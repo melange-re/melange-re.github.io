@@ -1,6 +1,6 @@
 # Melange
 
-## OCaml for JavaScript developers
+<div id="home-subtitle">OCaml for JavaScript developers</div>
 
 ---
 
