@@ -1,1 +1,16 @@
-site_name: My Docs
+site_name: Melange
+
+theme:
+  name: mkdocs
+  locale: en
+  highlightjs: true
+  hljs_languages:
+    - ocaml
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Learn: learn.md
+
+extra_css:
+  - css/extra.css
