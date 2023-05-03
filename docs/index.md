@@ -4,10 +4,11 @@
 
 ---
 
-Melange is a fork of the OCaml compiler that strives to provide the best
-integration with both the Ocaml and JavaScript ecosystems.
-To know more about it start by reading the [introductory tutorial](getting-started.md),
-then check the [Learn](learn.md) section for more information.
+Melange is a fork of the OCaml compiler that compiles to JavaScript. Melange
+strives to provide the best integration with both the OCaml and JavaScript
+ecosystems. To know more about it start by reading the [introductory
+tutorial](getting-started.md), then check the [Learn](learn.md) section for more
+information.
 
 <div class="text-center">
 <a href="getting-started" class="btn btn-primary" role="button">Getting Started</a>
