@@ -1,6 +1,6 @@
 # Getting started
 
-Get up and running with Melange in no time!
+<p class="centered">Get up and running with Melange in no time!</p>
 
 ---
 

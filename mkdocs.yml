@@ -11,6 +11,8 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Learn: learn.md
+  - Try: try.md
+  - Community: community.md
 
 extra_css:
   - css/extra.css
