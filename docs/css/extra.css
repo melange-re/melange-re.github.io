@@ -4,7 +4,7 @@ div.col-md-9 h1:first-of-type {
     font-weight: 300;
 }
 
-div.col-md-9 h2:first-of-type {
+#home-subtitle {
     text-align: center;
     font-size: 30px;
     font-weight: 300;
