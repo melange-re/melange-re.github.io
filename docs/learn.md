@@ -121,10 +121,17 @@ creation, with [Dune](https://dune.build/), which is the most used build system
 for OCaml projects.
 
 This fork of BuckleScript is later named Melange. After finishing the switch
-from Ninja to Dune, several additional features were added to bring it closer to
-OCaml. Some examples are the upgrade of the compiler version used by Melange to
-4.12, or modelling the changes to the OCaml compiler that Melange uses as just a
-plain library, instead of a full fork of the whole compiler.
+from Ninja to Dune, several additional features are added to bring it closer to
+OCaml. Some examples are the upgrade of the OCaml compiler version used by
+Melange, or modelling the changes to the OCaml compiler that Melange uses as
+just a plain library, instead of a full fork of the whole compiler.
+
+In September 2022, Ahrefs decides to invest on Melange by funding a project to
+deepen the integration between Dune and Melange. This project achieves its
+completion in Spring 2023, with the [migration of Ahrefs frontend codebase to
+Melange](https://tech.ahrefs.com/ahrefs-is-now-built-with-melange-b14f5ec56df4)
+and the new public releases that support it: version 3.8 of Dune and 1.0 of
+Melange.
 
 ## Package management
 
