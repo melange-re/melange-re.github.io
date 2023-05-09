@@ -556,7 +556,7 @@ docs](https://dune.readthedocs.io/en/latest/melange.html).
 
 The file structure of the app should look something like this:
 
-```
+```bash
 project_name/
 ├── _opam
 ├── lib
@@ -602,8 +602,8 @@ folder. To support this scenario, Dune will use the `target` field defined in
 the `melange.emit` to place the artifacts generated from a `melange.emit` stanza
 in the following folder:
 
-```
-_build/default/$path-to-directory-of-melange-emit-stanza/$target
+```bash
+_build/default/$path_to_melange_emit_stanza_directory/$target
 ```
 
 This allows to have two or more `melange.emit` stanzas in the same folder
