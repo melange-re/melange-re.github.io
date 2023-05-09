@@ -2,10 +2,11 @@
 
 ## New to OCaml?
 
-As Melange is a fork of the OCaml compiler, this documentation is designed to
-include the differences between both. But for the parts that overlap between
-Melange and OCaml, we will always refer to the main OCaml documentation
-throughout these docs.
+As a backend for the OCaml compiler, Melange shares many similarities with the
+OCaml language. Nevertheless, there are some notable differences between the
+two. This documentation aims to clarify these distinctions. For features that
+Melange inherits from OCaml, readers will be directed to the main OCaml
+documentation.
 
 If you are completely new to OCaml, you might want to get familiar first with
 the language, there are [plenty of resources available](https://ocaml.org/docs),
@@ -15,8 +16,6 @@ but we recommend the following tutorials from the official OCaml website:
 - [OCaml Exercises](https://ocaml.org/problems)
 
 ## Why Melange
-
-Melange is a fork of the OCaml compiler that produces JavaScript.
 
 OCaml offers an industrial-strength, state-of-the-art type system and provides
 type inference with very few type annotations, proving invaluable in managing
