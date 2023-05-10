@@ -724,9 +724,167 @@ template](https://github.com/melange-re/melange-opam-template).
 
 Melange offers an extensive range of techniques to use JavaScript code in
 Melange projects and to make Melange code accessible to JavaScript programs. To
-learn about these techniques, we will first go through the OCaml language
-extensions that make them possible. Then, we will provide a detailed explanation
-of their functionality.
+learn about these techniques, we will go through the types in Melange and how
+they map to JavaScript runtime code, then we will see what are the OCaml
+language extensions that make them possible, and also introduce the `external`
+construct. Finally, we will provide a variety of use cases with examples to show
+how to communicate to and from JavaScript.
+
+### Data types and runtime representation
+
+This is how each Melange type is converted into JavaScript values:
+
+Melange | JavaScript
+---------------------|---------------
+int | number
+nativeint | number
+int32 | number
+float | number
+string | string
+array | array
+tuple `(3, 4)` | array `[3, 4]`
+bool | boolean
+Js.Nullable.t | `null` / `undefined`
+Option.t `None` | `undefined`
+Option.t `Some( Some .. Some (None))` | internal representation
+Option.t `Some 2` | `2`
+record `{x: 1; y: 2}` | object `{x: 1, y: 2}`
+int64 | array of 2 elements `[high, low]` high is signed, low unsigned
+char | `'a'` -> `97` (ascii code)
+bytes | number array
+list `[]` | `0`
+list `[x, y]` | `[x, [y, 0]]`
+list `[1, 2, 3]` | `[ 1, [ 2, [ 3, 0 ] ] ]`
+variant | See below
+polymorphic variant | See below
+
+Variants with a single non-nullary constructor:
+
+```ocaml
+type tree = Leaf | Node of int * tree * tree
+(* Leaf -> 0 *)
+(* Node(7, Leaf, Leaf) -> { _0: 7, _1: 0, _2: 0 } *)
+```
+
+Variants with more than one non-nullary constructor:
+
+```ocaml
+type t = A of string | B of int
+(* A("foo") -> { TAG: 0, _0: "Foo" } *)
+(* B(2) -> { TAG: 1, _0: 2 } *)
+```
+
+Polymorphic Variant:
+
+```ocaml
+let u = `Foo (* "Foo" *)
+let v = `Foo(2) (* { NAME: "Foo", VAL: "2" } *)
+```
+
+> **_NOTE:_** Relying on runtime representations by reading or writing them
+manually from JavaScript code that communicates with Melange code might lead to
+runtime errors, as these representations might be changed in the future. In
+general, it is safer to leave the Melange compiler deal with the manipulation of
+these runtime values and interact with them from Melange code using bindings.
+
+Let’s see now some of these types in detail.
+
+### Shared types
+
+The following are types that can be shared between Melange and JavaScript almost
+"as is". Specific caveats are mentioned on the sections where they apply.
+
+#### Strings
+
+Melange strings are an immutable sequence of bytes. This is problematic when
+interacting with JavaScript code, because if one tries to use some unicode
+characters, like:
+
+```ocaml
+let () = Js.log "你好"
+```
+
+It will lead to some cryptic console output. To rectify this, Melange allows to
+define [quoted string
+literals](https://v2.ocaml.org/manual/lex.html#sss:stringliterals) using the
+`js` identifier, for example:
+
+```ocaml
+let () = Js.log {js|你好，
+世界|js}
+```
+
+For convenience, Melange exposes another special quoted string identifier: `j`.
+It is similar to JavaScript’ string interpolation, but for variables only (not
+arbitrary expressions):
+
+```ocaml
+let world = {j|世界|j}
+let helloWorld = {j|你好，$world|j}
+```
+
+You can surround the interpolation variable in parentheses too: `{j|你
+好，$(world)|j}`.
+
+To work with strings, Melange standard library provides some utilities in the
+[TODO - ADD LINK `Stdlib.String` module](#todo-fix-me). The bindings to the
+native JavaScript functions to work with strings are in the [TODO - ADD LINK
+`Js.String` module](#todo-fix-me).
+
+#### Float
+
+Melange floats are JavaScript numbers, and vice-versa. The Melange standard
+library doesn't come with a Float module. The JavaScript Float API can be found
+in [TODO - ADD LINK the `Js.Float`](#todo-fix-me) module.
+
+#### Int
+
+**Ints are 32-bits**. They compile to JavaScript numbers but treating both as
+the same might lead to unexpected behavior, because of the differences in
+precision. When working with large numbers, it is better to use floats. For
+example, the bindings in `Js.Date` use floats. The bindings to work with
+JavaScript integers are in the [TODO - ADD LINK `Js.Int`](#todo-fix-me) module.
+
+#### Array
+
+Idiomatic OCaml arrays are supposed to be fix-sized. This constraint is relaxed
+on the Melange side. You can change its length using the usual [JavaScript Array
+API](https://bucklescript.github.io/bucklescript/api/Js.Array.html#VALdefault).
+Melange’s functions to work with arrays are in the [TODO - ADD LINK
+`Js.Array`](#todo-fix-me) module.
+
+#### Tuple
+
+OCaml tuples are compiled to JavaScript arrays. This is convenient when writing
+bindings that will use a JavaScript array with heterogeneous values, but that
+happens to have a fixed length.
+
+#### Bool
+
+Melange `bool` compiles to JavaScript boolean.
+
+#### Records
+
+Melange records map directly to JavaScript objects. If the record fields include
+non-shared data types (like variants), these values should be transformed
+separately, and not be directly used in JavaScript.
+
+### Non-shared data types
+
+The following types differ too much between Melange and JavaScript, so while
+they can always be used, it is recommended to transform them before doing so.
+
+- Variants and polymorphic variants: Better transform them into readable
+  JavaScript values before manipulating them from JavaScript, Melange provides
+  [TODO - ADD LINK some helpers](#todo-fix-me) to do so.
+- Exceptions
+- Option (is a variant type): Better use the [TODO - ADD LINK `Js.Nullable`
+  module](#todo-fix-me) to transform them into either `null` or `undefined`
+  values.
+- List (also a variant type)
+- Character
+- Int64
+- Lazy values
 
 ### Language extensions
 
@@ -738,7 +896,7 @@ to do so, for example:
 
 ```ocaml
 javascript add : int -> int -> int = "function(x,y){
-   return x + y
+  return x + y
 }
 ```
 
@@ -853,8 +1011,7 @@ Used in other places like records, fields, parameters, functions...:
 **Extensions:**
 
 In order to use any of these extensions, you will have to add the melange PPX
-preprocessor to your project. To do so, just add the following to the `dune`
-file:
+preprocessor to your project. To do so, add the following to the `dune` file:
 
 ```bash
 (library
@@ -864,7 +1021,7 @@ file:
    (pps melange.ppx)))
 ```
 
-The same field can be added to `melange.emit`.
+The same field `preprocess` can be added to `melange.emit`.
 
 Here is the list of all extensions supported by Melange:
 
@@ -874,9 +1031,138 @@ Here is the list of all extensions supported by Melange:
 - `bs.raw`: write raw JavaScript code
 - `bs.re`: insert regular expressions
 
-### Melange preprocessor
+### Intro to `external`
 
-In order XXX TODO talk about `melange.ppx`.
+Most of the system that Melange exposes to communicate with JavaScript is built
+on top of a concept called `external`, so we'll specially introduce it here.
+
+`external` is a keyword for declaring a value in OCaml that will [interface with
+C code](https://v2.ocaml.org/manual/intfc.html):
+
+```ocaml
+external myCFunction : int -> string = "someCFunctionName"
+```
+
+It is like a `let` binding, except that the body of an external is a string.
+That string has a specific meaning depending on the context. For native OCaml,
+it usually refers to a C function with that name. For Melange, it refers to the
+functions or values that exist in the runtime JavaScript code, and will be used
+from Melange.
+
+Melange externals are always decorated with certain `[@bs.xxx]` attributes.
+These attributes are listed [above](#list-of-attributes-and-extensions), and
+will be further explain in the next sections.
+
+Once declared, one can use an `external` as a normal value.
+
+Melange `external`s are turned into the expected JavaScript values, inlined into
+their callers during compilation, **and completely erased afterward**. They
+don’t appear in the JavaScript output, so there are no costs on bundling size.
+
+**Note**: it is recommended to use `external`s and the `[@bs.xxx]` attributes in
+the interface files as well, as that can allow some optimizations where the
+values will be directly inlined at the call sites.
+
+#### Special identity external
+
+One external worth mentioning is the following one:
+
+```ocaml
+type foo = string
+type bar = int
+external dangerZone : foo -> bar = "%identity"
+```
+
+This is a final escape hatch which does nothing but convert from the type `foo`
+to `bar`. In the following sections, if you ever fail to write an `external`,
+you can fall back to using this one. But try not to.
+
+Let’s now see all the ways to use JavaScript from Melange.
+
+### Generate raw JavaScript
+
+It is possible to directly write JavaScript code from a Melange file. This is
+unsafe, but it can be useful for prototyping or as a escape hatch.
+
+To do it, we will use the `bs.raw`
+[extension](https://v2.ocaml.org/manual/extensionnodes.html):
+
+```ocaml
+let add = [%bs.raw {|
+  function(a, b) {
+    console.log("hello from raw JavaScript!");
+    return a + b;
+  }
+|}]
+
+let _ = Js.log (add 1 2)
+```
+
+The `{||}` strings are called ["quoted
+strings"](https://ocaml.org/manual/lex.html#quoted-string-id). They are similar
+to JavaScript’s template literals, in the sense that they are multi-line, and
+there is no need to escape characters inside the string.
+
+Using one `%` (`[%bs.raw <string>]`) is useful to define expressions (function
+bodies, or other values) where the implementation is directly JavaScript. This
+is useful as we can attach the type signature already in the same line, to make
+our code safer. For example:
+
+```ocaml
+[%%bs.raw "var a = 1"]
+
+let f : unit -> int = [%bs.raw "function() {return 1}"]
+```
+
+Using two percentages `%%` (`[%%bs.raw <string>]`) is reserved for top-level
+definitions, for example:
+
+```ocaml
+[%%bs.raw "var a = 1"]
+```
+
+### Debugger
+
+Melange allows to inject a `[%bs.debugger]` expression:
+
+```ocaml
+let f x y =
+  [%bs.debugger];
+  x + y
+```
+
+Output:
+
+```javascript
+function f (x,y) {
+  debugger; // JavaScript developer tools will set an breakpoint and stop here
+  x + y;
+}
+```
+
+### Detect global variables
+
+Melange provides a relatively type safe approach to use globals that might be
+defined either in the JavaScript runtime environment: `bs.external`.
+
+`[%bs.external id]` will check if the JavaScript value `id` is `undefined` or
+not, and return an `Option.t` value accordingly.
+
+For example:
+
+```ocaml
+let () = match [%external __DEV__] with
+| Some _ -> Js.log "dev mode"
+| None -> Js.log "production mode"
+```
+
+Another example:
+
+```ocaml
+let () = match [%external __filename] with
+| Some f -> Js.log f
+| None -> Js.log "non-node environment"
+```
 
 _TODO: Sections will be something like:_
 ```
