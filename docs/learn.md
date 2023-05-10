@@ -669,7 +669,8 @@ name `Jane`.
 Then, adapt the `lib/dune` file. We will need to add the `melange.runtime_deps`
 field, as well as a [`preprocessing`
 field](https://dune.readthedocs.io/en/stable/reference/preprocessing-spec.html)
-that will allow to use the `bs.raw` extension, in order to get the value of the
+that will allow to use the `bs.raw` extension (more about these extensions
+[below](#communicate-with-javascript)), in order to get the value of the
 `__dirname` environment variable:
 
 ```bash
@@ -721,6 +722,162 @@ template](https://github.com/melange-re/melange-opam-template).
 
 ## Communicate with JavaScript
 
+Melange offers an extensive range of techniques to use JavaScript code in
+Melange projects and to make Melange code accessible to JavaScript programs. To
+learn about these techniques, we will first go through the OCaml language
+extensions that make them possible. Then, we will provide a detailed explanation
+of their functionality.
+
+### Language extensions
+
+In order to interact with JavaScript, Melange needs to extend the language to
+provide blocks that express these interactions.
+
+One approach could be to introduce new syntactic constructs (keywords and such)
+to do so, for example:
+
+```ocaml
+javascript add : int -> int -> int = "function(x,y){
+   return x + y
+}
+```
+
+But this would break compatibility with OCaml, which is one of the main goals of
+Melange.
+
+Fortunately, OCaml provides mechanisms to extend its language without breaking
+compatibility with the parser or the language. These mechanisms are composed by
+two parts:
+- First, some syntax additions to define parts of the code that will be extended
+  or replaced
+- Second, compile-time OCaml native programs called [PPX
+  rewriters](https://ocaml.org/docs/metaprogramming), that will read the syntax
+  additions defined above and proceed to extend or replace them
+
+The syntax additions come in two flavours, called [extensions
+nodes](https://v2.ocaml.org/manual/extensionnodes.html) and
+[attributes](https://v2.ocaml.org/manual/attributes.html).
+
+Extension nodes are blocks that are supposed to be replaced by a specific type
+of PPX rewriters called extenders. Extension nodes use the `%` character to be
+identified. Extenders will take the extension node and replace it with valid
+OCaml code.
+
+An example where Melange uses extensions to communicate with JavaScript is to
+produce "raw" JavaScript inside a Melange program: 
+
+```ocaml
+[%%bs.raw "var a = 1; var b = 2"]
+let add = [%bs.raw "a + b"]
+```
+
+Which will generate the following JavaScript code:
+
+```js
+var a = 1; var b = 2
+var add = a + b
+```
+
+The difference between one and two `%` characters is detailed in the [OCaml
+documentation](https://v2.ocaml.org/manual/extensionnodes.html).
+
+Attributes are "lighter" than extensions, and are used to annotate specific
+parts of the code. For example, it is possible to have fields in a record
+renamed using using the `bs.as` attribute:
+
+```ocaml
+type t = {
+  foo : int; [@bs.as "foo_for_js"]
+  bar : string;
+}
+
+let t = { foo = 2; bar = "b" }
+```
+
+This will generate the following JavaScript code:
+
+```js
+var t = {
+  foo_for_js: 2,
+  bar: "b"
+};
+```
+
+To learn more about preprocessors, attributes and extension nodes, check the
+[section about PPX
+rewriters](https://ocaml.org/docs/metaprogramming#ppx-rewriters) in the OCaml
+docs.
+
+### List of attributes and extensions
+
+> **_NOTE:_** All these attributes and extensions are prefixed with `@bs.` for
+> backwards compatibility. They will be updated to `@mel.` in the future.
+
+**Attributes:**
+
+Used to annotate `external` definitions:
+
+- `bs.get`: read JavaScript object properties statically by name
+- `bs.get_index`: read a JavaScript object’s properties dynamically by using the
+  bracket notation `[]`
+- `bs.module`: bind to a value from a JavaScript module
+- `bs.new`: bind to a JavaScript constructor
+- `bs.obj`: create JavaScript object
+- `bs.return`: automate conversion from nullable values to `Option.t` values
+- `bs.send`: call a function that is a JavaScript object property
+- `bs.set`: set JavaScript object properties statically by name
+- `bs.set_index`: set JavaScript object properties dynamically by using the
+  bracket notation `[]`
+- `bs.scope`: reach to deeper properties inside a JavaScript object
+- `bs.val`: bind to global values
+- `bs.variadic`: bind to a function taking variadic arguments from an array
+
+Used to annotate arguments in `external` definitions:
+
+- `bs`: define function arguments as uncurried (manual)
+- `bs.ignore`: define phantom arguments 
+- `bs.int`: compile argument to an int
+- `bs.string`: compile function argument to a string
+- `bs.this`: bind to `this` based callbacks
+- `bs.uncurry`: define function arguments as uncurried (automated)
+- `bs.unwrap`: unwrap variant values
+
+Used in other places like records, fields, parameters, functions...:
+
+- `bs.as`: redefine the name generated in the JavaScript output code. Used in
+  variants, polymorphic variants and record fields.
+- `bs.deriving`: generate getters and setters for some types
+- `bs.inline`: forcefully inline constant values
+- `bs.optional`: omit fields in a record (combines with `bs.deriving`)
+
+**Extensions:**
+
+In order to use any of these extensions, you will have to add the melange PPX
+preprocessor to your project. To do so, just add the following to the `dune`
+file:
+
+```bash
+(library
+ (name lib)
+ (modes melange)
+ (preprocess
+   (pps melange.ppx)))
+```
+
+The same field can be added to `melange.emit`.
+
+Here is the list of all extensions supported by Melange:
+
+- `bs.debugger`: insert `debugger` statements
+- `bs.external`: read global values
+- `bs.obj`: create JavaScript object literals
+- `bs.raw`: write raw JavaScript code
+- `bs.re`: insert regular expressions
+
+### Melange preprocessor
+
+In order XXX TODO talk about `melange.ppx`.
+
 _TODO: Sections will be something like:_
 ```
 - intro: explain attributes, extensions, and `bs.` backwards compatibility
@@ -734,7 +891,7 @@ _TODO: Sections will be something like:_
 ```
 
 ## Additions to OCaml
-_TODO: pipe first_
+_TODO: pipe first, unicode support_
 
 ## Melange for X users
 
