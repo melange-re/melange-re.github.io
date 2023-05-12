@@ -36,9 +36,11 @@ information.
       <div class="card-body">
         <h3 class="card-title">First-Class Editor and Tooling</h3>
         <p class="card-text">
-            Melange can use the same editor integrations as OCaml, which exist
-            for VSCode, Vim, or Emacs. They allow to provide type inspection,
-            autocomplete and more. It also has first-class integration with <a
+            Melange fully utilizes the power of
+            <a href="https://ocaml.org/docs/platform">the OCaml Platform</a>
+            to provide integrations with editors such as VSCode, Vim, or Emacs,
+            with features like type inspection, autocomplete, and more. It also
+            has first-class integration with <a
             href="https://dune.build/">Dune</a>, OCaml's most used build system.
         </p>
       </div>
@@ -69,7 +71,7 @@ information.
             Melange builds on top of decades of type system research, compiler
             engineering and tooling development to provide a polished
             developer experience. Companies like Ahrefs use Melange daily to
-            deploy web applications to their users.
+            deploy web applications for their users.
         </p>
       </div>
     </div>
