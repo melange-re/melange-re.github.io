@@ -4,12 +4,17 @@
 
 ---
 
-## Install opam
+## Install a package manager
 
-To work with Melange, you need to install [opam](https://opam.ocaml.org/), a
-source-based package manager for OCaml. Instructions for installing opam on
-different operating systems can be found at the opam [install
-page](https://opam.ocaml.org/doc/Install.html).
+To work with Melange, you need to install a package manager compatible with
+OCaml. If you are not sure which one to use, we recommend
+[opam](https://opam.ocaml.org/), a source-based package manager for OCaml, but
+there are [other alternatives](#alternative-package-managers-experimental)
+available.
+
+Instructions for installing opam on different operating systems can be found at
+the opam [install page](https://opam.ocaml.org/doc/Install.html), and you can
+find [a whole section about it](./learn#package-management) on this website.
 
 ## Template
 
