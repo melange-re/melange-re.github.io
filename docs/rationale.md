@@ -108,8 +108,8 @@ for OCaml projects.
 This fork of BuckleScript is later named Melange. After finishing the switch
 from Ninja to Dune, several additional features are added to bring it closer to
 OCaml. Some examples are the upgrade of the OCaml compiler version used by
-Melange, or modelling the changes to the OCaml compiler that Melange uses as
-just a plain library, instead of a full fork of the whole compiler.
+Melange, or modeling the changes to the OCaml compiler that Melange uses as
+just a plain library, instead of a full fork of the upstream compiler.
 
 In September 2022, Ahrefs decides to invest on Melange by funding a project to
 deepen the integration between Dune and Melange. This project achieves its

@@ -8,9 +8,10 @@ two. This documentation aims to clarify these distinctions. For features that
 Melange inherits from OCaml, readers will be directed to the main OCaml
 documentation.
 
-If you are completely new to OCaml, you might want to get familiar first with
-the language, there are [plenty of resources available](https://ocaml.org/docs),
-but we recommend the following tutorials from the official OCaml website:
+If you are completely new to OCaml, it's recommended to familiarize yourself
+with the language first. [Learn OCaml](https://ocaml.org/docs) is a good
+starting point. but we recommend the following tutorials from the official OCaml
+website:
 
 - [A First Hour With OCaml](https://ocaml.org/docs/first-hour)
 - [OCaml Exercises](https://ocaml.org/problems)
