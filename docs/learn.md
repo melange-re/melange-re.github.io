@@ -1021,7 +1021,7 @@ Let’s now see all the ways to use JavaScript from Melange.
 ### Generate raw JavaScript
 
 It is possible to directly write JavaScript code from a Melange file. This is
-unsafe, but it can be useful for prototyping or as a escape hatch.
+unsafe, but it can be useful for prototyping or as an escape hatch.
 
 To do it, we will use the `bs.raw`
 [extension](https://v2.ocaml.org/manual/extensionnodes.html):
