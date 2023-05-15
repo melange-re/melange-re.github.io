@@ -665,13 +665,15 @@ let u = `Foo (* "Foo" *)
 let v = `Foo(2) (* { NAME: "Foo", VAL: "2" } *)
 ```
 
-> **_NOTE:_** Relying on runtime representations by reading or writing them
-manually from JavaScript code that communicates with Melange code might lead to
-runtime errors, as these representations might be changed in the future. In
-general, it is safer to leave the Melange compiler deal with the manipulation of
-these runtime values and interact with them from Melange code using bindings.
+Let’s see now some of these types in detail. We will first describe the [shared
+types](#shared-types), which have a transparent representation as JavaScript
+values, and then go through the [non-shared types](#non-shared-data-types), that
+have more complex runtime representations.
 
-Let’s see now some of these types in detail.
+> **_NOTE:_** Relying on the non-shared data types runtime representations by
+reading or writing them manually from JavaScript code that communicates with
+Melange code might lead to runtime errors, as these representations might change
+in the future.
 
 ### Shared types
 
