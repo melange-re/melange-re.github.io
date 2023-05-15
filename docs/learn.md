@@ -834,14 +834,14 @@ two parts:
   rewriters](https://ocaml.org/docs/metaprogramming), that will read the syntax
   additions defined above and proceed to extend or replace them
 
-The syntax additions come in two flavours, called [extensions
+The syntax additions come in two flavors, called [extensions
 nodes](https://v2.ocaml.org/manual/extensionnodes.html) and
 [attributes](https://v2.ocaml.org/manual/attributes.html).
 
 Extension nodes are blocks that are supposed to be replaced by a specific type
 of PPX rewriters called extenders. Extension nodes use the `%` character to be
-identified. Extenders will take the extension node and replace it with valid
-OCaml code.
+identified. Extenders will take the extension node and replace it with a valid
+OCaml AST (abstract syntax tree).
 
 An example where Melange uses extensions to communicate with JavaScript is to
 produce "raw" JavaScript inside a Melange program: 
@@ -861,9 +861,10 @@ var add = a + b
 The difference between one and two `%` characters is detailed in the [OCaml
 documentation](https://v2.ocaml.org/manual/extensionnodes.html).
 
-Attributes are "lighter" than extensions, and are used to annotate specific
-parts of the code. For example, it is possible to have fields in a record
-renamed using using the `bs.as` attribute:
+Attributes are "decorations" that are used to annotate specific parts of the
+code. Melange leverages attributes in multiple ways to improve the ways one can
+communicate with JavaScript code. For example, it introduces a `bs.as` attribute
+to have fields in a record be renamed on the generated JavaScript code:
 
 ```ocaml
 type t = {
