@@ -1,5 +1,8 @@
 site_name: Melange
 
+repo_url: https://github.com/melange-re/documentation-site/
+edit_uri: blob/master/docs/
+
 theme:
   name: mkdocs
   locale: en
@@ -7,10 +10,20 @@ theme:
   hljs_languages:
     - ocaml
 
+plugins:
+  - print-site
+
 nav:
   - Home: index.md
+  - Why: rationale.md
   - Getting Started: getting-started.md
-  - Learn: learn.md
+  - Learn:
+    - Table of contents: learn.md
+    - New to OCaml: learn#new-to-ocaml
+    - Why Melange?: learn#why-melange
+    - Package management: learn#package-management
+    - Build system: learn#build-system
+    - Communicate with JavaScript: learn#communicate-with-javascript
   - API: api.md
   - Try: try.md
   - Community: community.md
