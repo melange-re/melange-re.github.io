@@ -680,7 +680,9 @@ The following are types that can be shared between Melange and JavaScript almost
 
 #### Strings
 
-Melange strings are an immutable sequence of bytes. This is problematic when
+JavaScript strings are immutable sequences of UTF-16 encoded Unicode text. OCaml
+strings are immutable sequences of bytes and nowadays assumed to be UTF-8
+encoded text when interpreted as textual content. This is problematic when
 interacting with JavaScript code, because if one tries to use some unicode
 characters, like:
 
