@@ -758,6 +758,24 @@ OCaml tuples are compiled to JavaScript arrays. This is convenient when writing
 bindings that will use a JavaScript array with heterogeneous values, but that
 happens to have a fixed length.
 
+As a real world example of this can be found in
+[ReasonReact](https://github.com/reasonml/reason-react/), the Melange bindings
+for [React](https://react.dev/). In these bindings, component effects
+dependencies are represented as OCaml tuples, so they get compiled cleanly to
+JavaScript arrays by Melange.
+
+For example, some code like this:
+
+```ocaml
+let () = React.useEffect2 (fun () -> None) (foo, bar)
+```
+
+Will produce:
+
+```javascript
+React.useEffect(function () {}, [foo, bar]);
+```
+
 #### Bool
 
 Values of type `bool` compile to JavaScript booleans.
