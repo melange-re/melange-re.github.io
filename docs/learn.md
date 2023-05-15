@@ -1066,7 +1066,8 @@ For example:
 
 ### Debugger
 
-Melange allows to inject a `[%bs.debugger]` expression:
+Melange allows to inject a `debugger;` expression using the `bs.debugger`
+extension:
 
 ```ocaml
 let f x y =
@@ -1078,7 +1079,7 @@ Output:
 
 ```javascript
 function f (x,y) {
-  debugger; // JavaScript developer tools will set an breakpoint and stop here
+  debugger; // JavaScript developer tools will set a breakpoint and stop here
   x + y;
 }
 ```
