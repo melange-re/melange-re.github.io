@@ -861,10 +861,11 @@ var add = a + b
 The difference between one and two `%` characters is detailed in the [OCaml
 documentation](https://v2.ocaml.org/manual/extensionnodes.html).
 
-Attributes are "decorations" that are used to annotate specific parts of the
-code. Melange leverages attributes in multiple ways to improve the ways one can
-communicate with JavaScript code. For example, it introduces a `bs.as` attribute
-to have fields in a record be renamed on the generated JavaScript code:
+Attributes are "decorations" applied to specific parts of the code to provide
+additional information. Melange uses attributes in various ways to enhance
+communication with JavaScript code. For instance, it introduces the `bs.as`
+attribute, which allows renaming of fields in a record on the generated
+JavaScript code:
 
 ```ocaml
 type t = {
