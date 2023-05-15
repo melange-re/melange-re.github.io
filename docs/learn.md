@@ -637,8 +637,8 @@ int64 | array of 2 elements `[high, low]` high is signed, low unsigned
 char | `'a'` -> `97` (ascii code)
 bytes | number array
 list `[]` | `0`
-list `[x, y]` | `[x, [y, 0]]`
-list `[1, 2, 3]` | `[ 1, [ 2, [ 3, 0 ] ] ]`
+list `[x, y]` | `{ hd: x, tl: { hd: y, tl: 0 } }`
+list `[1, 2, 3]` | `{ hd: 1, tl: { hd: 2, tl: { hd: 3, tl: 0 } } }`
 variant | See below
 polymorphic variant | See below
 
