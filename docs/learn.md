@@ -905,12 +905,12 @@ Used to annotate `external` definitions:
   properties dynamically by using the bracket notation `[]`
 - [`bs.module`](#using-functions-from-other-javascript-modules): bind to a value
   from a JavaScript module
-- [`bs.new`](#javascript-classes): bind to a JavaScript constructor
+- [`bs.new`](#javascript-classes): bind to a JavaScript class constructor
 - [`bs.obj`](#using-jst-objects): create JavaScript object
 - [`bs.return`](#wrapping-returned-nullable-values): automate conversion from
   nullable values to `Option.t` values
-- [`bs.send`](#calling-a-function-as-an-object-property): call a function that
-  is a JavaScript object property
+- [`bs.send`](#calling-an-object-method): call a function that is a JavaScript
+  object property
 - [`bs.set`](#bind-to-object-properties): set JavaScript object properties
   statically by name
 - [`bs.set_index`](#bind-to-object-properties): set JavaScript object properties
@@ -1427,11 +1427,10 @@ MyGame.draw(10, 20, undefined);
 MyGame.draw(10, 20, undefined);
 ```
 
-#### Calling a function as an object property
+#### Calling an object method
 
-If we need to call a function that happens to be set as a JavaScript object
-property, Melange provides the attribute `bs.send` so we can define it with just
-one `external`:
+If we need to call a JavaScript method, Melange provides the attribute
+`bs.send`:
 
 ```ocaml
 (* Abstract type for the `document` global *)
