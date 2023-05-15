@@ -1303,14 +1303,17 @@ console.log(i32arr[0]);
 
 #### Objects with dynamic shape (dictionary-like)
 
-If you are binding to a JavaScript object that:
+Sometimes JavaScript objects are used as dictionaries. In these cases:
 
-- might or might not add or remove keys
-- contains only values that are of the same type
+- All values stored in the object belong to the same type
+- Key-value pairs can be added or removed at runtime
 
-Then it’s not really an object, it’s a dictionary or map. Use
-[Js.Dict](api/js/dict), which contains operations like `get`, `set`, etc. and
-compiles to a JavaScript object.
+For this particular use case of JavaScript objects, Melange exposes a specific
+type `Js.Dict.t`. The values and functions to work with values of this type are
+defined in the [`Js.Dict`](#todo-fix-me.md) module, with operations like `get`,
+`set`, etc.
+
+Values of the type `Js.Dict.t` compile to JavaScript objects.
 
 #### JavaScript classes
 
