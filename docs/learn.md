@@ -1232,9 +1232,14 @@ var john = {
 var t = john.name;
 ```
 
-Note that type inference with objects is more lenient than with records. For
-example, one can create a function that operates in all the object types that
-include a field `name` that is of type string, e.g.:
+Note that object types allow for some flexibility —thanks to subtyping— that the
+record types do not have. For example, an object type can be coerced to another
+with fewer values or methods, while it is impossible to coerce a record type to
+another one with fewer fields. So different object types that share some methods
+can be mixed in a data structure where only their common methods are visible.
+
+To give an example, one can create a function that operates in all the object
+types that include a field `name` that is of type string, e.g.:
 
 ```ocaml
 let name_extended obj = obj##name ^ " wayne"
@@ -1243,12 +1248,9 @@ let one = name_extended [%bs.obj { name = "john"; age = 99 }]
 let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
 ```
 
-This is possible thanks to [objects
-polymorphism](https://v2.ocaml.org/manual/objectexamples.html#s%3Apolymorphic-methods),
-and is a characteristic shared by some types in OCaml, like objects and
-polymorphic variants. The book Real World OCaml has [a good
-introduction](https://dev.realworldocaml.org/objects.html) to object
-polymorphism.
+To read more about objects, subtyping and polymorphism we recommend checking the
+[OCaml docs](https://ocaml.org/docs/objects) or the [OCaml
+manual](https://v2.ocaml.org/manual/objectexamples.html).
 
 ##### Bind to object properties
 
