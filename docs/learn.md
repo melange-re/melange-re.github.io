@@ -1209,7 +1209,7 @@ produce JavaScript objects. This type is `'a Js.t`, where `'a` is an [OCaml
 object](https://v2.ocaml.org/manual/objectexamples.html).
 
 The advantage of objects versus records is that no type declaration is needed in
-advanced, which can be helpful for prototyping or quickly generating JavaScript
+advance, which can be helpful for prototyping or quickly generating JavaScript
 object literals.
 
 Melange provides some ways to create `Js.t` object values, as well as accessing
