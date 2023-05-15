@@ -1436,8 +1436,9 @@ position. Not having the last param `unit` would lead to a warning, which is
 explained in detail [in the OCaml
 documentation](https://ocaml.org/docs/labels#warning-this-optional-argument-cannot-be-erased).
 
-Note that you can freely reorder the labels on the Melange side, they will
-appear in the right order on the JavaScript output:
+Note that you can freely reorder the labeled arguments when applying the
+function on the Melange side. The generated code will maintain the original
+order that was used when declaring the function:
 
 ```ocaml
 external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
