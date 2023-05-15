@@ -712,30 +712,45 @@ let helloWorld = {j|你好，$world|j}
 You can surround the interpolation variable in parentheses too: `{j|你
 好，$(world)|j}`.
 
-To work with strings, Melange standard library provides some utilities in the
-[`Stdlib.String` module](todo-fix-me.md). The bindings to the native JavaScript
-functions to work with strings are in the [`Js.String` module](todo-fix-me.md).
+To work with strings, the Melange standard library provides some utilities in
+the [`Stdlib.String` module](todo-fix-me.md). The bindings to the native
+JavaScript functions to work with strings are in the [`Js.String`
+module](todo-fix-me.md).
 
 #### Float
 
 Melange floats are JavaScript numbers, and vice-versa. The Melange standard
-library doesn’t come with a Float module. The JavaScript Float API can be found
-in the [`Js.Float`](todo-fix-me.md) module.
+library provides a [`Stdlib.Float` module](todo-fix-me.md). The bindings to the
+JavaScript APIs that manipulate float values can be found in the
+[`Js.Float`](todo-fix-me.md) module.
 
 #### Int
 
-**Ints are 32-bits**. They compile to JavaScript numbers but treating both as
-the same might lead to unexpected behavior, because of the differences in
-precision. When working with large numbers, it is better to use floats. For
-example, the bindings in `Js.Date` use floats. The bindings to work with
-JavaScript integers are in the [`Js.Int`](todo-fix-me.md) module.
+**Ints are 32-bits**, because bitwise operations in JavaScript [convert the
+operands to
+fixed-width](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#fixed-width_number_conversion).
+Melage integers compile to JavaScript numbers, but treating both as the same
+might lead to unexpected behavior, because of the differences in precision: even
+if bitwise operations are limited to 32 bits, integers themselves have a [max
+depth of 53
+bits](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding).
+When working with large numbers, it is better to use floats. For example, the
+bindings in `Js.Date` use floats. The Melange standard library provides a
+[`Stdlib.Int` module](todo-fix-me.md). The bindings to work with JavaScript
+integers are in the [`Js.Int`](todo-fix-me.md) module.
 
 #### Array
 
-Idiomatic OCaml arrays are supposed to be fix-sized. This constraint is relaxed
-on the Melange side. You can change its length using the usual [JavaScript Array
-API](todo-fix-me.md). Melange’s functions to work with arrays are in the
-[`Js.Array`](todo-fix-me.md) module.
+Melange arrays compile to JavaScript arrays. But note that unlike JavaScript
+arrays, all the values in a Melange array need to have the same type. 
+
+Another difference is that OCaml arrays are fix-sized, but on Melange side this
+constraint is relaxed. You can change an array’s length using functions like
+`Js.Array.push`, available in the bindings to the JavaScript APIs in
+[`Js.Array`](todo-fix-me.md).
+
+Melange standard library also has a module to work with arrays, available in
+`Stdlib.Array`(todo-fix-me.md) module.
 
 #### Tuple
 
