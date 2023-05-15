@@ -969,7 +969,7 @@ Here is the list of all extensions supported by Melange:
 - `bs.raw`: write raw JavaScript code
 - `bs.re`: insert regular expressions
 
-### Intro to `external`
+### Foreign function interface
 
 Most of the system that Melange exposes to communicate with JavaScript is built
 on top of an OCaml language construct called `external`.
@@ -1148,9 +1148,9 @@ var MySchool = require("MySchool");
 var john_name = MySchool.john.name;
 ```
 
-External is documented in the ["Intro to `external`"](#intro-to-external)
-section. `@@bs.module` is documented
-[here](#using-functions-from-other-javascript-modules).
+External functions are documented in the ["Foreign function
+interface"](#foreign-function-interface) section. The `bs.module` attribute is
+documented [here](#using-functions-from-other-javascript-modules).
 
 If you want or need to use different field names on the Melange and the
 JavaScript sides, you can use the `bs.as` decorator:
