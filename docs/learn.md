@@ -607,13 +607,12 @@ template](https://github.com/melange-re/melange-opam-template).
 
 ## Communicate with JavaScript
 
-Melange offers an extensive range of techniques to use JavaScript code in
-Melange projects and to make Melange code accessible to JavaScript programs. To
-learn about these techniques, we will go through the types in Melange and how
-they map to JavaScript runtime code, then we will see what are the OCaml
-language extensions that make them possible, and also introduce the `external`
-construct. Finally, we will provide a variety of use cases with examples to show
-how to communicate to and from JavaScript.
+Melange interoperates very well with JavaScript, and provides a wide array of
+features to consume foreign JavaScript code. To learn about these techniques, we
+will first map the OCaml type system to JavaScript runtime types, then we will
+see the OCaml language extensions that allow these techniques to exist. Finally,
+we will provide a variety of use cases with examples to show how to communicate
+to and from JavaScript.
 
 ### Data types and runtime representation
 
