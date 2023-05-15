@@ -1491,6 +1491,29 @@ It is common to find this kind of API in JavaScript: `foo().bar().baz()`. This
 kind of API can be designed with Melange externals and the `bs.send` attribute,
 in combination with the [the pipe operator](todo-fix-me.md).
 
+For example, we can write these bindings and `el` value definition, calculated
+using the pipe operator `|.`:
+
+```ocaml
+(* Abstract type for the `document` global *)
+type document
+
+external document : document = "document" [@@bs.val]
+external get_by_id : document -> string -> Dom.element = "getElementById"
+  [@@bs.send]
+external get_by_classname : Dom.element -> string -> Dom.element
+  = "getElementsByClassName"
+  [@@bs.send]
+
+let el = document |. get_by_id "my-id" |. get_by_classname "my-class"
+```
+
+Will generate:
+
+```javascript
+var el = document.getElementById("my-id").getElementsByClassName("my-class");
+```
+
 #### Variadic function arguments
 
 Sometimes JavaScript functions take an arbitrary amount of arguments. For this
