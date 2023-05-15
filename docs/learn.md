@@ -900,7 +900,7 @@ docs.
 Used to annotate `external` definitions:
 
 - [`bs.get`](#bind-to-object-properties): read JavaScript object properties
-  statically by name
+  statically by name, using the dot notation `.`
 - [`bs.get_index`](#bind-to-object-properties): read a JavaScript object’s
   properties dynamically by using the bracket notation `[]`
 - [`bs.module`](#using-functions-from-other-javascript-modules): bind to a value
@@ -912,7 +912,7 @@ Used to annotate `external` definitions:
 - [`bs.send`](#calling-an-object-method): call a function that is a JavaScript
   object property
 - [`bs.set`](#bind-to-object-properties): set JavaScript object properties
-  statically by name
+  statically by name, using the dot notation `.`
 - [`bs.set_index`](#bind-to-object-properties): set JavaScript object properties
   dynamically by using the bracket notation `[]`
 - [`bs.scope`](todo-fix-me.md): reach to deeper properties inside a JavaScript
@@ -1255,16 +1255,31 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 ##### Bind to object properties
 
 If you need to bind only to the property of a JavaScript object, you can use
-`bs.get` and `bs.set`:
+`bs.get` and `bs.set` to access it using the dot notation `.`:
 
 ```ocaml
-type textarea
-external set_name : textarea -> string -> unit = "name" [@@bs.set]
-external get_name : textarea -> string = "name" [@@bs.get]
+(* Abstract type for the `document` value *)
+type document
+
+external document : document = "document" [@@bs.val]
+
+external set_title : document -> string -> unit = "title" [@@bs.set]
+external get_title : document -> string = "title" [@@bs.get]
+
+let current = get_title document
+let () = set_title document "melange"
 ```
 
-You can also use `bs.get_index` and `bs.set_index` to access a dynamic property
-or an index:
+This generates:
+
+```javascript
+var current = document.title;
+document.title = "melange";
+```
+
+Alternatively, if some dynamism is required on the way the property is accessed,
+you can use `bs.get_index` and `bs.set_index` to access it using the bracket
+notation `[]`:
 
 ```ocaml
 type t
