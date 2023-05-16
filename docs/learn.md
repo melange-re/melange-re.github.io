@@ -754,9 +754,9 @@ The bindings to work with JavaScript integers are in the
 Melange arrays compile to JavaScript arrays. But note that unlike JavaScript
 arrays, all the values in a Melange array need to have the same type. 
 
-Another difference is that OCaml arrays are fix-sized, but on Melange side this
-constraint is relaxed. You can change an array’s length using functions like
-`Js.Array.push`, available in the bindings to the JavaScript APIs in
+Another difference is that OCaml arrays are fixed-sized, but on Melange side
+this constraint is relaxed. You can change an array’s length using functions
+like `Js.Array.push`, available in the bindings to the JavaScript APIs in
 [`Js.Array`](todo-fix-me.md).
 
 Melange standard library also has a module to work with arrays, available in
