@@ -1174,6 +1174,7 @@ external transition_timing_function :
 
 let element_style = style (get_by_id document "my-id")
 let () = transition_timing_function element_style `easeIn
+```
 
 This will generate:
 
