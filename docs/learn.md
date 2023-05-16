@@ -937,10 +937,10 @@ Used to annotate `external` definitions:
 Used to annotate arguments in `external` definitions:
 
 - [`bs`](#binding-to-callbacks): define function arguments as uncurried (manual)
-- [`bs.int`](#using-polymorphic-variants-to-bind-to-enums-and-string-types):
-  compile function argument to an int
-- [`bs.string`](#using-polymorphic-variants-to-bind-to-enums-and-string-types):
-  compile function argument to a string
+- [`bs.int`](#using-polymorphic-variants-to-bind-to-enums): compile function
+  argument to an int
+- [`bs.string`](#using-polymorphic-variants-to-bind-to-enums): compile function
+  argument to a string
 - [`bs.this`](#modeling-this-based-callbacks): bind to `this` based callbacks
 - [`bs.uncurry`](#binding-to-callbacks): define function arguments as uncurried
   (automated)
@@ -951,8 +951,8 @@ Used in other places like records, fields, parameters, functions...:
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
   [variants](todo-fix-me.md), [polymorphic
-  variants](#using-polymorphic-variants-to-bind-to-enums-and-string-types) and
-  [record fields](#objects-with-static-shape-record-like).
+  variants](#using-polymorphic-variants-to-bind-to-enums) and [record
+  fields](#objects-with-static-shape-record-like).
 - [`bs.deriving`](todo-fix-me.md): generate getters and setters for some types
 - [`bs.inline`](todo-fix-me.md): forcefully inline constant values
 - [`bs.optional`](todo-fix-me.md): omit fields in a record (combines with
@@ -1726,15 +1726,21 @@ should rather avoid passing variants directly to the JavaScript side. By using
 `bs.unwrap` we get the best of both worlds: from Melange we can use variants,
 while JavaScript gets the raw values inside them.
 
-#### Using polymorphic variants to bind to enums and string types
+#### Using polymorphic variants to bind to enums
 
 Some JavaScript APIs take a limited subset of values as input. For example,
-Node’s `fs.readFileSync` second argument. It can only take a few given string
-values: `"ascii"`, `"utf8"`, etc.
+Node’s `fs.readFileSync` second argument can only take a few given string
+values: `"ascii"`, `"utf8"`, etc. Some other functions can take values from a
+few given integers, like the `createStatusBarItem` function in VS Code API,
+which can take an alignment parameter that can only be [`1` or
+`2`](https://github.com/Microsoft/vscode/blob/2362ec665c84a1519162b50c36ed4f29d1e20f62/src/vs/vscode.d.ts#L4098-L4109).
 
-One could still bind it just as a string, but this would not prevent from using
-unsupported values. Let’s see how we can use polymorphic variants and the
-`bs.string` attribute to avoid runtime errors:
+One could still type these parameters as just `string` or `int`, but this would
+not prevent consumers of the external function from calling it using values that
+are unsupported by the JavaScript function. Let’s see how we can use polymorphic
+variants to avoid runtime errors.
+
+If the values are strings, we can use the `bs.string` attribute:
 
 ```ocaml
 external read_file_sync :
@@ -1751,13 +1757,41 @@ var Fs = require("fs");
 Fs.readFileSync("xx.txt", "ascii");
 ```
 
-Attaching `bs.string` to the polymorphic variant type makes its constructor
-compile to a string of the same name. This technique can be combined with the
-`bs.as` attributes to modify the strings produced from the polymorphic variant
-values, we will see an example of this just below.
+This technique can be combined with the `bs.as` attribute to modify the strings
+produced from the polymorphic variant values. For example:
+
+```ocaml
+type document
+type style
+
+external document : document = "document" [@@bs.val]
+external get_by_id : document -> string -> Dom.element = "getElementById"
+  [@@bs.send]
+external style : Dom.element -> style = "style" [@@bs.get]
+external transition_timing_function :
+  style ->
+  [ `ease
+  | `easeIn [@bs.as "ease-in"]
+  | `easeOut [@bs.as "ease-out"]
+  | `easeInOut [@bs.as "ease-in-out"]
+  | `linear
+  ] ->
+  unit = "transitionTimingFunction"
+  [@@bs.set]
+
+let element_style = style (get_by_id document "my-id")
+let () = transition_timing_function element_style `easeIn
+
+This will generate:
+
+```javascript
+var element_style = document.getElementById("my-id").style;
+
+element_style.transitionTimingFunction = "ease-in";
+```
 
 Aside from producing string values, Melange also offers `bs.int` to produce
-integer values:
+integer values. `bs.int` can also be combined with `bs.as`:
 
 ```ocaml
 external test_int_type :
@@ -1769,7 +1803,9 @@ let value = test_int_type `on_open
 ```
 
 In this example, `on_closed` will be encoded as 0, `on_open` will be 20 due to
-the attribute `bs.as` and `in_bin` will be 21.
+the attribute `bs.as` and `in_bin` will be 21, because if no `bs.as` annotation
+is provided for a variant tag, the compiler continues assigning values counting
+up from the previous one.
 
 This code generates:
 
