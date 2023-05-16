@@ -1889,8 +1889,23 @@ functions, more information about currying in OCaml can be found in [this
 chapter](https://cs3110.github.io/textbook/chapters/hop/currying.html) of the
 "OCaml Programming: Correct + Efficient + Beautiful" book.
 
-Currying is problematic when binding to JavaScript, let’s say we have a function
-like this:
+This is incompatible with how function calling conventions work in JavaScript,
+where all function calls always apply all the arguments. To continue the
+example, let's say we have an `add` function implemented in JavaScript, similar
+to the one above:
+
+```javascript
+var add = function (a, b) {
+    return a + b;
+};
+```
+
+If we call `add(1)`, the function will be totally applied, with `b` having
+`undefined` value. And as JavaScript will try to add `1` with `undefined`, we
+will get `NaN` as a result.
+
+To illustrate this difference and how it affects Melange bindings, let’s say we
+want to write bindings for a JavaScript function like this:
 
 ```javascript
 function map (a, b, f){
