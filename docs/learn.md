@@ -733,17 +733,17 @@ float values can be found in the [`Js.Float`](todo-fix-me.md) module.
 
 #### Integers
 
-Melange integers are 32-bits, because bitwise operations in JavaScript [convert
-the operands to
-fixed-width](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#fixed-width_number_conversion).
-Melage integers compile to JavaScript numbers, but treating both as the same
-might lead to unexpected behavior, because of the differences in precision: even
-if bitwise operations in JavaScript are limited to 32 bits, integers themselves
-are represented using [the same floating point format as
+In Melange, integers are limited to 32 bits due to the [fixed-width
+conversion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#fixed-width_number_conversion)
+of bitwise operations in JavaScript. While Melange integers compile to
+JavaScript numbers, treating them interchangeably can result in unexpected
+behavior due to differences in precision. Even though bitwise operations in
+JavaScript are constrained to 32 bits, integers themselves are represented using
+the same floating-point format [as
 numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding),
-so the range of representable integers in JavaScript is larger than that in
-Melange. When working with large numbers, it is better to use floats. For
-example, the bindings in `Js.Date` use floats.
+allowing for a larger range of representable integers in JavaScript compared to
+Melange. When dealing with large numbers, it is advisable to use floats instead.
+For instance, floats are used in bindings like `Js.Date`.
 
 The Melange standard library provides a [`Stdlib.Int` module](todo-fix-me.md).
 The bindings to work with JavaScript integers are in the
