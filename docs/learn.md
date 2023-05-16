@@ -1654,7 +1654,7 @@ var v = Path.join("a", 2);
 #### Bing to a polymorphic function
 
 Some JavaScript libraries will define functions where the arguments can
-vary on both type and shape.There are two approaches to bind to those, depending
+vary on both type and shape. There are two approaches to bind to those, depending
 on how dynamic they are.
 
 ##### Approach 1: Multiple external functions
