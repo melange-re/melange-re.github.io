@@ -658,7 +658,7 @@ type t = A of string | B of int
 (* B(2) -> { TAG: 1, _0: 2 } *)
 ```
 
-Polymorphic Variant:
+Polymorphic variants:
 
 ```ocaml
 let u = `Foo (* "Foo" *)
@@ -1653,9 +1653,9 @@ var v = Path.join("a", 2);
 
 #### Bing to a polymorphic function
 
-Some JavaScript libraries will define functions where the arguments can
-vary on both type and shape. There are two approaches to bind to those, depending
-on how dynamic they are.
+Some JavaScript libraries will define functions where the arguments can vary on
+both type and shape. There are two approaches to bind to those, depending on how
+dynamic they are.
 
 ##### Approach 1: Multiple external functions
 
@@ -1691,7 +1691,15 @@ function padLeft(value, padding) {
 }
 ```
 
-Here, `padding` can be modeled as a polymorphic variant.
+As the `padding` argument can be either a number or a string, we can use
+`bs.unwrap` to define it. It is important to note that `bs.unwrap` imposes
+certain requirements on the type it is applied to:
+
+- It needs to be a [polymorphic
+  variant](https://v2.ocaml.org/manual/polyvariant.html)
+- Its definition needs to be inlined
+- Each variant tag needs to have an argument
+- The variant type can not be opened (can’t use `>`)
 
 ```ocaml
 external padLeft:
