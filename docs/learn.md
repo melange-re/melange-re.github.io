@@ -1926,9 +1926,9 @@ external map : 'a array -> 'b array -> ('a -> 'b -> 'c) -> 'c array = "map"
 ```
 
 Unfortunately, this is not completely correct. The issue is in the callback
-function, with type `'a → 'b → 'c`. This means that `map` will expect a function
-like `add` described above. But as we said, in OCaml, having two arguments means
-just to have two functions that take one argument.
+function, with type `'a -> 'b -> 'c`. This means that `map` will expect a
+function like `add` described above. But as we said, in OCaml, having two
+arguments means just to have two functions that take one argument.
 
 Let’s rewrite `add` to make the problem a bit more clear:
 
@@ -1966,9 +1966,9 @@ external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
   [@@bs.val]
 ```
 
-Here `('a → 'b → 'c [@bs])` will be interpreted as having arity 2, in general,
-`'a0 → 'a1 …​ 'aN → 'b0 [@bs]` is the same as `'a0 → 'a1 …​ 'aN → 'b0` except
-the former’s arity is guaranteed to be N while the latter is unknown.
+Here `('a -> 'b -> 'c [@bs])` will be interpreted as having arity 2, in general,
+`'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]` is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`
+except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
