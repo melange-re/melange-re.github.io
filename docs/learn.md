@@ -1242,11 +1242,11 @@ var john = {
 var t = john.name;
 ```
 
-Note that object types allow for some flexibility —thanks to subtyping— that the
-record types do not have. For example, an object type can be coerced to another
-with fewer values or methods, while it is impossible to coerce a record type to
-another one with fewer fields. So different object types that share some methods
-can be mixed in a data structure where only their common methods are visible.
+Note that object types allow for some flexibility that the record types do not
+have. For example, an object type can be coerced to another with fewer values or
+methods, while it is impossible to coerce a record type to another one with
+fewer fields. So different object types that share some methods can be mixed in
+a data structure where only their common methods are visible.
 
 To give an example, one can create a function that operates in all the object
 types that include a field `name` that is of type string, e.g.:
@@ -1258,8 +1258,8 @@ let one = name_extended [%bs.obj { name = "john"; age = 99 }]
 let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
 ```
 
-To read more about objects, subtyping and polymorphism we recommend checking the
-[OCaml docs](https://ocaml.org/docs/objects) or the [OCaml
+To read more about objects and polymorphism we recommend checking the [OCaml
+docs](https://ocaml.org/docs/objects) or the [OCaml
 manual](https://v2.ocaml.org/manual/objectexamples.html).
 
 ##### Bind to object properties
