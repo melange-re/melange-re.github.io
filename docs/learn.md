@@ -1519,21 +1519,54 @@ external get_by_id : document -> string -> Dom.element = "getElementById"
 let el = get_by_id document "my-id"
 ```
 
+Generates:
+
 ```js
 var el = document.getElementById("my-id");
 ```
 
 When using `bs.send`, the first argument will be the object that holds the
-property with the function we want to call. 
+property with the function we want to call. This combines well with the pipe
+first operator `|.`, see the ["Chaining"](#chaining) section below.
+
+If we want to design our bindings to be used with OCaml pipe last operator `|>`,
+there is an alternate `bs.send.pipe` attribute. Let’s rewrite the example above
+using it:
+
+```ocaml
+(* Abstract type for the `document` global *)
+type document
+
+external document : document = "document" [@@bs.val]
+external get_by_id : string -> Dom.element = "getElementById"
+  [@@bs.send.pipe: document]
+
+let el = get_by_id "my-id" document
+```
+
+Generates the same code as `bs.send`:
+
+```js
+var el = document.getElementById("my-id");
+```
 
 ##### Chaining
 
 It is common to find this kind of API in JavaScript: `foo().bar().baz()`. This
-kind of API can be designed with Melange externals and the `bs.send` attribute,
-in combination with the [the pipe operator](todo-fix-me.md).
+kind of API can be designed with Melange externals. Depending on which
+convention we want to use, there are two attributes available:
 
-For example, we can write these bindings and `el` value definition, calculated
-using the pipe operator `|.`:
+- For a data-first convention, the `bs.send` attribute, in combination with [the
+  pipe first operator](todo-fix-me.md) `|.`
+- For a data-last convention, the `bs.send.pipe` attribute, in combination with
+  OCaml pipe last operator `|>`.
+
+For further details about the differences in the conventions and the trade-offs,
+one can refer to [this "Data-first and data-last" blog
+post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
+
+Let’s see first an example of chaining using data-first convention with the pipe
+first operator `|.`:
 
 ```ocaml
 (* Abstract type for the `document` global *)
@@ -1555,9 +1588,30 @@ Will generate:
 var el = document.getElementById("my-id").getElementsByClassName("my-class");
 ```
 
+Now with pipe last operator `|>`:
+
+```ocaml
+(* Abstract type for the `document` global *)
+type document
+
+external document : document = "document" [@@bs.val]
+external get_by_id : string -> Dom.element = "getElementById"
+  [@@bs.send.pipe: document]
+external get_by_classname : string -> Dom.element = "getElementsByClassName"
+  [@@bs.send.pipe: Dom.element]
+
+let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
+```
+
+Will generate the same JavaScript as the pipe first version:
+
+```javascript
+var el = document.getElementById("my-id").getElementsByClassName("my-class");
+```
+
 #### Variadic function arguments
 
-Sometimes JavaScript functions take an arbitrary amount of arguments. For this
+Sometimes JavaScript functions take an arbitrary amount of arguments. For these
 cases, Melange provides the `bs.variadic` attribute, which can be attached to
 the `external` declaration. However, there is one caveat: all the variadic
 arguments need to belong to the same type.
