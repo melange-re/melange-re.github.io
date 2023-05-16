@@ -2046,7 +2046,7 @@ nullable]` above. Currently 4 directives are supported: `null_to_opt`,
 <!-- When the return type is unit: the compiler will append its return value with an OCaml unit literal to make sure it does return unit. Its main purpose is to make the user consume FFI in idiomatic OCaml code, the cost is very very small and the compiler will do smart optimizations to remove it when the returned value is not used (mostly likely). -->
 
 `identity` will make sure that compiler will do nothing about the returned
-value. It is rarely used, but introduced here for debugging purpose.
+value. It is rarely used, but introduced here for debugging purposes.
 
 
 TODO:
