@@ -14,7 +14,7 @@ available.
 
 Instructions for installing opam on different operating systems can be found at
 the opam [install page](https://opam.ocaml.org/doc/Install.html), and you can
-find [a whole section about it](./learn#package-management) on this website.
+find [a whole section about it](package-management.md) on this website.
 
 ## Template
 

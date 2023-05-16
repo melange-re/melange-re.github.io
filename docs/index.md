@@ -10,14 +10,15 @@ ecosystems. To know more about it start by reading the [introductory
 tutorial](getting-started.md), then check the [Learn](learn.md) section for more
 information.
 
+<!-- Temporarily disabled in readthedocs mode
 <div class="text-center">
 <a href="getting-started" class="btn btn-primary" role="button">Getting Started</a>
 <a href="learn" class="btn btn-primary" role="button">Learn</a>
 </div>
+-->
 
 <div class="jumbotron">
 <h2 class="display-4 text-center">Features</h2>
-
 <div class="row">
   <div class="col-sm-6">
     <div class="card">
