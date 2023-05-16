@@ -1629,6 +1629,28 @@ var Path = require("path");
 var v = Path.join("a", "b");
 ```
 
+If more dynamism is needed, there is a way to inject elements with different
+types in the array and still have Melange compile to JavaScript values that are
+not wrapped using the OCaml
+[`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which is
+documented [in a section below](todo-fix-me.md):
+
+```ocaml
+type hide = Hide : 'a -> hide [@@unboxed]
+
+external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.splice]
+
+let v = join [| Hide "a"; Hide 2 |]
+```
+
+Compiles to:
+
+```javascript
+var Path = require("path");
+
+var v = Path.join("a", 2);
+```
+
 #### Bing to a polymorphic function
 
 Some JavaScript libraries will define functions that where the arguments can
