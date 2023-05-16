@@ -919,16 +919,18 @@ Used to annotate `external` definitions:
 - [`bs.obj`](#using-jst-objects): create JavaScript object
 - [`bs.return`](#wrapping-returned-nullable-values): automate conversion from
   nullable values to `Option.t` values
-- [`bs.send`](#calling-an-object-method): call a function that is a JavaScript
-  object property
+- [`bs.send`](#calling-an-object-method): call a JavaScript object method using
+  [pipe first](todo-fix-me.md) convention
+- [`bs.send.pipe`](#calling-an-object-method): call a JavaScript object method
+  using [pipe last](todo-fix-me.md) convention
 - [`bs.set`](#bind-to-object-properties): set JavaScript object properties
   statically by name, using the dot notation `.`
 - [`bs.set_index`](#bind-to-object-properties): set JavaScript object properties
   dynamically by using the bracket notation `[]`
 - [`bs.scope`](todo-fix-me.md): reach to deeper properties inside a JavaScript
   object
-- [`bs.val`](#bind-to-global-javascript-functions): bind to global JavaScript
-  functions
+- [`bs.val`](#bind-to-global-javascript-functions-or-values): bind to global
+  JavaScript functions or other values
 - [`bs.variadic`](#variadic-function-arguments): bind to a function taking
   variadic arguments from an array
 
@@ -1027,6 +1029,43 @@ to `bar`. In the following sections, if you ever fail to write an `external`,
 you can fall back to using this one. But try not to.
 
 Let’s now see all the ways to use JavaScript from Melange.
+
+#### Abstract Types
+
+In the examples below, you’ll encounter type definitions where a type is
+declared without being assigned to anything, such as:
+
+```ocaml
+type document
+```
+
+These types are referred to as "abstract types" and are commonly used together
+with external functions that define operations over values when communicating
+with JavaScript.
+
+Abstract types enable defining types for specific values originating from
+JavaScript while omitting unnecessary details. An illustration is the `document`
+type mentioned earlier, which has several
+[properties](https://developer.mozilla.org/en-US/docs/Web/API/Document). By
+using abstract types, one can focus solely on the required aspects of the
+`document` value that the Melange program requires, rather than defining all its
+properties. Consider the following example:
+
+```ocaml
+type document
+
+external document : document = "document" [@@bs.val]
+external set_title : document -> string -> unit = "title" [@@bs.set]
+```
+
+Subsequent sections delve into the details of the
+[`bs.val`](#bind-to-global-javascript-functions-or-values) and
+[`bs.set`](#bind-to-object-properties) attributes.
+
+For a comprehensive understanding of abstract types and their usefulness, refer
+to the "Encapsulation" section of the [OCaml Cornell
+textbook](https://cs3110.github.io/textbook/chapters/modules/encapsulation.html).
+
 
 ### Generate raw JavaScript
 
@@ -1358,7 +1397,7 @@ var Book = require("Book");
 var myBook = new Book();
 ```
 
-### Bind to global JavaScript functions
+### Bind to global JavaScript functions or values
 
 Binding to a JavaScript function makes use of `external`, like with objects. If
 we want to bind to a function available globally, Melange offers the `bs.val`
@@ -1485,13 +1524,7 @@ var el = document.getElementById("my-id");
 ```
 
 When using `bs.send`, the first argument will be the object that holds the
-property with the function we want to call. In the example above, we are binding
-to the JavaScript object `document` using an abstract type, a very useful
-technique for bindings but also in other use cases. The "Encapsulation" section
-[in the OCaml Cornell
-textbook](https://cs3110.github.io/textbook/chapters/modules/encapsulation.html)
-provides a great overview to understand what abstract types are and when they
-are useful.
+property with the function we want to call. 
 
 ##### Chaining
 
