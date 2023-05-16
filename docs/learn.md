@@ -2076,7 +2076,7 @@ external get_by_id : document -> string -> element option = "getElementById"
   [@@bs.send] [@@bs.return nullable]
 
 let test document =
-  let elem = document |. get_by_id "header" in
+  let elem = get_by_id document "header" in
   match elem with
   | None -> 1
   | Some _element -> 2
