@@ -202,6 +202,23 @@ _build/default/$path_to_melange_emit_stanza_directory/$target
 This allows to have two or more `melange.emit` stanzas in the same folder
 without conflicts or overrides between each other.
 
+#### Guidelines for `melange.emit`
+
+Here are some recommendations about the `melange.emit` stanza that can help with
+the maintenance and performance of Melange projects:
+
+- To simplify access to the generated JavaScript files from tools like Webpack,
+  it is recommended to place the `dune` files containing the `melange.emit`
+  stanzas in the project’s root folder. This arrangement ensures that the
+  generated JavaScript files are directly placed under the
+  `_build/default/$target` path.
+- To minimize the risk of inadvertent increases in bundle size, it is advisable
+  to reduce the number of `melange.emit` stanzas to a minimum, ideally just one.
+  Having multiple `melange.emit` stanzas may result in multiple copies of
+  JavaScript code generated from the same library. By consolidating the
+  `melange.emit` stanzas, you can mitigate this issue and ensure more efficient
+  bundle sizes.
+
 #### Using aliases
 
 The default `melange` alias is useful for prototyping or when working on small
