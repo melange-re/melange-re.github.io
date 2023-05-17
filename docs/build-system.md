@@ -124,8 +124,8 @@ quite convenient.
 
 #### Entry points with `melange.emit`
 
-Libraries are useful to encapsulate behavior and logical components of our
-application, but they won’t produce any JavaScript artifacts on their own.
+**Libraries are useful to encapsulate behavior and logical components of our
+application**, but they won’t produce any JavaScript artifacts on their own.
 
 To generate JavaScript code, we need to define an entry point of our
 application. In the root folder, create another `dune` file:
