@@ -43,9 +43,10 @@ developers. It provides several benefits, including:
 - Optimized for monorepos: no need for `npm link` or similar solutions.
 - Easy project maintenance, as one can rearrange folders without updating the
   paths to libraries.
-- Hygiene is maintained in Dune by never writing in source folders by default,
-  unless explicitly configured to do so. All the compilation artifacts are
-  placed in a separate `_build` folder.
+- Hygiene is maintained in Dune by building out of source: all compilation
+  artifacts are placed in a separate `_build` folder. Users can optionally [copy
+  them back to the source
+  tree](https://dune.readthedocs.io/en/latest/dune-files.html#promote).
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
