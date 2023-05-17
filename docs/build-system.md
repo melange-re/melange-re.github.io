@@ -27,7 +27,7 @@ template](https://github.com/melange-re/melange-opam-template). To create a
 repository based on this template, follow [this
 link](https://github.com/melange-re/melange-opam-template/generate).
 
-### Dune for Melange developers
+### How is Melange integrated into Dune?
 
 Dune is an OCaml build system that Melange projects can use to specify libraries
 and applications. It’s optimized for monorepos and makes project maintenance
