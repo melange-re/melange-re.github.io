@@ -578,12 +578,9 @@ generated JavaScript. Let’s look at an example:
 ```ocaml
 external node_env : string = "NODE_ENV" [@@bs.val] [@@bs.scope "process", "env"]
 
-(* This variable will be used in the comparison below. *)
 let development = "development"
 let () = if node_env <> development then Js.log "Only in Production"
 
-(* The value of this variable will be inlined in the final output. The variable
-   won't be present in the JavaScript output. *)
 let development_inline = "development" [@@bs.inline]
 let () = if node_env <> development_inline then Js.log "Only in Production"
 ```
