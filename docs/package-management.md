@@ -7,18 +7,16 @@ Melange can consume packages from both the npm registry and the opam repository.
   [npm](https://docs.npmjs.com/cli/) (or [any of its
   alternatives](https://npmtrends.com/@microsoft/rush-vs-bolt-vs-pnpm-vs-rush-vs-yarn)).
 
-This dual approach has some obvious downsides, such as forcing Melange
-applications to have both an `<app_name>.opam` and a `package.json` file.
-However, it unlocks the advantages of both ecosystems. As we will see below,
-opam has been designed for the OCaml language, which makes the developer
-experience fundamentally different from npm in the way it handles and installs
-dependencies.
+Integrating with opam provides Melange projects with a native toolchain. Opam
+has been designed for the OCaml language, and it enables Melange projects to
+have first-class access to [PPXs](https://ocaml.org/docs/metaprogramming),
+compiler libraries, editor integration software and other tools.
 
-In the following sections, we will go through the details of how to use opam to
-define the dependencies of our application, as well as how to publish packages
-in the public opam repository. However, this documentation is not exhaustive and
-only covers what we believe are the most important parts for Melange developers.
-If you want to learn more about opam, please refer to the [opam
+In the following sections, we explain in detail how to use opam to define the
+dependencies of our application, as well as how to publish packages in the
+public opam repository. However, this documentation is not exhaustive and only
+covers what we believe are the most important parts for Melange developers. If
+you want to learn more about opam, please refer to the [opam
 manual](https://opam.ocaml.org/doc/Manual.html) and [FAQ
 page](https://opam.ocaml.org/doc/FAQ.html).
 
