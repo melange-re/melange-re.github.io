@@ -268,19 +268,19 @@ projects, but larger projects might define multiple entry points or
 individual stanzas. To do so, one can define explicit aliases for each one of
 them by using the `alias` field.
 
-Let’s define a custom alias `app` for our `melange.emit` stanza:
+Let’s define a custom alias `my-app` for our `melange.emit` stanza:
 
 ```bash
 (melange.emit
  (target app)
- (alias app)
+ (alias my-app)
  (libraries lib))
 ```
 
-Now, when building with Dune, we can refer to this new alias:
+Now we can refer to this new alias:
 
 ```bash
-$ dune build @app
+$ dune build @my-app
 ```
 
 Note that if we try to build again using the default `melange` alias, Dune will
@@ -294,11 +294,10 @@ It is not defined in . or any of its descendants.
 
 #### Handling assets
 
-The last topic we will go through in this demo project is asset handling.
 Sometimes we want to use CSS files, fonts, or other assets in our Melange
 projects. Due to the way Dune works, our assets will have to be copied to the
-`_build` folder as well. To make this process as easy as possible, the Melange
-integration with Dune provides two ways to do this:
+`_build` folder and installed. To make this process as easy as possible, Dune
+provides a way to specify these dependencies, depending on the stanza:
 
 - For `library` stanzas, a field `melange.runtime_deps`
 - For `melange.emit` stanzas, a field `runtime_deps`
@@ -350,9 +349,11 @@ Jane
 ```
 
 The same approach could be used to copy fonts, CSS or SVG files, or any other
-asset in your project. Note that Dune offers great flexibility to copy runtime
-assets using wildcards or globs, so one can simplify the configuration when
-there are a lot of runtime dependencies, for example:
+asset in your project.
+
+Dune offers great flexibility to specify dependencies. Another interesting
+feature are globs, that allow to simplify the configuration when depending on
+multiple files. For example:
 
 ```bash
 (melange.runtime_deps
@@ -361,9 +362,9 @@ there are a lot of runtime dependencies, for example:
  (glob_files static/*.{pdf,txt}))
 ```
 
-See the documentation for [glob
-dependencies](https://dune.readthedocs.io/en/latest/concepts/dependency-spec.html#glob)
-to learn more about it.
+See the [dependency specification
+docs](https://dune.readthedocs.io/en/latest/concepts/dependency-spec.html) to
+learn more about it.
 
 With runtime dependencies, we have reached the end of this Dune guide for
 Melange developers. For further details about how Dune works and its integration
