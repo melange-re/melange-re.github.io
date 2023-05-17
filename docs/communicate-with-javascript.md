@@ -1322,9 +1322,6 @@ compile the first argument of the JavaScript function to the string `"exit"`.
 You can also use any JSON literal by passing a quoted string to `bs.as`: `bs.as
 {json|true|json}` or `bs.as {json|{"name": "John"}|json}`.
 
-Sometimes, passing a constant argument to an external function is not enough.
-If you need to inline constant values, check the [`bs.inline`](#bs-inline) attribute.
-
 ### Binding to callbacks
 
 In OCaml, all functions have arity 1. This means that if you define a function
