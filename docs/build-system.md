@@ -22,9 +22,10 @@ JavaScript project. It also facilitates the integration of Melange with
 JavaScript module bundlers such as [Webpack](https://webpack.js.org/), or [other
 alternatives](https://npmtrends.com/@vercel/ncc-vs-esbuild-vs-parcel-vs-rollup).
 
-The [Melange opam template](https://github.com/melange-re/melange-opam-template)
-can be used as reference, as it provides an example of how to integrate Melange
-with Webpack.
+As an example of integration with Webpack, you can refer to the [Melange opam
+template](https://github.com/melange-re/melange-opam-template). To create a
+repository based on this template, follow [this
+link](https://github.com/melange-re/melange-opam-template/generate).
 
 ### Dune for Melange developers
 
