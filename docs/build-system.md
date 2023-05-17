@@ -187,14 +187,60 @@ $ node _build/default/app/app.js
 Jane
 ```
 
-One thing to note is that we have to look for the `app.js` file inside an `app`
-folder, but we don’t have any such folder in our sources. This folder is the one
-declared in the `target` field of the `melange.emit` stanza, which Dune will use
-to know where to place the generated JavaScript artifacts. The path to these
-artifacts follows this schema:
+#### JavaScript artifacts layout
+
+One thing to note is that in the command above we had to look for the `app.js`
+file inside an `app` folder, but we don’t have any such folder in our sources.
+This folder is the one declared in the `target` field of the `melange.emit`
+stanza, which Dune will use to know where to place the generated JavaScript
+artifacts.
+
+As a more complex example, consider the following setup:
 
 ```bash
-_build/default/$path_to_melange_emit_stanza_directory/$target
+project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.ml
+└── emit
+    └── dune
+```
+
+With `emit/dune` being:
+
+```bash
+(melange.emit
+ (target app)
+ (libraries lib))
+```
+
+And `lib/dune`:
+
+```bash
+(library
+ (name lib)
+ (modes melange))
+```
+
+Then, the JavaScript artifacts for `foo.ml` will be placed under:
+
+```bash
+_build/default/emit/app/lib/foo.js
+```
+
+More generically:
+
+- For a `melange.emit` stanza defined in a `dune` file located in the relative
+  workspace path `$melange-emit-folder`
+- Which includes a `target` field named `$target`
+- And a source file called `$name.ml`, placed in the relative workspace path
+  `$path-to-source-file`
+
+The path to the generated JavaScript file from `$name.ml` will be:
+
+```bash
+_build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
 ```
 
 #### Guidelines for `melange.emit`
