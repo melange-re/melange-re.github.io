@@ -6,20 +6,18 @@ single project with both OCaml native executables and frontend applications that
 are built with Melange, and even share code between both platforms in an easy
 manner.
 
-The way Dune and Melange work with each other is as follows: Dune orchestrates
-and plans the work needed to compile a project, copies files when needed, and
-prepares everything so that Melange takes OCaml source files and convert them
-into JavaScript code.
+Dune orchestrates and plans the work needed to compile a project, copies files
+when needed, and prepares everything so that Melange takes OCaml source files
+and convert them into JavaScript code.
 
 Let’s now dive into the Melange compilation model and go through a brief guide
 on how to work with Dune in Melange projects.
 
 ### Compilation model
 
-Melange compiles a single source file (either `.ml` or `.re` for
-[Reason](https://reasonml.github.io/en/) syntax) to a single JavaScript module.
-This simplifies debugging the produced JavaScript code and allows to import
-assets like CSS files and fonts in the same way as one would do in a JavaScript
+Melange compiles a single source file to a single JavaScript module. This
+simplifies debugging the produced JavaScript code and allows to import assets
+like CSS files and fonts in the same way as one would do in a JavaScript
 project. Even if Melange does not handle the bundling of JavaScript code for web
 applications, its compilation model allows integration with tools such as
 [Webpack](https://webpack.js.org/), or [other
