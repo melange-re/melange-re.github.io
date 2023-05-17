@@ -240,8 +240,8 @@ dependencies, e.g. `opam install --deps-only --with-dev-setup`.
 
 ### Lock files
 
-Lock files are also not common yet in the opam world, but they can be used as
-follows:
+Lock files aren’t as used in the opam world as somewhere else, but they can be
+used as follows:
 
 - Using `opam lock` to generate the lock file when needed (basically after each
   `opam install` or `opam upgrade`).
