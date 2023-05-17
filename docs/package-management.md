@@ -1,6 +1,6 @@
 # Package management
 
-Melange uses a dual approach to package management:
+Melange can consume packages from both the npm registry and the opam repository.
 
 - For Melange libraries and bindings, use [opam](https://opam.ocaml.org/).
 - For JavaScript packages required by Melange bindings, use
