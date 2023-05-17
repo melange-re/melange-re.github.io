@@ -225,7 +225,7 @@ And `lib/dune`:
 
 Then, the JavaScript artifacts for `foo.ml` will be placed under:
 
-```bash
+```text
 _build/default/emit/app/lib/foo.js
 ```
 
@@ -233,13 +233,13 @@ More generically:
 
 - For a `melange.emit` stanza defined in a `dune` file located in the relative
   workspace path `$melange-emit-folder`
-- Which includes a `target` field named `$target`
-- And a source file called `$name.ml`, placed in the relative workspace path
+- Which includes a `target` field named `$target`, like `(target $target)`
+- For a source file called `$name.ml`, placed in the relative workspace path
   `$path-to-source-file`
 
 The path to the generated JavaScript file from `$name.ml` will be:
 
-```bash
+```text
 _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
 ```
 
