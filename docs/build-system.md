@@ -16,11 +16,10 @@ on how to work with Dune in Melange projects.
 ### Compilation model
 
 Melange compiles a single source file to a single JavaScript module. This
-simplifies debugging the produced JavaScript code and allows to import assets
-like CSS files and fonts in the same way as one would do in a JavaScript
-project. Even if Melange does not handle the bundling of JavaScript code for web
-applications, its compilation model allows integration with tools such as
-[Webpack](https://webpack.js.org/), or [other
+compilation model simplifies debugging the produced JavaScript code and allows
+to import assets like CSS files and fonts in the same way as one would do in a
+JavaScript project. It also facilitates the integration of Melange with
+JavaScript module bundlers such as [Webpack](https://webpack.js.org/), or [other
 alternatives](https://npmtrends.com/@vercel/ncc-vs-esbuild-vs-parcel-vs-rollup).
 
 The [Melange opam template](https://github.com/melange-re/melange-opam-template)
@@ -209,7 +208,7 @@ projects, but larger projects might define multiple entry points or
 individual stanzas. To do so, one can define explicit aliases for each one of
 them by using the `alias` field.
 
-Let’s define a custom alias `app` for our `melange.emit` stanza: 
+Let’s define a custom alias `app` for our `melange.emit` stanza:
 
 ```bash
 (melange.emit
@@ -311,4 +310,3 @@ Melange developers. For further details about how Dune works and its integration
 with Melange, check the [Dune documentation](https://dune.readthedocs.io/), and
 the [Melange opam
 template](https://github.com/melange-re/melange-opam-template).
-
