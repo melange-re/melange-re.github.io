@@ -59,10 +59,9 @@ developers. It provides several benefits, including:
 
 #### Creating a new project
 
-To understand how to use Dune, let’s create a small Melange application using
-it.
+To understand how to use Dune, let’s create a small Melange application.
 
-First of all, create an opam switch, like shown in the [package management
+First of all, create an opam switch, as shown in the [package management
 section](package-management.md):
 
 ```bash
@@ -85,8 +84,8 @@ our project configuration:
 ```
 
 The first line `(lang dune 3.8)` tells Dune which version of the "Dune language"
-(the language used in `dune` files) we want to use. Melange is only compatible
-with versions of the Dune language equal or greater than 3.8.
+(the language used in `dune` files) we want to use. Melange support in Dune is
+only available from version 3.8.
 
 The second line `(using melange 0.1)` tells Dune we want to use the [Melange
 extension of the Dune
@@ -117,10 +116,11 @@ All stanzas are well covered in the Dune documentation site, where we can find
 the reference for the [`library`
 stanza](https://dune.readthedocs.io/en/stable/dune-files.html#library).
 
-Dune is designed to minimize changes in configuration when the project folder
-structure changes, so one can move around the `lib` folder to another place
-inside the project, and all build commands will still keep working without any
-changes in Dune configuration. Very handy!
+Dune is designed to minimize the need for configuration changes when modifying
+the project folder structure. For example, you can move the `lib` folder to a
+different location within the project, and all build commands will continue to
+work without requiring any updates to any `dune` file. This feature proves to be
+quite convenient.
 
 #### Entry points with `melange.emit`
 
