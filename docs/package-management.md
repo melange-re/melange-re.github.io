@@ -206,7 +206,15 @@ documentation](https://opam.ocaml.org/doc/Usage.html#opam-pin).
 
 ### Upgrading packages
 
-To upgrade the installed packages to the latest version, run:
+There is one big difference compared to npm: opam stores a local copy of the
+opam repository, like `apt-get` does in Debian. So before doing any upgrades, we
+might want to update this copy before:
+
+```bash
+opam update
+```
+
+Then, to upgrade the installed packages to the latest version, run:
 
 ```bash
 opam upgrade <package_name>
@@ -214,14 +222,6 @@ opam upgrade <package_name>
 
 `opam upgrade` is also able to upgrade *all* the packages of the local switch if
 no package name is given.
-
-There is one big difference compared to npm: opam stores a local copy of the
-opam repository, like `apt-get` does in Debian. So we often want to update this
-copy before requesting an upgrade:
-
-```bash
-opam update && opam upgrade <package_name>
-```
 
 ### Dev dependencies
 
