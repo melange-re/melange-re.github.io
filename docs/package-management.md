@@ -252,8 +252,8 @@ used as follows:
 ### Bindings and package management
 
 When writing Melange libraries that bind to existing JavaScript packages, the
-users of the Melange library will have to make sure to install those JavaScript
-packages manually.
+users of the Melange library will have to make sure that those JavaScript
+packages are installed.
 
 This is similar to how OCaml bindings to system libraries work, see examples
 like
