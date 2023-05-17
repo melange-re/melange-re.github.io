@@ -188,11 +188,11 @@ Branch names can also be used.
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#feature
 ```
 
-A shortcut to get the latest version of a package is to use the `--dev-repo`
-flag, e.g.
+For packages that are already published in the opam repository, a shortcut to
+pin to the latest version is to use the `--dev-repo` flag, e.g.
 
 ```bash
-opam pin add reason-react.dev --dev-repo
+opam pin add melange.dev --dev-repo
 ```
 
 To remove the pinning for any package, use `opam unpin <package_name>` or `opam
