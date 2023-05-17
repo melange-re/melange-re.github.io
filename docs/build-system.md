@@ -142,10 +142,9 @@ And an `app.ml` file:
 let () = Js.log Lib.name
 ```
 
-The `melange.emit` stanza is the one that tells Dune to generate JavaScript
-files from a set of libraries and modules. In-depth documentation about this
-stanza can be found on the [Dune
-docs](https://dune.readthedocs.io/en/latest/melange.html).
+The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
+libraries and modules. In-depth documentation about this stanza can be found in
+the [Dune docs](https://dune.readthedocs.io/en/latest/melange.html).
 
 The file structure of the app should look something like this:
 
@@ -157,7 +156,7 @@ project_name/
 │   └── lib.ml
 ├── dune-project
 ├── dune
-└── main.ml
+└── app.ml
 ```
 
 #### Building the project
@@ -179,7 +178,7 @@ depends on are attached to the `melange` alias. We can define explicit aliases
 though, as we will see below.
 
 If everything went well, we should be able to run the resulting JavaScript with
-Node. As we mentioned while going through its features, Dune places all
+Node.js. As we mentioned above while going through its features, Dune places all
 artifacts inside the `_build` folder to not pollute any source folders. So we
 will point Node to the script placed in that folder, to see the expected output:
 
@@ -189,18 +188,14 @@ Jane
 ```
 
 One thing to note is that we have to look for the `app.js` file inside an `app`
-folder, but we don’t have any such folder in our sources. The reason why this
-folder is created is to support multiple `melange.emit` stanzas in the same
-folder. To support this scenario, Dune will use the `target` field defined in
-the `melange.emit` to place the artifacts generated from a `melange.emit` stanza
-in the following folder:
+folder, but we don’t have any such folder in our sources. This folder is the one
+declared in the `target` field of the `melange.emit` stanza, which Dune will use
+to know where to place the generated JavaScript artifacts. The path to these
+artifacts follows this schema:
 
 ```bash
 _build/default/$path_to_melange_emit_stanza_directory/$target
 ```
-
-This allows to have two or more `melange.emit` stanzas in the same folder
-without conflicts or overrides between each other.
 
 #### Guidelines for `melange.emit`
 
