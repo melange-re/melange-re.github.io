@@ -27,9 +27,9 @@ differences between opam and npm that are worth mentioning.
 
 **1. One version of each package**
 
-At any given time, any opam switch can only *at most* a single version of a
-package. This is known as a flat dependency graph, and some package managers in
-other languages (like [Bower](https://bower.io/)) follow a similar approach.
+At any given time, any opam switch can only install *at most* a single version
+of a package. This is known as a flat dependency graph, and some package
+managers (like [Bower](https://bower.io/)) follow a similar approach.
 
 A flat dependency graph means that, for example, it is impossible to have two
 versions of [`reason-react`](https://github.com/reasonml/reason-react/)
@@ -50,23 +50,18 @@ dependency.
 
 opam distributes just the source code of the packages and leaves the compilation
 step to a build phase that runs when consuming them, after they have been
-fetched. As the package manager for a compiled language like OCaml, opam has
+fetched. As a package manager for a compiled language like OCaml, opam has
 first-class support for this build step. Every package must tell opam how it
 should be built, and the way to do this is by using the [`build`
 field](https://opam.ocaml.org/doc/Manual.html#opamfield-build) in the package
-`.opam` file.
+`.opam` file. This is different than how npm is used: most published packages in
+the npm registry don’t rely on a build step.
 
-This is different from how npm handles packages. Because npm has been designed
-for JavaScript (an interpreted language) having a build step makes no sense.
-Whenever any project or community tries to use npm to distribute software that
-includes code written in compiled languages, the burden to distribute pre-built
-binaries is imposed on library authors, like [the node-sass
-example](https://github.com/sass/node-sass/issues/1589) shows.
-
-As Melange relies heavily on OCaml packages for the compilation step (either
-PPXs, linters, instrumentation, or any other build-time package), using opam
-provides access to these tools without library authors having to care about
-creating and distributing pre-built versions of their packages.
+As Melange relies on OCaml packages for the compilation step (either PPXs,
+linters, instrumentation, or any other build-time package), it’s integrated with
+the native toolchain that OCaml programmers are familiar with, which relieves
+library authors of the burden of creating and distributing pre-built versions of
+their packages.
 
 ---
 
