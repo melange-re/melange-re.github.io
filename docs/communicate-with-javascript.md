@@ -339,8 +339,8 @@ These attributes are used to annotate arguments in `external` definitions:
   (automated)
 - [`bs.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant values
 
-These attributes are used in places like records, fields, parameters,
-functions, and more:
+These attributes are used in places like records, fields, parameters, functions,
+and more:
 
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
@@ -798,20 +798,34 @@ we want to bind to a function available globally, Melange offers the `bs.val`
 attribute:
 
 ```ocaml
-external imul : int -> int -> int = "Math.imul" [@@bs.val]
-let res = imul 1 2
+(* Abstract type for `timeoutId` *)
+type timeoutId
+external setTimeout : (unit -> unit) -> int -> timeoutId = "setTimeout"
+  [@@bs.val]
+external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+
+let id = setTimeout (fun () -> Js.log "hello") 100
+let () = clearTimeout id
 ```
+
+> **_NOTE:_** The bindings to `setTimeout` and `clearTimeout` are shown here for
+> learning purposes, but they are already available in the
+> [`Js.Global`](todo-fix-me.md) module.
 
 Generates:
 
 ```javascript
-var res = Math.imul(1, 2);
+var id = setTimeout(function (param) {
+  console.log("hello");
+}, 100);
+
+clearTimeout(id);
 ```
 
-Or for `document`:
+Global bindings can also be applied to values:
 
 ```ocaml
-(* Abstract type for the `document` value *)
+(* Abstract type for `document` *)
 type document
 
 external document : document = "document" [@@bs.val]
