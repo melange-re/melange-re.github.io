@@ -339,8 +339,8 @@ These attributes are used to annotate arguments in `external` definitions:
   (automated)
 - [`bs.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant values
 
-These attributes are used in other places like records, fields, parameters,
-functions...:
+These attributes are used in places like records, fields, parameters,
+functions, and more:
 
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
