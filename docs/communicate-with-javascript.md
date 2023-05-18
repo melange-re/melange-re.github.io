@@ -320,8 +320,8 @@ These attributes are used to annotate `external` definitions:
   statically by name, using the dot notation `.`
 - [`bs.set_index`](#bind-to-object-properties): set JavaScript object properties
   dynamically by using the bracket notation `[]`
-- [`bs.scope`](todo-fix-me.md): reach to deeper properties inside a JavaScript
-  object
+- [`bs.scope`](#binding-to-properties-inside-a-module-or-global): reach to
+  deeper properties inside a JavaScript object
 - [`bs.val`](#bind-to-global-javascript-functions-or-values): bind to global
   JavaScript functions or other values
 - [`bs.variadic`](#variadic-function-arguments): bind to a function taking
@@ -339,7 +339,8 @@ These attributes are used to annotate arguments in `external` definitions:
   (automated)
 - [`bs.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant values
 
-These attributes are used in other places like records, fields, parameters, functions...:
+These attributes are used in places like records, fields, parameters, functions,
+and more:
 
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
@@ -852,16 +853,44 @@ we want to bind to a function available globally, Melange offers the `bs.val`
 attribute:
 
 ```ocaml
-external imul : int -> int -> int = "Math.imul" [@@bs.val]
+(* Abstract type for `timeoutId` *)
+type timeoutId
+external setTimeout : (unit -> unit) -> int -> timeoutId = "setTimeout"
+  [@@bs.val]
+external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+
+let id = setTimeout (fun () -> Js.log "hello") 100
+let () = clearTimeout id
 ```
 
-Or for `document`:
+> **_NOTE:_** The bindings to `setTimeout` and `clearTimeout` are shown here for
+> learning purposes, but they are already available in the
+> [`Js.Global`](todo-fix-me.md) module.
+
+Generates:
+
+```javascript
+var id = setTimeout(function (param) {
+  console.log("hello");
+}, 100);
+
+clearTimeout(id);
+```
+
+Global bindings can also be applied to values:
 
 ```ocaml
-(* Abstract type for the `document` value *)
+(* Abstract type for `document` *)
 type document
 
 external document : document = "document" [@@bs.val]
+let document = document
+```
+
+Which generates:
+
+```javascript
+var doc = document;
 ```
 
 ### Using functions from other JavaScript modules
@@ -879,6 +908,91 @@ Generates:
 ```js
 var Path = require("path");
 var root = Path.dirname("/User/github");
+```
+
+### Binding to properties inside a module or global
+
+For cases when we need to create bindings for a property within a module or a
+global JavaScript object, Melange provides the `bs.scope` attribute.
+
+For example, if we want to write some bindings for a specific property
+`commands` from [the `vscode`
+package](https://code.visualstudio.com/api/references/vscode-api#commands), we
+can do:
+
+```ocaml
+type param
+external executeCommands : string -> param array -> unit = ""
+  [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.splice]
+
+let f a b c = executeCommands "hi" [| a; b; c |]
+```
+
+Which compiles to:
+
+```javascript
+var Vscode = require("vscode");
+
+function f(a, b, c) {
+  Vscode.commands.executeCommands("hi", a, b, c);
+}
+```
+
+The `bs.scope` attribute can take multiple arguments as payload, in case we want
+to reach deeper into the object from the module we are importing.
+
+For example:
+
+```ocaml
+type t
+
+external back : t = "back"
+  [@@bs.module "expo-camera"] [@@bs.scope "Camera", "Constants", "Type"]
+
+let camera_type_back = back
+```
+
+Which generates:
+
+```javascript
+var ExpoCamera = require("expo-camera");
+
+var camera_type_back = ExpoCamera.Camera.Constants.Type.back;
+```
+
+It can also be used in combination with other attributes besides `bs.module`,
+like `bs.val`:
+
+```ocaml
+external imul : int -> int -> int = "imul" [@@bs.val] [@@bs.scope "Math"]
+
+let res = imul 1 2
+```
+
+Which produces:
+
+```javascript
+var res = Math.imul(1, 2);
+```
+
+Or it can be used together with `bs.new`:
+
+```ocaml
+type t
+
+external create : unit -> t = "GUI"
+  [@@bs.new] [@@bs.scope "default"] [@@bs.module "dat.gui"]
+
+let gui = create ()
+```
+
+Which generates:
+
+
+```javascript
+var DatGui = require("dat.gui");
+
+var gui = new (DatGui.default.GUI)();
 ```
 
 ### Labeled arguments
