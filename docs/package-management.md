@@ -1,24 +1,25 @@
 # Package management
 
-Melange uses a dual approach to package management:
+Melange can consume packages from both the [npm
+registry](https://www.npmjs.com/) and the [opam
+repository](https://opam.ocaml.org/packages/).
 
-- For Melange libraries and bindings, use [opam](https://opam.ocaml.org/).
-- For JavaScript packages required by Melange bindings, use
-  [npm](https://docs.npmjs.com/cli/) (or [any of its
+- For Melange libraries and bindings (compile-time dependencies), use
+  [opam](https://opam.ocaml.org/).
+- For JavaScript packages required by Melange bindings (runtime dependencies),
+  use [npm](https://docs.npmjs.com/cli/) (or [any of its
   alternatives](https://npmtrends.com/@microsoft/rush-vs-bolt-vs-pnpm-vs-rush-vs-yarn)).
 
-This dual approach has some obvious downsides, such as forcing Melange
-applications to have both an `<app_name>.opam` and a `package.json` file.
-However, it unlocks the advantages of both ecosystems. As we will see below,
-opam has been designed for the OCaml language, which makes the developer
-experience fundamentally different from npm in the way it handles and installs
-dependencies.
+Integrating with opam provides Melange projects with a native toolchain. Opam
+has been designed for the OCaml language, and it enables Melange projects to
+have first-class access to [PPXs](https://ocaml.org/docs/metaprogramming),
+compiler libraries, editor integration software and other tools.
 
-In the following sections, we will go through the details of how to use opam to
-define the dependencies of our application, as well as how to publish packages
-in the public opam repository. However, this documentation is not exhaustive and
-only covers what we believe are the most important parts for Melange developers.
-If you want to learn more about opam, please refer to the [opam
+In the following sections, we explain in detail how to use opam to define the
+dependencies of our application, as well as how to publish packages in the
+public opam repository. However, this documentation is not exhaustive and only
+covers what we believe are the most important parts for Melange developers. If
+you want to learn more about opam, please refer to the [opam
 manual](https://opam.ocaml.org/doc/Manual.html) and [FAQ
 page](https://opam.ocaml.org/doc/FAQ.html).
 
@@ -29,9 +30,9 @@ differences between opam and npm that are worth mentioning.
 
 **1. One version of each package**
 
-At any given time, any opam switch can only *at most* a single version of a
-package. This is known as a flat dependency graph, and some package managers in
-other languages (like [Bower](https://bower.io/)) follow a similar approach.
+At any given time, any opam switch can only install *at most* a single version
+of a package. This is known as a flat dependency graph, and some package
+managers (like [Bower](https://bower.io/)) follow a similar approach.
 
 A flat dependency graph means that, for example, it is impossible to have two
 versions of [`reason-react`](https://github.com/reasonml/reason-react/)
@@ -52,23 +53,18 @@ dependency.
 
 opam distributes just the source code of the packages and leaves the compilation
 step to a build phase that runs when consuming them, after they have been
-fetched. As the package manager for a compiled language like OCaml, opam has
+fetched. As a package manager for a compiled language like OCaml, opam has
 first-class support for this build step. Every package must tell opam how it
 should be built, and the way to do this is by using the [`build`
 field](https://opam.ocaml.org/doc/Manual.html#opamfield-build) in the package
-`.opam` file.
+`.opam` file. This is different than how npm is used: most published packages in
+the npm registry don’t rely on a build step.
 
-This is different from how npm handles packages. Because npm has been designed
-for JavaScript (an interpreted language) having a build step makes no sense.
-Whenever any project or community tries to use npm to distribute software that
-includes code written in compiled languages, the burden to distribute pre-built
-binaries is imposed on library authors, like [the node-sass
-example](https://github.com/sass/node-sass/issues/1589) shows.
-
-As Melange relies heavily on OCaml packages for the compilation step (either
-PPXs, linters, instrumentation, or any other build-time package), using opam
-provides access to these tools without library authors having to care about
-creating and distributing pre-built versions of their packages.
+As Melange relies on OCaml packages for the compilation step (either PPXs,
+linters, instrumentation, or any other build-time package), it’s integrated with
+the native toolchain that OCaml programmers are familiar with, which relieves
+library authors of the burden of creating and distributing pre-built versions of
+their packages.
 
 ---
 
@@ -195,11 +191,11 @@ Branch names can also be used.
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#feature
 ```
 
-A shortcut to get the latest version of a package is to use the `--dev-repo`
-flag, e.g.
+For packages that are already published in the opam repository, a shortcut to
+pin to the latest version is to use the `--dev-repo` flag, e.g.
 
 ```bash
-opam pin add reason-react.dev --dev-repo
+opam pin add melange.dev --dev-repo
 ```
 
 To remove the pinning for any package, use `opam unpin <package_name>` or `opam
@@ -210,7 +206,15 @@ documentation](https://opam.ocaml.org/doc/Usage.html#opam-pin).
 
 ### Upgrading packages
 
-To upgrade the installed packages to the latest version, run:
+There is one big difference compared to npm: opam stores a local copy of the
+opam repository, like `apt-get` does in Debian. So before doing any upgrades, we
+might want to update this copy before:
+
+```bash
+opam update
+```
+
+Then, to upgrade the installed packages to the latest version, run:
 
 ```bash
 opam upgrade <package_name>
@@ -218,14 +222,6 @@ opam upgrade <package_name>
 
 `opam upgrade` is also able to upgrade *all* the packages of the local switch if
 no package name is given.
-
-There is one big difference compared to npm: opam stores a local copy of the
-opam repository, like `apt-get` does in Debian. So we often want to update this
-copy before requesting an upgrade:
-
-```bash
-opam update && opam upgrade <package_name>
-```
 
 ### Dev dependencies
 
@@ -244,8 +240,8 @@ dependencies, e.g. `opam install --deps-only --with-dev-setup`.
 
 ### Lock files
 
-Lock files are also not common yet in the opam world, but they can be used as
-follows:
+Lock files aren’t as used in the opam world as somewhere else, but they can be
+used as follows:
 
 - Using `opam lock` to generate the lock file when needed (basically after each
   `opam install` or `opam upgrade`).
@@ -256,8 +252,8 @@ follows:
 ### Bindings and package management
 
 When writing Melange libraries that bind to existing JavaScript packages, the
-users of the Melange library will have to make sure to install those JavaScript
-packages manually.
+users of the Melange library will have to make sure that those JavaScript
+packages are installed.
 
 This is similar to how OCaml bindings to system libraries work, see examples
 like
