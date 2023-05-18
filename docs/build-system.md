@@ -6,30 +6,28 @@ single project with both OCaml native executables and frontend applications that
 are built with Melange, and even share code between both platforms in an easy
 manner.
 
-The way Dune and Melange work with each other is as follows: Dune orchestrates
-and plans the work needed to compile a project, copies files when needed, and
-prepares everything so that Melange takes OCaml source files and convert them
-into JavaScript code.
+Dune orchestrates and plans the work needed to compile a project, copies files
+when needed, and prepares everything so that Melange takes OCaml source files
+and convert them into JavaScript code.
 
 Let’s now dive into the Melange compilation model and go through a brief guide
 on how to work with Dune in Melange projects.
 
 ### Compilation model
 
-Melange compiles a single source file (either `.ml` or `.re` for
-[Reason](https://reasonml.github.io/en/) syntax) to a single JavaScript module.
-This simplifies debugging the produced JavaScript code and allows to import
-assets like CSS files and fonts in the same way as one would do in a JavaScript
-project. Even if Melange does not handle the bundling of JavaScript code for web
-applications, its compilation model allows integration with tools such as
-[Webpack](https://webpack.js.org/), or [other
+Melange compiles a single source file to a single JavaScript module. This
+compilation model simplifies debugging the produced JavaScript code and allows
+to import assets like CSS files and fonts in the same way as one would do in a
+JavaScript project. It also facilitates the integration of Melange with
+JavaScript module bundlers such as [Webpack](https://webpack.js.org/), or [other
 alternatives](https://npmtrends.com/@vercel/ncc-vs-esbuild-vs-parcel-vs-rollup).
 
-The [Melange opam template](https://github.com/melange-re/melange-opam-template)
-can be used as reference, as it provides an example of how to integrate Melange
-with Webpack.
+As an example of integration with Webpack, you can refer to the [Melange opam
+template](https://github.com/melange-re/melange-opam-template). To create a
+repository based on this template, follow [this
+link](https://github.com/melange-re/melange-opam-template/generate).
 
-### Dune for Melange developers
+### How is Melange integrated into Dune?
 
 Dune is an OCaml build system that Melange projects can use to specify libraries
 and applications. It’s optimized for monorepos and makes project maintenance
@@ -45,9 +43,10 @@ developers. It provides several benefits, including:
 - Optimized for monorepos: no need for `npm link` or similar solutions.
 - Easy project maintenance, as one can rearrange folders without updating the
   paths to libraries.
-- Hygiene is maintained in Dune by never writing in source folders by default,
-  unless explicitly configured to do so. All the compilation artifacts are
-  placed in a separate `_build` folder.
+- Hygiene is maintained in Dune by building out of source: all compilation
+  artifacts are placed in a separate `_build` folder. Users can optionally [copy
+  them back to the source
+  tree](https://dune.readthedocs.io/en/latest/dune-files.html#promote).
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
@@ -60,10 +59,9 @@ developers. It provides several benefits, including:
 
 #### Creating a new project
 
-To understand how to use Dune, let’s create a small Melange application using
-it.
+To understand how to use Dune, let’s create a small Melange application.
 
-First of all, create an opam switch, like shown in the [package management
+First of all, create an opam switch, as shown in the [package management
 section](package-management.md):
 
 ```bash
@@ -86,8 +84,8 @@ our project configuration:
 ```
 
 The first line `(lang dune 3.8)` tells Dune which version of the "Dune language"
-(the language used in `dune` files) we want to use. Melange is only compatible
-with versions of the Dune language equal or greater than 3.8.
+(the language used in `dune` files) we want to use. Melange support in Dune is
+only available from version 3.8.
 
 The second line `(using melange 0.1)` tells Dune we want to use the [Melange
 extension of the Dune
@@ -118,15 +116,16 @@ All stanzas are well covered in the Dune documentation site, where we can find
 the reference for the [`library`
 stanza](https://dune.readthedocs.io/en/stable/dune-files.html#library).
 
-Dune is designed to minimize changes in configuration when the project folder
-structure changes, so one can move around the `lib` folder to another place
-inside the project, and all build commands will still keep working without any
-changes in Dune configuration. Very handy!
+Dune is designed to minimize the need for configuration changes when modifying
+the project folder structure. For example, you can move the `lib` folder to a
+different location within the project, and all build commands will continue to
+work without requiring any updates to any `dune` file. This feature proves to be
+quite convenient.
 
 #### Entry points with `melange.emit`
 
-Libraries are useful to encapsulate behavior and logical components of our
-application, but they won’t produce any JavaScript artifacts on their own.
+**Libraries are useful to encapsulate behavior and logical components of our
+application**, but they won’t produce any JavaScript artifacts on their own.
 
 To generate JavaScript code, we need to define an entry point of our
 application. In the root folder, create another `dune` file:
@@ -143,10 +142,9 @@ And an `app.ml` file:
 let () = Js.log Lib.name
 ```
 
-The `melange.emit` stanza is the one that tells Dune to generate JavaScript
-files from a set of libraries and modules. In-depth documentation about this
-stanza can be found on the [Dune
-docs](https://dune.readthedocs.io/en/latest/melange.html).
+The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
+libraries and modules. In-depth documentation about this stanza can be found in
+the [Dune docs](https://dune.readthedocs.io/en/latest/melange.html).
 
 The file structure of the app should look something like this:
 
@@ -158,7 +156,7 @@ project_name/
 │   └── lib.ml
 ├── dune-project
 ├── dune
-└── main.ml
+└── app.ml
 ```
 
 #### Building the project
@@ -180,7 +178,7 @@ depends on are attached to the `melange` alias. We can define explicit aliases
 though, as we will see below.
 
 If everything went well, we should be able to run the resulting JavaScript with
-Node. As we mentioned while going through its features, Dune places all
+Node.js. As we mentioned above while going through its features, Dune places all
 artifacts inside the `_build` folder to not pollute any source folders. So we
 will point Node to the script placed in that folder, to see the expected output:
 
@@ -189,19 +187,77 @@ $ node _build/default/app/app.js
 Jane
 ```
 
-One thing to note is that we have to look for the `app.js` file inside an `app`
-folder, but we don’t have any such folder in our sources. The reason why this
-folder is created is to support multiple `melange.emit` stanzas in the same
-folder. To support this scenario, Dune will use the `target` field defined in
-the `melange.emit` to place the artifacts generated from a `melange.emit` stanza
-in the following folder:
+#### JavaScript artifacts layout
+
+In the command above we had to look for the `app.js` file inside an `app`
+folder, but we don’t have any such folder in our sources. This folder is the one
+declared in the `target` field of the `melange.emit` stanza, which Dune will use
+to know where to place the generated JavaScript artifacts.
+
+As a more complex example, consider the following setup:
 
 ```bash
-_build/default/$path_to_melange_emit_stanza_directory/$target
+project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.ml
+└── emit
+    └── dune
 ```
 
-This allows to have two or more `melange.emit` stanzas in the same folder
-without conflicts or overrides between each other.
+With `emit/dune` being:
+
+```bash
+(melange.emit
+ (target app)
+ (libraries lib))
+```
+
+And `lib/dune`:
+
+```bash
+(library
+ (name lib)
+ (modes melange))
+```
+
+Then, the JavaScript artifacts for `foo.ml` will be placed under:
+
+```text
+_build/default/emit/app/lib/foo.js
+```
+
+More generically:
+
+- For a `melange.emit` stanza defined in a `dune` file located in the relative
+  workspace path `$melange-emit-folder`
+- Which includes a `target` field named `$target`, like `(target $target)`
+- For a source file called `$name.ml`, placed in the relative workspace path
+  `$path-to-source-file`
+
+The path to the generated JavaScript file from `$name.ml` will be:
+
+```text
+_build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
+```
+
+#### Guidelines for `melange.emit`
+
+The following recommendations around `melange.emit` have been tested within
+large industrial projects, and have proven to be helpful guidelines to deal with
+complexity, maintenance and build performance.
+
+- To simplify access to the generated JavaScript files from tools like Webpack,
+  it is recommended to place the `dune` files containing the `melange.emit`
+  stanzas in the project’s root folder. This ensures that the generated
+  JavaScript files are directly placed under the `_build/default/$target` path.
+- To minimize the risk of inadvertent increases in bundle size, it is advisable
+  to reduce the number of `melange.emit` stanzas to a minimum, ideally just one.
+  Having multiple `melange.emit` stanzas may result in multiple copies of
+  JavaScript code generated from the same library. By consolidating the
+  `melange.emit` stanzas, you can mitigate this issue and ensure more efficient
+  bundle sizes.
 
 #### Using aliases
 
@@ -211,19 +267,19 @@ projects, but larger projects might define multiple entry points or
 individual stanzas. To do so, one can define explicit aliases for each one of
 them by using the `alias` field.
 
-Let’s define a custom alias `app` for our `melange.emit` stanza: 
+Let’s define a custom alias `my-app` for our `melange.emit` stanza:
 
 ```bash
 (melange.emit
  (target app)
- (alias app)
+ (alias my-app)
  (libraries lib))
 ```
 
-Now, when building with Dune, we can refer to this new alias:
+Now we can refer to this new alias:
 
 ```bash
-$ dune build @app
+$ dune build @my-app
 ```
 
 Note that if we try to build again using the default `melange` alias, Dune will
@@ -237,11 +293,10 @@ It is not defined in . or any of its descendants.
 
 #### Handling assets
 
-The last topic we will go through in this demo project is asset handling.
 Sometimes we want to use CSS files, fonts, or other assets in our Melange
 projects. Due to the way Dune works, our assets will have to be copied to the
-`_build` folder as well. To make this process as easy as possible, the Melange
-integration with Dune provides two ways to do this:
+`_build` folder and installed. To make this process as easy as possible, Dune
+provides a way to specify these dependencies, depending on the stanza:
 
 - For `library` stanzas, a field `melange.runtime_deps`
 - For `melange.emit` stanzas, a field `runtime_deps`
@@ -293,9 +348,11 @@ Jane
 ```
 
 The same approach could be used to copy fonts, CSS or SVG files, or any other
-asset in your project. Note that Dune offers great flexibility to copy runtime
-assets using wildcards or globs, so one can simplify the configuration when
-there are a lot of runtime dependencies, for example:
+asset in your project.
+
+Dune offers great flexibility to specify dependencies. Another interesting
+feature are globs, that allow to simplify the configuration when depending on
+multiple files. For example:
 
 ```bash
 (melange.runtime_deps
@@ -304,13 +361,12 @@ there are a lot of runtime dependencies, for example:
  (glob_files static/*.{pdf,txt}))
 ```
 
-See the documentation for [glob
-dependencies](https://dune.readthedocs.io/en/latest/concepts/dependency-spec.html#glob)
-to learn more about it.
+See the [dependency specification
+docs](https://dune.readthedocs.io/en/latest/concepts/dependency-spec.html) to
+learn more about it.
 
 With runtime dependencies, we have reached the end of this Dune guide for
 Melange developers. For further details about how Dune works and its integration
 with Melange, check the [Dune documentation](https://dune.readthedocs.io/), and
 the [Melange opam
 template](https://github.com/melange-re/melange-opam-template).
-
