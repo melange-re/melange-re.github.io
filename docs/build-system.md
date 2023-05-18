@@ -189,11 +189,10 @@ Jane
 
 #### JavaScript artifacts layout
 
-One thing to note is that in the command above we had to look for the `app.js`
-file inside an `app` folder, but we don’t have any such folder in our sources.
-This folder is the one declared in the `target` field of the `melange.emit`
-stanza, which Dune will use to know where to place the generated JavaScript
-artifacts.
+In the command above we had to look for the `app.js` file inside an `app`
+folder, but we don’t have any such folder in our sources. This folder is the one
+declared in the `target` field of the `melange.emit` stanza, which Dune will use
+to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
@@ -251,9 +250,8 @@ complexity, maintenance and build performance.
 
 - To simplify access to the generated JavaScript files from tools like Webpack,
   it is recommended to place the `dune` files containing the `melange.emit`
-  stanzas in the project’s root folder. This ensures that the
-  generated JavaScript files are directly placed under the
-  `_build/default/$target` path.
+  stanzas in the project’s root folder. This ensures that the generated
+  JavaScript files are directly placed under the `_build/default/$target` path.
 - To minimize the risk of inadvertent increases in bundle size, it is advisable
   to reduce the number of `melange.emit` stanzas to a minimum, ideally just one.
   Having multiple `melange.emit` stanzas may result in multiple copies of
