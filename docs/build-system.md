@@ -245,12 +245,13 @@ _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
 
 #### Guidelines for `melange.emit`
 
-Here are some recommendations about the `melange.emit` stanza that can help with
-the maintenance and performance of Melange projects:
+The following recommendations around `melange.emit` have been tested within
+large industrial projects, and have proven to be helpful guidelines to deal with
+complexity, maintenance and build performance.
 
 - To simplify access to the generated JavaScript files from tools like Webpack,
   it is recommended to place the `dune` files containing the `melange.emit`
-  stanzas in the project’s root folder. This arrangement ensures that the
+  stanzas in the project’s root folder. This ensures that the
   generated JavaScript files are directly placed under the
   `_build/default/$target` path.
 - To minimize the risk of inadvertent increases in bundle size, it is advisable
