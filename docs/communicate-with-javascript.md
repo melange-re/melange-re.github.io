@@ -1779,8 +1779,8 @@ val actionFromJs : int -> action option
 ```
 
 `actionToJs` returns integers from values of `action` type. It will start with 0
-for `Click`, 3 for `Submit` (because it was annotated with `bs.as`), and then
-4 for `Cancel`, in the same way that we described when [using `bs.int` with
+for `Click`, 3 for `Submit` (because it was annotated with `bs.as`), and then 4
+for `Cancel`, in the same way that we described when [using `bs.int` with
 polymorphic variants](#using-polymorphic-variants-to-bind-to-enums).
 
 `actionFromJs` returns a value of type `option`, because not every integer can
@@ -1819,9 +1819,9 @@ The `@bs.deriving jsConverter` attribute is applicable to polymorphic variants
 as well.
 
 > **_NOTE:_** Similarly to variants, the `@bs.deriving jsConverter` attribute
-> cannot be used when the polymorphic variant tags have payloads. Refer to
-> the [section on runtime representation](#data-types-and-runtime-representation)
-> to learn more about how polymorphic variants are represented in JavaScript.
+> cannot be used when the polymorphic variant tags have payloads. Refer to the
+> [section on runtime representation](#data-types-and-runtime-representation) to
+> learn more about how polymorphic variants are represented in JavaScript.
 
 Let’s see an example:
 
@@ -1834,8 +1834,7 @@ type action =
 [@@bs.deriving jsConverter]
 ```
 
-Akin to the variant example, the following two functions will be
-generated:
+Akin to the variant example, the following two functions will be generated:
 
 ```ocaml
 val actionToJs : action -> int
@@ -1843,15 +1842,15 @@ val actionToJs : action -> int
 val actionFromJs : int -> action option
 ```
 
-The `{ jsConverter = newType }` payload can also be used with
-polymorphic variants.
+The `{ jsConverter = newType }` payload can also be used with polymorphic
+variants.
 
 ### Records
 
 #### Accessing fields
 
-Use `@bs.deriving accessors` on a record type to create accessor functions
-for its record field names.
+Use `@bs.deriving accessors` on a record type to create accessor functions for
+its record field names.
 
 ```ocaml
 type pet = { name : string } [@@bs.deriving accessors]
@@ -1892,10 +1891,9 @@ console.log(Belt_Array.map(pets, name).join("&"));
 
 Usually, it’s recommended to use plain records when compiling to JavaScript
 objects (see the section on [binding to JavaScript
-objects](#bind-to-javascript-objects)). But there's a specific case where
-records may not be enough: Specifically, when we want to emit a JavaScript object
-where some of the keys may be nullable, i.e. not present at all in the JavaScript
-object. `
+objects](#bind-to-javascript-objects)). But there’s a specific case where
+records may not be enough: when we want to emit a JavaScript object where some
+of the keys might be present or absent.
 
 For instance, consider the following record:
 
@@ -1907,19 +1905,19 @@ type person = {
 ```
 
 An example of this use-case would be expecting `{ name = "John"; age = None }`
-to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn't
+to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
 appear.
 
-The `@bs.deriving abstract` attribute exists to solve this problem. When
-present in a record type, `@bs.deriving abstract` makes the record definition
-abstract and generates the following functions instead:
+The `@bs.deriving abstract` attribute exists to solve this problem. When present
+in a record type, `@bs.deriving abstract` makes the record definition abstract
+and generates the following functions instead:
 
 - A constructor function for creating values of the type
 - Getters and setters for accessing the record fields
 
 `@bs.deriving abstract` effectively models a record-shaped JavaScript object
-exclusively through a set of (generated) functions derived from attribute annotations
-on the OCaml type definition.
+exclusively through a set of (generated) functions derived from attribute
+annotations on the OCaml type definition.
 
 Let’s see an example. Considering this Melange code:
 
@@ -1932,8 +1930,8 @@ type person = {
 ```
 
 Melange will make the `person` type abstract and generate constructor, getter
-and setter functions. In our example, the OCaml signature would look like this after
-preprocessing:
+and setter functions. In our example, the OCaml signature would look like this
+after preprocessing:
 
 ```ocaml
 type person
@@ -1947,7 +1945,8 @@ val ageGet : person -> int option
 
 The `person` function can be used to create values of `person`. It is the only
 possible way to create values of this type, since Melange makes it abstract.
-Using literals like `{ name = "Alice"; age = None }` directly doesn't type check.
+Using literals like `{ name = "Alice"; age = None }` directly doesn’t type
+check.
 
 Here is an example of how we can use it:
 
@@ -2083,10 +2082,10 @@ preventing any Melange code from creating values of such type.
 We have already explored one approach for creating JavaScript object literals by
 using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
 
-Melange additionally offers the `bs.obj` attribute, which can
-be used in combination with external functions to create JavaScript objects.
-When these functions are called, they generate objects with fields corresponding
-to the labeled arguments of the function.
+Melange additionally offers the `bs.obj` attribute, which can be used in
+combination with external functions to create JavaScript objects. When these
+functions are called, they generate objects with fields corresponding to the
+labeled arguments of the function.
 
 If any of these labeled arguments are defined as optional and omitted during
 function application, the resulting JavaScript object will exclude the
@@ -2144,8 +2143,8 @@ If we call the function like this:
 let homeRoute = route ~__type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
 ```
 
-We get the following JavaScript, which does not include the `options`
-field since its argument wasn't present:
+We get the following JavaScript, which does not include the `options` field
+since its argument wasn’t present:
 
 ```javascript
 var homeRoute = {
