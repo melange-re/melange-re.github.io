@@ -1969,11 +1969,13 @@ console.log(Belt_Array.map(pets, name).join("&"));
 
 #### Convert records into abstract types
 
-Usually, it’s recommended to use plain records when compiling to JavaScript
-objects (see the section on [binding to JavaScript
-objects](#bind-to-javascript-objects)). But there’s a specific case where
-records may not be enough: when we want to emit a JavaScript object where some
-of the keys might be present or absent.
+When binding to JavaScript objects, it is generally recommended to use records
+since Melange precisely uses objects as their runtime representation. This
+approach was discussed in the section about [binding to JavaScript
+objects](#bind-to-javascript-objects).
+
+But there’s a specific case where records may not be enough: when we want to
+emit a JavaScript object where some of the keys might be present or absent.
 
 For instance, consider the following record:
 
