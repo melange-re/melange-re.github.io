@@ -309,7 +309,7 @@ These attributes are used to annotate `external` definitions:
 - [`bs.module`](#using-functions-from-other-javascript-modules): bind to a value
   from a JavaScript module
 - [`bs.new`](#javascript-classes): bind to a JavaScript class constructor
-- [`bs.obj`](todo-fix-me.md): create JavaScript object
+- [`bs.obj`](#using-external-functions): create a JavaScript object
 - [`bs.return`](#wrapping-returned-nullable-values): automate conversion from
   nullable values to `Option.t` values
 - [`bs.send`](#calling-an-object-method): call a JavaScript object method using
@@ -750,6 +750,85 @@ let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
 To read more about objects and polymorphism we recommend checking the [OCaml
 docs](https://ocaml.org/docs/objects) or the [OCaml
 manual](https://v2.ocaml.org/manual/objectexamples.html).
+
+#### Using external functions
+
+We have already explored one approach for creating JavaScript object literals by
+using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
+
+Melange additionally offers the `bs.obj` attribute, which can be used in
+combination with external functions to create JavaScript objects. When these
+functions are called, they generate objects with fields corresponding to the
+labeled arguments of the function.
+
+If any of these labeled arguments are defined as optional and omitted during
+function application, the resulting JavaScript object will exclude the
+corresponding fields. This allows to create runtime objects and control whether
+optional keys are emitted at runtime.
+
+For example, assuming we need to bind to a JavaScript object like this:
+
+```js
+var homeRoute = {
+  type: "GET",
+  path: "/",
+  action: () => console.log("Home"),
+  // options: ...
+};
+```
+
+The first three fields are required and the `options` field is optional. You can
+declare a binding function like:
+
+```ocaml
+external route :
+  _type:string ->
+  path:string ->
+  action:(string list -> unit) ->
+  ?options:< .. > ->
+  unit ->
+  _ = ""
+  [@@bs.obj]
+```
+
+Note that the empty string at the end of the function is used to make it
+syntactically valid. The value of this string is ignored by the compiler.
+
+Since there is an optional argument `options`, an additional unlabeled argument
+of type `unit` is required. This allows the compiler to determine if the
+optional argument has been omitted when the function is applied. More
+information about optional arguments can be found in the [OCaml
+manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
+
+The return type of the function should be left unspecified using the wildcard
+type `_`. Melange will automatically infer the type of the resulting JavaScript
+object.
+
+In the route function, the `_type` argument starts with an underscore. When
+binding to JavaScript objects with fields that are reserved keywords in OCaml,
+Melange allows the use of an underscore prefix for the labeled arguments. The
+resulting JavaScript object will have the underscore removed from the field
+names. This is only required for the `bs.obj` attribute, while for other cases,
+the `bs.as` attribute can be used to rename fields.
+
+If we call the function like this:
+
+```ocaml
+let homeRoute = route ~__type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+```
+
+We get the following JavaScript, which does not include the `options` field
+since its argument wasn’t present:
+
+```javascript
+var homeRoute = {
+  type: "GET",
+  path: "/",
+  action: (function (param) {
+      console.log("Home");
+    })
+};
+```
 
 #### Bind to object properties
 
@@ -2076,82 +2155,3 @@ type person = private {
 The accessors `nameGet` and `ageGet` will still be generated, but not the
 constructor `person`. This is useful when binding to JavaScript objects while
 preventing any Melange code from creating values of such type.
-
-### Create JavaScript objects using external functions
-
-We have already explored one approach for creating JavaScript object literals by
-using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
-
-Melange additionally offers the `bs.obj` attribute, which can be used in
-combination with external functions to create JavaScript objects. When these
-functions are called, they generate objects with fields corresponding to the
-labeled arguments of the function.
-
-If any of these labeled arguments are defined as optional and omitted during
-function application, the resulting JavaScript object will exclude the
-corresponding fields. This allows to create runtime objects and control whether
-optional keys are emitted at runtime.
-
-For example, assuming we need to bind to a JavaScript object like this:
-
-```js
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: () => console.log("Home"),
-  // options: ...
-};
-```
-
-The first three fields are required and the `options` field is optional. You can
-declare a binding function like:
-
-```ocaml
-external route :
-  _type:string ->
-  path:string ->
-  action:(string list -> unit) ->
-  ?options:< .. > ->
-  unit ->
-  _ = ""
-  [@@bs.obj]
-```
-
-Note that the empty string at the end of the function is used to make it
-syntactically valid. The value of this string is ignored by the compiler.
-
-Since there is an optional argument `options`, an additional unlabeled argument
-of type `unit` is required. This allows the compiler to determine if the
-optional argument has been omitted when the function is applied. More
-information about optional arguments can be found in the [OCaml
-manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
-
-The return type of the function should be left unspecified using the wildcard
-type `_`. Melange will automatically infer the type of the resulting JavaScript
-object.
-
-In the route function, the `_type` argument starts with an underscore. When
-binding to JavaScript objects with fields that are reserved keywords in OCaml,
-Melange allows the use of an underscore prefix for the labeled arguments. The
-resulting JavaScript object will have the underscore removed from the field
-names. This is only required for the `bs.obj` attribute, while for other cases,
-the `bs.as` attribute can be used to rename fields.
-
-If we call the function like this:
-
-```ocaml
-let homeRoute = route ~__type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
-```
-
-We get the following JavaScript, which does not include the `options` field
-since its argument wasn’t present:
-
-```javascript
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: (function (param) {
-      console.log("Home");
-    })
-};
-```
