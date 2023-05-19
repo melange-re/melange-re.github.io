@@ -1677,7 +1677,7 @@ As we saw in a [previous section](#non-shared-data-types), there are some types
 in Melange that compile to values that are not easily manipulable from
 JavaScript. To facilitate the communication from JavaScript code with values of
 these types, Melange includes an attribute `bs.deriving` that helps generating
-conversion functions, as well as functions to create values of these types. In
+conversion functions, as well as functions to create values from these types. In
 particular, for variants and polymorphic variants.
 
 Additionally, `bs.deriving` can be used with record types, to generate setters
@@ -1688,7 +1688,7 @@ and getters as well as creation functions.
 #### Creating values
 
 Use `@bs.deriving accessors` on a variant type to create constructor values for
-each tag.
+each branch.
 
 ```ocaml
 type action =
@@ -1757,7 +1757,7 @@ There are a few differences with `@bs.deriving accessors`:
 - `jsConverter` does not support variant tags with payload, while `accessors`
   does
 - `jsConverter` generates functions to transform values back and forth, while
-  `accessors` generates functions to create values from JavaScript
+  `accessors` generates functions to create values
 
 Let’s see a version of the previous example, adapted to work with `jsConverter`
 given the constraints above:
@@ -1779,7 +1779,7 @@ val actionFromJs : int -> action option
 ```
 
 `actionToJs` returns integers from values of `action` type. It will start with 0
-for `Click`, then 3 for `Submit` due to the usage of `bs.as` attribute, and then
+for `Click`, 3 for `Submit` (because it was annotated with `bs.as`), and then
 4 for `Cancel`, in the same way that we described when [using `bs.int` with
 polymorphic variants](#using-polymorphic-variants-to-bind-to-enums).
 
@@ -1788,7 +1788,7 @@ be converted into a variant tag of the `action` type.
 
 ##### Hide runtime types
 
-For extra type safety, we can remove the runtime representation of variants
+For extra type safety, we can hide the runtime representation of variants
 (`int`) from the generated functions, by using `{ jsConverter = newType }`
 payload with `@bs.deriving`:
 
@@ -1801,7 +1801,7 @@ type action =
 ```
 
 This feature relies on [abstract types](#abstract-types) to hide the JavaScript
-actual type on Melange. It will generate functions with the following types:
+runtime representation. It will generate functions with the following types:
 
 ```ocaml
 val actionToJs : action -> abs_action
@@ -1810,9 +1810,8 @@ val actionFromJs : abs_action -> action
 ```
 
 In the case of `actionFromJs`, the return value, unlike the previous case, is
-not an option type. This is because there is no possibility of passing an
-invalid value to the function: values of type `abs_fruit` can only be created
-using `actionToJs`.
+not an option type. This is an example of "correct by construction": the only
+way to create an `abs_action` is by calling the `actionToJs` function.
 
 ### Polymorphic variants
 
@@ -1820,7 +1819,9 @@ The `@bs.deriving jsConverter` attribute is applicable to polymorphic variants
 as well.
 
 > **_NOTE:_** Similarly to variants, the `@bs.deriving jsConverter` attribute
-> cannot be used when the polymorphic variant tags have payloads.
+> cannot be used when the polymorphic variant tags have payloads. Refer to
+> the [section on runtime representation](#data-types-and-runtime-representation)
+> to learn more about how polymorphic variants are represented in JavaScript.
 
 Let’s see an example:
 
@@ -1833,7 +1834,7 @@ type action =
 [@@bs.deriving jsConverter]
 ```
 
-Just like with variants, two functions with the following types will be
+Akin to the variant example, the following two functions will be
 generated:
 
 ```ocaml
@@ -1842,15 +1843,15 @@ val actionToJs : action -> int
 val actionFromJs : int -> action option
 ```
 
-The `{ jsConverter = newType }` payload can also be passed to `@bs.deriving`
-attribute when working with polymorphic variants.
+The `{ jsConverter = newType }` payload can also be used with
+polymorphic variants.
 
 ### Records
 
 #### Accessing fields
 
-Use `@bs.deriving accessors` on a record type to create accessors for its record
-field names.
+Use `@bs.deriving accessors` on a record type to create accessor functions
+for its record field names.
 
 ```ocaml
 type pet = { name : string } [@@bs.deriving accessors]
@@ -1892,8 +1893,9 @@ console.log(Belt_Array.map(pets, name).join("&"));
 Usually, it’s recommended to use plain records when compiling to JavaScript
 objects (see the section on [binding to JavaScript
 objects](#bind-to-javascript-objects)). But there's a specific case where
-records may not be enough. This happens when a record type has optional fields,
-and we want the resulting JavaScript objects to exclude those fields entirely.
+records may not be enough: Specifically, when we want to emit a JavaScript object
+where some of the keys may be nullable, i.e. not present at all in the JavaScript
+object. `
 
 For instance, consider the following record:
 
@@ -1904,17 +1906,20 @@ type person = {
 }
 ```
 
-The specific use-case we are referring to arises when we have a Melange value
-such as `{ name = "John"; age = None }`, but we desire the resulting JavaScript
-object to be `{name: "Carl"}`.
+An example of this use-case would be expecting `{ name = "John"; age = None }`
+to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn't
+appear.
 
-To address this case, the `@bs.deriving abstract` attribute can prove useful.
-When applied to a record type, this attribute removes the record type definition
-and replaces it with an abstract type. Additionally, it generates these
-functions:
+The `@bs.deriving abstract` attribute exists to solve this problem. When
+present in a record type, `@bs.deriving abstract` makes the record definition
+abstract and generates the following functions instead:
 
 - A constructor function for creating values of the type
 - Getters and setters for accessing the record fields
+
+`@bs.deriving abstract` effectively models a record-shaped JavaScript object
+exclusively through a set of (generated) functions derived from attribute annotations
+on the OCaml type definition.
 
 Let’s see an example. Considering this Melange code:
 
@@ -1926,9 +1931,9 @@ type person = {
 [@@bs.deriving abstract]
 ```
 
-Melange will transform the `person` type into an abstract type and generate the
-constructor, getters, and setters functions. So we would get an interface like
-this:
+Melange will make the `person` type abstract and generate constructor, getter
+and setter functions. In our example, the OCaml signature would look like this after
+preprocessing:
 
 ```ocaml
 type person
@@ -1940,10 +1945,9 @@ val nameGet : person -> string
 val ageGet : person -> int option
 ```
 
-The `person` constructor enables the creation of values for the `person` type.
-It is the only valid way to create such values because using literals directly
-like `{ name = "Alice"; age = None }` will no longer type check, due to the
-opaque nature of the abstract type definition.
+The `person` function can be used to create values of `person`. It is the only
+possible way to create values of this type, since Melange makes it abstract.
+Using literals like `{ name = "Alice"; age = None }` directly doesn't type check.
 
 Here is an example of how we can use it:
 
@@ -2076,18 +2080,18 @@ preventing any Melange code from creating values of such type.
 
 ### Create JavaScript objects using external functions
 
-We have already explored one approach to creating JavaScript object literals by
+We have already explored one approach for creating JavaScript object literals by
 using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
 
-In addition to that approach, Melange offers the `bs.obj` attribute, which can
+Melange additionally offers the `bs.obj` attribute, which can
 be used in combination with external functions to create JavaScript objects.
 When these functions are called, they generate objects with fields corresponding
 to the labeled arguments of the function.
 
 If any of these labeled arguments are defined as optional and omitted during
 function application, the resulting JavaScript object will exclude the
-corresponding fields. This feature allows for runtime object creation with
-dynamic selection of the subset of fields to include.
+corresponding fields. This allows to create runtime objects and control whether
+optional keys are emitted at runtime.
 
 For example, assuming we need to bind to a JavaScript object like this:
 
@@ -2140,8 +2144,8 @@ If we call the function like this:
 let homeRoute = route ~__type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
 ```
 
-We would get the generated JavaScript, which does not include the `options`
-field as required:
+We get the following JavaScript, which does not include the `options`
+field since its argument wasn't present:
 
 ```javascript
 var homeRoute = {
