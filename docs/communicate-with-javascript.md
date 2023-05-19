@@ -2107,6 +2107,14 @@ Another distinction from the previous example is that the `person` constructor
 function no longer requires the final `unit` argument since we have excluded the
 optional field in this case.
 
+> **_NOTE:_** The `bs.as` attribute can still be applied to record fields when
+> the record type is annotated with `bs.deriving`, allowing for the renaming of
+> fields in the resulting JavaScript objects, as demonstrated in the section
+> about [binding to objects with static
+> shape](#objects-with-static-shape-record-like). However, the option to pass
+> indices to the `bs.as` decorator (like `[@bs.as "0"]`) to change the runtime
+> representation to an array is not available when using `bs.deriving`.
+
 ##### Compatibility with OCaml features
 
 The `@bs.deriving abstract` attribute and its lightweight variant can be used
