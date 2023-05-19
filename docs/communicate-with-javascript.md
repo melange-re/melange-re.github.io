@@ -200,7 +200,7 @@ them before doing so.
 
 - Variants and polymorphic variants: Better transform them into readable
   JavaScript values before manipulating them from JavaScript, Melange provides
-  [some helpers](#deriving-code-from-types) to do so.
+  [some helpers](#generate-getters-setters-and-constructors) to do so.
 - Exceptions
 - Option (a variant type): Better use the `Js.Nullable.fromOption` and
   `Js.Nullable.toOption` functions in the [`Js.Nullable` module](todo-fix-me.md)
@@ -347,10 +347,11 @@ and more:
   [variants](todo-fix-me.md), [polymorphic
   variants](#using-polymorphic-variants-to-bind-to-enums) and [record
   fields](#objects-with-static-shape-record-like).
-- [`bs.deriving`](todo-fix-me.md): generate getters and setters for some types
+- [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
+  and setters for some types
 - [`bs.inline`]([#inlining-constant-values]): forcefully inline constant values
-- [`bs.optional`](todo-fix-me.md): omit fields in a record (combines with
-  `bs.deriving`)
+- [`bs.optional`](#convert-records-into-abstract-types): omit fields in a record
+  (combines with `bs.deriving`)
 
 **Extensions:**
 
@@ -1750,7 +1751,7 @@ nullable]` above. Currently 4 directives are supported: `null_to_opt`,
 `identity` will make sure that compiler will do nothing about the returned
 value. It is rarely used, but introduced here for debugging purposes.
 
-## Deriving code from types
+## Generate getters, setters and constructors
 
 As we saw in a [previous section](#non-shared-data-types), there are some types
 in Melange that compile to values that are not easy to manipulate from
