@@ -371,11 +371,11 @@ The same field `preprocess` can be added to `melange.emit`.
 
 Here is the list of all extensions supported by Melange:
 
-- `bs.debugger`: insert `debugger` statements
-- `bs.external`: read global values
+- [`bs.debugger`](#debugger): insert `debugger` statements
+- [`bs.external`](#detect-global-variables): read global values
 - [`bs.obj`](#using-jst-objects): create JavaScript object literals
-- `bs.raw`: write raw JavaScript code
-- `bs.re`: insert regular expressions
+- [`bs.raw`](#generate-raw-javascript): write raw JavaScript code
+- [`bs.re`](todo-fix-me.md): insert regular expressions
 
 ## Foreign function interface
 
