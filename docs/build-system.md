@@ -77,7 +77,7 @@ opam install dune melange
 Create a file named `dune-project`. This file will tell Dune a few things about
 our project configuration:
 
-```bash
+```text
 (lang dune 3.8)
 
 (using melange 0.1)
@@ -96,7 +96,7 @@ language](https://dune.readthedocs.io/en/stable/dune-files.html#using).
 Next, create a folder `lib`, and a `dune` file inside. Put the following content
 inside the `dune` file:
 
-```bash
+```text
 (library
  (name lib)
  (modes melange))
@@ -130,7 +130,7 @@ application**, but they won’t produce any JavaScript artifacts on their own.
 To generate JavaScript code, we need to define an entry point of our
 application. In the root folder, create another `dune` file:
 
-```bash
+```text
 (melange.emit
  (target app)
  (libraries lib))
@@ -148,7 +148,7 @@ the [Dune docs](https://dune.readthedocs.io/en/latest/melange.html).
 
 The file structure of the app should look something like this:
 
-```bash
+```text
 project_name/
 ├── _opam
 ├── lib
@@ -196,7 +196,7 @@ to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
-```bash
+```text
 project_name/
 ├── dune-project
 ├── lib
@@ -208,7 +208,7 @@ project_name/
 
 With `emit/dune` being:
 
-```bash
+```text
 (melange.emit
  (target app)
  (libraries lib))
@@ -216,7 +216,7 @@ With `emit/dune` being:
 
 And `lib/dune`:
 
-```bash
+```text
 (library
  (name lib)
  (modes melange))
@@ -269,7 +269,7 @@ them by using the `alias` field.
 
 Let’s define a custom alias `my-app` for our `melange.emit` stanza:
 
-```bash
+```text
 (melange.emit
  (target app)
  (alias my-app)
@@ -285,7 +285,7 @@ $ dune build @my-app
 Note that if we try to build again using the default `melange` alias, Dune will
 return an error, as there are no more targets attached to it.
 
-```bash
+```text
 $ dune build @melange
 Error: Alias "melange" specified on the command line is empty.
 It is not defined in . or any of its descendants.
@@ -322,7 +322,7 @@ that will allow to use the `bs.raw` extension (more about these extensions in
 the ["Communicate with JavaScript"](communicate-with-javascript.md) section), in
 order to get the value of the `__dirname` environment variable:
 
-```bash
+```text
 (library
  (name lib)
  (modes melange)
@@ -354,7 +354,7 @@ Dune offers great flexibility to specify dependencies. Another interesting
 feature are globs, that allow to simplify the configuration when depending on
 multiple files. For example:
 
-```bash
+```text
 (melange.runtime_deps
  (glob_files styles/*.css)
  (glob_files images/*.png)

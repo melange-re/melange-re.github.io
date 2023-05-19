@@ -82,7 +82,7 @@ for every platform.
 
 There is a necessary first step before using opam:
 
-```bash
+```text
 opam init -a
 ```
 
@@ -126,7 +126,7 @@ to be done by hand.
 
 A minimal `.opam` file looks like this:
 
-```
+```text
 opam-version: "2.0"
 name: "my-app"
 authors: "Louis"
@@ -155,13 +155,13 @@ in the project folder.
 
 If it does not exist, we can create it with:
 
-```bash
+```text
 opam switch create . 4.14.1 --deps-only
 ```
 
 If it exists, we can install the dependencies of the project with:
 
-```bash
+```text
 opam install . --deps-only
 ```
 
@@ -169,7 +169,7 @@ opam install . --deps-only
 
 To add a new package to the opam switch, we can do:
 
-```bash
+```text
 opam install <package_name>
 ```
 
@@ -181,20 +181,20 @@ to be done by hand, by adding the name of the package in the `depends` field.
 This can be achieved with `opam pin`. For example, to pin a package to a
 specific commit on GitHub:
 
-```bash
+```text
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#61bfbfaf8c971dec5152bce7e528d30552c70bc5
 ```
 
 Branch names can also be used.
 
-```bash
+```text
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#feature
 ```
 
 For packages that are already published in the opam repository, a shortcut to
 pin to the latest version is to use the `--dev-repo` flag, e.g.
 
-```bash
+```text
 opam pin add melange.dev --dev-repo
 ```
 
@@ -210,13 +210,13 @@ There is one big difference compared to npm: opam stores a local copy of the
 opam repository, like `apt-get` does in Debian. So before doing any upgrades, we
 might want to update this copy before:
 
-```bash
+```text
 opam update
 ```
 
 Then, to upgrade the installed packages to the latest version, run:
 
-```bash
+```text
 opam upgrade <package_name>
 ```
 

@@ -359,7 +359,7 @@ and more:
 In order to use any of these extensions, you will have to add the melange PPX
 preprocessor to your project. To do so, add the following to the `dune` file:
 
-```bash
+```text
 (library
  (name lib)
  (modes melange)
@@ -1623,7 +1623,7 @@ let _ = map [||] [||] add
 ```
 We will get an error:
 
-```bash
+```text
 let _ = map [||] [||] add
                       ^^^
 This expression has type int -> int -> int
