@@ -344,8 +344,9 @@ and more:
 
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
-  [variants](todo-fix-me.md), [polymorphic
-  variants](#using-polymorphic-variants-to-bind-to-enums) and [record
+  [variants](#conversion-functions), polymorphic variants (either [inlined in
+  external functions](#using-polymorphic-variants-to-bind-to-enums) or [in type
+  definitions](#polymorphic-variants)) and [record
   fields](#objects-with-static-shape-record-like).
 - [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
   and setters for some types
@@ -1908,7 +1909,7 @@ Let’s see an example:
 ```ocaml
 type action =
   [ `Click
-  | `Submit
+  | `Submit [@bs.as "submit"]
   | `Cancel
   ]
 [@@bs.deriving jsConverter]
@@ -1917,9 +1918,9 @@ type action =
 Akin to the variant example, the following two functions will be generated:
 
 ```ocaml
-val actionToJs : action -> int
+val actionToJs : action -> string
 
-val actionFromJs : int -> action option
+val actionFromJs : string -> action option
 ```
 
 The `{ jsConverter = newType }` payload can also be used with polymorphic
