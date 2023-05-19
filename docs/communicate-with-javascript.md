@@ -200,7 +200,7 @@ them before doing so.
 
 - Variants and polymorphic variants: Better transform them into readable
   JavaScript values before manipulating them from JavaScript, Melange provides
-  [some helpers](todo-fix-me.md) to do so.
+  [some helpers](#generate-getters-setters-and-constructors) to do so.
 - Exceptions
 - Option (a variant type): Better use the `Js.Nullable.fromOption` and
   `Js.Nullable.toOption` functions in the [`Js.Nullable` module](todo-fix-me.md)
@@ -309,7 +309,7 @@ These attributes are used to annotate `external` definitions:
 - [`bs.module`](#using-functions-from-other-javascript-modules): bind to a value
   from a JavaScript module
 - [`bs.new`](#javascript-classes): bind to a JavaScript class constructor
-- [`bs.obj`](#using-jst-objects): create JavaScript object
+- [`bs.obj`](#using-external-functions): create a JavaScript object
 - [`bs.return`](#wrapping-returned-nullable-values): automate conversion from
   nullable values to `Option.t` values
 - [`bs.send`](#calling-an-object-method): call a JavaScript object method using
@@ -339,18 +339,20 @@ These attributes are used to annotate arguments in `external` definitions:
   (automated)
 - [`bs.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant values
 
-These attributes are used in places like records, fields, parameters, functions,
+These attributes are used in places like records, fields, arguments, functions,
 and more:
 
 - `bs.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
-  [variants](todo-fix-me.md), [polymorphic
-  variants](#using-polymorphic-variants-to-bind-to-enums) and [record
+  [variants](#conversion-functions), polymorphic variants (either [inlined in
+  external functions](#using-polymorphic-variants-to-bind-to-enums) or [in type
+  definitions](#polymorphic-variants)) and [record
   fields](#objects-with-static-shape-record-like).
-- [`bs.deriving`](todo-fix-me.md): generate getters and setters for some types
+- [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
+  and setters for some types
 - [`bs.inline`]([#inlining-constant-values]): forcefully inline constant values
-- [`bs.optional`](todo-fix-me.md): omit fields in a record (combines with
-  `bs.deriving`)
+- [`bs.optional`](#convert-records-into-abstract-types): omit fields in a record
+  (combines with `bs.deriving`)
 
 **Extensions:**
 
@@ -371,7 +373,7 @@ Here is the list of all extensions supported by Melange:
 
 - `bs.debugger`: insert `debugger` statements
 - `bs.external`: read global values
-- `bs.obj`: create JavaScript object literals
+- [`bs.obj`](#using-jst-objects): create JavaScript object literals
 - `bs.raw`: write raw JavaScript code
 - `bs.re`: insert regular expressions
 
@@ -573,8 +575,8 @@ if ("development" !== "production") {
 In this case, bundlers such as Webpack can tell that the `if` statement always
 evaluates to a specific branch and eliminate the others.
 
-Melange provides the `bs.inline` attribute to achieve the same goal in
-generated JavaScript. Let’s look at an example:
+Melange provides the `bs.inline` attribute to achieve the same goal in generated
+JavaScript. Let’s look at an example:
 
 ```ocaml
 external node_env : string = "NODE_ENV" [@@bs.val] [@@bs.scope "process", "env"]
@@ -592,7 +594,8 @@ As we can see in the generated JavaScript presented below:
     - it gets used as a variable `process.env.NODE_ENV !== development` in the
       `if` statement
 - the `development_inline` variable isn’t present in the final output
-    - its value is inlined in the `if` statement: `process.env.NODE_ENV !== "development"`
+    - its value is inlined in the `if` statement: `process.env.NODE_ENV !==
+      "development"`
 
 ```js
 var development = "development";
@@ -749,6 +752,85 @@ let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
 To read more about objects and polymorphism we recommend checking the [OCaml
 docs](https://ocaml.org/docs/objects) or the [OCaml
 manual](https://v2.ocaml.org/manual/objectexamples.html).
+
+#### Using external functions
+
+We have already explored one approach for creating JavaScript object literals by
+using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
+
+Melange additionally offers the `bs.obj` attribute, which can be used in
+combination with external functions to create JavaScript objects. When these
+functions are called, they generate objects with fields corresponding to the
+labeled arguments of the function.
+
+If any of these labeled arguments are defined as optional and omitted during
+function application, the resulting JavaScript object will exclude the
+corresponding fields. This allows to create runtime objects and control whether
+optional keys are emitted at runtime.
+
+For example, assuming we need to bind to a JavaScript object like this:
+
+```js
+var homeRoute = {
+  type: "GET",
+  path: "/",
+  action: () => console.log("Home"),
+  // options: ...
+};
+```
+
+The first three fields are required and the `options` field is optional. You can
+declare a binding function like:
+
+```ocaml
+external route :
+  _type:string ->
+  path:string ->
+  action:(string list -> unit) ->
+  ?options:< .. > ->
+  unit ->
+  _ = ""
+  [@@bs.obj]
+```
+
+Note that the empty string at the end of the function is used to make it
+syntactically valid. The value of this string is ignored by the compiler.
+
+Since there is an optional argument `options`, an additional unlabeled argument
+of type `unit` is included after it. It allows to omit the optional argument on
+function application. More information about labeled optional arguments can be
+found in the [OCaml
+manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
+
+The return type of the function should be left unspecified using the wildcard
+type `_`. Melange will automatically infer the type of the resulting JavaScript
+object.
+
+In the route function, the `_type` argument starts with an underscore. When
+binding to JavaScript objects with fields that are reserved keywords in OCaml,
+Melange allows the use of an underscore prefix for the labeled arguments. The
+resulting JavaScript object will have the underscore removed from the field
+names. This is only required for the `bs.obj` attribute, while for other cases,
+the `bs.as` attribute can be used to rename fields.
+
+If we call the function like this:
+
+```ocaml
+let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+```
+
+We get the following JavaScript, which does not include the `options` field
+since its argument wasn’t present:
+
+```javascript
+var homeRoute = {
+  type: "GET",
+  path: "/",
+  action: (function (param) {
+      console.log("Home");
+    })
+};
+```
 
 #### Bind to object properties
 
@@ -1294,7 +1376,7 @@ Some JavaScript APIs take a limited subset of values as input. For example,
 Node’s `fs.readFileSync` second argument can only take a few given string
 values: `"ascii"`, `"utf8"`, etc. Some other functions can take values from a
 few given integers, like the `createStatusBarItem` function in VS Code API,
-which can take an alignment parameter that can only be [`1` or
+which can take an `alignment` parameter that can only be [`1` or
 `2`](https://github.com/Microsoft/vscode/blob/2362ec665c84a1519162b50c36ed4f29d1e20f62/src/vs/vscode.d.ts#L4098-L4109).
 
 One could still type these parameters as just `string` or `int`, but this would
@@ -1669,3 +1751,419 @@ nullable]` above. Currently 4 directives are supported: `null_to_opt`,
 
 `identity` will make sure that compiler will do nothing about the returned
 value. It is rarely used, but introduced here for debugging purposes.
+
+## Generate getters, setters and constructors
+
+As we saw in a [previous section](#non-shared-data-types), there are some types
+in Melange that compile to values that are not easy to manipulate from
+JavaScript. To facilitate the communication from JavaScript code with values of
+these types, Melange includes an attribute `bs.deriving` that helps generating
+conversion functions, as well as functions to create values from these types. In
+particular, for variants and polymorphic variants.
+
+Additionally, `bs.deriving` can be used with record types, to generate setters
+and getters as well as creation functions.
+
+### Variants
+
+#### Creating values
+
+Use `@bs.deriving accessors` on a variant type to create constructor values for
+each branch.
+
+```ocaml
+type action =
+  | Click
+  | Submit of string
+  | Cancel
+[@@bs.deriving accessors]
+```
+
+Melange will generate one `let` definition for each variant tag, implemented as
+follows:
+
+- For variant tags with payloads, it will be a function that takes the payload
+  value as a parameter.
+- For variant tags without payloads, it will be a constant with the runtime
+  value of the tag.
+
+Given the `action` type definition above, annotated with `bs.deriving`, Melange
+will generate something similar to the following code:
+
+```ocaml
+type action =
+  | Click
+  | Submit of string
+  | Cancel
+
+let click = (Click : action)
+let submit param = (Submit param : action)
+let cancel = (Cancel : action)
+```
+
+Which will result in the following JavaScript code after compilation:
+
+```javascript
+function submit(param_0) {
+  return /* Submit */{
+          _0: param_0
+        };
+}
+
+var click = /* Click */0;
+
+var cancel = /* Cancel */1;
+```
+
+Note the generated definitions are lower-cased, and they can be safely used from
+JavaScript code. For example, if the above JavaScript generated code was located
+in a `generators.js` file, the definitions can be used like this:
+
+```javascript
+const generators = require('./generators.js');
+
+const hello = generators.submit("Hello");
+const click = generators.click;
+```
+
+#### Conversion functions
+
+Use `@bs.deriving jsConverter` on a variant type to create converter functions
+that allow to transform back and forth between JavaScript integers and Melange
+variant values.
+
+There are a few differences with `@bs.deriving accessors`:
+
+- `jsConverter` works with the `bs.as` attribute, while `accessors` does not
+- `jsConverter` does not support variant tags with payload, while `accessors`
+  does
+- `jsConverter` generates functions to transform values back and forth, while
+  `accessors` generates functions to create values
+
+Let’s see a version of the previous example, adapted to work with `jsConverter`
+given the constraints above:
+
+```ocaml
+type action =
+  | Click
+  | Submit [@bs.as 3]
+  | Cancel
+[@@bs.deriving jsConverter]
+```
+
+This will generate a couple of functions with the following types:
+
+```ocaml
+val actionToJs : action -> int
+
+val actionFromJs : int -> action option
+```
+
+`actionToJs` returns integers from values of `action` type. It will start with 0
+for `Click`, 3 for `Submit` (because it was annotated with `bs.as`), and then 4
+for `Cancel`, in the same way that we described when [using `bs.int` with
+polymorphic variants](#using-polymorphic-variants-to-bind-to-enums).
+
+`actionFromJs` returns a value of type `option`, because not every integer can
+be converted into a variant tag of the `action` type.
+
+##### Hide runtime types
+
+For extra type safety, we can hide the runtime representation of variants
+(`int`) from the generated functions, by using `{ jsConverter = newType }`
+payload with `@bs.deriving`:
+
+```ocaml
+type action =
+  | Click
+  | Submit [@bs.as 3]
+  | Cancel
+[@@bs.deriving { jsConverter = newType }]
+```
+
+This feature relies on [abstract types](#abstract-types) to hide the JavaScript
+runtime representation. It will generate functions with the following types:
+
+```ocaml
+val actionToJs : action -> abs_action
+
+val actionFromJs : abs_action -> action
+```
+
+In the case of `actionFromJs`, the return value, unlike the previous case, is
+not an option type. This is an example of "correct by construction": the only
+way to create an `abs_action` is by calling the `actionToJs` function.
+
+### Polymorphic variants
+
+The `@bs.deriving jsConverter` attribute is applicable to polymorphic variants
+as well.
+
+> **_NOTE:_** Similarly to variants, the `@bs.deriving jsConverter` attribute
+> cannot be used when the polymorphic variant tags have payloads. Refer to the
+> [section on runtime representation](#data-types-and-runtime-representation) to
+> learn more about how polymorphic variants are represented in JavaScript.
+
+Let’s see an example:
+
+```ocaml
+type action =
+  [ `Click
+  | `Submit [@bs.as "submit"]
+  | `Cancel
+  ]
+[@@bs.deriving jsConverter]
+```
+
+Akin to the variant example, the following two functions will be generated:
+
+```ocaml
+val actionToJs : action -> string
+
+val actionFromJs : string -> action option
+```
+
+The `{ jsConverter = newType }` payload can also be used with polymorphic
+variants.
+
+### Records
+
+#### Accessing fields
+
+Use `@bs.deriving accessors` on a record type to create accessor functions for
+its record field names.
+
+```ocaml
+type pet = { name : string } [@@bs.deriving accessors]
+
+let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
+
+let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
+```
+
+Melange will generate a function for each field defined in the record. In this
+case, a function `name` that allows to get that field from any record of type
+`pet`:
+
+```ocaml
+let name (param : pet) = param.name
+```
+
+Considering all the above, the produced JavaScript will be:
+
+```js
+function name(param) {
+  return param.name;
+}
+
+var pets = [
+  {
+    name: "Brutus"
+  },
+  {
+    name: "Mochi"
+  }
+];
+
+console.log(Belt_Array.map(pets, name).join("&"));
+```
+
+#### Convert records into abstract types
+
+When binding to JavaScript objects, it is generally recommended to use records
+since Melange precisely uses objects as their runtime representation. This
+approach was discussed in the section about [binding to JavaScript
+objects](#bind-to-javascript-objects).
+
+But there’s a specific case where records may not be enough: when we want to
+emit a JavaScript object where some of the keys might be present or absent.
+
+For instance, consider the following record:
+
+```ocaml
+type person = {
+  name : string;
+  age : int option;
+}
+```
+
+An example of this use-case would be expecting `{ name = "John"; age = None }`
+to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
+appear.
+
+The `@bs.deriving abstract` attribute exists to solve this problem. When present
+in a record type, `@bs.deriving abstract` makes the record definition abstract
+and generates the following functions instead:
+
+- A constructor function for creating values of the type
+- Getters and setters for accessing the record fields
+
+`@bs.deriving abstract` effectively models a record-shaped JavaScript object
+exclusively through a set of (generated) functions derived from attribute
+annotations on the OCaml type definition.
+
+Let’s see an example. Considering this Melange code:
+
+```ocaml
+type person = {
+  name : string;
+  age : int; [@bs.optional]
+}
+[@@bs.deriving abstract]
+```
+
+Melange will make the `person` type abstract and generate constructor, getter
+and setter functions. In our example, the OCaml signature would look like this
+after preprocessing:
+
+```ocaml
+type person
+
+val person : name:string -> ?age:int -> unit -> person
+
+val nameGet : person -> string
+
+val ageGet : person -> int option
+```
+
+The `person` function can be used to create values of `person`. It is the only
+possible way to create values of this type, since Melange makes it abstract.
+Using literals like `{ name = "Alice"; age = None }` directly doesn’t type
+check.
+
+Here is an example of how we can use it:
+
+```ocaml
+let alice = person ~name:"Alice" ~age:20 ()
+let bob = person ~name:"Bob" ()
+```
+
+This will generate the following JavaScript code. Note how there is no
+JavaScript runtime overhead:
+
+```js
+var alice = {
+  name: "Alice",
+  age: 20
+};
+
+var bob = {
+  name: "Bob"
+};
+```
+
+The `person` function uses labeled arguments to represent record fields. Because
+there is an optional argument `age`, it takes a last argument of type `unit`.
+This non-labeled argument allows to omit the optional argument on function
+application. Further details about optional labeled arguments can be found in
+[the corresponding section of the OCaml
+manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
+
+The functions `nameGet` and `ageGet` are accessors for each record field:
+
+```ocaml
+let twenty = ageGet alice
+
+let bob = nameGet bob
+```
+
+This generates:
+
+```javascript
+var twenty = alice.age;
+
+var bob = bob.name;
+```
+
+The functions are named by appending `Get` to the field names of the record to
+prevent potential clashes with other values within the module. If shorter names
+are preferred for the getter functions, there is an alternate `{ abstract =
+light }` payload that can be passed to `bs.deriving`:
+
+```ocaml
+type person = {
+  name : string;
+  age : int;
+}
+[@@bs.deriving { abstract = light }]
+
+let alice = person ~name:"Alice" ~age:20
+let aliceName = name alice
+```
+
+Which generates:
+
+```javascript
+var alice = {
+  name: "Alice",
+  age: 20
+};
+
+var aliceName = alice.name;
+```
+
+In this example, the getter functions share the same names as the object fields.
+Another distinction from the previous example is that the `person` constructor
+function no longer requires the final `unit` argument since we have excluded the
+optional field in this case.
+
+> **_NOTE:_** The `bs.as` attribute can still be applied to record fields when
+> the record type is annotated with `bs.deriving`, allowing for the renaming of
+> fields in the resulting JavaScript objects, as demonstrated in the section
+> about [binding to objects with static
+> shape](#objects-with-static-shape-record-like). However, the option to pass
+> indices to the `bs.as` decorator (like `[@bs.as "0"]`) to change the runtime
+> representation to an array is not available when using `bs.deriving`.
+
+##### Compatibility with OCaml features
+
+The `@bs.deriving abstract` attribute and its lightweight variant can be used
+with [mutable
+fields](https://v2.ocaml.org/manual/coreexamples.html#s:imperative-features) and
+[private types](https://v2.ocaml.org/manual/privatetypes.html), which are
+features inherited by Melange from OCaml.
+
+When the record type has mutable fields, Melange will generate setter functions
+for them. For example:
+
+```ocaml
+type person = {
+  name : string;
+  mutable age : int;
+}
+[@@bs.deriving abstract]
+
+let alice = person ~name:"Alice" ~age:20 
+
+let () = ageSet alice 21
+```
+
+This will generate:
+
+```javascript
+var alice = {
+  name: "Alice",
+  age: 20
+};
+
+alice.age = 21;
+```
+
+If the `mutable` keyword is omitted from the interface file, Melange will not
+include the setter function in the module signature, preventing other modules
+from mutating any values from the type.
+
+Private types can be used to prevent Melange from creating the constructor
+function. For example, if we define `person` type as private:
+
+```ocaml
+type person = private {
+  name : string;
+  age : int;
+}
+[@@bs.deriving abstract]
+```
+
+The accessors `nameGet` and `ageGet` will still be generated, but not the
+constructor `person`. This is useful when binding to JavaScript objects while
+preventing any Melange code from creating values of such type.

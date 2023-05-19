@@ -110,3 +110,8 @@ blockquote {
     padding: 1em 10px .1em 10px;
     quotes: "\201C""\201D""\2018""\2019"
 }
+
+/* Needed for code spans like `{ abstract = light }` to render ok when they get broken into 2 lines in md */
+.rst-content code {
+    white-space:nowrap;
+}
