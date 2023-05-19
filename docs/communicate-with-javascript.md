@@ -796,9 +796,9 @@ Note that the empty string at the end of the function is used to make it
 syntactically valid. The value of this string is ignored by the compiler.
 
 Since there is an optional argument `options`, an additional unlabeled argument
-of type `unit` is required. This allows the compiler to determine if the
-optional argument has been omitted when the function is applied. More
-information about optional arguments can be found in the [OCaml
+of type `unit` is included after it. It allows to omit the optional argument on
+function application. More information about labeled optional arguments can be
+found in the [OCaml
 manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The return type of the function should be left unspecified using the wildcard
@@ -2051,11 +2051,11 @@ var bob = {
 };
 ```
 
-The `person` function uses labeled arguments to represent record fields, and
-also takes a last argument of type `unit`. This non-labeled argument is
-necessary to allow the compiler to determine when the optional argument has been
-omitted during function application. Further details about optional labeled
-arguments can be found in [the corresponding section of the OCaml
+The `person` function uses labeled arguments to represent record fields. Because
+there is an optional argument `age`, it takes a last argument of type `unit`.
+This non-labeled argument allows to omit the optional argument on function
+application. Further details about optional labeled arguments can be found in
+[the corresponding section of the OCaml
 manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The functions `nameGet` and `ageGet` are accessors for each record field:
