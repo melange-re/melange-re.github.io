@@ -815,7 +815,7 @@ the `bs.as` attribute can be used to rename fields.
 If we call the function like this:
 
 ```ocaml
-let homeRoute = route ~__type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
 ```
 
 We get the following JavaScript, which does not include the `options` field
