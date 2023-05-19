@@ -1674,7 +1674,7 @@ value. It is rarely used, but introduced here for debugging purposes.
 ## Deriving code from types
 
 As we saw in a [previous section](#non-shared-data-types), there are some types
-in Melange that compile to values that are not easily manipulable from
+in Melange that compile to values that are not easy to manipulate from
 JavaScript. To facilitate the communication from JavaScript code with values of
 these types, Melange includes an attribute `bs.deriving` that helps generating
 conversion functions, as well as functions to create values from these types. In
