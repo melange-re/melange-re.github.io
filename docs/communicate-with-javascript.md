@@ -1309,8 +1309,8 @@ var v = Path.join("a", "b");
 If more dynamism is needed, there is a way to inject elements with different
 types in the array and still have Melange compile to JavaScript values that are
 not wrapped using the OCaml
-[`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which is
-documented [in a section below](todo-fix-me.md):
+[`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which was
+mentioned [in the OCaml attributes section](#attributes):
 
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
