@@ -1,0 +1,28 @@
+opam-version: "2.0"
+synopsis: "Melange documentation site"
+description: "Content for the Melange documentation site"
+maintainer: [
+  "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
+  "Javier Chávarri <javier.chavarri@gmail.com>"
+]
+authors: [
+  "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
+  "Javier Chávarri <javier.chavarri@gmail.com>"
+]
+license: "MIT"
+homepage: "https://github.com/melange-re/documentation-site"
+bug-reports: "https://github.com/melange-re/documentation-site"
+depends: [
+  "ocaml" {>= "4.14.0" & < "5.0.0"}
+  "reason" {>= "3.8.1" & < "4.0.0"}
+  "cmarkit"
+  "dune" {dev}
+  "melange" {dev}
+  "ocaml-lsp-server" {dev}
+  "ocamlformat" {dev}
+]
+dev-repo: "git+https://github.com/melange-re/documentation-site.git"
+pin-depends: [
+  [ "dune.dev" "git+https://github.com/ocaml/dune.git#e33cb627bd301dd5632f91001be0a78bce31032b" ]
+  [ "melange.dev" "git+https://github.com/melange-re/melange.git#bd428f319b1d5ff2cf412b859c5e652b8c9e92a7" ]
+]
