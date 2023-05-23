@@ -4,8 +4,9 @@ Melange can consume packages from both the [npm
 registry](https://www.npmjs.com/) and the [opam
 repository](https://opam.ocaml.org/packages/).
 
-- For Melange libraries and bindings (compile-time dependencies), use
-  [opam](https://opam.ocaml.org/).
+- For Melange libraries and bindings (compile-time dependencies), use one of
+  the package management alternatives described in [Getting
+  started](getting-started.md).
 - For JavaScript packages required by Melange bindings (runtime dependencies),
   use [npm](https://docs.npmjs.com/cli/) (or [any of its
   alternatives](https://npmtrends.com/@microsoft/rush-vs-bolt-vs-pnpm-vs-rush-vs-yarn)).
