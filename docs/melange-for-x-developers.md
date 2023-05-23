@@ -531,13 +531,18 @@ dedicated section](package-management.md).
 
 ### Build system
 
-While ReScript has its own build system, originally based on Ninja, Melange
-defers to Dune as orchestrator of builds, as is explained in detail in [the
-corresponding section](build-system.md).
+ReScript has its own build system, originally based on Ninja.
 
-The divergences caused by switching the build system have a lot of implications
-and nuances that are too complex to explain in this section, but some of the
-specific details have been discussed in [the OCaml
+Melange defers to [Dune](https://dune.build/) as orchestrator of builds, as it
+is explained in detail in [the corresponding section](build-system.md). By
+integrating with Dune, Melange can benefit from the multiple features provided.
+One of the most useful features is first-class supports for monorepos. But there
+are multiple others, like virtual libraries, watch mode, or integrations with
+tools like [odoc](https://github.com/ocaml/odoc).
+
+The divergences caused by the different build systems have a lot of implications
+and nuances that might be too complex to explain in this section, but some of
+the specific details have been discussed in [the OCaml
 forum](https://discuss.ocaml.org/t/ahrefs-is-now-built-with-melange/12107/3).
 
 ### Source-based vs pre-built distribution
@@ -556,9 +561,11 @@ users if their architecture is not included in the prebuilt set of binaries.
 
 ### OCaml compiler version
 
-While ReScript is compatible with the 4.06 version of the OCaml compiler,
-Melange is compatible with the version 4.14 (as of May 2023), and the Melange
-roadmap includes upgrading to the latest version of the compiler.
+ReScript is compatible with the 4.06 version of the OCaml compiler, while
+Melange is compatible with the version 4.14 (as of May 2023).
+
+The (Melange roadmap)[todo-fix-me.md] includes a milestone to upgrade to the
+latest version of the compiler 5.0.
 
 ### Editor integration
 
@@ -570,20 +577,45 @@ same editor configuration.
 ReScript has its [own set of editor
 plugins](https://rescript-lang.org/docs/manual/latest/editor-plugins).
 
-### Features compromising OCaml compatibility
+### Feature choice and alignment with OCaml
 
-ReScript supports features that compromise the compatibility with the OCaml
-compiler in order to bring it closer to JavaScript. As one of the main goals of
-Melange is to maintain or increase its compatibility with OCaml, these features
-are not included in Melange.
+ReScript goal is to model the language to bring it as close to JavaScript as
+possible. From the website [introduction
+section](https://rescript-lang.org/docs/manual/latest/introduction):
 
-Here is a non-exhaustive list of these features:
+> ReScript looks like JS, acts like JS, and compiles to the highest quality of
+> clean, readable and performant JS (...)
+
+New features added to ReScript might close its alignment with JavaScript, but
+some of these features can lead to greater divergence from OCaml. As Melange
+prioritizes compatibility with OCaml, it avoids incorporating those features
+that widen the gap between the two.
+
+Here is a non-exhaustive list of the features that ReScript has added and will
+not be supported in Melange:
 
 - The `async` / `await` syntax: similar functionality can be achieved in Melange
   through the usage of [binding
   operators](https://v2.ocaml.org/manual/bindingops.html) (introduced in OCaml
   4.13).
-- Optional fields in records, like `type t = { x : int, @optional y : int }`
+- Optional fields in records, like `type t = { x : int, @optional y : int }`.
+- Uncurried by default.
+
+The restriction above only applies to features that compromise compatibility
+with OCaml, but otherwise Melange can incorporate bugfixes or new functionality
+from ReScript.
+
+On the other hand, as Melange goal is to keep up with the version of the OCaml
+compiler, there are features inherited from OCaml that most likely will never be
+available in ReScript, for example:
+
+- [Binding operators](https://v2.ocaml.org/manual/bindingops.html) / `let`
+  bindings
+- Better type errors for some specific cases
+- Additions to the stdlib
+
+The whole list of changes added to the OCaml compiler can be checked
+[here](https://ocaml.org/releases).
 
 ### Syntax
 
