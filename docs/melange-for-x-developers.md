@@ -584,3 +584,18 @@ Here is a non-exhaustive list of these features:
   operators](https://v2.ocaml.org/manual/bindingops.html) (introduced in OCaml
   4.13).
 - Optional fields in records, like `type t = { x : int, @optional y : int }`
+
+### Syntax
+
+ReScript encourages using [the new
+syntax](https://rescript-lang.org/docs/manual/latest/migrate-from-bucklescript-reason)
+for any new code. While OCaml syntax might be supported today, its usage is not
+documented. Reason syntax is no longer supported.
+
+Melange supports and documents both Reason and OCaml syntaxes. It also includes
+a best-effort support for ReScript syntax for backwards compatibility, provided
+through the `rescript-syntax` package, available [in opam](todo-fix-me.md). To
+build any code written using ReScript syntax, the only requirement is to
+download this package, as Melange and Dune will already coordinate to make use
+of it when `res` or `resi` files are found.
+
