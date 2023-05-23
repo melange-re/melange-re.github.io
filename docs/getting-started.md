@@ -57,14 +57,7 @@ documentation site.
 ## Alternative package managers (experimental)
 
 Melange can also be used with other package managers. The following instructions
-apply to:
-
-- [Nix](#nix)
-- [Esy](#esy)
-    - a [Melange project template for
-      esy](https://github.com/melange-re/melange-esy-template) is also
-      available to [start from a
-      template](https://github.com/melange-re/melange-esy-template/generate)
+apply to [Nix](#nix) and [esy](#esy).
 
 ### [Nix](https://nixos.org/)
 
@@ -117,12 +110,15 @@ Make sure [Nix](https://nixos.org/download.html) is installed. The following
 
 To enter a Melange development shell, run `nix develop -c $SHELL`.
 
-### Esy
+### [esy](https://esy.sh/)
 
-First, make sure `esy` is installed. `npm i -g esy` does the trick in most
+First, make sure `esy` is [installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g esy` does the trick in most
 setups.
 
-The following is an example `esy.json` that can help start a Melange project.
+The following is an example `esy.json` that can help start a Melange project. A
+[project template for esy](https://github.com/melange-re/melange-esy-template)
+is also available if you prefer to [start from a
+template](https://github.com/melange-re/melange-esy-template/generate).
 
 ```json
 {
@@ -146,5 +142,5 @@ The following is an example `esy.json` that can help start a Melange project.
 Run:
 
 1. `esy install` to build and make all dependencies available
-2. `esy shell` to enter a melange development environment
+2. `esy shell` to enter a Melange development environment
 
