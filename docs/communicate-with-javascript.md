@@ -346,7 +346,8 @@ string | string
 array | array
 tuple `(3, 4)` | array `[3, 4]`
 bool | boolean
-Js.Nullable.t | `null` / `undefined`
+[Js.Nullable.t](todo-fix-me.md) | `null` / `undefined`
+[Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 Option.t `None` | `undefined`
 Option.t `Some( Some .. Some (None))` | internal representation
 Option.t `Some 2` | `2`
@@ -517,7 +518,28 @@ separately, and not be directly used in JavaScript.
 Extensive documentation about interfacing with JavaScript objects using records
 can be found in [the section below](#bind-to-js-object).
 
-### Non-shared data types
+#### Regular expressions
+
+Regular expressions created using the `%bs.re` extension node compile to their
+JavaScript counterpart.
+
+For example:
+
+```ocaml
+let r = [%bs.re "/b/g"]
+```
+
+Will compile to:
+
+```js
+var r = /b/g;
+```
+
+A regular expression like the above is of type `Js.Re.t`. The
+[`Js.Re`](todo-fix-me.md) module provides the bindings to the JavaScript
+functions that operate over regular expressions.
+
+## Non-shared data types
 
 The following types differ too much between Melange and JavaScript, so while
 they can always be manipulated from JavaScript, it is recommended to transform
@@ -619,7 +641,7 @@ Here is the list of all the extension nodes supported by Melange:
 - [`bs.external`](#detect-global-variables): read global values
 - [`bs.obj`](#using-jst-objects): create JavaScript object literals
 - [`bs.raw`](#generate-raw-javascript): write raw JavaScript code
-- [`bs.re`](todo-fix-me.md): insert regular expressions
+- [`bs.re`](#regular-expressions): insert regular expressions
 
 ## Generate raw JavaScript
 
