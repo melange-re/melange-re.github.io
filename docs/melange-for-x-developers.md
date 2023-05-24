@@ -19,7 +19,14 @@ applications safely, thanks to OCaml expressive and powerful type system.
 Melange allows to build applications using either OCaml syntax or Reason syntax.
 If you don’t know which one to choose, we recommend
 [Reason](https://reasonml.github.io/en/), as it has been designed with
-JavaScript developers in mind. Programs written using Reason syntax are fully
+JavaScript developers in mind.
+
+Reason has first-class support for
+[JSX](https://reasonml.github.io/docs/en/jsx), and there are bindings like
+[ReasonReact](https://github.com/reasonml/reason-react/) that build on top of
+that functionality to provide a great developer experience.
+
+Another advantage is that programs written using Reason syntax are fully
 compatible with those written in OCaml syntax.
 
 Here is the cheat sheet with some equivalents between JavaScript and Reason
@@ -467,6 +474,7 @@ add(5)(3);
 
 There are many similarities between Js_of_ocaml and Melange:
 
+- Both compile OCaml to JavaScript.
 - Both are available as libraries in the official opam repository.
 - Both have access to the OCaml platform developer toolchain: the OCaml LSP
   server, Merlin, and the different editor extensions.
