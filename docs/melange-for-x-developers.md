@@ -496,20 +496,20 @@ These aspects translate into different trade-offs. Compared to Js_of_ocaml:
 
 On the upside, in Melange:
 
-- Consuming existing JavaScript packages might a bit easier in Melange, thanks
+- Consuming existing JavaScript packages might be a bit easier in Melange, thanks
   to its compilation model and the extensive availability of mechanisms to bind
   to JavaScript code.
 - There is great support for some of the most used JavaScript libraries like
   [ReactJS](https://github.com/reasonml/reason-react/) or GraphQL clients.
 - The generated JavaScript bundles are generally smaller.
 - The generated JavaScript code is generally more readable.
-- Straight-forward integration with JavaScript tooling like Webpack, NextJS,
+- Straight-forward integration with modern JavaScript tooling like Webpack, NextJS,
   etc. This is possible thanks to the 1 module <-> 1 JavaScript file compilation
   model.
 
 ## For ReScript developers
 
-As a project that was born originally from ReScript, Melange inherits a lot of
+As a project that shares a common ancestry with ReScript, Melange inherits a lot of
 its characteristics:
 
 - The compilation model involves compiling a single module into a single
@@ -565,7 +565,7 @@ ReScript is compatible with the 4.06 version of the OCaml compiler, while
 Melange is compatible with the version 4.14 (as of May 2023).
 
 The (Melange roadmap)[todo-fix-me.md] includes a milestone to upgrade to the
-latest version of the compiler 5.0.
+latest version of the compiler to the 5.x release line.
 
 ### Editor integration
 
@@ -579,7 +579,7 @@ plugins](https://rescript-lang.org/docs/manual/latest/editor-plugins).
 
 ### Feature choice and alignment with OCaml
 
-ReScript goal is to model the language to bring it as close to JavaScript as
+ReScript's goal is to model the language to bring it as close to JavaScript as
 possible. From the website [introduction
 section](https://rescript-lang.org/docs/manual/latest/introduction):
 
