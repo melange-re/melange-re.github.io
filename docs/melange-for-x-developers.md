@@ -496,21 +496,21 @@ These aspects translate into different trade-offs. Compared to Js_of_ocaml:
 
 On the upside, in Melange:
 
-- Consuming existing JavaScript packages might be a bit easier in Melange, thanks
-  to its compilation model and the extensive availability of mechanisms to bind
-  to JavaScript code.
+- Consuming existing JavaScript packages might be a bit easier in Melange,
+  thanks to its compilation model and the extensive availability of mechanisms
+  to bind to JavaScript code.
 - There is great support for some of the most used JavaScript libraries like
   [ReactJS](https://github.com/reasonml/reason-react/) or GraphQL clients.
 - The generated JavaScript bundles are generally smaller.
 - The generated JavaScript code is generally more readable.
-- Straight-forward integration with modern JavaScript tooling like Webpack, NextJS,
-  etc. This is possible thanks to the 1 module <-> 1 JavaScript file compilation
-  model.
+- Straight-forward integration with modern JavaScript tooling like Webpack,
+  NextJS, etc. This is possible thanks to the 1 module <-> 1 JavaScript file
+  compilation model.
 
 ## For ReScript developers
 
-As a project that shares a common ancestry with ReScript, Melange inherits a lot of
-its characteristics:
+As a project that shares a common ancestry with ReScript, Melange inherits a lot
+of its characteristics:
 
 - The compilation model involves compiling a single module into a single
   JavaScript file.
@@ -533,8 +533,8 @@ dedicated section](package-management.md).
 
 ReScript has its own build system, originally based on Ninja.
 
-Melange defers to [Dune](https://dune.build/) as orchestrator of builds, as it
-is explained in detail in [the corresponding section](build-system.md). By
+Melange defers to [Dune](https://dune.build/) for build orchestration, as it is
+explained in detail in [the corresponding section](build-system.md). By
 integrating with Dune, Melange can benefit from the multiple features provided.
 One of the most useful features is first-class supports for monorepos. But there
 are multiple others, like virtual libraries, watch mode, or integrations with
@@ -579,7 +579,7 @@ plugins](https://rescript-lang.org/docs/manual/latest/editor-plugins).
 
 ### Feature choice and alignment with OCaml
 
-ReScript's goal is to model the language to bring it as close to JavaScript as
+ReScript’s goal is to model the language to bring it as close to JavaScript as
 possible. From the website [introduction
 section](https://rescript-lang.org/docs/manual/latest/introduction):
 
