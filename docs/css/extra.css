@@ -115,3 +115,29 @@ blockquote {
 .rst-content code {
     white-space:nowrap;
 }
+
+/* Toggle syntax */
+
+.button.toggleSyntaxButton {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 80%;
+    color: #fff;
+}
+
+.toggleSyntaxButton span {
+    padding: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.syntax__ocaml .toggleSyntaxButton-ocaml,.syntax__reasonml .toggleSyntaxButton-reasonml {
+    text-decoration: underline;
+}
+
+.syntax__ocaml .hljs.language-reasonml,.syntax__ocaml .homeCodeSnippet-reasonml,.syntax__reasonml .hljs.language-ocaml,.syntax__reasonml .homeCodeSnippet-ocaml {
+    display: none
+}
