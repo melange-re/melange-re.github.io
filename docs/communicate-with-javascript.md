@@ -176,6 +176,164 @@ For a comprehensive understanding of abstract types and their usefulness, refer
 to the "Encapsulation" section of the [OCaml Cornell
 textbook](https://cs3110.github.io/textbook/chapters/modules/encapsulation.html).
 
+### Pipe operators
+
+There are two pipe operators available in Melange:
+
+- A _pipe last_ operator `|>`, available [in
+  OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
+  inherited in Melange
+
+- A _pipe first_ operator `|.`, available exclusively in Melange
+
+Let’s see the differences between the two.
+
+#### Pipe last
+
+Since version 4.01, OCaml includes a reverse application or "pipe" (`|>`)
+operator, an infix operator that applies the result from the previous expression
+the next function. As a backend for OCaml, Melange inherits this operator.
+
+The pipe operator could be implemented like this (the real implementation is a
+bit
+[different](https://github.com/ocaml/ocaml/blob/d9547617e8b14119beacafaa2546cbebfac1bfe5/stdlib/stdlib.ml#L48)):
+
+```ocaml
+let ( |> ) f g = g f
+```
+
+This operator is useful when multiple functions are applied to some value in
+sequence, with the output of each function becoming the input of the next (a
+_pipeline_).
+
+For example, assuming we have a function `square` defined as:
+
+```ocaml
+let square x = x * x
+```
+
+We are using it like:
+
+```ocaml
+let ten = succ (square 3)
+```
+
+The pipe operator allows to write the computation for `ten` in left-to-right
+order, as [it has left
+associativity](https://v2.ocaml.org/manual/expr.html#ss:precedence-and-associativity):
+
+```ocaml
+let ten = 3 |> square |> succ
+```
+
+When working with functions that can take multiple arguments, the pipe operator
+works best when the functions take the data we are processing as the last
+argument. For example:
+
+```ocaml
+let sum = List.fold_left ( + ) 0
+
+let sum_sq =
+  [ 1; 2; 3 ]
+  |> List.map square (* [1; 4; 9] *)
+  |> sum             (* 1 + 4 + 9 *)
+```
+
+The above example can be written concisely because the `List.map` function in
+the [OCaml standard library](https://v2.ocaml.org/api/Stdlib.List.html) takes
+the list as the second argument. This convention is sometimes referred to as
+"data-last", and is widely adopted in the OCaml ecosystem. Data-last and the
+pipe operator `|>` work great with currying, so they are a great fit for the
+language.
+
+However, there are some limitations when using data-last when it comes to error
+handling. In the given example, if we mistakenly used the wrong function:
+
+```ocaml
+let sum_sq =
+  [ 1; 2; 3 ]
+  |> List.map String.cat
+  |> sum
+```
+
+The compiler would rightfully raise an error:
+
+```text
+4 |   [ 1; 2; 3 ]
+        ^
+Error: This expression has type int but an expression was expected of type
+         string
+```
+
+Note that instead of telling us that we are passing the wrong function in
+`List.map` (`String.cat`), the error points to the list itself. This behavior
+aligns with the way type inference works, as the compiler infers types from left
+to right. Since `[ 1; 2; 3 ] |> List.map String.cat` is equivalent to `List.map
+String.cat [ 1; 2; 3 ]`, the type mismatch is detected when the list is type
+checked, after `String.cat` has been processed.
+
+With the goal of addressing this kind of limitations, Melange introduces the
+pipe first operator `|.`.
+
+#### Pipe first
+
+To overcome the constraints mentioned above and enable the generation of more
+performant JavaScript code, Melange introduces the pipe first operator `|.`.
+
+Unlike the pipe last operator, the pipe first operator is not defined as an
+infix operator. Instead, it is a purely syntactic transformation. This means
+that the parser will convert `f |. g` into `g f` without any runtime performance
+impact.
+
+As its name suggests, the pipe first operator is better suited for functions
+where the data is passed as the first argument.
+
+The functions in the [`Belt` library](todo-fix-me.md) included with Melange have
+been designed with the data-first convention in mind, so they work best with the
+pipe first operator.
+
+For example, we can rewrite the example above using `Belt.List.map` and the pipe
+first operator:
+
+```ocaml
+let sum_sq =
+  [ 1; 2; 3 ]
+  |. Belt.List.map square
+  |. sum
+```
+
+We can see the difference on the error we get if the wrong function is passed to
+`Belt.List.map`:
+
+```ocaml
+let sum_sq =
+  [ 1; 2; 3 ]
+  |. Belt.List.map String.cat
+  |. sum
+```
+
+The compiler will show this error message:
+
+```text
+4 |   |. Belt.List.map String.cat
+                       ^^^^^^^^^^
+Error: This expression has type string -> string -> string
+       but an expression was expected of type int -> 'a
+       Type string is not compatible with type int
+```
+
+The error points now to the function passed to `Belt.List.map`, which is more
+natural with the way the code is being written.
+
+Melange supports writing bindings to JavaScript using any of the two
+conventions, data-first or data-last, as shown in the ["Chaining"
+section](#chaining).
+
+For further details about the differences between the two operators, the
+data-first and data-last conventions and the trade-offs between them, one can
+refer to [this related blog
+post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
+
 ## Data types and runtime representation
 
 This is how each Melange type is converted into JavaScript values:
@@ -1225,13 +1383,9 @@ kind of API can be designed with Melange externals. Depending on which
 convention we want to use, there are two attributes available:
 
 - For a data-first convention, the `bs.send` attribute, in combination with [the
-  pipe first operator](todo-fix-me.md) `|.`
+  pipe first operator](#pipe-first) `|.`
 - For a data-last convention, the `bs.send.pipe` attribute, in combination with
-  OCaml pipe last operator `|>`.
-
-For further details about the differences in the conventions and the trade-offs,
-one can refer to [this "Data-first and data-last" blog
-post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
+  OCaml [pipe last operator](#pipe-last) `|>`.
 
 Let’s see first an example of chaining using data-first convention with the pipe
 first operator `|.`:
