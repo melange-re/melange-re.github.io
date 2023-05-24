@@ -344,8 +344,9 @@ TypeScript you can use types like `any`, or other extensive types like
 TypeScript may sacrifice soundness for practicality when needed, like mentioned
 in [the
 handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness).
-OCaml implementations provide methods like `Obj.magic` but they are more
-normally discouraged.
+OCaml implementations provide methods like `Obj.magic` and [the `identity`
+primitive](communicate-with-javascript.md#special-identity-external), but they
+are more normally discouraged.
 
 ### Cheatsheet
 
@@ -561,11 +562,12 @@ Melange projects might need to include two package configuration files. But on
 the other hand they can benefit from opam’s source-based package distribution
 model for things like PPXs, linters, or any other OCaml tooling.
 
-By comparison, to consume any OCaml ecosystem tool in ReScript is more
-challenging. As npm is a package manager designed for an interpreted language,
-package distribution requires including prebuilt binaries, which makes
-maintenance harder for library authors, and might lead to issues for library
-users if their architecture is not included in the prebuilt set of binaries.
+In comparison, consuming any OCaml tool in ReScript is more challenging. Since
+ReScript lacks a native toolchain, authors of the tools need to provide
+pre-built binaries for all the supported systems and architectures. This poses
+difficulties for the authors in terms of maintenance, and it can also result in
+certain users being unable to access these tools if their systems or
+architectures are not included in the pre-built binaries.
 
 ### OCaml compiler version
 
