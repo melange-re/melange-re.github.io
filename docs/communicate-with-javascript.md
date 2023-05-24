@@ -72,9 +72,12 @@ The difference between one and two percentage characters is detailed in the
 
 Attributes are "decorations" applied to specific parts of the code to provide
 additional information. In Melange, attributes are used in two ways to enhance
-the expressiveness of generating JavaScript code.
+the expressiveness of generating JavaScript code: either reusing existing OCaml
+built-in attributes or defining new ones.
 
-The first approach is leveraging the existing [OCaml's built-in
+##### Reusing OCaml attributes
+
+The first approach is leveraging the existing [OCaml’s built-in
 attributes](https://v2.ocaml.org/manual/attributes.html#ss:builtin-attributes)
 to be used for JavaScript generation.
 
@@ -102,6 +105,8 @@ var student_name = "alice";
 
 Other OCaml pre-built attributes like `alert` or `deprecated` can be used with
 Melange as well.
+
+##### Defining new attributes
 
 The second approach is introducing new attributes specifically designed for
 Melange, such as the [`bs.val`
@@ -1492,7 +1497,7 @@ If more dynamism is needed, there is a way to inject elements with different
 types in the array and still have Melange compile to JavaScript values that are
 not wrapped using the OCaml
 [`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which was
-mentioned [in the OCaml attributes section](#attributes):
+mentioned [in the OCaml attributes section](#reusing-ocaml-attributes):
 
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
