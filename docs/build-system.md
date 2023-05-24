@@ -46,7 +46,7 @@ developers. It provides several benefits, including:
 - Hygiene is maintained in Dune by building out of source: all compilation
   artifacts are placed in a separate `_build` folder. Users can optionally [copy
   them back to the source
-  tree](https://dune.readthedocs.io/en/latest/dune-files.html#promote).
+  tree](https://dune.readthedocs.io/en/stable/dune-files.html#promote).
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
@@ -55,7 +55,7 @@ developers. It provides several benefits, including:
   integration for editor support, [cross
   compilation](https://dune.readthedocs.io/en/stable/cross-compilation.html),
   and [generation of `opam`
-  files](https://dune.readthedocs.io/en/stable/opam.html#generating-opam-files).
+  files](https://dune.readthedocs.io/en/stable/howto/opam-file-generation.html).
 
 #### Creating a new project
 
@@ -144,7 +144,7 @@ let () = Js.log Lib.name
 
 The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
 libraries and modules. In-depth documentation about this stanza can be found in
-the [Dune docs](https://dune.readthedocs.io/en/latest/melange.html).
+the [Dune docs](https://dune.readthedocs.io/en/stable/melange.html).
 
 The file structure of the app should look something like this:
 
@@ -302,7 +302,7 @@ provides a way to specify these dependencies, depending on the stanza:
 - For `melange.emit` stanzas, a field `runtime_deps`
 
 Both fields are documented in the [Melange
-page](https://dune.readthedocs.io/en/latest/melange.html) of the Dune
+page](https://dune.readthedocs.io/en/stable/melange.html) of the Dune
 documentation site.
 
 For the sake of learning how to work with assets in a Melange project, let’s say
@@ -362,7 +362,7 @@ multiple files. For example:
 ```
 
 See the [dependency specification
-docs](https://dune.readthedocs.io/en/latest/concepts/dependency-spec.html) to
+docs](https://dune.readthedocs.io/en/stable/concepts/dependency-spec.html) to
 learn more about it.
 
 With runtime dependencies, we have reached the end of this Dune guide for
