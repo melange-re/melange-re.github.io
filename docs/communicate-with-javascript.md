@@ -76,9 +76,15 @@ the expressiveness of generating JavaScript code.
 
 The first approach is leveraging the existing [OCaml's built-in
 attributes](https://v2.ocaml.org/manual/attributes.html#ss:builtin-attributes)
-to be used for JavaScript generation. One prominent example is the `unboxed`
-attribute, which optimizes the compilation of single-field records and variants
-with a single tag to their raw values.
+to be used for JavaScript generation.
+
+One prominent example of OCaml attributes that can be used in Melange projects
+is the `unboxed` attribute, which optimizes the compilation of single-field
+records and variants with a single tag to their raw values. This is useful when
+defining type aliases that we don’t want to mix up, or when binding to
+JavaScript code that uses heterogeneous collections. An example of the latter is
+discussed in the [variadic function arguments](#variadic-function-arguments)
+section.
 
 For instance:
 
