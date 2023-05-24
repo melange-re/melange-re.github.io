@@ -1,10 +1,11 @@
 site_name: Melange
 
-repo_url: https://github.com/melange-re/documentation-site/
+repo_url: https://github.com/melange-re/melange-re.github.io/
 edit_uri: blob/master/docs/
 
 theme:
   name: readthedocs
+  custom_dir: theme
   locale: en
   highlightjs: true
   hljs_languages:
@@ -24,6 +25,7 @@ nav:
     - Package management: package-management.md
     - Build system: build-system.md
     - Communicate with JavaScript: communicate-with-javascript.md
+    - Melange for X developers: melange-for-x-developers.md
   - Reference:
     - API: api.md
   - Try:
