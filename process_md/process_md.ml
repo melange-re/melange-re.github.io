@@ -24,6 +24,7 @@ let insert_reason_blocks doc =
   let block _m = function
     | Block.Code_block (cb, meta) as original -> (
         match Block.Code_block.info_string cb with
+        | Some ("reasonml", _) -> Mapper.ret Block.empty
         | Some ("ocaml", _) ->
             let layout = Block.Code_block.layout cb in
             let ocaml_code = Block.Code_block.code cb in
