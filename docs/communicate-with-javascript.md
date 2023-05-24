@@ -180,7 +180,9 @@ textbook](https://cs3110.github.io/textbook/chapters/modules/encapsulation.html)
 
 There are two pipe operators available in Melange:
 
-- A _pipe last_ operator `|>`, available in OCaml and inherited in Melange
+- A _pipe last_ operator `|>`, available [in
+  OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
+  inherited in Melange
 
 - A _pipe first_ operator `|.`, available exclusively in Melange
 
