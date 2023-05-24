@@ -50,7 +50,7 @@ developers. It provides several benefits, including:
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
-  [Js_of_ocaml](https://dune.readthedocs.io/en/stable/jsoo.html), [watch
+  [Js\_of\_ocaml](https://dune.readthedocs.io/en/stable/jsoo.html), [watch
   mode](https://dune.readthedocs.io/en/stable/usage.html#watch-mode), Merlin/LSP
   integration for editor support, [cross
   compilation](https://dune.readthedocs.io/en/stable/cross-compilation.html),
@@ -104,8 +104,11 @@ inside the `dune` file:
 
 Create a file `lib.ml` in the same folder:
 
-```ml
+```ocaml
 let name = "Jane"
+```
+```reasonml
+let name = "Jane";
 ```
 
 The top level configuration entries —like the `library` one that appears in the
@@ -336,6 +339,11 @@ Finally, update `lib/lib.ml` to read from the recently added file:
 let dir = [%bs.raw "__dirname"]
 let file = "name.txt"
 let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
+```
+```reasonml
+let dir = [%bs.raw "__dirname"];
+let file = "name.txt";
+let name = Node.Fs.readFileSync(dir ++ "/" ++ file, `ascii);
 ```
 
 After these changes, once we build the project, we should still be able to run
