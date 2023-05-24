@@ -56,8 +56,91 @@ documentation site.
 
 ## Alternative package managers (experimental)
 
-Although the recommended setup for Melange projects is with opam, Melange can
-also be used with other package managers, such as [esy](https://esy.sh/) and
-[Nix](https://github.com/NixOS/nix). There is also a [Melange project template
-for esy](https://github.com/melange-re/melange-esy-template) available, similar
-in spirit to the Melange opam template mentioned above.
+Melange can also be used with other package managers. The following instructions
+apply to [Nix](#nix) and [esy](#esy).
+
+### [Nix](https://nixos.org/)
+
+Melange provides an overlay that can be:
+
+- referenced from a [Nix flake](https://nixos.wiki/wiki/Flakes)
+- overlayed onto a `nixpkgs` package set
+
+Make sure [Nix](https://nixos.org/download.html) is installed. The following
+`flake.nix` illustrates how to set up a Melange development environment.
+
+```nix
+{
+  description = "Melange starter";
+
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs";
+
+    # Depend on the Melange flake, which provides the overlay
+    melange.url = "github:melange-re/melange";
+  };
+
+  outputs = { self, nixpkgs, flake-utils, melange }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
+          # Set the OCaml set of packages to the 4.14 release line
+          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_4_14; })
+          # Apply the Melange overlay
+          melange.overlays.default
+        ];
+        inherit (pkgs) ocamlPackages;
+      in
+
+      {
+        devShells.default = pkgs.mkShell {
+          nativeBuildInputs = with ocamlPackages; [
+            ocaml
+            dune_3
+            findlib
+            ocaml-lsp
+            ocamlPackages.melange
+          ];
+          buildInputs = [ ocamlPackages.melange ];
+        };
+      });
+}
+```
+
+To enter a Melange development shell, run `nix develop -c $SHELL`.
+
+### [esy](https://esy.sh/)
+
+First, make sure `esy` is [installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g esy` does the trick in most
+setups.
+
+The following is an example `esy.json` that can help start a Melange project. A
+[project template for esy](https://github.com/melange-re/melange-esy-template)
+is also available if you prefer to [start from a
+template](https://github.com/melange-re/melange-esy-template/generate).
+
+```json
+{
+  "name": "melange-project",
+  "dependencies": {
+    "ocaml": "4.14.x",
+    "@opam/dune": ">= 3.8.0",
+    "@opam/melange": "*"
+  },
+  "devDependencies": {
+    "@opam/ocaml-lsp-server": "*"
+  },
+  "esy": {
+    "build": [
+      "dune build @melange"
+    ]
+  }
+}
+```
+
+Run:
+
+1. `esy install` to build and make all dependencies available
+2. `esy shell` to enter a Melange development environment
+
