@@ -21,7 +21,7 @@ provide blocks that express these interactions.
 One approach could be to introduce new syntactic constructs (keywords and such)
 to do so, for example:
 
-```ocaml
+```text
 javascript add : int -> int -> int = {|function(x,y){
   return x + y
 }|}
@@ -56,6 +56,11 @@ to produce "raw" JavaScript inside a Melange program:
 ```ocaml
 [%%bs.raw "var a = 1; var b = 2"]
 let add = [%bs.raw "a + b"]
+```
+```reasonml
+%bs.raw
+"var a = 1; var b = 2";
+let add = [%bs.raw "a + b"];
 ```
 
 Which will generate the following JavaScript code:
@@ -96,6 +101,12 @@ type name =
   | Name of string [@@unboxed]
 let student_name = Name "alice"
 ```
+```reasonml
+[@unboxed]
+type name =
+  | Name(string);
+let student_name = Name("alice");
+```
 
 Compiles into:
 
@@ -131,6 +142,16 @@ type t = {
   name : string; [@bs.as "n"]
 }
 ```
+```reasonml
+[@bs.val] external clearTimeout: timeoutId => unit = "clearTimeout";
+
+type t = {
+  [@bs.as "a"]
+  age: int,
+  [@bs.as "n"]
+  name: string,
+};
+```
 
 To learn more about preprocessors, attributes and extension nodes, check the
 [section about PPX
@@ -147,6 +168,9 @@ C code](https://v2.ocaml.org/manual/intfc.html):
 
 ```ocaml
 external my_c_function : int -> string = "someCFunctionName"
+```
+```reasonml
+external my_c_function: int => string = "someCFunctionName";
 ```
 
 It is like a `let` binding, except that the body of an external is a string.
@@ -177,6 +201,11 @@ type foo = string
 type bar = int
 external danger_zone : foo -> bar = "%identity"
 ```
+```reasonml
+type foo = string;
+type bar = int;
+external danger_zone: foo => bar = "%identity";
+```
 
 This is a final escape hatch which does nothing but convert from the type `foo`
 to `bar`. In the following sections, if you ever fail to write an `external`,
@@ -189,6 +218,9 @@ type is defined without being assigned to a value. Here is an example:
 
 ```ocaml
 type document
+```
+```reasonml
+type document;
 ```
 
 These types are referred to as "abstract types" and are commonly used together
@@ -209,6 +241,12 @@ type document
 external document : document = "document" [@@bs.val]
 external set_title : document -> string -> unit = "title" [@@bs.set]
 ```
+```reasonml
+type document;
+
+[@bs.val] external document: document = "document";
+[@bs.set] external set_title: (document, string) => unit = "title";
+```
 
 Subsequent sections delve into the details of the
 [`bs.val`](#bind-to-global-javascript-functions-or-values) and
@@ -225,7 +263,7 @@ There are two pipe operators available in Melange:
 - A _pipe last_ operator `|>`, available [in
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
-
+  
 - A _pipe first_ operator `|.`, available exclusively in Melange
 
 Let’s see the differences between the two.
@@ -243,6 +281,9 @@ bit
 ```ocaml
 let ( |> ) f g = g f
 ```
+```reasonml
+let (|>) = (f, g) => g(f);
+```
 
 This operator is useful when multiple functions are applied to some value in
 sequence, with the output of each function becoming the input of the next (a
@@ -253,11 +294,17 @@ For example, assuming we have a function `square` defined as:
 ```ocaml
 let square x = x * x
 ```
+```reasonml
+let square = x => x * x;
+```
 
 We are using it like:
 
 ```ocaml
 let ten = succ (square 3)
+```
+```reasonml
+let ten = succ(square(3));
 ```
 
 The pipe operator allows to write the computation for `ten` in left-to-right
@@ -266,6 +313,9 @@ associativity](https://v2.ocaml.org/manual/expr.html#ss:precedence-and-associati
 
 ```ocaml
 let ten = 3 |> square |> succ
+```
+```reasonml
+let ten = 3 |> square |> succ;
 ```
 
 When working with functions that can take multiple arguments, the pipe operator
@@ -279,6 +329,14 @@ let sum_sq =
   [ 1; 2; 3 ]
   |> List.map square (* [1; 4; 9] *)
   |> sum             (* 1 + 4 + 9 *)
+```
+```reasonml
+let sum = List.fold_left((+), 0);
+
+let sum_sq =
+  [1, 2, 3]
+  |> List.map(square)  /* [1; 4; 9] */
+  |> sum; /* 1 + 4 + 9 */
 ```
 
 The above example can be written concisely because the `List.map` function in
@@ -296,6 +354,9 @@ let sum_sq =
   [ 1; 2; 3 ]
   |> List.map String.cat
   |> sum
+```
+```reasonml
+let sum_sq = [1, 2, 3] |> List.map(String.cat) |> sum;
 ```
 
 The compiler would rightfully raise an error:
@@ -343,6 +404,9 @@ let sum_sq =
   |. Belt.List.map square
   |. sum
 ```
+```reasonml
+let sum_sq = [1, 2, 3]->(Belt.List.map(square))->sum;
+```
 
 We can see the difference on the error we get if the wrong function is passed to
 `Belt.List.map`:
@@ -352,6 +416,9 @@ let sum_sq =
   [ 1; 2; 3 ]
   |. Belt.List.map String.cat
   |. sum
+```
+```reasonml
+let sum_sq = [1, 2, 3]->(Belt.List.map(String.cat))->sum;
 ```
 
 The compiler will show this error message:
@@ -380,30 +447,30 @@ post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
 
 This is how each Melange type is converted into JavaScript values:
 
-Melange | JavaScript
----------------------|---------------
-int | number
-nativeint | number
-int32 | number
-float | number
-string | string
-array | array
-tuple `(3, 4)` | array `[3, 4]`
-bool | boolean
-[Js.Nullable.t](todo-fix-me.md) | `null` / `undefined`
-[Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-Option.t `None` | `undefined`
-Option.t `Some( Some .. Some (None))` | internal representation
-Option.t `Some 2` | `2`
-record `{x: 1; y: 2}` | object `{x: 1, y: 2}`
-int64 | array of 2 elements `[high, low]` high is signed, low unsigned
-char | `'a'` -> `97` (ascii code)
-bytes | number array
-list `[]` | `0`
-list `[x, y]` | `{ hd: x, tl: { hd: y, tl: 0 } }`
-list `[1, 2, 3]` | `{ hd: 1, tl: { hd: 2, tl: { hd: 3, tl: 0 } } }`
-variant | See below
-polymorphic variant | See below
+Melange \| JavaScript
+\---------------------\|---------------
+int \| number
+nativeint \| number
+int32 \| number
+float \| number
+string \| string
+array \| array
+tuple `(3, 4)` \| array `[3, 4]`
+bool \| boolean
+[Js.Nullable.t](todo-fix-me.md) \| `null` / `undefined`
+[Js.Re.t](todo-fix-me.md) \| [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+Option.t `None` \| `undefined`
+Option.t `Some( Some .. Some (None))` \| internal representation
+Option.t `Some 2` \| `2`
+record `{x: 1; y: 2}` \| object `{x: 1, y: 2}`
+int64 \| array of 2 elements `[high, low]` high is signed, low unsigned
+char \| `'a'` -\> `97` (ascii code)
+bytes \| number array
+list `[]` \| `0`
+list `[x, y]` \| `{ hd: x, tl: { hd: y, tl: 0 } }`
+list `[1, 2, 3]` \| `{ hd: 1, tl: { hd: 2, tl: { hd: 3, tl: 0 } } }`
+variant \| See below
+polymorphic variant \| See below
 
 Variants with a single non-nullary constructor:
 
@@ -411,6 +478,13 @@ Variants with a single non-nullary constructor:
 type tree = Leaf | Node of int * tree * tree
 (* Leaf -> 0 *)
 (* Node(7, Leaf, Leaf) -> { _0: 7, _1: 0, _2: 0 } *)
+```
+```reasonml
+type tree =
+  | Leaf
+  | Node(int, tree, tree);
+/* Leaf -> 0 */
+/* Node(7, Leaf, Leaf) -> { _0: 7, _1: 0, _2: 0 } */
 ```
 
 Variants with more than one non-nullary constructor:
@@ -420,12 +494,23 @@ type t = A of string | B of int
 (* A("foo") -> { TAG: 0, _0: "Foo" } *)
 (* B(2) -> { TAG: 1, _0: 2 } *)
 ```
+```reasonml
+type t =
+  | A(string)
+  | B(int);
+/* A("foo") -> { TAG: 0, _0: "Foo" } */
+/* B(2) -> { TAG: 1, _0: 2 } */
+```
 
 Polymorphic variants:
 
 ```ocaml
 let u = `Foo (* "Foo" *)
 let v = `Foo(2) (* { NAME: "Foo", VAL: "2" } *)
+```
+```reasonml
+let u = `Foo; /* "Foo" */
+let v = `Foo(2); /* { NAME: "Foo", VAL: "2" } */
 ```
 
 Let’s see now some of these types in detail. We will first describe the [shared
@@ -434,9 +519,9 @@ values, and then go through the [non-shared types](#non-shared-data-types), that
 have more complex runtime representations.
 
 > **_NOTE:_** Relying on the non-shared data types runtime representations by
-reading or writing them manually from JavaScript code that communicates with
-Melange code might lead to runtime errors, as these representations might change
-in the future.
+> reading or writing them manually from JavaScript code that communicates with
+> Melange code might lead to runtime errors, as these representations might change
+> in the future.
 
 ### Shared types
 
@@ -454,6 +539,9 @@ characters, like:
 ```ocaml
 let () = Js.log "你好"
 ```
+```reasonml
+let () = Js.log("你好");
+```
 
 It will lead to some cryptic console output. To rectify this, Melange allows to
 define [quoted string
@@ -464,6 +552,10 @@ literals](https://v2.ocaml.org/manual/lex.html#sss:stringliterals) using the
 let () = Js.log {js|你好，
 世界|js}
 ```
+```reasonml
+let () = Js.log({js|你好，
+世界|js});
+```
 
 For convenience, Melange exposes another special quoted string identifier: `j`.
 It is similar to JavaScript’ string interpolation, but for variables only (not
@@ -472,6 +564,10 @@ arbitrary expressions):
 ```ocaml
 let world = {j|世界|j}
 let helloWorld = {j|你好，$world|j}
+```
+```reasonml
+let world = {j|世界|j};
+let helloWorld = {j|你好，$world|j};
 ```
 
 You can surround the interpolation variable in parentheses too: `{j|你
@@ -542,6 +638,9 @@ For example, some code like this:
 ```ocaml
 let () = React.useEffect2 (fun () -> None) (foo, bar)
 ```
+```reasonml
+let () = React.useEffect2(() => None, (foo, bar));
+```
 
 Will produce:
 
@@ -571,6 +670,9 @@ For example:
 
 ```ocaml
 let r = [%bs.re "/b/g"]
+```
+```reasonml
+let r = [%bs.re "/b/g"];
 ```
 
 Will compile to:
@@ -705,6 +807,18 @@ let add = [%bs.raw {|
 
 let () = Js.log (add 1 2)
 ```
+```reasonml
+let add = [%bs.raw
+  {|
+  function(a, b) {
+    console.log("hello from raw JavaScript!");
+    return a + b;
+  }
+|}
+];
+
+let () = Js.log(add(1, 2));
+```
 
 The `{||}` strings are called ["quoted
 strings"](https://ocaml.org/manual/lex.html#quoted-string-id). They are similar
@@ -721,6 +835,12 @@ same line, to make our code safer. For example:
 
 let f : unit -> int = [%bs.raw "function() {return 1}"]
 ```
+```reasonml
+%bs.raw
+"var a = 1";
+
+let f: unit => int = ([%bs.raw "function() {return 1}"]: unit => int);
+```
 
 Using two percentage signs (`[%%bs.raw <string>]`) is reserved for definitions
 in a
@@ -732,6 +852,10 @@ For example:
 ```ocaml
 [%%bs.raw "var a = 1"]
 ```
+```reasonml
+%bs.raw
+"var a = 1";
+```
 
 ## Debugger
 
@@ -742,6 +866,12 @@ extension:
 let f x y =
   [%bs.debugger];
   x + y
+```
+```reasonml
+let f = (x, y) => {
+  [%bs.debugger];
+  x + y;
+};
 ```
 
 Output:
@@ -768,6 +898,13 @@ let () = match [%bs.external __DEV__] with
 | Some _ -> Js.log "dev mode"
 | None -> Js.log "production mode"
 ```
+```reasonml
+let () =
+  switch ([%bs.external __DEV__]) {
+  | Some(_) => Js.log("dev mode")
+  | None => Js.log("production mode")
+  };
+```
 
 Another example:
 
@@ -775,6 +912,13 @@ Another example:
 let () = match [%bs.external __filename] with
 | Some f -> Js.log f
 | None -> Js.log "non-node environment"
+```
+```reasonml
+let () =
+  switch ([%bs.external __filename]) {
+  | Some(f) => Js.log(f)
+  | None => Js.log("non-node environment")
+  };
 ```
 
 ## Inlining constant values
@@ -811,6 +955,23 @@ let () = if node_env <> development then Js.log "Only in Production"
 let development_inline = "development" [@@bs.inline]
 let () = if node_env <> development_inline then Js.log "Only in Production"
 ```
+```reasonml
+[@bs.val] [@bs.scope ("process", "env")]
+external node_env: string = "NODE_ENV";
+
+let development = "development";
+let () =
+  if (node_env != development) {
+    Js.log("Only in Production");
+  };
+
+[@bs.inline]
+let development_inline = "development";
+let () =
+  if (node_env != development_inline) {
+    Js.log("Only in Production");
+  };
+```
 
 As we can see in the generated JavaScript presented below:
 
@@ -838,7 +999,7 @@ if (process.env.NODE_ENV !== "development") {
 JavaScript objects are used in a variety of use cases:
 
 - As a fixed shape
-  [record](https://en.wikipedia.org/wiki/Record_(computer_science)).
+  [record](https://en.wikipedia.org/wiki/Record_\(computer_science\)).
 - As a map or dictionary.
 - As a class.
 - As a module to import/export.
@@ -870,6 +1031,16 @@ type person = {
 external john : person = "john" [@@bs.module "MySchool"]
 let john_name = john.name
 ```
+```reasonml
+type person = {
+  name: string,
+  friends: array(string),
+  age: int,
+};
+
+[@bs.module "MySchool"] external john: person = "john";
+let john_name = john.name;
+```
 
 This is the generated JavaScript:
 
@@ -892,6 +1063,14 @@ type action = {
 }
 
 let action = { type_ = "ADD_USER" }
+```
+```reasonml
+type action = {
+  [@bs.as "type"]
+  type_: string,
+};
+
+let action = {type_: "ADD_USER"};
 ```
 
 Which generates the JavaScript code:
@@ -916,6 +1095,16 @@ type t = {
 }
 
 let value = { foo = 7; bar = "baz" }
+```
+```reasonml
+type t = {
+  [@bs.as "0"]
+  foo: int,
+  [@bs.as "1"]
+  bar: string,
+};
+
+let value = {foo: 7, bar: "baz"};
 ```
 
 And its JavaScript generated code:
@@ -945,6 +1134,10 @@ and the `##` infix operator allows to read from the object properties:
 let john = [%bs.obj { name = "john"; age = 99 }]
 let t = john##name
 ```
+```reasonml
+let john = {"name": "john", "age": 99};
+let t = john##name;
+```
 
 Which generates:
 
@@ -971,6 +1164,12 @@ let name_extended obj = obj##name ^ " wayne"
 
 let one = name_extended [%bs.obj { name = "john"; age = 99 }]
 let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
+```
+```reasonml
+let name_extended = obj => obj##name ++ " wayne";
+
+let one = name_extended({"name": "john", "age": 99});
+let two = name_extended({"name": "jane", "address": "1 infinite loop"});
 ```
 
 To read more about objects and polymorphism we recommend checking the [OCaml
@@ -1016,6 +1215,18 @@ external route :
   _ = ""
   [@@bs.obj]
 ```
+```reasonml
+[@bs.obj]
+external route:
+  (
+    ~_type: string,
+    ~path: string,
+    ~action: list(string) => unit,
+    ~options: {..}=?,
+    unit
+  ) =>
+  _;
+```
 
 Note that the empty string at the end of the function is used to make it
 syntactically valid. The value of this string is ignored by the compiler.
@@ -1041,6 +1252,10 @@ If we call the function like this:
 
 ```ocaml
 let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+```
+```reasonml
+let homeRoute =
+  route(~_type="GET", ~path="/", ~action=_ => Js.log("Home"), ());
 ```
 
 We get the following JavaScript, which does not include the `options` field
@@ -1073,6 +1288,18 @@ external get_title : document -> string = "title" [@@bs.get]
 let current = get_title document
 let () = set_title document "melange"
 ```
+```reasonml
+/* Abstract type for the `document` value */
+type document;
+
+[@bs.val] external document: document = "document";
+
+[@bs.set] external set_title: (document, string) => unit = "title";
+[@bs.get] external get_title: document => string = "title";
+
+let current = get_title(document);
+let () = set_title(document, "melange");
+```
 
 This generates:
 
@@ -1095,6 +1322,18 @@ let () =
   let i32arr = (create 3) in
   set i32arr 0 42;
   Js.log (get i32arr 0)
+```
+```reasonml
+type t;
+[@bs.new] external create: int => t = "Int32Array";
+[@bs.get_index] external get: (t, int) => int = "get";
+[@bs.set_index] external set: (t, int, int) => unit = "set";
+
+let () = {
+  let i32arr = create(3);
+  set(i32arr, 0, 42);
+  Js.log(get(i32arr, 0));
+};
 ```
 
 Which generates:
@@ -1129,6 +1368,11 @@ type t
 external create_date : unit -> t = "Date" [@@bs.new]
 let date = create_date ()
 ```
+```reasonml
+type t;
+[@bs.new] external create_date: unit => t = "Date";
+let date = create_date();
+```
 
 Which generates:
 
@@ -1143,6 +1387,11 @@ with is in a separate JavaScript module:
 type t
 external book : unit -> t = "Book" [@@bs.new] [@@bs.module]
 let myBook = book ()
+```
+```reasonml
+type t;
+[@bs.new] [@bs.module] external book: unit => t = "Book";
+let myBook = book();
 ```
 
 Which generates:
@@ -1168,6 +1417,15 @@ external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
 let id = setTimeout (fun () -> Js.log "hello") 100
 let () = clearTimeout id
 ```
+```reasonml
+/* Abstract type for `timeoutId` */
+type timeoutId;
+[@bs.val] external setTimeout: (unit => unit, int) => timeoutId = "setTimeout";
+[@bs.val] external clearTimeout: timeoutId => unit = "clearTimeout";
+
+let id = setTimeout(() => Js.log("hello"), 100);
+let () = clearTimeout(id);
+```
 
 > **_NOTE:_** The bindings to `setTimeout` and `clearTimeout` are shown here for
 > learning purposes, but they are already available in the
@@ -1192,6 +1450,13 @@ type document
 external document : document = "document" [@@bs.val]
 let document = document
 ```
+```reasonml
+/* Abstract type for `document` */
+type document;
+
+[@bs.val] external document: document = "document";
+let document = document;
+```
 
 Which generates:
 
@@ -1207,6 +1472,10 @@ name of the module, or the relative path to it.
 ```ocaml
 external dirname : string -> string = "dirname" [@@bs.module "path"]
 let root = dirname "/User/github"
+```
+```reasonml
+[@bs.module "path"] external dirname: string => string = "dirname";
+let root = dirname("/User/github");
 ```
 
 Generates:
@@ -1233,6 +1502,13 @@ external executeCommands : string -> param array -> unit = ""
 
 let f a b c = executeCommands "hi" [| a; b; c |]
 ```
+```reasonml
+type param;
+[@bs.scope "commands"] [@bs.module "vscode"] [@bs.splice]
+external executeCommands: (string, array(param)) => unit;
+
+let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
+```
 
 Which compiles to:
 
@@ -1257,6 +1533,14 @@ external back : t = "back"
 
 let camera_type_back = back
 ```
+```reasonml
+type t;
+
+[@bs.module "expo-camera"] [@bs.scope ("Camera", "Constants", "Type")]
+external back: t = "back";
+
+let camera_type_back = back;
+```
 
 Which generates:
 
@@ -1274,6 +1558,11 @@ external imul : int -> int -> int = "imul" [@@bs.val] [@@bs.scope "Math"]
 
 let res = imul 1 2
 ```
+```reasonml
+[@bs.val] [@bs.scope "Math"] external imul: (int, int) => int = "imul";
+
+let res = imul(1, 2);
+```
 
 Which produces:
 
@@ -1290,6 +1579,14 @@ external create : unit -> t = "GUI"
   [@@bs.new] [@@bs.scope "default"] [@@bs.module "dat.gui"]
 
 let gui = create ()
+```
+```reasonml
+type t;
+
+[@bs.new] [@bs.scope "default"] [@bs.module "dat.gui"]
+external create: unit => t = "GUI";
+
+let gui = create();
 ```
 
 Which generates:
@@ -1332,6 +1629,13 @@ external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
 let () = draw ~x:10 ~y:20 ~border:true ()
 let () = draw ~x:10 ~y:20 ()
 ```
+```reasonml
+[@module "MyGame"]
+external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw";
+
+let () = draw(~x=10, ~y=20, ~border=true, ());
+let () = draw(~x=10, ~y=20, ());
+```
 
 Generates:
 
@@ -1361,6 +1665,12 @@ external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
 let () = draw ~x:10 ~y:20 ()
 let () = draw ~y:20 ~x:10 ()
 ```
+```reasonml
+[@module "MyGame"]
+external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw";
+let () = draw(~x=10, ~y=20, ());
+let () = draw(~y=20, ~x=10, ());
+```
 
 Generates:
 
@@ -1386,6 +1696,16 @@ external get_by_id : document -> string -> Dom.element = "getElementById"
 
 let el = get_by_id document "my-id"
 ```
+```reasonml
+/* Abstract type for the `document` global */
+type document;
+
+[@bs.val] external document: document = "document";
+[@bs.send]
+external get_by_id: (document, string) => Dom.element = "getElementById";
+
+let el = get_by_id(document, "my-id");
+```
 
 Generates:
 
@@ -1410,6 +1730,16 @@ external get_by_id : string -> Dom.element = "getElementById"
   [@@bs.send.pipe: document]
 
 let el = get_by_id "my-id" document
+```
+```reasonml
+/* Abstract type for the `document` global */
+type document;
+
+[@bs.val] external document: document = "document";
+[@bs.send.pipe: document]
+external get_by_id: string => Dom.element = "getElementById";
+
+let el = get_by_id("my-id", document);
 ```
 
 Generates the same code as `bs.send`:
@@ -1445,6 +1775,19 @@ external get_by_classname : Dom.element -> string -> Dom.element
 
 let el = document |. get_by_id "my-id" |. get_by_classname "my-class"
 ```
+```reasonml
+/* Abstract type for the `document` global */
+type document;
+
+[@bs.val] external document: document = "document";
+[@bs.send]
+external get_by_id: (document, string) => Dom.element = "getElementById";
+[@bs.send]
+external get_by_classname: (Dom.element, string) => Dom.element =
+  "getElementsByClassName";
+
+let el = document->(get_by_id("my-id"))->(get_by_classname("my-class"));
+```
 
 Will generate:
 
@@ -1466,6 +1809,18 @@ external get_by_classname : string -> Dom.element = "getElementsByClassName"
 
 let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
 ```
+```reasonml
+/* Abstract type for the `document` global */
+type document;
+
+[@bs.val] external document: document = "document";
+[@bs.send.pipe: document]
+external get_by_id: string => Dom.element = "getElementById";
+[@bs.send.pipe: Dom.element]
+external get_by_classname: string => Dom.element = "getElementsByClassName";
+
+let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
+```
 
 Will generate the same JavaScript as the pipe first version:
 
@@ -1484,6 +1839,11 @@ arguments need to belong to the same type.
 external join : string array -> string = "join"
   [@@bs.module "path"] [@@bs.splice]
 let v = join [| "a"; "b" |]
+```
+```reasonml
+[@bs.module "path"] [@bs.splice]
+external join: array(string) => string = "join";
+let v = join([|"a", "b"|]);
 ```
 
 Generates:
@@ -1505,6 +1865,16 @@ type hide = Hide : 'a -> hide [@@unboxed]
 external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.splice]
 
 let v = join [| Hide "a"; Hide 2 |]
+```
+```reasonml
+[@unboxed]
+type hide =
+  | Hide('a): hide;
+
+[@bs.module "path"] [@bs.splice]
+external join: array(hide) => string = "join";
+
+let v = join([|Hide("a"), Hide(2)|]);
 ```
 
 Compiles to:
@@ -1531,6 +1901,12 @@ external drawCat : unit -> unit = "draw" [@@bs.module "MyGame"]
 external drawDog : giveName:string -> unit = "draw" [@@bs.module "MyGame"]
 external draw : string -> useRandomAnimal:bool -> unit = "draw"
   [@@bs.module "MyGame"]
+```
+```reasonml
+[@bs.module "MyGame"] external drawCat: unit => unit = "draw";
+[@bs.module "MyGame"] external drawDog: (~giveName: string) => unit = "draw";
+[@bs.module "MyGame"]
+external draw: (string, ~useRandomAnimal: bool) => unit = "draw";
 ```
 
 Note how all three externals bind to the same JavaScript function, `draw`.
@@ -1577,6 +1953,15 @@ external padLeft:
 let _ = padLeft "Hello World" (`Int 4)
 let _ = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
+```reasonml
+[@bs.val]
+external padLeft:
+  (string, [@bs.unwrap] [ | `Str(string) | `Int(int)]) => string =
+  "padLeft";
+
+let _ = padLeft("Hello World", `Int(4));
+let _ = padLeft("Hello World", `Str("Message from Melange: "));
+```
 
 Which produces the following JavaScript:
 
@@ -1613,6 +1998,14 @@ external read_file_sync :
 
 let _ = read_file_sync ~name:"xx.txt" `ascii
 ```
+```reasonml
+[@bs.module "fs"]
+external read_file_sync:
+  (~name: string, [@bs.string] [ | `utf8 | `ascii]) => string =
+  "readFileSync";
+
+let _ = read_file_sync(~name="xx.txt", `ascii);
+```
 
 Which generates:
 
@@ -1646,6 +2039,32 @@ external transition_timing_function :
 let element_style = style (get_by_id document "my-id")
 let () = transition_timing_function element_style `easeIn
 ```
+```reasonml
+type document;
+type style;
+
+[@bs.val] external document: document = "document";
+[@bs.send]
+external get_by_id: (document, string) => Dom.element = "getElementById";
+[@bs.get] external style: Dom.element => style = "style";
+[@bs.set]
+external transition_timing_function:
+  (
+    style,
+    [
+      | `ease
+      | [@bs.as "ease-in"] `easeIn
+      | [@bs.as "ease-out"] `easeOut
+      | [@bs.as "ease-in-out"] `easeInOut
+      | `linear
+    ]
+  ) =>
+  unit =
+  "transitionTimingFunction";
+
+let element_style = style(get_by_id(document, "my-id"));
+let () = transition_timing_function(element_style, `easeIn);
+```
 
 This will generate:
 
@@ -1665,6 +2084,14 @@ external test_int_type :
   [@@bs.val]
 
 let value = test_int_type `on_open
+```
+```reasonml
+[@bs.val]
+external test_int_type:
+  ([@bs.int] [ | `on_closed | [@bs.as 20] `on_open | `in_bin]) => int =
+  "testIntType";
+
+let value = test_int_type(`on_open);
 ```
 
 In this example, `on_closed` will be encoded as 0, `on_open` will be 20 due to
@@ -1695,6 +2122,21 @@ external on :
 let register rl =
   rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
 ```
+```reasonml
+type readline;
+
+[@bs.send]
+external on:
+  (
+    readline,
+    [@bs.string] [ | `close(unit => unit) | `line(string => unit)]
+  ) =>
+  readline =
+  "on";
+
+let register = rl =>
+  rl->(on(`close(event => ())))->(on(`line(line => Js.log(line))));
+```
 
 This generates:
 
@@ -1723,6 +2165,16 @@ let () =
   process_on_exit (fun exit_code ->
     Js.log ("error code: " ^ string_of_int exit_code))
 ```
+```reasonml
+[@bs.val]
+external process_on_exit: ([@bs.as "exit"] _, int => unit) => unit =
+  "process.on";
+
+let () =
+  process_on_exit(exit_code =>
+    Js.log("error code: " ++ string_of_int(exit_code))
+  );
+```
 
 This generates:
 
@@ -1745,6 +2197,9 @@ like this:
 
 ```ocaml
 let add x y = x + y
+```
+```reasonml
+let add = (x, y) => x + y;
 ```
 
 Its type will be `int -> int -> int`. This means that one can partially apply
@@ -1789,6 +2244,10 @@ A naive external function declaration could be as below:
 external map : 'a array -> 'b array -> ('a -> 'b -> 'c) -> 'c array = "map"
   [@@bs.val]
 ```
+```reasonml
+[@bs.val]
+external map: (array('a), array('b), ('a, 'b) => 'c) => array('c) = "map";
+```
 
 Unfortunately, this is not completely correct. The issue is in the callback
 function, with type `'a -> 'b -> 'c`. This means that `map` will expect a
@@ -1799,6 +2258,12 @@ Let’s rewrite `add` to make the problem a bit more clear:
 
 ```ocaml
 let add x = let partial y = x + y in partial
+```
+```reasonml
+let add = x => {
+  let partial = y => x + y;
+  partial;
+};
 ```
 
 This will be compiled to:
@@ -1830,6 +2295,10 @@ external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
   = "map"
   [@@bs.val]
 ```
+```reasonml
+[@bs.val]
+external map: (array('a), array('b), (. 'a, 'b) => 'c) => array('c) = "map";
+```
 
 Here `('a -> 'b -> 'c [@bs])` will be interpreted as having arity 2, in general,
 `'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]` is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`
@@ -1840,6 +2309,10 @@ If we try now to call `map` using `add`:
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
+```
+```reasonml
+let add = (x, y) => x + y;
+let _ = map([||], [||], add);
 ```
 We will get an error:
 
@@ -1854,6 +2327,9 @@ To solve this, we add `@bs` in the function definition as well:
 
 ```ocaml
 let add = fun [@bs] x y -> x + y
+```
+```reasonml
+let add = (. x, y) => x + y;
 ```
 
 Annotating function definitions can be quite cumbersome when writing a lot of
@@ -1870,12 +2346,22 @@ external map :
   'a array -> 'b array -> (('a -> 'b -> 'c)[@bs.uncurry]) -> 'c array = "map"
   [@@bs.val]
 ```
+```reasonml
+[@bs.val]
+external map:
+  (array('a), array('b), [@bs.uncurry] (('a, 'b) => 'c)) => array('c) =
+  "map";
+```
 
 Now if we try to call `map` with a regular `add` function:
 
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
+```
+```reasonml
+let add = (x, y) => x + y;
+let _ = map([||], [||], add);
 ```
 
 Everything works fine now, without having to attach any attributes to `add`.
@@ -1886,7 +2372,7 @@ while `bs` remains useful for those use cases where performance is crucial and
 we want the JavaScript functions generated from OCaml ones to not be applied
 partially.
 
-### Modeling `this`-based Callbacks
+### Modeling `this`\-based Callbacks
 
 Many JavaScript libraries have callbacks which rely on the [`this`
 keyword](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this),
@@ -1913,6 +2399,14 @@ let _ =
     begin
       fun [@bs.this] o v -> Js.log (resp o + v)
     end
+```
+```reasonml
+type x;
+[@bs.val] external x: x = "x";
+[@bs.set]
+external set_onload: (x, [@bs.this] ((x, int) => unit)) => unit = "onload";
+[@bs.get] external resp: x => int = "response";
+let _ = set_onload(x, [@bs.this] (o, v) => Js.log(resp(o) + v));
 ```
 
 Which generates:
@@ -1945,6 +2439,20 @@ let test document =
   match elem with
   | None -> 1
   | Some _element -> 2
+```
+```reasonml
+type element;
+type document;
+[@bs.send] [@bs.return nullable]
+external get_by_id: (document, string) => option(element) = "getElementById";
+
+let test = document => {
+  let elem = get_by_id(document, "header");
+  switch (elem) {
+  | None => 1
+  | Some(_element) => 2
+  };
+};
 ```
 
 Which generates:
@@ -1998,6 +2506,13 @@ type action =
   | Cancel
 [@@bs.deriving accessors]
 ```
+```reasonml
+[@bs.deriving accessors]
+type action =
+  | Click
+  | Submit(string)
+  | Cancel;
+```
 
 Melange will generate one `let` definition for each variant tag, implemented as
 follows:
@@ -2019,6 +2534,16 @@ type action =
 let click = (Click : action)
 let submit param = (Submit param : action)
 let cancel = (Cancel : action)
+```
+```reasonml
+type action =
+  | Click
+  | Submit(string)
+  | Cancel;
+
+let click: action = Click;
+let submit = (param): action => Submit(param);
+let cancel: action = Cancel;
 ```
 
 Which will result in the following JavaScript code after compilation:
@@ -2070,6 +2595,13 @@ type action =
   | Cancel
 [@@bs.deriving jsConverter]
 ```
+```reasonml
+[@bs.deriving jsConverter]
+type action =
+  | Click
+  | [@bs.as 3] Submit
+  | Cancel;
+```
 
 This will generate a couple of functions with the following types:
 
@@ -2077,6 +2609,11 @@ This will generate a couple of functions with the following types:
 val actionToJs : action -> int
 
 val actionFromJs : int -> action option
+```
+```reasonml
+external actionToJs: action => int = ;
+
+external actionFromJs: int => option(action) = ;
 ```
 
 `actionToJs` returns integers from values of `action` type. It will start with 0
@@ -2100,6 +2637,13 @@ type action =
   | Cancel
 [@@bs.deriving { jsConverter = newType }]
 ```
+```reasonml
+[@bs.deriving {jsConverter: newType}]
+type action =
+  | Click
+  | [@bs.as 3] Submit
+  | Cancel;
+```
 
 This feature relies on [abstract types](#abstract-types) to hide the JavaScript
 runtime representation. It will generate functions with the following types:
@@ -2108,6 +2652,11 @@ runtime representation. It will generate functions with the following types:
 val actionToJs : action -> abs_action
 
 val actionFromJs : abs_action -> action
+```
+```reasonml
+external actionToJs: action => abs_action = ;
+
+external actionFromJs: abs_action => action = ;
 ```
 
 In the case of `actionFromJs`, the return value, unlike the previous case, is
@@ -2134,6 +2683,10 @@ type action =
   ]
 [@@bs.deriving jsConverter]
 ```
+```reasonml
+[@bs.deriving jsConverter]
+type action = [ | `Click | [@bs.as "submit"] `Submit | `Cancel];
+```
 
 Akin to the variant example, the following two functions will be generated:
 
@@ -2141,6 +2694,11 @@ Akin to the variant example, the following two functions will be generated:
 val actionToJs : action -> string
 
 val actionFromJs : string -> action option
+```
+```reasonml
+external actionToJs: action => string = ;
+
+external actionFromJs: string => option(action) = ;
 ```
 
 The `{ jsConverter = newType }` payload can also be used with polymorphic
@@ -2160,6 +2718,14 @@ let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
 
 let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
 ```
+```reasonml
+[@bs.deriving accessors]
+type pet = {name: string};
+
+let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
+
+let () = pets->(Belt.Array.map(name))->(Js.Array2.joinWith("&"))->Js.log;
+```
 
 Melange will generate a function for each field defined in the record. In this
 case, a function `name` that allows to get that field from any record of type
@@ -2167,6 +2733,9 @@ case, a function `name` that allows to get that field from any record of type
 
 ```ocaml
 let name (param : pet) = param.name
+```
+```reasonml
+let name = (param: pet) => param.name;
 ```
 
 Considering all the above, the produced JavaScript will be:
@@ -2206,6 +2775,12 @@ type person = {
   age : int option;
 }
 ```
+```reasonml
+type person = {
+  name: string,
+  age: option(int),
+};
+```
 
 An example of this use-case would be expecting `{ name = "John"; age = None }`
 to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
@@ -2231,6 +2806,14 @@ type person = {
 }
 [@@bs.deriving abstract]
 ```
+```reasonml
+[@bs.deriving abstract]
+type person = {
+  name: string,
+  [@bs.optional]
+  age: int,
+};
+```
 
 Melange will make the `person` type abstract and generate constructor, getter
 and setter functions. In our example, the OCaml signature would look like this
@@ -2245,6 +2828,15 @@ val nameGet : person -> string
 
 val ageGet : person -> int option
 ```
+```reasonml
+type person;
+
+external person: (~name: string, ~age: int=?, unit) => person = ;
+
+external nameGet: person => string = ;
+
+external ageGet: person => option(int) = ;
+```
 
 The `person` function can be used to create values of `person`. It is the only
 possible way to create values of this type, since Melange makes it abstract.
@@ -2256,6 +2848,10 @@ Here is an example of how we can use it:
 ```ocaml
 let alice = person ~name:"Alice" ~age:20 ()
 let bob = person ~name:"Bob" ()
+```
+```reasonml
+let alice = person(~name="Alice", ~age=20, ());
+let bob = person(~name="Bob", ());
 ```
 
 This will generate the following JavaScript code. Note how there is no
@@ -2286,6 +2882,11 @@ let twenty = ageGet alice
 
 let bob = nameGet bob
 ```
+```reasonml
+let twenty = ageGet(alice);
+
+let bob = nameGet(bob);
+```
 
 This generates:
 
@@ -2309,6 +2910,16 @@ type person = {
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
+```
+```reasonml
+[@bs.deriving {abstract: light}]
+type person = {
+  name: string,
+  age: int,
+};
+
+let alice = person(~name="Alice", ~age=20);
+let aliceName = name(alice);
 ```
 
 Which generates:
@@ -2357,6 +2968,17 @@ let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
+```reasonml
+[@bs.deriving abstract]
+type person = {
+  name: string,
+  mutable age: int,
+};
+
+let alice = person(~name="Alice", ~age=20);
+
+let () = ageSet(alice, 21);
+```
 
 This will generate:
 
@@ -2382,6 +3004,14 @@ type person = private {
   age : int;
 }
 [@@bs.deriving abstract]
+```
+```reasonml
+[@bs.deriving abstract]
+type person =
+  pri {
+    name: string,
+    age: int,
+  };
 ```
 
 The accessors `nameGet` and `ageGet` will still be generated, but not the
