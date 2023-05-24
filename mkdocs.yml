@@ -5,6 +5,7 @@ edit_uri: blob/master/docs/
 
 theme:
   name: readthedocs
+  custom_dir: theme
   locale: en
   highlightjs: true
   hljs_languages:
