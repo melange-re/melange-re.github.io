@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $toggleSyntaxButton.classList.add("button", "toggleSyntaxButton");
   $toggleSyntaxButton.innerHTML = `
     <span>Syntax:</span>
-    <span class="toggleSyntaxButton-reasonml">Reason</span>
     <span class="toggleSyntaxButton-ocaml">OCaml</span>
+    <span class="toggleSyntaxButton-reasonml">Reason</span>
   `;
   document
     .querySelector(".wy-side-scroll > .wy-side-nav-search > a")
