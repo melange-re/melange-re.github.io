@@ -35,7 +35,7 @@ syntaxes:
 ### Variable
 
 | JavaScript              | OCaml (Reason syntax)          |
-| ----------------------- | ------------------------------ |
+|-------------------------|--------------------------------|
 | `const x = 5;`          | `let x = 5;`                   |
 | `var x = y;`            | No equivalent                  |
 | `let x = 5; x = x + 1;` | `let x = ref(5); x := x^ + 1;` |
@@ -43,7 +43,7 @@ syntaxes:
 ### String & Character
 
 | JavaScript             | OCaml (Reason syntax) |
-| ---------------------- | --------------------- |
+|------------------------|-----------------------|
 | `"Hello world!"`       | Same                  |
 | `'Hello world!'`       | Strings must use `"`  |
 | Characters are strings | `'a'`                 |
@@ -52,7 +52,7 @@ syntaxes:
 ### Boolean
 
 | JavaScript                                            | OCaml (Reason syntax)             |
-| ----------------------------------------------------- | --------------------------------- |
+|-------------------------------------------------------|-----------------------------------|
 | `true`, `false`                                       | Same                              |
 | `!true`                                               | Same                              |
 | <code>||</code>, `&&`, `<=`, `>=`, `<`, `>` | Same                              |
@@ -63,7 +63,7 @@ syntaxes:
 ### Number
 
 | JavaScript  | OCaml (Reason syntax) |
-| ----------- | --------------------- |
+|-------------|-----------------------|
 | `3`         | Same \*               |
 | `3.1415`    | Same                  |
 | `3 + 4`     | Same                  |
@@ -75,7 +75,7 @@ syntaxes:
 ### Object/Record
 
 | JavaScript          | OCaml (Reason syntax)                   |
-| ------------------- | --------------------------------------- |
+|---------------------|-----------------------------------------|
 | no static types     | `type point = {x: int, mutable y: int}` |
 | `{x: 30, y: 20}`    | Same                                    |
 | `point.x`           | Same                                    |
@@ -85,7 +85,7 @@ syntaxes:
 ### Array
 
 | JavaScript            | OCaml (Reason syntax)              |
-| --------------------- | ---------------------------------- |
+|-----------------------|------------------------------------|
 | `[1, 2, 3]`           | <code>\[|1, 2, 3|\]</code> |
 | `myArray[1] = 10`     | Same                               |
 | `[1, "Bob", true]` \* | `(1, "Bob", true)`                 |
@@ -97,7 +97,7 @@ contain multiple types of elements.
 ### Null
 
 | JavaScript          | OCaml (Reason syntax) |
-| ------------------- | --------------------- |
+|---------------------|-----------------------|
 | `null`, `undefined` | `None` \*             |
 
 \* There are no nulls, nor null bugs in Reason. But it does have [an option
@@ -107,7 +107,7 @@ nullability.
 ### Function
 
 | JavaScript                      | OCaml (Reason syntax)      |
-| ------------------------------- | -------------------------- |
+|---------------------------------|----------------------------|
 | `arg => retVal`                 | `(arg) => retVal`          |
 | `function named(arg) {...}`     | `let named = (arg) => ...` |
 | `const f = function(arg) {...}` | `let f = (arg) => ...`     |
@@ -145,7 +145,7 @@ nullability.
 #### Currying
 
 | JavaScript                  | OCaml (Reason syntax)       |
-| --------------------------- | --------------------------- |
+|-----------------------------|-----------------------------|
 | `let add = a => b => a + b` | `let add = (a, b) => a + b` |
 
 Both JavaScript and Reason support currying, but Reason currying is **built-in
@@ -155,7 +155,7 @@ possible.
 ### If-else
 
 | JavaScript            | OCaml (Reason syntax)                                                              |
-| --------------------- | ---------------------------------------------------------------------------------- |
+|-----------------------|------------------------------------------------------------------------------------|
 | `if (a) {b} else {c}` | Same \*                                                                            |
 | `a ? b : c`           | Same                                                                               |
 | `switch`              | `switch` but [super-powered\!](https://reasonml.github.io/docs/en/pattern-matching) |
@@ -166,7 +166,7 @@ branch is not optional.
 ### Destructuring
 
 | JavaScript                    | OCaml (Reason syntax)                         |
-| ----------------------------- | --------------------------------------------- |
+|-------------------------------|-----------------------------------------------|
 | `const {a, b} = data`         | `let {a, b} = data`                           |
 | `const [a, b] = data`         | <code>let \[|a, b|\] = data</code> \* |
 | `const {a: aa, b: bb} = data` | `let {a: aa, b: bb} = data`                   |
@@ -178,7 +178,7 @@ instead.
 ### Loop
 
 | JavaScript                            | OCaml (Reason syntax)          |
-| ------------------------------------- | ------------------------------ |
+|---------------------------------------|--------------------------------|
 | `for (let i = 0; i <= 10; i++) {...}` | `for (i in 0 to 10) {...}`     |
 | `for (let i = 10; i >= 0; i--) {...}` | `for (i in 10 downto 0) {...}` |
 | `while (true) {...}`                  | Same                           |
@@ -186,7 +186,7 @@ instead.
 ### JSX
 
 | JavaScript                             | OCaml (Reason syntax)    |
-| -------------------------------------- | ------------------------ |
+|----------------------------------------|--------------------------|
 | `<Foo bar=1 baz="hi" onClick={bla} />` | Same                     |
 | `<Foo bar=bar />`                      | `<Foo bar />` \*         |
 | `<input checked />`                    | `<input checked=true />` |
@@ -197,7 +197,7 @@ instead.
 ### Exception
 
 | JavaScript                                | OCaml (Reason syntax)                        |
-| ----------------------------------------- | -------------------------------------------- |
+|-------------------------------------------|----------------------------------------------|
 | `throw new SomeError(...)`                | `raise(SomeError(...))`                      |
 | `try {a} catch (Err) {...} finally {...}` | <code>try (a) { | Err =\> ...}</code> \* |
 
@@ -239,7 +239,7 @@ function expression (since function bodies have their own local scope).
 ### Comments
 
 | JavaScript        | OCaml (Reason syntax) |
-| ----------------- | --------------------- |
+|-------------------|-----------------------|
 | `/* Comment */`   | Same                  |
 | `// Line comment` | Same                  |
 
@@ -360,7 +360,7 @@ JavaScript developers](#for-javascript-developers).
 #### Type aliases
 
 | TypeScript             | OCaml (Reason syntax)  |
-| ---------------------- | ---------------------- |
+|------------------------|------------------------|
 | `type Email = string;` | `type email = string;` |
 
 #### Abstract types
@@ -471,7 +471,7 @@ add(5)(3);
 #### Parametric polymorphism
 
 | TypeScript                             | OCaml (Reason syntax)          |
-| -------------------------------------- | ------------------------------ |
+|----------------------------------------|--------------------------------|
 | `type length = <T>(_: T[]) => number;` | `let length: list('a) => int;` |
 
 ## For Js\_of\_ocaml developers

@@ -58,4 +58,4 @@ let rec loop acc =
   | None -> List.rev acc
 
 let input = String.concat "\n" (loop [])
-let () = print_endline (cmark_to_commonmark ~strict:true input)
+let () = print_endline (cmark_to_commonmark ~strict:false input)
