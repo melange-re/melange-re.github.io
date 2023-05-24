@@ -112,8 +112,9 @@ To enter a Melange development shell, run `nix develop -c $SHELL`.
 
 ### [esy](https://esy.sh/)
 
-First, make sure `esy` is [installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g esy` does the trick in most
-setups.
+First, make sure `esy` is
+[installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g
+esy` does the trick in most setups.
 
 The following is an example `esy.json` that can help start a Melange project. A
 [project template for esy](https://github.com/melange-re/melange-esy-template)
