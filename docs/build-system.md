@@ -102,7 +102,12 @@ inside the `dune` file:
  (modes melange))
 ```
 
-Create a file `lib.ml` in the same folder:
+<div class="text-ocaml">
+Create a file <code>lib.ml</code> in the same folder:
+</div>
+<div class="text-reasonml">
+Create a file <code>lib.re</code> in the same folder:
+</div>
 
 ```ocaml
 let name = "Jane"
@@ -151,16 +156,22 @@ the [Dune docs](https://dune.readthedocs.io/en/stable/melange.html).
 
 The file structure of the app should look something like this:
 
-```text
-project_name/
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── _opam
 ├── lib
 │   ├── dune
 │   └── lib.ml
 ├── dune-project
 ├── dune
-└── app.ml
-```
+└── app.ml</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── lib
+│   ├── dune
+│   └── lib.re
+├── dune-project
+├── dune
+└── app.ml</code></pre>
 
 #### Building the project
 
@@ -333,7 +344,12 @@ order to get the value of the `__dirname` environment variable:
  (preprocess (pps melange.ppx)))
 ```
 
-Finally, update `lib/lib.ml` to read from the recently added file:
+<div class="text-ocaml">
+Finally, update <code>lib/lib.ml</code> to read from the recently added file:
+</div>
+<div class="text-reasonml">
+Finally, update <code>lib/lib.re</code> to read from the recently added file:
+</div>
 
 ```ocaml
 let dir = [%bs.raw "__dirname"]
