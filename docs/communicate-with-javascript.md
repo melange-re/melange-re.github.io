@@ -362,12 +362,14 @@ let sum_sq = [1, 2, 3] |> List.map(String.cat) |> sum;
 
 The compiler would rightfully raise an error:
 
-```text
-4 |   [ 1; 2; 3 ]
+<pre class="text-ocaml"><code class="language-text hljs plaintext">4 |   [ 1; 2; 3 ]
         ^
 Error: This expression has type int but an expression was expected of type
-         string
-```
+         string</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">1 |   [ 1, 2, 3 ]
+        ^
+Error: This expression has type int but an expression was expected of type
+         string</code></pre>
 
 Note that instead of telling us that we are passing the wrong function in
 `List.map` (`String.cat`), the error points to the list itself. This behavior
