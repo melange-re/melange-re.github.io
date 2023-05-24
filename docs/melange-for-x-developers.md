@@ -606,8 +606,8 @@ with OCaml, but otherwise Melange can incorporate bugfixes or new functionality
 from ReScript.
 
 On the other hand, as Melange goal is to keep up with the version of the OCaml
-compiler, there are features inherited from OCaml that most likely will never be
-available in ReScript, for example:
+compiler, there are features inherited from OCaml that are not supported by
+ReScript at the moment (May 2023), for example:
 
 - [Binding operators](https://v2.ocaml.org/manual/bindingops.html) / `let`
   bindings
