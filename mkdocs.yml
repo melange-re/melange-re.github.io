@@ -1,6 +1,6 @@
 site_name: Melange
 
-repo_url: https://github.com/melange-re/documentation-site/
+repo_url: https://github.com/melange-re/melange-re.github.io/
 edit_uri: blob/master/docs/
 
 theme:
