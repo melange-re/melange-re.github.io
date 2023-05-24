@@ -43,6 +43,8 @@ The syntax additions come in two flavors, called [extension
 nodes](https://v2.ocaml.org/manual/extensionnodes.html) and
 [attributes](https://v2.ocaml.org/manual/attributes.html).
 
+#### Extension nodes
+
 Extension nodes are blocks that are supposed to be replaced by a specific type
 of PPX rewriters called extenders. Extension nodes use the `%` character to be
 identified. Extenders will take the extension node and replace it with a valid
@@ -63,31 +65,71 @@ var a = 1; var b = 2
 var add = a + b
 ```
 
-The difference between one and two `%` characters is detailed in the [OCaml
-documentation](https://v2.ocaml.org/manual/extensionnodes.html).
+The difference between one and two percentage characters is detailed in the
+[OCaml documentation](https://v2.ocaml.org/manual/extensionnodes.html).
+
+#### Attributes
 
 Attributes are "decorations" applied to specific parts of the code to provide
-additional information. Melange uses attributes in various ways to enhance
-communication with JavaScript code. For instance, it introduces the `bs.as`
-attribute, which allows renaming of fields in a record on the generated
-JavaScript code:
+additional information. In Melange, attributes are used in two ways to enhance
+the expressiveness of generating JavaScript code: either reusing existing OCaml
+built-in attributes or defining new ones.
+
+##### Reusing OCaml attributes
+
+The first approach is leveraging the existing [OCaml’s built-in
+attributes](https://v2.ocaml.org/manual/attributes.html#ss:builtin-attributes)
+to be used for JavaScript generation.
+
+One prominent example of OCaml attributes that can be used in Melange projects
+is the `unboxed` attribute, which optimizes the compilation of single-field
+records and variants with a single tag to their raw values. This is useful when
+defining type aliases that we don’t want to mix up, or when binding to
+JavaScript code that uses heterogeneous collections. An example of the latter is
+discussed in the [variadic function arguments](#variadic-function-arguments)
+section.
+
+For instance:
 
 ```ocaml
-type t = {
-  foo : int; [@bs.as "foo_for_js"]
-  bar : string;
-}
-
-let t = { foo = 2; bar = "b" }
+type name =
+  | Name of string [@@unboxed]
+let student_name = Name "alice"
 ```
 
-This will generate the following JavaScript code:
+Compiles into:
 
 ```js
-var t = {
-  foo_for_js: 2,
-  bar: "b"
-};
+var student_name = "alice";
+```
+
+Other OCaml pre-built attributes like `alert` or `deprecated` can be used with
+Melange as well.
+
+##### Defining new attributes
+
+The second approach is introducing new attributes specifically designed for
+Melange, such as the [`bs.val`
+attribute](#bind-to-global-javascript-functions-or-values) used to bind to
+global JavaScript values. The complete list of attributes introduced by Melange
+can be found [here](#list-of-attributes-and-extension-nodes).
+
+Attribute annotations can use one, two or three `@` characters depending on
+their placement in the code and which kind of syntax tree node they are
+annotating. More information about attributes can be found in the [dedicated
+OCaml manual page](https://v2.ocaml.org/manual/attributes.html).
+
+Here are some samples using Melange attributes
+[`bs.val`](#bind-to-global-javascript-functions-or-values) and
+[`bs.as`](#using-ocaml-records):
+
+```ocaml
+external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+
+type t = {
+  age : int; [@bs.as "a"]
+  name : string; [@bs.as "n"]
+}
 ```
 
 To learn more about preprocessors, attributes and extension nodes, check the
@@ -1454,8 +1496,8 @@ var v = Path.join("a", "b");
 If more dynamism is needed, there is a way to inject elements with different
 types in the array and still have Melange compile to JavaScript values that are
 not wrapped using the OCaml
-[`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which is
-documented [in a section below](todo-fix-me.md):
+[`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which was
+mentioned [in the OCaml attributes section](#reusing-ocaml-attributes):
 
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
