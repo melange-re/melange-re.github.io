@@ -659,7 +659,7 @@ and more:
   fields](#objects-with-static-shape-record-like).
 - [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
   and setters for some types
-- [`bs.inline`]([#inlining-constant-values]): forcefully inline constant values
+- [`bs.inline`](#inlining-constant-values): forcefully inline constant values
 - [`bs.optional`](#convert-records-into-abstract-types): omit fields in a record
   (combines with `bs.deriving`)
 
@@ -1114,7 +1114,7 @@ Sometimes JavaScript objects are used as dictionaries. In these cases:
 
 For this particular use case of JavaScript objects, Melange exposes a specific
 type `Js.Dict.t`. The values and functions to work with values of this type are
-defined in the [`Js.Dict`](#todo-fix-me.md) module, with operations like `get`,
+defined in the [`Js.Dict`](todo-fix-me.md) module, with operations like `get`,
 `set`, etc.
 
 Values of the type `Js.Dict.t` compile to JavaScript objects.
