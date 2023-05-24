@@ -34,71 +34,71 @@ syntaxes:
 
 ### Variable
 
-\| JavaScript              \| OCaml (Reason syntax)          \|
-\| ----------------------- \| ------------------------------ \|
-\| `const x = 5;`          \| `let x = 5;`                   \|
-\| `var x = y;`            \| No equivalent                  \|
-\| `let x = 5; x = x + 1;` \| `let x = ref(5); x := x^ + 1;` \|
+| JavaScript              | OCaml (Reason syntax)          |
+| ----------------------- | ------------------------------ |
+| `const x = 5;`          | `let x = 5;`                   |
+| `var x = y;`            | No equivalent                  |
+| `let x = 5; x = x + 1;` | `let x = ref(5); x := x^ + 1;` |
 
 ### String & Character
 
-\| JavaScript             \| OCaml (Reason syntax) \|
-\| ---------------------- \| --------------------- \|
-\| `"Hello world!"`       \| Same                  \|
-\| `'Hello world!'`       \| Strings must use `"`  \|
-\| Characters are strings \| `'a'`                 \|
-\| `"hello " + "world"`   \| `"hello " ++ "world"` \|
+| JavaScript             | OCaml (Reason syntax) |
+| ---------------------- | --------------------- |
+| `"Hello world!"`       | Same                  |
+| `'Hello world!'`       | Strings must use `"`  |
+| Characters are strings | `'a'`                 |
+| `"hello " + "world"`   | `"hello " ++ "world"` |
 
 ### Boolean
 
-\| JavaScript                                            \| OCaml (Reason syntax)             \|
-\| ----------------------------------------------------- \| --------------------------------- \|
-\| `true`, `false`                                       \| Same                              \|
-\| `!true`                                               \| Same                              \|
-\| <code>\|\|</code>, `&&`, `<=`, `>=`, `<`, `>` \| Same                              \|
-\| `a === b`, `a !== b`                                  \| Same                              \|
-\| No deep equality (recursive compare)                  \| `a == b`, `a != b`                \|
-\| `a == b`                                              \| No equality with implicit casting \|
+| JavaScript                                            | OCaml (Reason syntax)             |
+| ----------------------------------------------------- | --------------------------------- |
+| `true`, `false`                                       | Same                              |
+| `!true`                                               | Same                              |
+| <code>||</code>, `&&`, `<=`, `>=`, `<`, `>` | Same                              |
+| `a === b`, `a !== b`                                  | Same                              |
+| No deep equality (recursive compare)                  | `a == b`, `a != b`                |
+| `a == b`                                              | No equality with implicit casting |
 
 ### Number
 
-\| JavaScript  \| OCaml (Reason syntax) \|
-\| ----------- \| --------------------- \|
-\| `3`         \| Same \*               \|
-\| `3.1415`    \| Same                  \|
-\| `3 + 4`     \| Same                  \|
-\| `3.0 + 4.5` \| `3.0 +. 4.5`          \|
-\| `5 % 3`     \| `5 mod 3`             \|
+| JavaScript  | OCaml (Reason syntax) |
+| ----------- | --------------------- |
+| `3`         | Same \*               |
+| `3.1415`    | Same                  |
+| `3 + 4`     | Same                  |
+| `3.0 + 4.5` | `3.0 +. 4.5`          |
+| `5 % 3`     | `5 mod 3`             |
 
 \* JavaScript has no distinction between integer and float.
 
 ### Object/Record
 
-\| JavaScript          \| OCaml (Reason syntax)                   \|
-\| ------------------- \| --------------------------------------- \|
-\| no static types     \| `type point = {x: int, mutable y: int}` \|
-\| `{x: 30, y: 20}`    \| Same                                    \|
-\| `point.x`           \| Same                                    \|
-\| `point.y = 30;`     \| Same                                    \|
-\| `{...point, x: 30}` \| Same                                    \|
+| JavaScript          | OCaml (Reason syntax)                   |
+| ------------------- | --------------------------------------- |
+| no static types     | `type point = {x: int, mutable y: int}` |
+| `{x: 30, y: 20}`    | Same                                    |
+| `point.x`           | Same                                    |
+| `point.y = 30;`     | Same                                    |
+| `{...point, x: 30}` | Same                                    |
 
 ### Array
 
-\| JavaScript            \| OCaml (Reason syntax)              \|
-\| --------------------- \| ---------------------------------- \|
-\| `[1, 2, 3]`           \| <code>\[\|1, 2, 3\|\]</code> \|
-\| `myArray[1] = 10`     \| Same                               \|
-\| `[1, "Bob", true]` \* \| `(1, "Bob", true)`                 \|
-\| No immutable list     \| `[1, 2, 3]`                        \|
+| JavaScript            | OCaml (Reason syntax)              |
+| --------------------- | ---------------------------------- |
+| `[1, 2, 3]`           | <code>\[|1, 2, 3|\]</code> |
+| `myArray[1] = 10`     | Same                               |
+| `[1, "Bob", true]` \* | `(1, "Bob", true)`                 |
+| No immutable list     | `[1, 2, 3]`                        |
 
 \* Tuples can be simulated in JavaScript with arrays, as JavaScript arrays can
 contain multiple types of elements.
 
 ### Null
 
-\| JavaScript          \| OCaml (Reason syntax) \|
-\| ------------------- \| --------------------- \|
-\| `null`, `undefined` \| `None` \*             \|
+| JavaScript          | OCaml (Reason syntax) |
+| ------------------- | --------------------- |
+| `null`, `undefined` | `None` \*             |
 
 \* There are no nulls, nor null bugs in Reason. But it does have [an option
 type](https://reasonml.github.io/docs/en/option) for when you actually need
@@ -106,12 +106,12 @@ nullability.
 
 ### Function
 
-\| JavaScript                      \| OCaml (Reason syntax)      \|
-\| ------------------------------- \| -------------------------- \|
-\| `arg => retVal`                 \| `(arg) => retVal`          \|
-\| `function named(arg) {...}`     \| `let named = (arg) => ...` \|
-\| `const f = function(arg) {...}` \| `let f = (arg) => ...`     \|
-\| `add(4, add(5, 6))`             \| Same                       \|
+| JavaScript                      | OCaml (Reason syntax)      |
+| ------------------------------- | -------------------------- |
+| `arg => retVal`                 | `(arg) => retVal`          |
+| `function named(arg) {...}`     | `let named = (arg) => ...` |
+| `const f = function(arg) {...}` | `let f = (arg) => ...`     |
+| `add(4, add(5, 6))`             | Same                       |
 
 #### Blocks
 
@@ -144,9 +144,9 @@ nullability.
 
 #### Currying
 
-\| JavaScript                  \| OCaml (Reason syntax)       \|
-\| --------------------------- \| --------------------------- \|
-\| `let add = a => b => a + b` \| `let add = (a, b) => a + b` \|
+| JavaScript                  | OCaml (Reason syntax)       |
+| --------------------------- | --------------------------- |
+| `let add = a => b => a + b` | `let add = (a, b) => a + b` |
 
 Both JavaScript and Reason support currying, but Reason currying is **built-in
 and optimized to avoid intermediate function allocation and calls**, whenever
@@ -154,22 +154,22 @@ possible.
 
 ### If-else
 
-\| JavaScript            \| OCaml (Reason syntax)                                                              \|
-\| --------------------- \| ---------------------------------------------------------------------------------- \|
-\| `if (a) {b} else {c}` \| Same \*                                                                            \|
-\| `a ? b : c`           \| Same                                                                               \|
-\| `switch`              \| `switch` but [super-powered\!](https://reasonml.github.io/docs/en/pattern-matching) \|
+| JavaScript            | OCaml (Reason syntax)                                                              |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| `if (a) {b} else {c}` | Same \*                                                                            |
+| `a ? b : c`           | Same                                                                               |
+| `switch`              | `switch` but [super-powered\!](https://reasonml.github.io/docs/en/pattern-matching) |
 
 \* In Reason, conditionals are always expressions. Or in other words: the `else`
 branch is not optional.
 
 ### Destructuring
 
-\| JavaScript                    \| OCaml (Reason syntax)                         \|
-\| ----------------------------- \| --------------------------------------------- \|
-\| `const {a, b} = data`         \| `let {a, b} = data`                           \|
-\| `const [a, b] = data`         \| <code>let \[\|a, b\|\] = data</code> \* \|
-\| `const {a: aa, b: bb} = data` \| `let {a: aa, b: bb} = data`                   \|
+| JavaScript                    | OCaml (Reason syntax)                         |
+| ----------------------------- | --------------------------------------------- |
+| `const {a, b} = data`         | `let {a, b} = data`                           |
+| `const [a, b] = data`         | <code>let \[|a, b|\] = data</code> \* |
+| `const {a: aa, b: bb} = data` | `let {a: aa, b: bb} = data`                   |
 
 \* This will cause the compiler to warn that not all cases are handled, because
 `data` could be of length other than 2. Better switch to pattern-matching
@@ -177,29 +177,29 @@ instead.
 
 ### Loop
 
-\| JavaScript                            \| OCaml (Reason syntax)          \|
-\| ------------------------------------- \| ------------------------------ \|
-\| `for (let i = 0; i <= 10; i++) {...}` \| `for (i in 0 to 10) {...}`     \|
-\| `for (let i = 10; i >= 0; i--) {...}` \| `for (i in 10 downto 0) {...}` \|
-\| `while (true) {...}`                  \| Same                           \|
+| JavaScript                            | OCaml (Reason syntax)          |
+| ------------------------------------- | ------------------------------ |
+| `for (let i = 0; i <= 10; i++) {...}` | `for (i in 0 to 10) {...}`     |
+| `for (let i = 10; i >= 0; i--) {...}` | `for (i in 10 downto 0) {...}` |
+| `while (true) {...}`                  | Same                           |
 
 ### JSX
 
-\| JavaScript                             \| OCaml (Reason syntax)    \|
-\| -------------------------------------- \| ------------------------ \|
-\| `<Foo bar=1 baz="hi" onClick={bla} />` \| Same                     \|
-\| `<Foo bar=bar />`                      \| `<Foo bar />` \*         \|
-\| `<input checked />`                    \| `<input checked=true />` \|
-\| No children spread                     \| `<Foo>...children</Foo>` \|
+| JavaScript                             | OCaml (Reason syntax)    |
+| -------------------------------------- | ------------------------ |
+| `<Foo bar=1 baz="hi" onClick={bla} />` | Same                     |
+| `<Foo bar=bar />`                      | `<Foo bar />` \*         |
+| `<input checked />`                    | `<input checked=true />` |
+| No children spread                     | `<Foo>...children</Foo>` |
 
 \* Note the argument punning when creating elements.
 
 ### Exception
 
-\| JavaScript                                \| OCaml (Reason syntax)                        \|
-\| ----------------------------------------- \| -------------------------------------------- \|
-\| `throw new SomeError(...)`                \| `raise(SomeError(...))`                      \|
-\| `try {a} catch (Err) {...} finally {...}` \| <code>try (a) { \| Err =\> ...}</code> \* \|
+| JavaScript                                | OCaml (Reason syntax)                        |
+| ----------------------------------------- | -------------------------------------------- |
+| `throw new SomeError(...)`                | `raise(SomeError(...))`                      |
+| `try {a} catch (Err) {...} finally {...}` | <code>try (a) { | Err =\> ...}</code> \* |
 
 \* No finally.
 
@@ -238,10 +238,10 @@ function expression (since function bodies have their own local scope).
 
 ### Comments
 
-\| JavaScript        \| OCaml (Reason syntax) \|
-\| ----------------- \| --------------------- \|
-\| `/* Comment */`   \| Same                  \|
-\| `// Line comment` \| Same                  \|
+| JavaScript        | OCaml (Reason syntax) |
+| ----------------- | --------------------- |
+| `/* Comment */`   | Same                  |
+| `// Line comment` | Same                  |
 
 ## For TypeScript developers
 
@@ -359,9 +359,9 @@ JavaScript developers](#for-javascript-developers).
 
 #### Type aliases
 
-\| TypeScript             \| OCaml (Reason syntax)  \|
-\| ---------------------- \| ---------------------- \|
-\| `type Email = string;` \| `type email = string;` \|
+| TypeScript             | OCaml (Reason syntax)  |
+| ---------------------- | ---------------------- |
+| `type Email = string;` | `type email = string;` |
 
 #### Abstract types
 
@@ -470,9 +470,9 @@ add(5)(3);
 
 #### Parametric polymorphism
 
-\| TypeScript                             \| OCaml (Reason syntax)          \|
-\| -------------------------------------- \| ------------------------------ \|
-\| `type length = <T>(_: T[]) => number;` \| `let length: list('a) => int;` \|
+| TypeScript                             | OCaml (Reason syntax)          |
+| -------------------------------------- | ------------------------------ |
+| `type length = <T>(_: T[]) => number;` | `let length: list('a) => int;` |
 
 ## For Js\_of\_ocaml developers
 

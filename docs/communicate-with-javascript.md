@@ -264,7 +264,7 @@ There are two pipe operators available in Melange:
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
   
-- A _pipe first_ operator <code class="text-ocaml">\|.</code><code
+- A _pipe first_ operator <code class="text-ocaml">|.</code><code
   class="text-reasonml">\-\></code>, available exclusively in Melange
 
 Let’s see the differences between the two.
@@ -379,18 +379,18 @@ String.cat [ 1; 2; 3 ]`, the type mismatch is detected when the list is type
 checked, after `String.cat` has been processed.
 
 With the goal of addressing this kind of limitations, Melange introduces the
-pipe first operator <code class="text-ocaml">\|.</code><code
+pipe first operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">\-\></code>.
 
 #### Pipe first
 
 To overcome the constraints mentioned above and enable the generation of more
 performant JavaScript code, Melange introduces the pipe first operator <code
-class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>.
+class="text-ocaml">|.</code><code class="text-reasonml">\-\></code>.
 
 Unlike the pipe last operator, the pipe first operator is not defined as an
 infix operator. Instead, it is a purely syntactic transformation. This means
-that the parser will convert <code class="text-ocaml">f \|. g</code><code
+that the parser will convert <code class="text-ocaml">f |. g</code><code
 class="text-reasonml">f -\> g</code> into `g f` without any runtime performance
 impact.
 
@@ -456,18 +456,18 @@ post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
 
 This is how each Melange type is converted into JavaScript values:
 
-Melange \| JavaScript \---------------------\|--------------- int \| number
-nativeint \| number int32 \| number float \| number string \| string array \|
-array tuple `(3, 4)` \| array `[3, 4]` bool \| boolean
-[Js.Nullable.t](todo-fix-me.md) \| `null` / `undefined`
-[Js.Re.t](todo-fix-me.md) \|
+Melange | JavaScript \---------------------|--------------- int | number
+nativeint | number int32 | number float | number string | string array |
+array tuple `(3, 4)` | array `[3, 4]` bool | boolean
+[Js.Nullable.t](todo-fix-me.md) | `null` / `undefined`
+[Js.Re.t](todo-fix-me.md) |
 [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-Option.t `None` \| `undefined` Option.t `Some( Some .. Some (None))` \| internal
-representation Option.t `Some 2` \| `2` record `{x: 1; y: 2}` \| object `{x: 1,
-y: 2}` int64 \| array of 2 elements `[high, low]` high is signed, low unsigned
-char \| `'a'` -\> `97` (ascii code) bytes \| number array list `[]` \| `0` list
-`[x, y]` \| `{ hd: x, tl: { hd: y, tl: 0 } }` list `[1, 2, 3]` \| `{ hd: 1, tl:
-{ hd: 2, tl: { hd: 3, tl: 0 } } }` variant \| See below polymorphic variant \|
+Option.t `None` | `undefined` Option.t `Some( Some .. Some (None))` | internal
+representation Option.t `Some 2` | `2` record `{x: 1; y: 2}` | object `{x: 1,
+y: 2}` int64 | array of 2 elements `[high, low]` high is signed, low unsigned
+char | `'a'` -\> `97` (ascii code) bytes | number array list `[]` | `0` list
+`[x, y]` | `{ hd: x, tl: { hd: y, tl: 0 } }` list `[1, 2, 3]` | `{ hd: 1, tl:
+{ hd: 2, tl: { hd: 3, tl: 0 } } }` variant | See below polymorphic variant |
 See below
 
 Variants with a single non-nullary constructor:
@@ -1713,7 +1713,7 @@ var el = document.getElementById("my-id");
 
 When using `bs.send`, the first argument will be the object that holds the
 property with the function we want to call. This combines well with the pipe
-first operator <code class="text-ocaml">\|.</code><code
+first operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">\-\></code>, see the ["Chaining"](#chaining) section
 below.
 
@@ -1755,13 +1755,13 @@ kind of API can be designed with Melange externals. Depending on which
 convention we want to use, there are two attributes available:
 
 - For a data-first convention, the `bs.send` attribute, in combination with [the
-  pipe first operator](#pipe-first) <code class="text-ocaml">\|.</code><code
+  pipe first operator](#pipe-first) <code class="text-ocaml">|.</code><code
   class="text-reasonml">\-\></code>
 - For a data-last convention, the `bs.send.pipe` attribute, in combination with
   OCaml [pipe last operator](#pipe-last) `|>`.
 
 Let’s see first an example of chaining using data-first convention with the pipe
-first operator <code class="text-ocaml">\|.</code><code
+first operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">\-\></code>:
 
 ```ocaml
