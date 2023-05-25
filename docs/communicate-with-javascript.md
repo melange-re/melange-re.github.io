@@ -456,7 +456,7 @@ post](https://www.javierchavarri.com/data-first-and-data-last-a-comparison/).
 
 This is how each Melange type is converted into JavaScript values:
 
-|Melange | JavaScript |
+| Melange | JavaScript |
 |---------------------|---------------|
 | int | number |
 | nativeint | number |
@@ -480,8 +480,6 @@ This is how each Melange type is converted into JavaScript values:
 | list `[1, 2, 3]` | `{ hd: 1, tl: { hd: 2, tl: { hd: 3, tl: 0 } } }` |
 | variant | See below |
 | polymorphic variant | See below |
-
-See below
 
 Variants with a single non-nullary constructor:
 

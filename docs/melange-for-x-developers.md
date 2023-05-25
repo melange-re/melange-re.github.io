@@ -21,7 +21,7 @@ If you don’t know which one to choose, we recommend
 [Reason](https://reasonml.github.io/en/), as it has been designed with
 JavaScript developers in mind.
 
-Reason has first-class support for
+Reason syntax has first-class support for
 [JSX](https://reasonml.github.io/docs/en/jsx), and there are bindings like
 [ReasonReact](https://github.com/reasonml/reason-react/) that build on top of
 that functionality to provide a great developer experience.
@@ -55,7 +55,7 @@ syntaxes:
 |-------------------------------------------------------|-----------------------------------|
 | `true`, `false`                                       | Same                              |
 | `!true`                                               | Same                              |
-| <code>||</code>, `&&`, `<=`, `>=`, `<`, `>` | Same                              |
+| <code>||</code>, `&&`, `<=`, `>=`, `<`, `>`           | Same                              |
 | `a === b`, `a !== b`                                  | Same                              |
 | No deep equality (recursive compare)                  | `a == b`, `a != b`                |
 | `a == b`                                              | No equality with implicit casting |
@@ -100,7 +100,7 @@ contain multiple types of elements.
 |---------------------|-----------------------|
 | `null`, `undefined` | `None` \*             |
 
-\* There are no nulls, nor null bugs in Reason. But it does have [an option
+\* There are no nulls, nor null bugs in OCaml. But it does have [an option
 type](https://reasonml.github.io/docs/en/option) for when you actually need
 nullability.
 
@@ -148,19 +148,19 @@ nullability.
 |-----------------------------|-----------------------------|
 | `let add = a => b => a + b` | `let add = (a, b) => a + b` |
 
-Both JavaScript and Reason support currying, but Reason currying is **built-in
-and optimized to avoid intermediate function allocation and calls**, whenever
+Both JavaScript and OCaml support currying, but OCaml currying is **built-in and
+optimized to avoid intermediate function allocation and calls**, whenever
 possible.
 
 ### If-else
 
-| JavaScript            | OCaml (Reason syntax)                                                              |
-|-----------------------|------------------------------------------------------------------------------------|
-| `if (a) {b} else {c}` | Same \*                                                                            |
-| `a ? b : c`           | Same                                                                               |
-| `switch`              | `switch` but [super-powered\!](https://reasonml.github.io/docs/en/pattern-matching) |
+| JavaScript            | OCaml (Reason syntax)                                                                     |
+|-----------------------|-------------------------------------------------------------------------------------------|
+| `if (a) {b} else {c}` | Same \*                                                                                   |
+| `a ? b : c`           | Same                                                                                      |
+| `switch`              | `switch` but [with pattern matching](https://reasonml.github.io/docs/en/pattern-matching) |
 
-\* In Reason, conditionals are always expressions. Or in other words: the `else`
+\* In OCaml, conditionals are always expressions. Or in other words: the `else`
 branch is not optional.
 
 ### Destructuring
@@ -205,7 +205,7 @@ instead.
 
 ### Blocks
 
-In Reason, "sequence expressions" are created with `{}` and evaluate to their
+In OCaml, "sequence expressions" are created with `{}` and evaluate to their
 last statement. In JavaScript, this can be simulated via an immediately-invoked
 function expression (since function bodies have their own local scope).
 
@@ -500,7 +500,8 @@ These aspects translate into different trade-offs. Compared to Js\_of\_ocaml:
   Melange.
 - Js\_of\_ocaml allows to compile the compiler itself and create "toplevels",
   which is not possible with Melange.
-- `Marshal` is well supported in Js\_of\_ocaml, while Melange does not support it.
+- `Marshal` is well supported in Js\_of\_ocaml, while Melange does not support
+  it.
 - Libraries like `Unix` or `Str` are available in Js\_of\_ocaml but not in
   Melange.
 - Js\_of\_ocaml supports sourcemaps, which Melange do not support yet (as of May

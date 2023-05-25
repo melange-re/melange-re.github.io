@@ -144,10 +144,18 @@ application. In the root folder, create another `dune` file:
  (libraries lib))
 ```
 
+<div class="text-ocaml">
 And an `app.ml` file:
+</div>
+<div class="text-reasonml">
+And an `app.re` file:
+</div>
 
-```
+```ocaml
 let () = Js.log Lib.name
+```
+```reasonml
+let () = Js.log(Lib.name);
 ```
 
 The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
@@ -171,7 +179,7 @@ The file structure of the app should look something like this:
 │   └── lib.re
 ├── dune-project
 ├── dune
-└── app.ml</code></pre>
+└── app.re</code></pre>
 
 #### Building the project
 
@@ -210,15 +218,20 @@ to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
-```text
-project_name/
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.ml
 └── emit
-    └── dune
-```
+    └── dune</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.re
+└── emit
+    └── dune</code></pre>
 
 With `emit/dune` being:
 
@@ -236,7 +249,12 @@ And `lib/dune`:
  (modes melange))
 ```
 
+<div class="text-ocaml">
 Then, the JavaScript artifacts for `foo.ml` will be placed under:
+</div>
+<div class="text-reasonml">
+Then, the JavaScript artifacts for `foo.re` will be placed under:
+</div>
 
 ```text
 _build/default/emit/app/lib/foo.js
@@ -247,10 +265,12 @@ More generically:
 - For a `melange.emit` stanza defined in a `dune` file located in the relative
   workspace path `$melange-emit-folder`
 - Which includes a `target` field named `$target`, like `(target $target)`
-- For a source file called `$name.ml`, placed in the relative workspace path
+- For a source file called <code class="text-ocaml">$name.ml</code><code
+  class="text-reasonml">$name.re</code>, placed in the relative workspace path
   `$path-to-source-file`
 
-The path to the generated JavaScript file from `$name.ml` will be:
+The path to the generated JavaScript file from <code class="text-ocaml">$name.ml</code><code
+  class="text-reasonml">$name.re</code> will be:
 
 ```text
 _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
