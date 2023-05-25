@@ -412,8 +412,8 @@ type email = string;</code></pre> </td> </tr>
       </td>
       <td>
         <pre><code>type result =
-| Error of string
-| Success of int</code></pre>
+| Error(string)
+| Success(int)</code></pre>
       </td>
     </tr>
   </tbody>
