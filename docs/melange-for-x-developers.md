@@ -55,7 +55,7 @@ syntaxes:
 |-------------------------------------------------------|-----------------------------------|
 | `true`, `false`                                       | Same                              |
 | `!true`                                               | Same                              |
-| <code>||</code>, `&&`, `<=`, `>=`, `<`, `>`           | Same                              |
+| `||`, `&&`, `<=`, `>=`, `<`, `>`                      | Same                              |
 | `a === b`, `a !== b`                                  | Same                              |
 | No deep equality (recursive compare)                  | `a == b`, `a != b`                |
 | `a == b`                                              | No equality with implicit casting |

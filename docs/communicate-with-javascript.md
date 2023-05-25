@@ -386,12 +386,12 @@ class="text-reasonml">\-\></code>.
 
 To overcome the constraints mentioned above and enable the generation of more
 performant JavaScript code, Melange introduces the pipe first operator <code
-class="text-ocaml">|.</code><code class="text-reasonml">\-\></code>.
+class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>.
 
 Unlike the pipe last operator, the pipe first operator is not defined as an
 infix operator. Instead, it is a purely syntactic transformation. This means
-that the parser will convert <code class="text-ocaml">f |. g</code><code
-class="text-reasonml">f -\> g</code> into `g f` without any runtime performance
+that the parser will convert <code class="text-ocaml">f \|. g</code><code
+class="text-reasonml">f-\>g</code> into `g f` without any runtime performance
 impact.
 
 As its name suggests, the pipe first operator is better suited for functions
@@ -470,13 +470,13 @@ This is how each Melange type is converted into JavaScript values:
 | [Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | Option.t `None` | `undefined` |
 | Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
-| Option.t <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
+| <p>foo</p> | `2` |
 | record <code class="text-ocaml">{x = 1; y = 2}</code><code class="text-reasonml">{x: 1; y: 2}</code> | object `{x: 1, y: 2}` |
 | int64 | array of 2 elements `[high, low]` high is signed, low unsigned |
-| char | `'a'` -> `97` (ascii code) |
+| char | `'a'` -\> `97` (ascii code) |
 | bytes | number array |
 | list `[]` | `0` |
-| list <code class="text-ocaml">[ x; y ]</code><code class="text-reasonml">[x, y]</code> | `{ hd: x, tl: { hd: y, tl: 0 } }` |
+| list <code class="text-ocaml">\[ x; y \]</code><code class="text-reasonml">\[x, y\]</code> | `{ hd: x, tl: { hd: y, tl: 0 } }` |
 | variant | See below |
 | polymorphic variant | See below |
 

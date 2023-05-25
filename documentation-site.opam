@@ -10,19 +10,20 @@ authors: [
   "Javier Chávarri <javier.chavarri@gmail.com>"
 ]
 license: "MIT"
-homepage: "https://github.com/melange-re/documentation-site"
-bug-reports: "https://github.com/melange-re/documentation-site"
+homepage: "https://github.com/melange-re/melange-re.github.io"
+bug-reports: "https://github.com/melange-re/melange-re.github.io"
 depends: [
   "ocaml" {>= "4.14.0" & < "5.0.0"}
   "reason" {>= "3.8.1" & < "4.0.0"}
-  "cmarkit"
+  "cmarkit" {dev}
   "dune" {dev}
   "melange" {dev}
   "ocaml-lsp-server" {dev}
   "ocamlformat" {dev}
 ]
-dev-repo: "git+https://github.com/melange-re/documentation-site.git"
+dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [
   [ "dune.dev" "git+https://github.com/ocaml/dune.git#e33cb627bd301dd5632f91001be0a78bce31032b" ]
   [ "melange.dev" "git+https://github.com/melange-re/melange.git#bd428f319b1d5ff2cf412b859c5e652b8c9e92a7" ]
+  [ "cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91" ]
 ]
