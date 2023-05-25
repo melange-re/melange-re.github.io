@@ -578,7 +578,7 @@ architectures are not included in the pre-built binaries.
 ReScript is compatible with the 4.06 version of the OCaml compiler, while
 Melange is compatible with the version 4.14 (as of May 2023).
 
-The (Melange roadmap)\[todo-fix-me.md\] includes a milestone to upgrade to the
+The [Melange roadmap](todo-fix-me.md) includes a milestone to upgrade to the
 latest version of the compiler to the 5.x release line.
 
 ### Editor integration
