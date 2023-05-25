@@ -50,7 +50,7 @@ developers. It provides several benefits, including:
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
-  [Js_of_ocaml](https://dune.readthedocs.io/en/stable/jsoo.html), [watch
+  [Js\_of\_ocaml](https://dune.readthedocs.io/en/stable/jsoo.html), [watch
   mode](https://dune.readthedocs.io/en/stable/usage.html#watch-mode), Merlin/LSP
   integration for editor support, [cross
   compilation](https://dune.readthedocs.io/en/stable/cross-compilation.html),
@@ -102,10 +102,18 @@ inside the `dune` file:
  (modes melange))
 ```
 
-Create a file `lib.ml` in the same folder:
+<div class="text-ocaml">
+Create a file <code>lib.ml</code> in the same folder:
+</div>
+<div class="text-reasonml">
+Create a file <code>lib.re</code> in the same folder:
+</div>
 
-```ml
+```ocaml
 let name = "Jane"
+```
+```reasonml
+let name = "Jane";
 ```
 
 The top level configuration entries —like the `library` one that appears in the
@@ -136,10 +144,18 @@ application. In the root folder, create another `dune` file:
  (libraries lib))
 ```
 
+<div class="text-ocaml">
 And an `app.ml` file:
+</div>
+<div class="text-reasonml">
+And an `app.re` file:
+</div>
 
-```
+```ocaml
 let () = Js.log Lib.name
+```
+```reasonml
+let () = Js.log(Lib.name);
 ```
 
 The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
@@ -148,16 +164,22 @@ the [Dune docs](https://dune.readthedocs.io/en/stable/melange.html).
 
 The file structure of the app should look something like this:
 
-```text
-project_name/
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── _opam
 ├── lib
 │   ├── dune
 │   └── lib.ml
 ├── dune-project
 ├── dune
-└── app.ml
-```
+└── app.ml</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── lib
+│   ├── dune
+│   └── lib.re
+├── dune-project
+├── dune
+└── app.re</code></pre>
 
 #### Building the project
 
@@ -196,15 +218,20 @@ to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
-```text
-project_name/
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.ml
 └── emit
-    └── dune
-```
+    └── dune</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.re
+└── emit
+    └── dune</code></pre>
 
 With `emit/dune` being:
 
@@ -222,7 +249,12 @@ And `lib/dune`:
  (modes melange))
 ```
 
+<div class="text-ocaml">
 Then, the JavaScript artifacts for `foo.ml` will be placed under:
+</div>
+<div class="text-reasonml">
+Then, the JavaScript artifacts for `foo.re` will be placed under:
+</div>
 
 ```text
 _build/default/emit/app/lib/foo.js
@@ -233,10 +265,12 @@ More generically:
 - For a `melange.emit` stanza defined in a `dune` file located in the relative
   workspace path `$melange-emit-folder`
 - Which includes a `target` field named `$target`, like `(target $target)`
-- For a source file called `$name.ml`, placed in the relative workspace path
+- For a source file called <code class="text-ocaml">$name.ml</code><code
+  class="text-reasonml">$name.re</code>, placed in the relative workspace path
   `$path-to-source-file`
 
-The path to the generated JavaScript file from `$name.ml` will be:
+The path to the generated JavaScript file from <code class="text-ocaml">$name.ml</code><code
+  class="text-reasonml">$name.re</code> will be:
 
 ```text
 _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
@@ -330,12 +364,22 @@ order to get the value of the `__dirname` environment variable:
  (preprocess (pps melange.ppx)))
 ```
 
-Finally, update `lib/lib.ml` to read from the recently added file:
+<div class="text-ocaml">
+Finally, update <code>lib/lib.ml</code> to read from the recently added file:
+</div>
+<div class="text-reasonml">
+Finally, update <code>lib/lib.re</code> to read from the recently added file:
+</div>
 
 ```ocaml
 let dir = [%bs.raw "__dirname"]
 let file = "name.txt"
 let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
+```
+```reasonml
+let dir = [%bs.raw "__dirname"];
+let file = "name.txt";
+let name = Node.Fs.readFileSync(dir ++ "/" ++ file, `ascii);
 ```
 
 After these changes, once we build the project, we should still be able to run

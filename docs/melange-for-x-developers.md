@@ -6,7 +6,7 @@ quickly. In particular:
 
 - JavaScript
 - TypeScript
-- Js_of_ocaml
+- Js\_of\_ocaml
 - ReScript
 
 ## For JavaScript developers
@@ -21,7 +21,7 @@ If you don’t know which one to choose, we recommend
 [Reason](https://reasonml.github.io/en/), as it has been designed with
 JavaScript developers in mind.
 
-Reason has first-class support for
+Reason syntax has first-class support for
 [JSX](https://reasonml.github.io/docs/en/jsx), and there are bindings like
 [ReasonReact](https://github.com/reasonml/reason-react/) that build on top of
 that functionality to provide a great developer experience.
@@ -35,7 +35,7 @@ syntaxes:
 ### Variable
 
 | JavaScript              | OCaml (Reason syntax)          |
-| ----------------------- | ------------------------------ |
+|-------------------------|--------------------------------|
 | `const x = 5;`          | `let x = 5;`                   |
 | `var x = y;`            | No equivalent                  |
 | `let x = 5; x = x + 1;` | `let x = ref(5); x := x^ + 1;` |
@@ -43,7 +43,7 @@ syntaxes:
 ### String & Character
 
 | JavaScript             | OCaml (Reason syntax) |
-| ---------------------- | --------------------- |
+|------------------------|-----------------------|
 | `"Hello world!"`       | Same                  |
 | `'Hello world!'`       | Strings must use `"`  |
 | Characters are strings | `'a'`                 |
@@ -52,10 +52,10 @@ syntaxes:
 ### Boolean
 
 | JavaScript                                            | OCaml (Reason syntax)             |
-| ----------------------------------------------------- | --------------------------------- |
+|-------------------------------------------------------|-----------------------------------|
 | `true`, `false`                                       | Same                              |
 | `!true`                                               | Same                              |
-| <code>&#124;&#124;</code>, `&&`, `<=`, `>=`, `<`, `>` | Same                              |
+| `||`, `&&`, `<=`, `>=`, `<`, `>`                      | Same                              |
 | `a === b`, `a !== b`                                  | Same                              |
 | No deep equality (recursive compare)                  | `a == b`, `a != b`                |
 | `a == b`                                              | No equality with implicit casting |
@@ -63,7 +63,7 @@ syntaxes:
 ### Number
 
 | JavaScript  | OCaml (Reason syntax) |
-| ----------- | --------------------- |
+|-------------|-----------------------|
 | `3`         | Same \*               |
 | `3.1415`    | Same                  |
 | `3 + 4`     | Same                  |
@@ -75,7 +75,7 @@ syntaxes:
 ### Object/Record
 
 | JavaScript          | OCaml (Reason syntax)                   |
-| ------------------- | --------------------------------------- |
+|---------------------|-----------------------------------------|
 | no static types     | `type point = {x: int, mutable y: int}` |
 | `{x: 30, y: 20}`    | Same                                    |
 | `point.x`           | Same                                    |
@@ -85,8 +85,8 @@ syntaxes:
 ### Array
 
 | JavaScript            | OCaml (Reason syntax)              |
-| --------------------- | ---------------------------------- |
-| `[1, 2, 3]`           | <code>[&#124;1, 2, 3&#124;]</code> |
+|-----------------------|------------------------------------|
+| `[1, 2, 3]`           | <code>\[|1, 2, 3|\]</code> |
 | `myArray[1] = 10`     | Same                               |
 | `[1, "Bob", true]` \* | `(1, "Bob", true)`                 |
 | No immutable list     | `[1, 2, 3]`                        |
@@ -97,17 +97,17 @@ contain multiple types of elements.
 ### Null
 
 | JavaScript          | OCaml (Reason syntax) |
-| ------------------- | --------------------- |
+|---------------------|-----------------------|
 | `null`, `undefined` | `None` \*             |
 
-\* There are no nulls, nor null bugs in Reason. But it does have [an option
+\* There are no nulls, nor null bugs in OCaml. But it does have [an option
 type](https://reasonml.github.io/docs/en/option) for when you actually need
 nullability.
 
 ### Function
 
 | JavaScript                      | OCaml (Reason syntax)      |
-| ------------------------------- | -------------------------- |
+|---------------------------------|----------------------------|
 | `arg => retVal`                 | `(arg) => retVal`          |
 | `function named(arg) {...}`     | `let named = (arg) => ...` |
 | `const f = function(arg) {...}` | `let f = (arg) => ...`     |
@@ -145,30 +145,30 @@ nullability.
 #### Currying
 
 | JavaScript                  | OCaml (Reason syntax)       |
-| --------------------------- | --------------------------- |
+|-----------------------------|-----------------------------|
 | `let add = a => b => a + b` | `let add = (a, b) => a + b` |
 
-Both JavaScript and Reason support currying, but Reason currying is **built-in
-and optimized to avoid intermediate function allocation and calls**, whenever
+Both JavaScript and OCaml support currying, but OCaml currying is **built-in and
+optimized to avoid intermediate function allocation and calls**, whenever
 possible.
 
 ### If-else
 
-| JavaScript            | OCaml (Reason syntax)                                                              |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| `if (a) {b} else {c}` | Same \*                                                                            |
-| `a ? b : c`           | Same                                                                               |
-| `switch`              | `switch` but [super-powered!](https://reasonml.github.io/docs/en/pattern-matching) |
+| JavaScript            | OCaml (Reason syntax)                                                                     |
+|-----------------------|-------------------------------------------------------------------------------------------|
+| `if (a) {b} else {c}` | Same \*                                                                                   |
+| `a ? b : c`           | Same                                                                                      |
+| `switch`              | `switch` but [with pattern matching](https://reasonml.github.io/docs/en/pattern-matching) |
 
-\* In Reason, conditionals are always expressions. Or in other words: the `else`
+\* In OCaml, conditionals are always expressions. Or in other words: the `else`
 branch is not optional.
 
 ### Destructuring
 
 | JavaScript                    | OCaml (Reason syntax)                         |
-| ----------------------------- | --------------------------------------------- |
+|-------------------------------|-----------------------------------------------|
 | `const {a, b} = data`         | `let {a, b} = data`                           |
-| `const [a, b] = data`         | <code>let [&#124;a, b&#124;] = data</code> \* |
+| `const [a, b] = data`         | <code>let \[|a, b|\] = data</code> \* |
 | `const {a: aa, b: bb} = data` | `let {a: aa, b: bb} = data`                   |
 
 \* This will cause the compiler to warn that not all cases are handled, because
@@ -178,7 +178,7 @@ instead.
 ### Loop
 
 | JavaScript                            | OCaml (Reason syntax)          |
-| ------------------------------------- | ------------------------------ |
+|---------------------------------------|--------------------------------|
 | `for (let i = 0; i <= 10; i++) {...}` | `for (i in 0 to 10) {...}`     |
 | `for (let i = 10; i >= 0; i--) {...}` | `for (i in 10 downto 0) {...}` |
 | `while (true) {...}`                  | Same                           |
@@ -186,7 +186,7 @@ instead.
 ### JSX
 
 | JavaScript                             | OCaml (Reason syntax)    |
-| -------------------------------------- | ------------------------ |
+|----------------------------------------|--------------------------|
 | `<Foo bar=1 baz="hi" onClick={bla} />` | Same                     |
 | `<Foo bar=bar />`                      | `<Foo bar />` \*         |
 | `<input checked />`                    | `<input checked=true />` |
@@ -197,15 +197,15 @@ instead.
 ### Exception
 
 | JavaScript                                | OCaml (Reason syntax)                        |
-| ----------------------------------------- | -------------------------------------------- |
+|-------------------------------------------|----------------------------------------------|
 | `throw new SomeError(...)`                | `raise(SomeError(...))`                      |
-| `try {a} catch (Err) {...} finally {...}` | <code>try (a) { &#124; Err => ...}</code> \* |
+| `try {a} catch (Err) {...} finally {...}` | <code>try (a) { | Err =\> ...}</code> \* |
 
 \* No finally.
 
 ### Blocks
 
-In Reason, "sequence expressions" are created with `{}` and evaluate to their
+In OCaml, "sequence expressions" are created with `{}` and evaluate to their
 last statement. In JavaScript, this can be simulated via an immediately-invoked
 function expression (since function bodies have their own local scope).
 
@@ -239,7 +239,7 @@ function expression (since function bodies have their own local scope).
 ### Comments
 
 | JavaScript        | OCaml (Reason syntax) |
-| ----------------- | --------------------- |
+|-------------------|-----------------------|
 | `/* Comment */`   | Same                  |
 | `// Line comment` | Same                  |
 
@@ -267,6 +267,9 @@ define a function that adds two numbers as:
 
 ```ocaml
 let add x y = x + y
+```
+```reasonml
+let add = (x, y) => x + y;
 ```
 
 ### Algebraic data types
@@ -357,7 +360,7 @@ JavaScript developers](#for-javascript-developers).
 #### Type aliases
 
 | TypeScript             | OCaml (Reason syntax)  |
-| ---------------------- | ---------------------- |
+|------------------------|------------------------|
 | `type Email = string;` | `type email = string;` |
 
 #### Abstract types
@@ -468,12 +471,12 @@ add(5)(3);
 #### Parametric polymorphism
 
 | TypeScript                             | OCaml (Reason syntax)          |
-| -------------------------------------- | ------------------------------ |
+|----------------------------------------|--------------------------------|
 | `type length = <T>(_: T[]) => number;` | `let length: list('a) => int;` |
 
-## For Js_of_ocaml developers
+## For Js\_of\_ocaml developers
 
-There are many similarities between Js_of_ocaml and Melange:
+There are many similarities between Js\_of\_ocaml and Melange:
 
 - Both compile OCaml to JavaScript.
 - Both are available as libraries in the official opam repository.
@@ -481,26 +484,27 @@ There are many similarities between Js_of_ocaml and Melange:
   server, Merlin, and the different editor extensions.
 - Both have implemented extensive integration with Dune.
 
-However, while Js_of_ocaml transforms OCaml bytecode into JavaScript, Melange
+However, while Js\_of\_ocaml transforms OCaml bytecode into JavaScript, Melange
 starts the conversion process earlier in the compiler pipeline, as it transforms
 the compiler lambda representation into JavaScript.
 
-Js_of_ocaml is a project with years of development and evolution behind it,
+Js\_of\_ocaml is a project with years of development and evolution behind it,
 while Melange [appearance](rationale.md#a-bit-of-history) is relatively recent
 in comparison.
 
-These aspects translate into different trade-offs. Compared to Js_of_ocaml:
+These aspects translate into different trade-offs. Compared to Js\_of\_ocaml:
 
 - Melange can be installed in an OCaml 5 opam switch, but the editor integration
   is not working at the time (May 2023).
 - Similarly, any OCaml 5 features like effects are currently unsupported in
   Melange.
-- Js_of_ocaml allows to compile the compiler itself and create "toplevels",
+- Js\_of\_ocaml allows to compile the compiler itself and create "toplevels",
   which is not possible with Melange.
-- `Marshal` is well supported in Js_of_ocaml, while Melange does not support it.
-- Libraries like `Unix` or `Str` are available in Js_of_ocaml but not in
+- `Marshal` is well supported in Js\_of\_ocaml, while Melange does not support
+  it.
+- Libraries like `Unix` or `Str` are available in Js\_of\_ocaml but not in
   Melange.
-- Js_of_ocaml supports sourcemaps, which Melange do not support yet (as of May
+- Js\_of\_ocaml supports sourcemaps, which Melange do not support yet (as of May
   2023).
 
 On the upside, in Melange:
@@ -513,7 +517,7 @@ On the upside, in Melange:
 - The generated JavaScript bundles are generally smaller.
 - The generated JavaScript code is generally more readable.
 - Straight-forward integration with modern JavaScript tooling like Webpack,
-  NextJS, etc. This is possible thanks to the 1 module <-> 1 JavaScript file
+  NextJS, etc. This is possible thanks to the 1 module \<-\> 1 JavaScript file
   compilation model.
 
 ## For ReScript developers
@@ -574,7 +578,7 @@ architectures are not included in the pre-built binaries.
 ReScript is compatible with the 4.06 version of the OCaml compiler, while
 Melange is compatible with the version 4.14 (as of May 2023).
 
-The (Melange roadmap)[todo-fix-me.md] includes a milestone to upgrade to the
+The (Melange roadmap)\[todo-fix-me.md\] includes a milestone to upgrade to the
 latest version of the compiler to the 5.x release line.
 
 ### Editor integration

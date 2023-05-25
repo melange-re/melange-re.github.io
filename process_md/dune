@@ -1,0 +1,4 @@
+(executable
+ (name process_md)
+ (public_name process_md)
+ (libraries cmarkit reason))
