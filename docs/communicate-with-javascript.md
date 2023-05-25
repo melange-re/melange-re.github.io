@@ -384,15 +384,9 @@ class="text-reasonml">\-\></code>.
 
 #### Pipe first
 
-To overcome the constraints mentioned above and enable the generation of more
-performant JavaScript code, Melange introduces the pipe first operator <code
-class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>.
-
-Unlike the pipe last operator, the pipe first operator is not defined as an
-infix operator. Instead, it is a purely syntactic transformation. This means
-that the parser will convert <code class="text-ocaml">f \|. g</code><code
-class="text-reasonml">f-\>g</code> into `g f` without any runtime performance
-impact.
+To overcome the constraints mentioned above, Melange introduces the pipe first
+operator <code class="text-ocaml">\|.</code><code
+class="text-reasonml">\-\></code>.
 
 As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.
