@@ -469,15 +469,14 @@ This is how each Melange type is converted into JavaScript values:
 | [Js.Nullable.t](todo-fix-me.md) | `null` / `undefined` |
 | [Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | Option.t `None` | `undefined` |
-| Option.t `Some( Some .. Some (None))` | internal representation |
-| Option.t `Some 2` | `2` |
-| record `{x: 1; y: 2}` | object `{x: 1, y: 2}` |
+| Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
+| Option.t <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
+| record <code class="text-ocaml">{x = 1; y = 2}</code><code class="text-reasonml">{x: 1; y: 2}</code> | object `{x: 1, y: 2}` |
 | int64 | array of 2 elements `[high, low]` high is signed, low unsigned |
 | char | `'a'` -> `97` (ascii code) |
 | bytes | number array |
 | list `[]` | `0` |
-| list `[x, y]` | `{ hd: x, tl: { hd: y, tl: 0 } }` |
-| list `[1, 2, 3]` | `{ hd: 1, tl: { hd: 2, tl: { hd: 3, tl: 0 } } }` |
+| list <code class="text-ocaml">[ x; y ]</code><code class="text-reasonml">[x, y]</code> | `{ hd: x, tl: { hd: y, tl: 0 } }` |
 | variant | See below |
 | polymorphic variant | See below |
 
