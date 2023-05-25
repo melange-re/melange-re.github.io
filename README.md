@@ -2,6 +2,9 @@
 
 This repository contains the source for Melange public documentation site.
 
+If you are looking for Melange source instead, it can be found in
+https://github.com/melange-re/melange.
+
 > **Warning** At the moment, this is a **work in progress**, opened to the
 > public. The content and technology used to build the website are being
 > developed and the website itself is not hosted yet on its final domain.
@@ -48,4 +51,5 @@ dune build @re --auto-promote
 
 ## Publishing
 
-Run `mkdocs gh-deploy`.
+Publishing is done automatically from `master`. To publish manually, run `mkdocs
+gh-deploy`.
