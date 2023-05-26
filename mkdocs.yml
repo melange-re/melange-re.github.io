@@ -10,7 +10,6 @@ theme:
   highlightjs: true
   hljs_languages:
     - ocaml
-    - reasonml
 
 plugins:
   - search
@@ -38,3 +37,4 @@ extra_css:
 
 extra_javascript:
   - js/toggleSyntaxButton.js
+  - js/reasonml.js
