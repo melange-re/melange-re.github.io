@@ -278,8 +278,9 @@ More generically:
   class="text-reasonml">$name.re</code>, placed in the relative workspace path
   `$path-to-source-file`
 
-The path to the generated JavaScript file from <code class="text-ocaml">$name.ml</code><code
-  class="text-reasonml">$name.re</code> will be:
+The path to the generated JavaScript file from <code
+  class="text-ocaml">$name.ml</code><code class="text-reasonml">$name.re</code>
+  will be:
 
 ```text
 _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
@@ -423,3 +424,33 @@ Melange developers. For further details about how Dune works and its integration
 with Melange, check the [Dune documentation](https://dune.readthedocs.io/), and
 the [Melange opam
 template](https://github.com/melange-re/melange-opam-template).
+
+#### CommonJS or ES6 modules
+
+Melange produces JavaScript modules that export the functions they declare, and
+declare imports for the values and modules they depend on.
+
+By default, Melange will produce
+[CommonJS](https://en.wikipedia.org/wiki/CommonJS) modules, but it is possible
+to configure it to generate
+[ES6](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015)
+modules.
+
+The place to do so is the `melange.emit` stanza. To configure Melange to
+generate ES6 modules, we will use the `module_systems` field:
+
+```text
+(melange.emit
+ (target app)
+ (alias my-app)
+ (libraries lib)
+ (module_systems es6))
+```
+
+If no extension is specified, the resulting JavaScript files will use `.js`. You
+can specify a different extension with a pair `(<module_system> <extension>)`,
+e.g. `(module_systems (es6 mjs))`. Multiple module systems can be used in the
+same field as long as their extensions are different. For example,
+`(module_systems commonjs (es6 mjs))` will produce one set of JavaScript files
+using CommonJS and the `.js` extension, and another using ES6 and the `.mjs`
+extension.

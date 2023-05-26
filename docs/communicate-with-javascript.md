@@ -3029,3 +3029,77 @@ type person =
 The accessors `nameGet` and `ageGet` will still be generated, but not the
 constructor `person`. This is useful when binding to JavaScript objects while
 preventing any Melange code from creating values of such type.
+
+## Use Melange code from JavaScript
+
+As mentioned in the [build system
+section](build-system.md#commonjs-or-es6-modules), Melange allows to produce
+both CommonJS and ES6 modules. In any of both cases, there is nothing special to
+do to use your Melange-generated JavaScript code from any hand-written
+JavaScript file.
+
+The following definition:
+
+```ocaml
+let print name = "Hello" ^ name
+```
+```reasonml
+let print = name => "Hello" ++ name;
+```
+
+Will generate this JavaScript code, when using CommonJS (the default):
+
+```js
+function print(name) {
+  return "Hello" + name;
+}
+
+exports.print = print;
+```
+
+When using ES6 (through the `(module_systems es6)` field in `melange.emit`) this
+code will be generated:
+
+```js
+function print(name) {
+  return "Hello" + name;
+}
+
+export {
+  print ,
+}
+```
+
+So one can use either `require` or `import` (depending on the modules system of
+choice) to import the `print` value in a JavaScript file.
+
+### Default ES6 values
+
+One special case occur when working with JavaScript imports in ES6 modules that
+look like this:
+
+```js
+import ten from 'numbers.js';
+```
+
+This import expects `numbers.js` to have a default export, like:
+
+```js
+export default ten = 10;
+```
+
+To emulate this kind of exports from Melange, one just needs to define a
+`default` value.
+
+For example, in a file named <code class="text-ocaml">numbers.ml</code><code
+class="text-reasonml">numbers.re</code>:
+
+```ocaml
+let default = 10
+```
+```reasonml
+let default = 10;
+```
+
+That way, Melange will set the value on the `default` export so it can be
+consumed as default import on the JavaScript side.
