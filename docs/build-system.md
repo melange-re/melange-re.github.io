@@ -145,10 +145,10 @@ application. In the root folder, create another `dune` file:
 ```
 
 <div class="text-ocaml">
-And an `app.ml` file:
+  And an <code>app.ml</code> file:
 </div>
 <div class="text-reasonml">
-And an `app.re` file:
+  And an <code>app.re</code> file:
 </div>
 
 ```ocaml
