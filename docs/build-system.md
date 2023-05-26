@@ -395,7 +395,7 @@ After these changes, once we build the project, we should still be able to run
 the application file with Node:
 
 ```bash
-$ dune build @app
+$ dune build @my-app
 $ node _build/default/app/app.js
 Jane
 ```
