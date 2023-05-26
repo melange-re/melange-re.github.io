@@ -71,8 +71,17 @@ opam switch create . 4.14.1 --deps-only
 Install Dune and Melange in the switch:
 
 ```bash
-opam install dune melange
+opam pin add dune.dev --dev-repo
+opam pin add melange.dev --dev-repo
 ```
+
+<div class="text-reasonml">
+As we will be using Reason syntax, let’s install the `reason` package too:
+
+```bash
+opam install reason
+```
+</div>
 
 Create a file named `dune-project`. This file will tell Dune a few things about
 our project configuration:
