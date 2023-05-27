@@ -3034,9 +3034,8 @@ preventing any Melange code from creating values of such type.
 
 As mentioned in the [build system
 section](build-system.md#commonjs-or-es6-modules), Melange allows to produce
-both CommonJS and ES6 modules. In both cases, there is nothing special to
-do to use your Melange-generated JavaScript code from any hand-written
-JavaScript file.
+both CommonJS and ES6 modules. In both cases, using Melange-generated JavaScript
+code from any hand-written JavaScript file works as expected.
 
 The following definition:
 
