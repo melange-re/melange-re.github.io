@@ -436,8 +436,8 @@ to configure it to generate
 [ES6](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015)
 modules.
 
-The place to do so is the `melange.emit` stanza. To configure Melange to
-generate ES6 modules, we will use the `module_systems` field:
+Use the `module_systems` field in the `melange.emit` stanza to emit
+ES6 modules:
 
 ```text
 (melange.emit

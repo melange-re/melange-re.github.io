@@ -3034,7 +3034,7 @@ preventing any Melange code from creating values of such type.
 
 As mentioned in the [build system
 section](build-system.md#commonjs-or-es6-modules), Melange allows to produce
-both CommonJS and ES6 modules. In any of both cases, there is nothing special to
+both CommonJS and ES6 modules. In both cases, there is nothing special to
 do to use your Melange-generated JavaScript code from any hand-written
 JavaScript file.
 
@@ -3070,7 +3070,7 @@ export {
 }
 ```
 
-So one can use either `require` or `import` (depending on the modules system of
+So one can use either `require` or `import` (depending on the module system of
 choice) to import the `print` value in a JavaScript file.
 
 ### Default ES6 values
