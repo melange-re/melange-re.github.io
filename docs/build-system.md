@@ -169,7 +169,8 @@ let () = Js.log(Lib.name);
 
 The `melange.emit` stanza tells Dune to generate JavaScript files from a set of
 libraries and modules. In-depth documentation about this stanza can be found in
-the [Dune docs](https://dune.readthedocs.io/en/stable/melange.html).
+the [Dune
+docs](https://dune.readthedocs.io/en/stable/melange.html#melange-emit).
 
 The file structure of the app should look something like this:
 
@@ -278,8 +279,9 @@ More generically:
   class="text-reasonml">$name.re</code>, placed in the relative workspace path
   `$path-to-source-file`
 
-The path to the generated JavaScript file from <code class="text-ocaml">$name.ml</code><code
-  class="text-reasonml">$name.re</code> will be:
+The path to the generated JavaScript file from <code
+  class="text-ocaml">$name.ml</code><code class="text-reasonml">$name.re</code>
+  will be:
 
 ```text
 _build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
@@ -345,8 +347,8 @@ provides a way to specify these dependencies, depending on the stanza:
 - For `melange.emit` stanzas, a field `runtime_deps`
 
 Both fields are documented in the [Melange
-page](https://dune.readthedocs.io/en/stable/melange.html) of the Dune
-documentation site.
+page](https://dune.readthedocs.io/en/stable/melange.html#melange-emit) of the
+Dune documentation site.
 
 For the sake of learning how to work with assets in a Melange project, let’s say
 that we want to read the string in `Lib.name` from a text file. We will combine
@@ -423,3 +425,34 @@ Melange developers. For further details about how Dune works and its integration
 with Melange, check the [Dune documentation](https://dune.readthedocs.io/), and
 the [Melange opam
 template](https://github.com/melange-re/melange-opam-template).
+
+#### CommonJS or ES6 modules
+
+Melange produces JavaScript modules that export the functions they declare, and
+declare imports for the values and modules they depend on.
+
+By default, Melange will produce
+[CommonJS](https://en.wikipedia.org/wiki/CommonJS) modules, but it is possible
+to configure it to generate
+[ES6](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015)
+modules.
+
+Use the `module_systems` field in the [`melange.emit`
+stanza](https://dune.readthedocs.io/en/stable/melange.html#melange-emit) to emit
+ES6 modules:
+
+```text
+(melange.emit
+ (target app)
+ (alias my-app)
+ (libraries lib)
+ (module_systems es6))
+```
+
+If no extension is specified, the resulting JavaScript files will use `.js`. You
+can specify a different extension with a pair `(<module_system> <extension>)`,
+e.g. `(module_systems (es6 mjs))`. Multiple module systems can be used in the
+same field as long as their extensions are different. For example,
+`(module_systems commonjs (es6 mjs))` will produce one set of JavaScript files
+using CommonJS and the `.js` extension, and another using ES6 and the `.mjs`
+extension.
