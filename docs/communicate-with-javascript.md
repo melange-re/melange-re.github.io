@@ -263,7 +263,7 @@ There are two pipe operators available in Melange:
 - A _pipe last_ operator `|>`, available [in
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
-  
+
 - A _pipe first_ operator <code class="text-ocaml">\|.</code><code
   class="text-reasonml">\-\></code>, available exclusively in Melange
 
@@ -2434,7 +2434,7 @@ to treat both as `'a option` in OCaml.
 Melange understands the `bs.return` attribute in externals to model how
 nullable return types should be wrapped at the OCaml <-> JavaScript boundary.
 An `external` value with `bs.return` converts the return value to an `option`
-type, avoiding the need for more cumbersome handling with functions such as
+type, avoiding the need for extra wrapping / unwrapping with functions such as
 `Js.Nullable.toOption`.
 
 ```ocaml
