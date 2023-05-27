@@ -2428,11 +2428,14 @@ Note that the first argument will be reserved for `this`.
 
 ### Wrapping returned nullable values
 
-For JavaScript functions that return a value that can be `undefined` or `null`,
-Melange provides `bs.return`. Using this attribute will have Melange generated
-code automatically convert the value returned by the function to an `option`
-type that can be used safely from Melange side, avoiding the need to use manual
-conversion functions like `Js.Nullable.toOption` and such.
+JavaScript models `null` and `undefined` differently, whereas it can be useful
+to treat both as `'a option` in OCaml.
+
+Melange understands the `bs.return` attribute in externals to model how
+nullable return types should be wrapped at the OCaml <-> JavaScript boundary.
+An `external` value with `bs.return` converts the return value to an `option`
+type, avoiding the need for more cumbersome handling with functions such as
+`Js.Nullable.toOption`.
 
 ```ocaml
 type element
@@ -2970,7 +2973,7 @@ type person = {
 }
 [@@bs.deriving abstract]
 
-let alice = person ~name:"Alice" ~age:20 
+let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
