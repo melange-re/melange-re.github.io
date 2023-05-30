@@ -2290,7 +2290,10 @@ discarded. The value returned from the operation would not be the addition of
 the two numbers, but rather the inner anonymous callback.
 
 To solve this mismatch between OCaml and JavaScript functions and their
-application, Melange provides a special attribute <span class="text-ocaml">`@bs`</span><span class="text-reasonml">`.`</span> that can be used with external functions.
+application, Melange provides a special attribute `@bs` that can be used to annotate
+external functions that need to be "uncurried".
+
+<span class="text-reasonml">In Reason syntax, this attribute does not need to be written explicitly, as it is deeply integrated with the Reason parser. To specify some function type as "uncurried", one just needs to add the dot character `.` to the function type. For example, `(. 'a, 'b) => 'c` instead of `('a, 'b) => 'c`.</span>
 
 In the example above:
 
