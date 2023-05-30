@@ -33,6 +33,7 @@ Melange.
 Fortunately, OCaml provides mechanisms to extend its language without breaking
 compatibility with the parser or the language. These mechanisms are composed by
 two parts:
+
 - First, some syntax additions to define parts of the code that will be extended
   or replaced
 - Second, compile-time OCaml native programs called [PPX
@@ -827,25 +828,23 @@ strings"](https://ocaml.org/manual/lex.html#quoted-string-id). They are similar
 to JavaScript’s template literals, in the sense that they are multi-line, and
 there is no need to escape characters inside the string.
 
-Using one percentage sign (`[%bs.raw <string>]`) is useful to define expressions
-(function bodies, or other values) where the implementation is directly
-JavaScript. This is useful as we can attach the type signature already in the
-same line, to make our code safer. For example:
+Using <span class="text-ocaml">one percentage sign</span><span
+class="text-reasonml">the extension name between square brackets</span>
+(`[%bs.raw <string>]`) is useful to define expressions (function bodies, or
+other values) where the implementation is directly JavaScript. This is useful as
+we can attach the type signature already in the same line, to make our code
+safer. For example:
 
 ```ocaml
-[%%bs.raw "var a = 1"]
-
 let f : unit -> int = [%bs.raw "function() {return 1}"]
 ```
 ```reasonml
-%bs.raw
-"var a = 1";
-
 let f: unit => int = ([%bs.raw "function() {return 1}"]: unit => int);
 ```
 
-Using two percentage signs (`[%%bs.raw <string>]`) is reserved for definitions
-in a
+Using <span class="text-ocaml">two percentage signs (`[%%bs.raw
+<string>]`)</span><span class="text-reasonml">the extension name without square
+brackets (`%bs.raw <string>`)</span> is reserved for definitions in a
 [structure](https://v2.ocaml.org/manual/moduleexamples.html#s:module:structures)
 or [signature](https://v2.ocaml.org/manual/moduleexamples.html#s%3Asignature).
 
