@@ -2290,8 +2290,7 @@ discarded. The value returned from the operation would not be the addition of
 the two numbers, but rather the inner anonymous callback.
 
 To solve this mismatch between OCaml and JavaScript functions and their
-application, Melange provides a special attribute `@bs` that can be used with
-external functions.
+application, Melange provides a special attribute <span class="text-ocaml">`@bs`</span><span class="text-reasonml">`.`</span> that can be used with external functions.
 
 In the example above:
 
@@ -2305,9 +2304,7 @@ external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
 external map: (array('a), array('b), (. 'a, 'b) => 'c) => array('c) = "map";
 ```
 
-Here `('a -> 'b -> 'c [@bs])` will be interpreted as having arity 2, in general,
-`'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]` is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`
-except the former’s arity is guaranteed to be N while the latter is unknown.
+Here <span class="text-ocaml">`('a -> 'b -> 'c [@bs])`</span><span class="text-reasonml">`(. 'a, 'b) => 'c`</span>will be interpreted as having arity 2. In general, <span class="text-ocaml">`'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]` is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`</span><span class="text-reasonml">`. 'a0, 'a1, ...​ 'aN => 'b0` is the same as `'a0, 'a1, ...​ 'aN => 'b0`</span> except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
@@ -2328,7 +2325,7 @@ This expression has type int -> int -> int
 but an expression was expected of type ('a -> 'b -> 'c) Js.Fn.arity2
 ```
 
-To solve this, we add `@bs` in the function definition as well:
+To solve this, we add <span class="text-ocaml">`@bs`</span><span class="text-reasonml">`.`</span> in the function definition as well:
 
 ```ocaml
 let add = fun [@bs] x y -> x + y
