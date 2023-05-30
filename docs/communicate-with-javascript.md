@@ -880,7 +880,7 @@ Output:
 ```javascript
 function f (x,y) {
   debugger; // JavaScript developer tools will set a breakpoint and stop here
-  return x + y;
+  return x + y | 0;
 }
 ```
 
