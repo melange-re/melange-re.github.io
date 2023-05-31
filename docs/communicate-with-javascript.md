@@ -2430,10 +2430,10 @@ Note that the first argument will be reserved for `this`.
 ### Wrapping returned nullable values
 
 JavaScript models `null` and `undefined` differently, whereas it can be useful
-to treat both as `'a option` in OCaml.
+to treat both as <span class="text-ocaml">`'a option` in OCaml</span><span class="text-reasonml">`option('a)` in Reason</span>.
 
 Melange understands the `bs.return` attribute in externals to model how
-nullable return types should be wrapped at the OCaml <-> JavaScript boundary.
+nullable return types should be wrapped at the <span class="text-ocaml">OCaml</span><span class="text-reasonml">Reason</span> <-> JavaScript boundary.
 An `external` value with `bs.return` converts the return value to an `option`
 type, avoiding the need for extra wrapping / unwrapping with functions such as
 `Js.Nullable.toOption`.
@@ -2478,9 +2478,7 @@ function test($$document) {
 }
 ```
 
-The `bs.return` attribute takes an attribute payload, as seen with `[@@bs.return
-nullable]` above. Currently 4 directives are supported: `null_to_opt`,
-`undefined_to_opt`, `nullable` and `identity`.
+The `bs.return` attribute takes an attribute payload, as seen with <span class="text-ocaml">`[@@bs.return nullable]`</span><span class="text-reasonml">`[@bs.return nullable]`</span> above. Currently 4 directives are supported: `null_to_opt`, `undefined_to_opt`, `nullable` and `identity`.
 
 `nullable` is encouraged, as it will convert from `null` and `undefined` to
 `option` type.
