@@ -739,7 +739,7 @@ These attributes are used to annotate `external` definitions:
 - [`bs.val`](#bind-to-global-javascript-functions-or-values): bind to global
   JavaScript functions or other values
 - [`bs.variadic`](#variadic-function-arguments): bind to a function taking
-  variadic arguments from an array
+  variadic arguments from an array (`bs.variadic` has replaced `bs.splice`, which is now considered deprecated; `bs.splice` still exists and can be used for backwards compatibility)
 
 These attributes are used to annotate arguments in `external` definitions:
 
@@ -1499,13 +1499,13 @@ can do:
 ```ocaml
 type param
 external executeCommands : string -> param array -> unit = ""
-  [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.splice]
+  [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.variadic]
 
 let f a b c = executeCommands "hi" [| a; b; c |]
 ```
 ```reasonml
 type param;
-[@bs.scope "commands"] [@bs.module "vscode"] [@bs.splice]
+[@bs.scope "commands"] [@bs.module "vscode"] [@bs.variadic]
 external executeCommands: (string, array(param)) => unit;
 
 let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
@@ -1842,11 +1842,11 @@ arguments need to belong to the same type.
 
 ```ocaml
 external join : string array -> string = "join"
-  [@@bs.module "path"] [@@bs.splice]
+  [@@bs.module "path"] [@@bs.variadic]
 let v = join [| "a"; "b" |]
 ```
 ```reasonml
-[@bs.module "path"] [@bs.splice]
+[@bs.module "path"] [@bs.variadic]
 external join: array(string) => string = "join";
 let v = join([|"a", "b"|]);
 ```
@@ -1867,7 +1867,7 @@ mentioned [in the OCaml attributes section](#reusing-ocaml-attributes):
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
 
-external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.splice]
+external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.variadic]
 
 let v = join [| Hide "a"; Hide 2 |]
 ```
@@ -1876,7 +1876,7 @@ let v = join [| Hide "a"; Hide 2 |]
 type hide =
   | Hide('a): hide;
 
-[@bs.module "path"] [@bs.splice]
+[@bs.module "path"] [@bs.variadic]
 external join: array(hide) => string = "join";
 
 let v = join([|Hide("a"), Hide(2)|]);
