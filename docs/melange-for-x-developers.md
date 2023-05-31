@@ -337,16 +337,22 @@ maps.
 
 ### Strictness and soundness
 
-TypeScript you can use types like `any`, or other extensive types like
-`Function`. This can be mitigated using the `strict` option in the
-`tsconfig.json`. There is no such option in OCaml.
+In TypeScript, you have the flexibility to use types like `any` or other
+expansive types such as `Function`. However, TypeScript provides the `strict`
+option in the `tsconfig.json` file to mitigate the usage of these less type-safe
+constructs. On the other hand, OCaml does not offer a similar option to enable
+or disable strictness. In OCaml, the language itself promotes type safety
+without the need for explicit configuration options to enforce stricter
+behavior.
 
-TypeScript may sacrifice soundness for practicality when needed, like mentioned
-in [the
-handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness).
-OCaml implementations provide methods like `Obj.magic` and [the `identity`
-primitive](communicate-with-javascript.md#special-identity-external), but they
-are more normally discouraged.
+TypeScript, as mentioned in [its
+handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness),
+may sacrifice soundness for practicality when needed. In contrast, OCaml
+implementations provide methods like `Obj.magic` and [the `identity`
+primitive](communicate-with-javascript.md#special-identity-external) but they
+are generally discouraged and rarely used. The OCaml community places a strong
+emphasis on maintaining soundness and prefers safer alternatives to ensure code
+correctness.
 
 ### Cheatsheet
 
