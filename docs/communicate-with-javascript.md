@@ -736,10 +736,12 @@ These attributes are used to annotate `external` definitions:
   dynamically by using the bracket notation `[]`
 - [`bs.scope`](#binding-to-properties-inside-a-module-or-global): reach to
   deeper properties inside a JavaScript object
+- [`bs.splice`](#variadic-function-arguments): a deprecated attribute, is an
+  alternate form of `bs.variadic`
 - [`bs.val`](#bind-to-global-javascript-functions-or-values): bind to global
   JavaScript functions or other values
 - [`bs.variadic`](#variadic-function-arguments): bind to a function taking
-  variadic arguments from an array (`bs.variadic` has replaced `bs.splice`, which is now considered deprecated; `bs.splice` still exists and can be used for backwards compatibility)
+  variadic arguments from an array
 
 These attributes are used to annotate arguments in `external` definitions:
 
