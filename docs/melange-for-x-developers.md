@@ -156,12 +156,9 @@ possible.
 
 | JavaScript            | OCaml (Reason syntax)                                                                     |
 |-----------------------|-------------------------------------------------------------------------------------------|
-| `if (a) {b} else {c}` | Same \*                                                                                   |
+| `if (a) {b} else {c}` | Same                                                                                      |
 | `a ? b : c`           | Same                                                                                      |
 | `switch`              | `switch` but [with pattern matching](https://reasonml.github.io/docs/en/pattern-matching) |
-
-\* In OCaml, conditionals are always expressions. Or in other words: the `else`
-branch is not optional.
 
 ### Destructuring
 
