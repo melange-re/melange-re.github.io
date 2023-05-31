@@ -168,7 +168,7 @@ branch is not optional.
 | JavaScript                    | OCaml (Reason syntax)                         |
 |-------------------------------|-----------------------------------------------|
 | `const {a, b} = data`         | `let {a, b} = data`                           |
-| `const [a, b] = data`         | <code>let \[|a, b|\] = data</code> \* |
+| `const [a, b] = data`         | <code>let \[\|a, b\|\] = data</code> \*       |
 | `const {a: aa, b: bb} = data` | `let {a: aa, b: bb} = data`                   |
 
 \* This will cause the compiler to warn that not all cases are handled, because
@@ -199,7 +199,7 @@ instead.
 | JavaScript                                | OCaml (Reason syntax)                        |
 |-------------------------------------------|----------------------------------------------|
 | `throw new SomeError(...)`                | `raise(SomeError(...))`                      |
-| `try {a} catch (Err) {...} finally {...}` | <code>try (a) { | Err =\> ...}</code> \* |
+| `try {a} catch (Err) {...} finally {...}` | <code>try (a) { \| Err =\> ...}</code> \*    |
 
 \* No finally.
 
