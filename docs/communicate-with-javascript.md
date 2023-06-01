@@ -2433,7 +2433,7 @@ JavaScript models `null` and `undefined` differently, whereas it can be useful
 to treat both as <span class="text-ocaml">`'a option`</span><span class="text-reasonml">`option('a)`</span> in Melange.
 
 Melange understands the `bs.return` attribute in externals to model how
-nullable return types should be wrapped at the <span class="text-ocaml">OCaml</span><span class="text-reasonml">Reason</span> <-> JavaScript boundary.
+nullable return types should be wrapped at the bindings boundary.
 An `external` value with `bs.return` converts the return value to an `option`
 type, avoiding the need for extra wrapping / unwrapping with functions such as
 `Js.Nullable.toOption`.
