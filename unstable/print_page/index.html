@@ -2907,9 +2907,9 @@ let _ = set_onload(x, [@bs.this] (o, v) =&gt; Js.log(resp(o) + v));
 <p>Note that the first argument will be reserved for <code>this</code>.</p>
 <h3 id="communicate-with-javascript-wrapping-returned-nullable-values">Wrapping returned nullable values</h3>
 <p>JavaScript models <code>null</code> and <code>undefined</code> differently, whereas it can be useful
-to treat both as <code>'a option</code> in OCaml.</p>
+to treat both as <span class="text-ocaml"><code>'a option</code></span><span class="text-reasonml"><code>option('a)</code></span> in Melange.</p>
 <p>Melange understands the <code>bs.return</code> attribute in externals to model how
-nullable return types should be wrapped at the OCaml &lt;-&gt; JavaScript boundary.
+nullable return types should be wrapped at the bindings boundary.
 An <code>external</code> value with <code>bs.return</code> converts the return value to an <code>option</code>
 type, avoiding the need for extra wrapping / unwrapping with functions such as
 <code>Js.Nullable.toOption</code>.</p>
@@ -2947,9 +2947,7 @@ let test = document =&gt; {
   }
 }
 </code></pre>
-<p>The <code>bs.return</code> attribute takes an attribute payload, as seen with <code>[@@bs.return
-nullable]</code> above. Currently 4 directives are supported: <code>null_to_opt</code>,
-<code>undefined_to_opt</code>, <code>nullable</code> and <code>identity</code>.</p>
+<p>The <code>bs.return</code> attribute takes an attribute payload, as seen with <span class="text-ocaml"><code>[@@bs.return nullable]</code></span><span class="text-reasonml"><code>[@bs.return nullable]</code></span> above. Currently 4 directives are supported: <code>null_to_opt</code>, <code>undefined_to_opt</code>, <code>nullable</code> and <code>identity</code>.</p>
 <p><code>nullable</code> is encouraged, as it will convert from <code>null</code> and <code>undefined</code> to
 <code>option</code> type.</p>
 <!-- When the return type is unit: the compiler will append its return value with an OCaml unit literal to make sure it does return unit. Its main purpose is to make the user consume FFI in idiomatic OCaml code, the cost is very very small and the compiler will do smart optimizations to remove it when the returned value is not used (mostly likely). -->
