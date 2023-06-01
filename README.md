@@ -51,5 +51,7 @@ dune build @re --auto-promote
 
 ## Publishing
 
-Publishing is done automatically from `master`. To publish manually, run `mkdocs
-gh-deploy`.
+Publishing is done automatically from GitHub actions:
+- Every commit to `master` will publish in the `unstable` folder
+- Every tag pushed with the `v*` format will publish on its correponding folder,
+  and set it as default
