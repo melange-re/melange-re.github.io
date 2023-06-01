@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://melange.re/unstable/sitemap.xml
+
+Sitemap: https://melange.re/v1.0.0/sitemap.xml
