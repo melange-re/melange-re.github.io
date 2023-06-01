@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OCaml for JavaScript developers">
+<meta name="ahrefs-site-verification" content="418209e997de7b3e1afdfd3575944e61695804a30ab7c7f5bf27f64d32935cda">
+
+    <title>Package management - Melange</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Package management";
+        var mkdocs_page_input_path = "package-management.md";
+        var mkdocs_page_url = "/package-management/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/ocaml.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Melange
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rationale/">Why</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Learn</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../new-to-ocaml/">New to OCaml?</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Package management</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#opam-for-melange-developers">opam for Melange developers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#initial-configuration">Initial configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#minimal-appopam-file">Minimal app.opam file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installing-packages">Installing packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#add-new-packages">Add new packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#linking-packages-for-development">Linking packages for development</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#upgrading-packages">Upgrading packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dev-dependencies">Dev dependencies</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#lock-files">Lock files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#bindings-and-package-management">Bindings and package management</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../build-system/">Build system</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Try</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../try/">Playground</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Talk</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../community/">Community</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Melange</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Learn &raquo;</li>
+      <li>Package management</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/melange-re/melange-re.github.io/blob/master/docs/package-management.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="package-management">Package management</h1>
+<p>Melange can consume packages from both the <a href="https://www.npmjs.com/">npm
+registry</a> and the <a href="https://opam.ocaml.org/packages/">opam
+repository</a>.</p>
+<ul>
+<li>For Melange libraries and bindings (compile-time dependencies), use one of
+  the package management alternatives described in <a href="../getting-started/">Getting
+  started</a>. The rest of this guide assumes you're using
+  opam.</li>
+<li>For JavaScript packages required by Melange bindings (runtime dependencies),
+  use <a href="https://docs.npmjs.com/cli/">npm</a> (or <a href="https://npmtrends.com/@microsoft/rush-vs-bolt-vs-pnpm-vs-rush-vs-yarn">any of its
+  alternatives</a>).</li>
+</ul>
+<p>Integrating with opam provides Melange projects with a native toolchain. Opam
+has been designed for the OCaml language, and it enables Melange projects to
+have first-class access to <a href="https://ocaml.org/docs/metaprogramming">PPXs</a>,
+compiler libraries, editor integration software and other tools.</p>
+<p>In the following sections, we explain in detail how to use opam to define the
+dependencies of our application, as well as how to publish packages in the
+public opam repository. However, this documentation is not exhaustive and only
+covers what we believe are the most important parts for Melange developers. If
+you want to learn more about opam, please refer to the <a href="https://opam.ocaml.org/doc/Manual.html">opam
+manual</a> and <a href="https://opam.ocaml.org/doc/FAQ.html">FAQ
+page</a>.</p>
+<h2 id="opam-for-melange-developers">opam for Melange developers</h2>
+<p>Before diving into specifics about using opam, there are the two relevant
+differences between opam and npm that are worth mentioning.</p>
+<p><strong>1. One version of each package</strong></p>
+<p>At any given time, any opam switch can only install <em>at most</em> a single version
+of a package. This is known as a flat dependency graph, and some package
+managers (like <a href="https://bower.io/">Bower</a>) follow a similar approach.</p>
+<p>A flat dependency graph means that, for example, it is impossible to have two
+versions of <a href="https://github.com/reasonml/reason-react/"><code>reason-react</code></a>
+installed in the same project. This avoids some headaches when one inadvertently
+installs two versions of a dependency. Also, and specifically for Melange, it
+helps keep the resulting JavaScript bundle lean and reduce page load for
+browser-based applications.</p>
+<p>On the other hand, upgrading your project dependencies to more recent versions
+might become tricky. Due to the restriction where only one version of a package
+can be installed, there is a higher chance for conflicts between the constraints
+of the transitive dependencies. If opam cannot find a solution, these conflicts
+need to be solved manually. This generally involves updating the conflicting
+dependency to make it compatible with a newer version of Melange or a transient
+dependency.</p>
+<p><strong>2. A source-based package manager for a compiled language</strong></p>
+<p>opam distributes just the source code of the packages and leaves the compilation
+step to a build phase that runs when consuming them, after they have been
+fetched. As a package manager for a compiled language like OCaml, opam has
+first-class support for this build step. Every package must tell opam how it
+should be built, and the way to do this is by using the <a href="https://opam.ocaml.org/doc/Manual.html#opamfield-build"><code>build</code>
+field</a> in the package
+<code>.opam</code> file. This is different than how npm is used: most published packages in
+the npm registry don’t rely on a build step.</p>
+<p>As Melange relies on OCaml packages for the compilation step (either PPXs,
+linters, instrumentation, or any other build-time package), it’s integrated with
+the native toolchain that OCaml programmers are familiar with, which relieves
+library authors of the burden of creating and distributing pre-built versions of
+their packages.</p>
+<hr />
+<p>Let’s go now through the most common actions with opam when working on Melange
+projects. The following guide is based on the amazing <a href="http://ocamlverse.net/content/opam_npm.html">opam for npm/yarn
+users</a> guide by Louis
+(<a href="https://github.com/Khady">@khady</a>).</p>
+<h3 id="initial-configuration">Initial configuration</h3>
+<p>The first thing to do is to install opam. There is an <a href="https://opam.ocaml.org/doc/Install.html">official documentation
+page</a> on installation. Most of the
+time, we can get it from your package manager. Otherwise, binaries are provided
+for every platform.</p>
+<p>There is a necessary first step before using opam:</p>
+<pre><code class="language-text">opam init -a
+</code></pre>
+<p>Here is what the documentation of the <code>opam init</code> command says:</p>
+<blockquote>
+<p>The init command initialises a local "opam root" (by default, <code>~/.opam/</code>) that
+holds opam’s data and packages. This is a necessary step for normal operation
+of opam. The initial software repositories are fetched, and an initial
+'switch' can also be installed, according to the configuration and options.
+These can be afterwards configured using opam switch and opam repository.</p>
+<p>Additionally, this command allows to customise some aspects of opam’s shell
+integration, when run initially (avoiding the interactive dialog), but also at
+any later time.</p>
+</blockquote>
+<p>The interesting parts are:</p>
+<ul>
+<li>The opam root is at <code>~/.opam</code></li>
+<li>opam uses shell integration to make our life easier</li>
+<li>opam uses the concept of a <em>switch</em></li>
+</ul>
+<p>A switch is the equivalent of the <code>node_modules</code> folder in npm’s world. It
+contains all the packages that are installed. There are local switches and
+global switches, in the same way we can have a <code>node_modules</code> folder local to
+our project or install global dependencies using <code>yarn global</code> or <code>npm install
+-g</code>. Global switches can be handy sometimes, but to avoid confusion, the
+recommendation is to avoid them.</p>
+<p>The default settings can be changed if the <code>-a</code> option is omitted while calling
+<code>opam init</code>.</p>
+<h3 id="minimal-appopam-file">Minimal <code>app.opam</code> file</h3>
+<p>The equivalent to <code>package.json</code> is an <code>app.opam</code> file, where <code>app</code> is the name
+of the package. It is possible to have multiple opam files in the same directory
+or project.</p>
+<p>There is no opam command to manipulate the opam file. A command similar to <code>npm
+init</code> or <code>yarn add</code> does not exist in opam, so the updates in <code>.opam</code> files have
+to be done by hand.</p>
+<p>A minimal <code>.opam</code> file looks like this:</p>
+<pre><code class="language-text">opam-version: &quot;2.0&quot;
+name: &quot;my-app&quot;
+authors: &quot;Louis&quot;
+homepage: &quot;https://github.com/khady/example&quot;
+maintainer: &quot;ex@ample.com&quot;
+dev-repo: &quot;git+ssh://git@github.com:khady/example.git&quot;
+bug-reports: &quot;https://github.com/khady/example/issues&quot;
+version: &quot;0.1&quot;
+build: [
+  [ &quot;dune&quot; &quot;subst&quot; ] {pinned}
+  [ &quot;dune&quot; &quot;build&quot; &quot;-p&quot; name &quot;-j&quot; jobs ]
+]
+depends: [
+  &quot;dune&quot; {build}
+]
+</code></pre>
+<p><code>build:</code> tells opam that <code>dune</code> is needed only to build the project.</p>
+<h3 id="installing-packages">Installing packages</h3>
+<p>The first thing we need is a local switch in the current project. To verify if a
+switch exists already, we can look for a <code>_opam</code> directory at the root of the
+project or use the <code>opam switch</code> command to identify if a switch already exists
+in the project folder.</p>
+<p>If it does not exist, we can create it with:</p>
+<pre><code class="language-text">opam switch create . 4.14.1 --deps-only
+</code></pre>
+<p>If it exists, we can install the dependencies of the project with:</p>
+<pre><code class="language-text">opam install . --deps-only
+</code></pre>
+<h3 id="add-new-packages">Add new packages</h3>
+<p>To add a new package to the opam switch, we can do:</p>
+<pre><code class="language-text">opam install &lt;package_name&gt;
+</code></pre>
+<p>But opam will not modify the <code>app.opam</code> file during the installation, this has
+to be done by hand, by adding the name of the package in the <code>depends</code> field.</p>
+<h3 id="linking-packages-for-development">Linking packages for development</h3>
+<p>This can be achieved with <code>opam pin</code>. For example, to pin a package to a
+specific commit on GitHub:</p>
+<pre><code class="language-text">opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#61bfbfaf8c971dec5152bce7e528d30552c70bc5
+</code></pre>
+<p>Branch names can also be used.</p>
+<pre><code class="language-text">opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#feature
+</code></pre>
+<p>For packages that are already published in the opam repository, a shortcut to
+pin to the latest version is to use the <code>--dev-repo</code> flag, e.g.</p>
+<pre><code class="language-text">opam pin add melange.dev --dev-repo
+</code></pre>
+<p>To remove the pinning for any package, use <code>opam unpin &lt;package_name&gt;</code> or <code>opam
+pin remove &lt;package_name&gt;</code>.</p>
+<p>For other options, the command is well described in <a href="https://opam.ocaml.org/doc/Usage.html#opam-pin">the official
+documentation</a>.</p>
+<h3 id="upgrading-packages">Upgrading packages</h3>
+<p>There is one big difference compared to npm: opam stores a local copy of the
+opam repository, like <code>apt-get</code> does in Debian. So before doing any upgrades, we
+might want to update this copy before:</p>
+<pre><code class="language-text">opam update
+</code></pre>
+<p>Then, to upgrade the installed packages to the latest version, run:</p>
+<pre><code class="language-text">opam upgrade &lt;package_name&gt;
+</code></pre>
+<p><code>opam upgrade</code> is also able to upgrade <em>all</em> the packages of the local switch if
+no package name is given.</p>
+<h3 id="dev-dependencies">Dev dependencies</h3>
+<p>You can use the <a href="https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup"><code>with-dev-setup</code>
+field</a> to define
+dependencies that are only required at development time. For example:</p>
+<pre><code>depends: [
+  &quot;ocamlformat&quot; {with-dev-setup}
+]
+</code></pre>
+<p>This has to be combined with the <code>--with-dev-setup</code> flag when installing
+dependencies, e.g. <code>opam install --deps-only --with-dev-setup</code>.</p>
+<h3 id="lock-files">Lock files</h3>
+<p>Lock files aren’t as used in the opam world as somewhere else, but they can be
+used as follows:</p>
+<ul>
+<li>Using <code>opam lock</code> to generate the lock file when needed (basically after each
+  <code>opam install</code> or <code>opam upgrade</code>).</li>
+<li>Adding <code>--locked</code> to all the <code>opam install --deps-only</code> and <code>opam switch
+  create .</code> commands.</li>
+</ul>
+<h3 id="bindings-and-package-management">Bindings and package management</h3>
+<p>When writing Melange libraries that bind to existing JavaScript packages, the
+users of the Melange library will have to make sure that those JavaScript
+packages are installed.</p>
+<p>This is similar to how OCaml bindings to system libraries work, see examples
+like
+<a href="https://github.com/andrenth/ocaml-mariadb/blob/9db2e4d8dec7c584213d0e0f03d079a36a35d9d5/README.md?plain=1#L18-L20"><code>ocaml-mariadb</code></a>
+or
+<a href="https://github.com/ygrek/ocurl/blob/f0c6f47d6f3d25282648439dc4ade5810a993710/README.md?plain=1#L16"><code>ocurl</code></a>.</p>
+<p>The advantage of this approach —as opposed to vendoring the JavaScript packages
+inside the bindings— is that it gives users of the bindings complete flexibility
+over the way these JavaScript packages are downloaded and bundled.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../new-to-ocaml/" class="btn btn-neutral float-left" title="New to OCaml?"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../build-system/" class="btn btn-neutral float-right" title="Build system">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span>
+            <a href="https://github.com/melange-re/melange" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+      
+        <span><a href="../new-to-ocaml/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      
+      
+        <span><a href="../build-system/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/print-site.js" defer></script>
+      <script src="../js/toggleSyntaxButton.js" defer></script>
+      <script src="../js/reasonml.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
