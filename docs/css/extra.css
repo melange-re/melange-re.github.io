@@ -147,3 +147,9 @@ blockquote {
 .syntax__reasonml .text-ocaml {
   display: none;
 }
+
+#version-selector {
+  border-radius: 6px;
+  color: #404040;
+  font-family: Lato,proxima-nova,Helvetica Neue,Arial,sans-serif;;
+}
