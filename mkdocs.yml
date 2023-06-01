@@ -15,6 +15,7 @@ theme:
 plugins:
   - search
   - print-site
+  - mike
 
 nav:
   - Home: index.md

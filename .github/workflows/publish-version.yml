@@ -1,10 +1,9 @@
-name: deploy
+name: publish-version
 
 on:
   push:
-    branches:
-      - master
-      - publish-versions # TODO: remove
+    tags:
+      - 'v*'
 
 jobs:
   deploy:
@@ -15,4 +14,5 @@ jobs:
         with:
           python-version: 3.x
       - run: python3 -m pip install -r ./pip-requirements.txt
-      - run: mike deploy --push unstable
+      - run: mike deploy ${{  github.ref_name }}
+      - run: mike set-default --push ${{  github.ref_name }}
