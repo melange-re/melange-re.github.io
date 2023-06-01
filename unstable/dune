@@ -1,0 +1,46 @@
+(rule
+ (deps communicate-with-javascript.md)
+ (target communicate-with-javascript.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff
+   communicate-with-javascript.md
+   communicate-with-javascript.md.processed)))
+
+(rule
+ (deps build-system.md)
+ (target build-system.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff build-system.md build-system.md.processed)))
+
+(rule
+ (deps melange-for-x-developers.md)
+ (target melange-for-x-developers.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff melange-for-x-developers.md melange-for-x-developers.md.processed)))

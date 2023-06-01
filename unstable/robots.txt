@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://melange-re.github.io/sitemap.xml
