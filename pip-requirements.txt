@@ -1,0 +1,2 @@
+mkdocs==1.4.3
+mkdocs-print-site-plugin==2.3.4

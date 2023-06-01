@@ -11,11 +11,11 @@ https://github.com/melange-re/melange.
 
 ## Working locally
 
-After cloning the repository, install:
-- [mkdocs](https://www.mkdocs.org/getting-started/)
-- Install the [print site
-  plugin](https://github.com/timvink/mkdocs-print-site-plugin): `pip3 install
-  mkdocs-print-site-plugin`
+After cloning the repository, install the necessary Python packages:
+
+```
+python3 -m pip install -r ./pip-requirements.txt
+```
 
 Then run `mkdocs serve .` from the folder where the repository lives.
 
