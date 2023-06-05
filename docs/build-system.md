@@ -68,11 +68,11 @@ section](package-management.md):
 opam switch create . 4.14.1 --deps-only
 ```
 
-Install Dune and Melange in the switch:
+Install the latest versions of Dune and Melange in the switch:
 
 ```bash
-opam pin add dune.dev --dev-repo
-opam pin add melange.dev --dev-repo
+opam update
+opam install dune melange
 ```
 
 <div class="text-reasonml">
