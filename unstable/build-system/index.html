@@ -199,9 +199,9 @@ developers. It provides several benefits, including:</p>
 section</a>:</p>
 <pre><code class="language-bash">opam switch create . 4.14.1 --deps-only
 </code></pre>
-<p>Install Dune and Melange in the switch:</p>
-<pre><code class="language-bash">opam pin add dune.dev --dev-repo
-opam pin add melange.dev --dev-repo
+<p>Install the latest versions of Dune and Melange in the switch:</p>
+<pre><code class="language-bash">opam update
+opam install dune melange
 </code></pre>
 <div class="text-reasonml">
 As we will be using Reason syntax, let’s install the `reason` package too:
