@@ -1,0 +1,111 @@
+.debug * {
+  position: relative;
+  outline: 1px solid rgba(255, 255, 0, 0.2);
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+.debug *::after {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  content: attr("class");
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.Sidebar {
+  width: 100px;
+  height: 100%;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.Sidebar.colapsed {
+  width: 30px;
+}
+
+.Logo {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.Layout {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+.Editor {
+  overflow: auto;
+  height: 100%;
+}
+
+.Menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ActionMenu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ActionMenu .Separator {
+  width: 100%;
+  border: none;
+}
+
+.Info {
+  display: flex;
+  flex-direction: column;
+}
+
+.Info .Versions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.ResizeHandle {
+  flex: 0 0 0.5em;
+  position: relative;
+  outline: none;
+
+  --background-color: transparent;
+}
+.ResizeHandle[data-resize-handle-active] {
+  --background-color: rgba(255, 255, 255, 0.2);
+}
+
+.Left,
+.Right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.Toggle {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+}
