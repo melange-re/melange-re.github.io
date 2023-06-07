@@ -13,7 +13,6 @@ const langMap = {
 };
 
 function LanguageToggle() {
-  const [lang, setLang] = React.useState(langMap.Reason);
   return <div className="Toggle">OCaml | ReasonML</div>;
 }
 
@@ -82,7 +81,17 @@ function Sidebar() {
   );
 }
 
+const defaultCode = "(* Write OCaml or Reason here *)";
+
 function App() {
+  const [input, setInput] = React.useState({
+    lang: langMap.OCaml,
+    code: defaultCode,
+  });
+  const output = ocaml.compile(input.code);
+  console.log(output);
+  const javascriptCode = output.js_code || "Error: check the \"Problems\" panel";
+
   return (
     <div className="App debug">
       <Sidebar />
@@ -103,8 +112,10 @@ function App() {
                       theme="vs-dark"
                       height="100%"
                       defaultLanguage="reasonml"
-                      defaultValue="// Write ReasonML or OCaml here"
-                      onChange={code => console.log(ocaml.compile(code))}
+                      value={defaultCode}
+                      onChange={(code) =>
+                        setInput({ lang: langMap.OCaml, code: code })
+                      }
                     />
                   </div>
                 </Panel>
@@ -134,7 +145,7 @@ function App() {
                       height="100%"
                       defaultLanguage="reasonml"
                       defaultValue="// Generated code by Melange"
-                      value="// Generated code by Melange"
+                      value={javascriptCode}
                     />
                   </div>
                 </Panel>
