@@ -1,3 +1,7 @@
+import "../../_opam/bin/jsoo_main.bc";
+import "../../_opam/bin/belt-cmijs";
+import "../../_opam/bin/runtime-cmijs";
+import "../../_opam/bin/stdlib-cmijs";
 import "./App.css";
 import * as React from "react";
 import Editor from "@monaco-editor/react";
@@ -100,6 +104,7 @@ function App() {
                       height="100%"
                       defaultLanguage="reasonml"
                       defaultValue="// Write ReasonML or OCaml here"
+                      onChange={code => console.log(ocaml.compile(code))}
                     />
                   </div>
                 </Panel>
