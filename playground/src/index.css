@@ -42,6 +42,7 @@ button {
   border: 1px solid transparent;
   font-family: inherit;
   background-color: #1a1a1a;
+  color: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
 }

@@ -23,7 +23,6 @@ function MiniSidebarMenu() {
         <p>{"M"}</p>
       </div>
       <div className="ActionMenu">
-        <button>{"R"}</button>
         <button>{"F"}</button>
         <button>{"S"}</button>
         <hr className="Separator" />
@@ -44,7 +43,6 @@ function MaxiSidebarMenu() {
         <p>{"Melange"}</p>
       </div>
       <div className="ActionMenu">
-        <button>{"Run"}</button>
         <button>{"Format"}</button>
         <button>{"Share"}</button>
         <hr className="Separator" />
@@ -91,6 +89,7 @@ function App() {
   const output = ocaml.compile(input.code);
   console.log(output);
   const javascriptCode = output.js_code || "Error: check the \"Problems\" panel";
+  const problems = output.js_error_msg || "";
 
   return (
     <div className="App debug">
@@ -122,7 +121,7 @@ function App() {
                 <PanelResizeHandle className="ResizeHandle" />
                 <Panel collapsible={true} defaultSize={20}>
                   Problems
-                  <div className="Problems" />
+                  <div className="Problems">{problems}</div>
                 </Panel>
               </PanelGroup>
             </div>
