@@ -12,8 +12,13 @@ const langMap = {
   OCaml: "OCaml",
 };
 
-function LanguageToggle() {
-  return <div className="Toggle">OCaml | ReasonML</div>;
+function LanguageToggle({ onChange }) {
+  return (
+    <div className="Toggle">
+      <button onClick={() => onChange(langMap.OCaml)}>OCaml</button>
+      <button onClick={() => onChange(langMap.Reason)}>Reason</button>
+    </div>
+  );
 }
 
 function MiniSidebarMenu() {
@@ -79,16 +84,41 @@ function Sidebar() {
   );
 }
 
-const defaultCode = "(* Write OCaml or Reason here *)";
+const defaultCode = `type tree = Leaf | Node of int * tree * tree
+
+let rec sum item =
+  match item with
+  | Leaf -> 0
+  | Node (value, left, right) -> value + sum left + sum right
+
+let myTree =
+  Node
+    ( 1,
+      Node (2, Node (4, Leaf, Leaf), Node (6, Leaf, Leaf)),
+      Node (3, Node (5, Leaf, Leaf), Node (7, Leaf, Leaf)) )
+
+let () = Js.log (sum myTree)`;
+
+const _anotherExample = `/* Based on https://rosettacode.org/wiki/Factorial#Recursive_50 */
+let rec factorial = (n) =>
+  n <= 0
+  ? 1
+  : n * factorial(n - 1);
+
+Js.log(factorial(6));`
 
 function App() {
   const [input, setInput] = React.useState({
     lang: langMap.OCaml,
     code: defaultCode,
   });
-  const output = ocaml.compile(input.code);
+  console.log(input);
+  const output =
+    input.lang == langMap.Reason
+      ? ocaml.compile(ocaml.printML(ocaml.parseRE(input.code)))
+      : ocaml.compile(input.code);
   console.log(output);
-  const javascriptCode = output.js_code || "Error: check the \"Problems\" panel";
+  const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
 
   return (
@@ -97,7 +127,24 @@ function App() {
       <div className="Layout">
         <PanelGroup direction="horizontal">
           <Panel collapsible={false} defaultSize={45}>
-            <LanguageToggle />
+            <LanguageToggle
+              onChange={(language) => {
+                if (language != input.lang) {
+                  let newCode = input.code;
+                  if (language == langMap.Reason) {
+                    try {
+                      newCode = ocaml.printRE(ocaml.parseML(input.code));
+                    } catch (error) {}
+                    setInput({ lang: langMap.Reason, code: newCode });
+                  } else {
+                    try {
+                      newCode = ocaml.printML(ocaml.parseRE(input.code));
+                    } catch (error) {}
+                    setInput({ lang: langMap.OCaml, code: newCode });
+                  }
+                }
+              }}
+            />
             <div className="Left">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
@@ -111,9 +158,9 @@ function App() {
                       theme="vs-dark"
                       height="100%"
                       defaultLanguage="reasonml"
-                      value={defaultCode}
+                      value={input.code}
                       onChange={(code) =>
-                        setInput({ lang: langMap.OCaml, code: code })
+                        setInput({ lang: input.lang, code: code })
                       }
                     />
                   </div>
