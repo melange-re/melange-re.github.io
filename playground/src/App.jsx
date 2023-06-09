@@ -4,9 +4,11 @@ import "../../_opam/bin/runtime-cmijs";
 import "../../_opam/bin/stdlib-cmijs";
 import "./App.css";
 import * as React from "react";
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import examples from "./examples";
+import { language as mlLanguage } from "./ml_syntax";
+import { language as reLanguage } from "./re_syntax";
 
 const langMap = {
   Reason: "Reason",
@@ -119,8 +121,21 @@ function App() {
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
 
+  const monaco = useMonaco();
+
+  React.useEffect(() => {
+    // or make sure that it exists by other ways
+    if (monaco) {
+      monaco.languages.register({ id: langMap.OCaml });
+      monaco.languages.setMonarchTokensProvider(langMap.OCaml, mlLanguage);
+      monaco.languages.register({ id: langMap.Reason });
+      monaco.languages.setMonarchTokensProvider(langMap.Reason, reLanguage);
+    }
+  }, [monaco]);
+
   return (
-    <div className="App debug">
+    // <div className="App debug">
+    <div className="App">
       <Sidebar
         onExampleClick={(example) => {
           let exampleCode =
@@ -161,7 +176,7 @@ function App() {
                       }}
                       theme="vs-dark"
                       height="100%"
-                      defaultLanguage="reasonml"
+                      language={input.lang}
                       value={input.code}
                       onChange={(code) =>
                         setInput({ lang: input.lang, code: code })
@@ -193,8 +208,7 @@ function App() {
                         },
                       }}
                       height="100%"
-                      defaultLanguage="reasonml"
-                      defaultValue="// Generated code by Melange"
+                      defaultLanguage="javascript"
                       value={javascriptCode}
                     />
                   </div>
