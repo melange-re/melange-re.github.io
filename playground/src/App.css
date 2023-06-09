@@ -37,6 +37,10 @@
   width: 30px;
 }
 
+.Problems {
+  white-space: pre-line
+}
+
 .Logo {
   align-items: center;
   justify-content: center;

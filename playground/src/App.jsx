@@ -6,6 +6,7 @@ import "./App.css";
 import * as React from "react";
 import Editor from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import examples from "./examples";
 
 const langMap = {
   Reason: "Reason",
@@ -41,7 +42,8 @@ function MiniSidebarMenu() {
   );
 }
 
-function MaxiSidebarMenu() {
+function MaxiSidebarMenu({ onExampleClick }) {
+  const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
   return (
     <div className="Menu">
       <div className="Logo">
@@ -51,7 +53,19 @@ function MaxiSidebarMenu() {
         <button>{"Format"}</button>
         <button>{"Share"}</button>
         <hr className="Separator" />
-        <button>{"Examples"}</button>
+        <button onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
+          {"Examples"}
+        </button>
+        {isExamplesOpen
+          ? examples.map((example) => (
+              <button
+                key={example.name}
+                onClick={(_) => onExampleClick(example)}
+              >
+                {example.name}
+              </button>
+            ))
+          : React.null}
         <button>{"Settings"}</button>
         <hr className="Separator" />
         <button>{"GitHub"}</button>
@@ -69,14 +83,18 @@ function MaxiSidebarMenu() {
   );
 }
 
-function Sidebar() {
+function Sidebar({ onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const root = "Sidebar " + (sidebarColapsed ? "colapsed" : "");
 
   return (
     <div className={root}>
-      {sidebarColapsed ? <MiniSidebarMenu /> : <MaxiSidebarMenu />}
+      {sidebarColapsed ? (
+        <MiniSidebarMenu />
+      ) : (
+        <MaxiSidebarMenu onExampleClick={onExampleClick} />
+      )}
       <button onClick={(_) => toggleSidebar()}>
         {sidebarColapsed ? ">>>" : "<<<"}
       </button>
@@ -84,46 +102,32 @@ function Sidebar() {
   );
 }
 
-const defaultCode = `type tree = Leaf | Node of int * tree * tree
-
-let rec sum item =
-  match item with
-  | Leaf -> 0
-  | Node (value, left, right) -> value + sum left + sum right
-
-let myTree =
-  Node
-    ( 1,
-      Node (2, Node (4, Leaf, Leaf), Node (6, Leaf, Leaf)),
-      Node (3, Node (5, Leaf, Leaf), Node (7, Leaf, Leaf)) )
-
-let () = Js.log (sum myTree)`;
-
-const _anotherExample = `/* Based on https://rosettacode.org/wiki/Factorial#Recursive_50 */
-let rec factorial = (n) =>
-  n <= 0
-  ? 1
-  : n * factorial(n - 1);
-
-Js.log(factorial(6));`
-
 function App() {
   const [input, setInput] = React.useState({
     lang: langMap.OCaml,
-    code: defaultCode,
+    code: examples[0].ml,
   });
-  console.log(input);
-  const output =
-    input.lang == langMap.Reason
-      ? ocaml.compile(ocaml.printML(ocaml.parseRE(input.code)))
-      : ocaml.compile(input.code);
-  console.log(output);
+  let output = undefined;
+  try {
+    output =
+      input.lang == langMap.Reason
+        ? ocaml.compileRE(input.code)
+        : ocaml.compileML(input.code);
+  } catch (error) {
+    output = { js_error_msg: error.message };
+  }
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
 
   return (
     <div className="App debug">
-      <Sidebar />
+      <Sidebar
+        onExampleClick={(example) => {
+          let exampleCode =
+            input.lang == langMap.Reason ? example.re : example.ml;
+          setInput({ lang: input.lang, code: exampleCode });
+        }}
+      />
       <div className="Layout">
         <PanelGroup direction="horizontal">
           <Panel collapsible={false} defaultSize={45}>
@@ -134,13 +138,13 @@ function App() {
                   if (language == langMap.Reason) {
                     try {
                       newCode = ocaml.printRE(ocaml.parseML(input.code));
+                      setInput({ lang: langMap.Reason, code: newCode });
                     } catch (error) {}
-                    setInput({ lang: langMap.Reason, code: newCode });
                   } else {
                     try {
                       newCode = ocaml.printML(ocaml.parseRE(input.code));
+                      setInput({ lang: langMap.OCaml, code: newCode });
                     } catch (error) {}
-                    setInput({ lang: langMap.OCaml, code: newCode });
                   }
                 }
               }}
