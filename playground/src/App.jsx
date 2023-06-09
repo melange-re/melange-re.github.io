@@ -208,7 +208,7 @@ function App() {
                         },
                       }}
                       height="100%"
-                      defaultLanguage="javascript"
+                      language={output.js_error_msg ? "text" : "javascript"}
                       value={javascriptCode}
                     />
                   </div>

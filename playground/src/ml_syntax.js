@@ -10,12 +10,12 @@ export const conf = {
   autoClosingPairs: [
     { open: "[", close: "]" },
     { open: "(", close: ")" },
-    { open: "\"", close: "\"" },
+    { open: '"', close: '"' },
   ],
   surroundingPairs: [
     { open: "[", close: "]" },
     { open: "(", close: ")" },
-    { open: "\"", close: "\"" },
+    { open: '"', close: '"' },
   ],
 };
 
@@ -171,7 +171,7 @@ export const language = {
       // numbers
       [/0[xX][a-fA-F0-9_]+[Lln]?/, "number.hex"],
       [/0[oO][0-7_]+[Lln]?/, "number.octal"],
-      [/0[bB][01_]+[Lln]?/, "number.binary"],
+      [/0[bB][01_]+[Lln]?/, "number.bin"],
       [/[0-9][0-9_]*(\.[0-9_]*)?([eE][-+]?[0-9_]+)/, "number.float"],
       [/[0-9][0-9_]*[Lln]?/, "number"],
 
