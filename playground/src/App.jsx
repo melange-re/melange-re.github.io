@@ -9,11 +9,17 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import examples from "./examples";
 import { language as mlLanguage } from "./ml_syntax";
 import { language as reLanguage } from "./re_syntax";
+import { useWorkerizedReducer } from "use-workerized-reducer/react";
 
 const langMap = {
   Reason: "Reason",
   OCaml: "OCaml",
 };
+
+// Spin up the worker running the reducers.
+const worker = new Worker(new URL("./evalWorker.js", import.meta.url), {
+  type: "module",
+});
 
 function LanguageToggle({ onChange }) {
   return (
@@ -121,6 +127,12 @@ function App() {
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
 
+  const [state, dispatch, busy] = useWorkerizedReducer(
+    worker,
+    "eval", // Reducer name
+    {logs: []} // Initial state
+  );
+
   const monaco = useMonaco();
 
   React.useEffect(() => {
@@ -136,6 +148,14 @@ function App() {
   return (
     // <div className="App debug">
     <div className="App">
+      <button
+        disabled={busy}
+        onClick={() =>
+          dispatch({ type: "eval", code: "var t = 1 + 2; console.log(t)" })
+        }
+      >
+        eval
+      </button>
       <Sidebar
         onExampleClick={(example) => {
           let exampleCode =
@@ -217,6 +237,11 @@ function App() {
                 <Panel collapsible={true} defaultSize={20}>
                   Console
                   <div className="Console" />
+                  {state.logs.map((log, i) => (
+                    <div key={i}>
+                      {log.items.join(" ")}
+                    </div>
+                  ))}
                 </Panel>
               </PanelGroup>
             </div>

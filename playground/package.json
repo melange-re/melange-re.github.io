@@ -12,7 +12,8 @@
     "@monaco-editor/react": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-resizable-panels": "^0.0.41"
+    "react-resizable-panels": "^0.0.41",
+    "use-workerized-reducer": "^0.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",
