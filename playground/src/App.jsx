@@ -21,6 +21,9 @@ const worker = new Worker(new URL("./evalWorker.js", import.meta.url), {
   type: "module",
 });
 
+const wrapInExports = code =>
+  `(function(exports) {${code}})({})`
+
 function LanguageToggle({ onChange }) {
   return (
     <div className="Toggle">
@@ -130,7 +133,7 @@ function App() {
   const [state, dispatch, busy] = useWorkerizedReducer(
     worker,
     "eval", // Reducer name
-    {logs: []} // Initial state
+    { logs: [] } // Initial state
   );
 
   const monaco = useMonaco();
@@ -145,17 +148,13 @@ function App() {
     }
   }, [monaco]);
 
+  React.useEffect(() => {
+    dispatch({ type: "eval", code: wrapInExports(output.js_code) });
+  }, [output.js_code]);
+
   return (
     // <div className="App debug">
     <div className="App">
-      <button
-        disabled={busy}
-        onClick={() =>
-          dispatch({ type: "eval", code: "var t = 1 + 2; console.log(t)" })
-        }
-      >
-        eval
-      </button>
       <Sidebar
         onExampleClick={(example) => {
           let exampleCode =
@@ -238,9 +237,7 @@ function App() {
                   Console
                   <div className="Console" />
                   {state.logs.map((log, i) => (
-                    <div key={i}>
-                      {log.items.join(" ")}
-                    </div>
+                    <div key={i}>{log.items.join(" ")}</div>
                   ))}
                 </Panel>
               </PanelGroup>
