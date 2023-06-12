@@ -16,6 +16,9 @@ console = {
   warn: (...items) => log('warn', items),
 };
 
+// https://rollupjs.org/troubleshooting/#avoiding-eval
+const eval2 = eval;
+
 initWorkerizedReducer(
  "eval", // Name of the reducer
  async (state, action) => {
@@ -26,7 +29,7 @@ initWorkerizedReducer(
    switch (action.type) {
      case "eval":
        const code = action.code;
-       eval(code);
+       eval2(code);
        state.logs = buffer;
        break;
      default:
