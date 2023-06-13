@@ -21,8 +21,6 @@ const worker = new Worker(new URL("./evalWorker.js", import.meta.url), {
   type: "module",
 });
 
-const wrapInExports = (code) => `(function(exports) {${code}})({})`;
-
 function LanguageToggle({ onChange }) {
   return (
     <div className="Toggle">
@@ -148,7 +146,7 @@ function App() {
   }, [monaco]);
 
   React.useEffect(() => {
-    dispatch({ type: "eval", code: wrapInExports(output.js_code) });
+    dispatch({ type: "eval", code: output.js_code });
   }, [output.js_code]);
 
   return (

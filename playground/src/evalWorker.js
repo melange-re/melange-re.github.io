@@ -38,41 +38,47 @@ initWorkerizedReducer(
     // care of maintaining referential equality.
     switch (action.type) {
       case "eval":
-        modules["main.js"] = action.code;
+        const code = action.code;
+        if (code) {
+          modules["main.js"] = code;
 
-        const bundle = await rollup({
-          input: "main.js",
-          output: { inlineDynamicImports: true },
-          plugins: [
-            {
-              name: "loader",
-              resolveId(importee, importer) {
-                var source = importee;
-                if (importee.substring(0, 2) == "./" && importer) {
-                  const pkg = importer.substring(
-                    0,
-                    importer.lastIndexOf("/") + 1
-                  );
-                  source = pkg + source.substring(2, importee.length);
-                }
-                if (modules.hasOwnProperty(source)) {
-                  return source;
-                }
+          const bundle = await rollup({
+            input: "main.js",
+            plugins: [
+              {
+                name: "loader",
+                resolveId(importee, importer) {
+                  var source = importee;
+                  if (importee.substring(0, 2) == "./" && importer) {
+                    const pkg = importer.substring(
+                      0,
+                      importer.lastIndexOf("/") + 1
+                    );
+                    source = pkg + source.substring(2, importee.length);
+                  }
+                  if (modules.hasOwnProperty(source)) {
+                    return source;
+                  }
+                },
+                load(id) {
+                  if (modules.hasOwnProperty(id)) {
+                    return modules[id];
+                  }
+                },
               },
-              load(id) {
-                if (modules.hasOwnProperty(id)) {
-                  return modules[id];
-                }
-              },
-            },
-          ],
-        });
-        const { output } = await bundle.generate({ format: "iife" });
-        try {
-          eval2(output[0].code);
-        } catch (e) {
-          console.log(e);
+            ],
+          });
+          const { output } = await bundle.generate({
+            format: "iife",
+            name: "MelangeApp",
+          });
+          try {
+            eval2(output[0].code);
+          } catch (e) {
+            console.log(e);
+          }
         }
+        // We always set logs, if `code` is undefined we will erase them
         state.logs = buffer;
         break;
       default:
