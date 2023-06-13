@@ -11,17 +11,6 @@ Object.keys(rawModules).forEach((k) => {
   const value = rawModules[k];
   modules[k.replace("./node_modules_playground/", "")] = value;
 });
-console.log(modules);
-
-// modules[
-//   "main.js"
-// ] = `import * as Belt_List from "melange.belt/belt_List.js"; var t = Belt_List.map;`;
-modules[
-  "main.js"
-] = `import foo from 'foo.js'; console.log(foo);`;
-modules[
-  "foo.js"
-] = `export default 42;`;
 
 const _console = console;
 
@@ -49,25 +38,30 @@ initWorkerizedReducer(
     // care of maintaining referential equality.
     switch (action.type) {
       case "eval":
-        const code = action.code;
+        modules["main.js"] = action.code;
 
         const bundle = await rollup({
           input: "main.js",
+          output: { inlineDynamicImports: true },
           plugins: [
             {
               name: "loader",
-              resolveId(source) {
+              resolveId(importee, importer) {
+                var source = importee;
+                if (importee.substring(0, 2) == "./" && importer) {
+                  const pkg = importer.substring(
+                    0,
+                    importer.lastIndexOf("/") + 1
+                  );
+                  source = pkg + source.substring(2, importee.length);
+                }
                 if (modules.hasOwnProperty(source)) {
                   return source;
-                } else {
-                  console.log("NOT FOUND", source);
                 }
               },
               load(id) {
                 if (modules.hasOwnProperty(id)) {
                   return modules[id];
-                } else {
-                  console.log("load NOT FOUND", source);
                 }
               },
             },
@@ -76,8 +70,8 @@ initWorkerizedReducer(
         const { output } = await bundle.generate({ format: "iife" });
         try {
           eval2(output[0].code);
-        } catch {
-          console.log(output);
+        } catch (e) {
+          console.log(e);
         }
         state.logs = buffer;
         break;

@@ -10,55 +10,6 @@ import examples from "./examples";
 import { language as mlLanguage } from "./ml_syntax";
 import { language as reLanguage } from "./re_syntax";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
-import { rollup } from "@rollup/browser";
-const rawModules = import.meta.glob("./node_modules_playground/**/*.js", {
-  as: "raw",
-  eager: true,
-});
-
-const modules = {};
-
-Object.keys(rawModules).forEach((k) => {
-  const value = rawModules[k];
-  modules[k.replace("./node_modules_playground/", "")] = value;
-});
-modules[
-  "main.js"
-] = `import * as Belt_List from "melange.belt/belt_List.js"; var t = Belt_List.map; console.log( "Belt is", t);`;
-console.log(modules);
-
-const bundle = await rollup({
-  input: "main.js",
-  output: { inlineDynamicImports: true },
-  plugins: [
-    {
-      name: "loader",
-      resolveId(importee, importer) {
-        var source = importee;
-        if (importee.substring(0, 2) == "./" && importer) {
-          const pkg = importer.substring(0, importer.lastIndexOf("/") + 1);
-          source = pkg + source.substring(2, importee.length);
-        }
-        if (modules.hasOwnProperty(source)) {
-          // console.log("HAS SOURCE", source);
-          return source;
-        } else {
-          console.log("EHREHRHEH");
-        }
-      },
-      load(id) {
-        if (modules.hasOwnProperty(id)) {
-          // console.log("LOAD", id, modules[id]);
-          return modules[id];
-        } else {
-          console.log("load NOT FOUND", source);
-        }
-      },
-    },
-  ],
-});
-const { output } = await bundle.generate({ format: "iife" });
-eval(output[0].code);
 
 const langMap = {
   Reason: "Reason",
