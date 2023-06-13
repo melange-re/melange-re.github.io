@@ -21,8 +21,7 @@ const worker = new Worker(new URL("./evalWorker.js", import.meta.url), {
   type: "module",
 });
 
-const wrapInExports = code =>
-  `(function(exports) {${code}})({})`
+const wrapInExports = (code) => `(function(exports) {${code}})({})`;
 
 function LanguageToggle({ onChange }) {
   return (

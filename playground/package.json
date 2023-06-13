@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.5.0",
+    "@rollup/browser": "^3.25.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-resizable-panels": "^0.0.41",
