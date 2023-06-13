@@ -125,7 +125,4 @@ continuously improving Melange, ensuring it remains a robust and
 efficient tool for OCaml developers targeting the JavaScript platform.
 The [Q2 2023
 roadmap](https://docs.google.com/document/d/1279euT9LeJIkwAUYqazqeh2lc8c7TLQap2_2vBNcK4w/)
-includes short and long term goals for the project, including
-cherry-picking relevant upstream patches from the ReScript compiler,
-adding support for OCaml 5, supporting source maps, improving
-developer experience, and developing a playground for Melange.
+includes short and long term goals for the project.
