@@ -1,15 +1,20 @@
 import { initWorkerizedReducer } from "use-workerized-reducer";
 import { rollup } from "@rollup/browser";
-const rawModules = import.meta.glob("./node_modules_playground/**/*.js", {
-  as: "raw",
-  eager: true,
-});
 
 const modules = {};
 
+const rawModules = import.meta.glob(
+  "../../_build/default/playground/output/node_modules/**/*.js",
+  {
+    as: "raw",
+    eager: true,
+  }
+);
 Object.keys(rawModules).forEach((k) => {
   const value = rawModules[k];
-  modules[k.replace("./node_modules_playground/", "")] = value;
+  modules[
+    k.replace("../../_build/default/playground/output/node_modules/", "")
+  ] = value;
 });
 
 const _console = console;
