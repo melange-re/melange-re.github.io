@@ -126,12 +126,19 @@ function App() {
   }
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
+  console.log(output);
 
   const [state, dispatch, busy] = useWorkerizedReducer(
     worker,
     "eval", // Reducer name
     { logs: [] } // Initial state
   );
+
+  const editorRef = React.useRef(null);
+
+  function handleEditorDidMount(editor, _monaco) {
+    editorRef.current = editor;
+  }
 
   const monaco = useMonaco();
 
@@ -144,6 +151,27 @@ function App() {
       monaco.languages.setMonarchTokensProvider(langMap.Reason, reLanguage);
     }
   }, [monaco]);
+
+  React.useEffect(() => {
+    // or make sure that it exists by other ways
+    if (monaco && editorRef.current) {
+      const owner = "playground";
+      if (output.js_error_msg) {
+        monaco.editor.setModelMarkers(editorRef.current.getModel(), owner, [
+          {
+            startLineNumber: output.row + 1,
+            startColumn: output.column + 1,
+            endLineNumber: output.endRow + 1,
+            endColumn: output.endColumn + 1,
+            message: output.text,
+            severity: monaco.MarkerSeverity.Error,
+          },
+        ]);
+      } else {
+        monaco.editor.removeAllMarkers(owner);
+      }
+    }
+  }, [monaco, output]);
 
   React.useEffect(() => {
     dispatch({ type: "eval", code: output.js_code });
@@ -194,6 +222,7 @@ function App() {
                       height="100%"
                       language={input.lang}
                       value={input.code}
+                      onMount={handleEditorDidMount}
                       onChange={(code) =>
                         setInput({ lang: input.lang, code: code })
                       }
