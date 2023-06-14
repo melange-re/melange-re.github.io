@@ -20,6 +20,7 @@ plugins:
 nav:
   - Home: index.md
   - Why: rationale.md
+  - Roadmap: roadmap.md
   - Getting Started: getting-started.md
   - Learn:
     - New to OCaml?: new-to-ocaml.md

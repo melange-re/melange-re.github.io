@@ -119,10 +119,9 @@ Melange.
 
 ## Looking forward
 
-While reaching v1.0 marks a major milestone for Melange, it is only the 
-beginning of the journey. The Melange team remains committed to
-continuously improving Melange, ensuring it remains a robust and efficient
-tool for OCaml developers targeting the JavaScript platform.
-The [Q2 2023
-roadmap](https://docs.google.com/document/d/1279euT9LeJIkwAUYqazqeh2lc8c7TLQap2_2vBNcK4w/)
-includes short and long term goals for the project.
+While reaching v1.0 marks a major milestone for Melange, it is only
+the beginning of the journey. The Melange team remains committed to
+continuously improving Melange, ensuring it remains a robust and
+efficient tool for OCaml developers targeting the JavaScript platform.
+The [roadmap](roadmap.md) includes short and long term goals for the
+project.
