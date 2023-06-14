@@ -267,3 +267,129 @@ The advantage of this approach —as opposed to vendoring the JavaScript package
 inside the bindings— is that it gives users of the bindings complete flexibility
 over the way these JavaScript packages are downloaded and bundled.
 
+## Finding and using Melange compatible packages
+
+### Opam packages
+
+Ideally, Melange compatible packages should be published on opam. To search for a package on opam enter `opam search <package_name>`, e.g., `opam search reason-react`. If the package is found, install it by running `opam install reason-react`. As mentioned earlier, opam will not add the package to the `.opam` file, so remember to add the package after it is installed:
+
+```text
+...
+depends: [
+  ...
+  "reason-react" {>= "0.11.0"}
+]
+```
+
+To use the installed package, add the package name to the `dune` file under the `libraries` field. For example, if our project structure looks like:
+
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── src
+│   ├── dune
+│   ├── ReactComponent1.ml
+│   ├── ReactComponent2.ml
+│   └── lib
+│        ├── dune
+│        └── data.ml
+├── dune-project
+├── dune
+├── package.json
+└── ...</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── src
+│   ├── dune
+│   ├── ReactComponent1.re
+│   ├── ReactComponent2.re
+│   └── lib
+│        ├── dune
+│        └── data.re
+├── dune-project
+├── dune
+├── package.json
+└── ...</code></pre>
+
+then `react-reason` should be added to the `dune` file under the `src` folder:
+
+```text
+(melange.emit
+ (target output)
+ (alias react)
+ (libraries melange reason-react)
+ (preprocess
+  (pps reactjs-jsx-ppx))
+ (module_systems es6))
+```
+
+(Some packages, like `reason-react`, will need to be preprocessed using a ppx, which may also need to be installed via opam.)
+
+### Unpublished opam packages
+
+Some packages may have a `dune` file, `dune-project` file and an `.opam` file, but they are not yet published in the official opam repository. These packages should be installed using `opam pin`, e.g., `opam pin add melange-fetch.dev https://github.com/melange-community/melange-fetch`. The project `.opam` file should then be updated in two places:
+
+```text
+...
+depends: [
+  ...
+  "melange-fetch" {dev}
+]
+pin-depends: [
+  [ "melange-fetch.dev" "git+https://github.com/melange-community/melange-fetch" ]
+]
+```
+
+Once installed, the package name can be added to the `dune` file:
+
+```text
+(melange.emit
+ (target output)
+ (alias react)
+ (libraries melange reason-react melange-fetch)
+ (preprocess
+  (pps reactjs-jsx-ppx))
+ (module_systems es6))
+```
+
+Depending on where the installed package is used will determine in which `dune` file the package should be referenced. In the next section we will see how to reference a package from within a library subfolder.
+
+### NPM packages
+
+A number of Melanage compatible packages can be found on NPM. These packages are typically bindings to JavaScript libraries. Many older, but still useful, compatible BuckleScript libraries can be found on NPM, e.g., `bs-json`. An NPM package is installed like any normal NPM package is: `npm install @glennsl/bs-json`, which will add the package to the `package.json` file at the root of our project.
+
+In order to get dune to pick up and process the NPM package so that it can be consumed in our application, the `dune` file at the root of our project must be updated with a `subdir` stanza:
+
+```text
+(subdir
+ node_modules
+ (vendored_dirs @glennsl)
+ (dirs @glennsl)
+ (subdir
+  @glennsl
+  (subdir
+   bs-json
+   (subdir
+    src
+    (library
+     (name bs_json)
+     (wrapped false)
+     (modes melange))))))
+```
+
+(If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.)
+Note the `(vendored_dirs @glennsl)` field in the stanza. This is used to silence warnings from vendored libraries, keeping the terminal output relevant to our application code.
+
+In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` package from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the package name to the `dune` file in the same folder, i.e., `src/lib/dune`:
+
+```text
+(library
+ (name data)
+ (libraries bs_json)
+ (modes melange))
+```
+
+Note that the package `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
+
+If we install any more NPM packages then a new `subdir` stanza will have to be added to `dune` file in the root of our project and referenced in the `dune` file that lives next the code we want to use the package from. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple NPM packages.
+
+**The advantage of publishing packages on opam is that none of the these `subdir` and `vendored_dirs` configurations are necessary.**
