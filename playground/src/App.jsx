@@ -2,6 +2,7 @@ import "../../_opam/bin/jsoo_main.bc";
 import "../../_opam/bin/belt-cmijs";
 import "../../_opam/bin/runtime-cmijs";
 import "../../_opam/bin/stdlib-cmijs";
+import "../../_build/default/playground/reason-react-cmijs";
 import "./App.css";
 import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
@@ -126,7 +127,6 @@ function App() {
   }
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
-  console.log(output);
 
   const [state, dispatch, busy] = useWorkerizedReducer(
     worker,
@@ -174,7 +174,42 @@ function App() {
   }, [monaco, output]);
 
   React.useEffect(() => {
-    dispatch({ type: "eval", code: output.js_code });
+    const code = output.js_code;
+    const requireReactString = 'var React = require("react");';
+    const requireReasonReactString =
+      'var ReasonReact = require("stdlib/reasonReact");';
+    // the code to evaluate might be expensive, so we're sending it into a
+    // worker. But if it's DOM manipulation, then don't use it; worker
+    // doesn't have access to DOM
+    if (
+      code &&
+      (code.indexOf(requireReactString) >= 0 ||
+        code.indexOf(requireReasonReactString) >= 0)
+    ) {
+      // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
+      const eval2 = eval;
+      try {
+        const codeWithExports = "const exports = {};" + code;
+        eval2(codeWithExports);
+      } catch (e) {
+        this.errorTimerId = setTimeout(
+          () =>
+            this.setState((_) => {
+              return {
+                reasonSyntaxError: null,
+                ocamlSyntaxError: null,
+                jsError: e,
+                js: "",
+                ocaml: "",
+                output: [],
+              };
+            }),
+          errorTimeout
+        );
+      }
+    } else {
+      dispatch({ type: "eval", code: output.js_code });
+    }
   }, [output.js_code]);
 
   return (

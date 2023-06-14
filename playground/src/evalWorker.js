@@ -34,6 +34,36 @@ console = {
 // https://rollupjs.org/troubleshooting/#avoiding-eval
 const eval2 = eval;
 
+/** @type {Map<string, Promise<{ url: string; body: string; }>>} */
+const FETCH_CACHE = new Map();
+
+/**
+ * @param {string} url
+ * @param {number} uid
+ */
+async function fetch_if_uncached(url) {
+  if (FETCH_CACHE.has(url)) {
+    return FETCH_CACHE.get(url);
+  }
+
+  const promise = fetch(url)
+    .then(async (r) => {
+      if (!r.ok) throw new Error(await r.text());
+
+      return {
+        url: r.url,
+        body: await r.text(),
+      };
+    })
+    .catch((err) => {
+      FETCH_CACHE.delete(url);
+      throw err;
+    });
+
+  FETCH_CACHE.set(url, promise);
+  return promise;
+}
+
 initWorkerizedReducer(
   "eval", // Name of the reducer
   async (state, action) => {
@@ -54,20 +84,27 @@ initWorkerizedReducer(
                 name: "loader",
                 resolveId(importee, importer) {
                   var source = importee;
-                  if (importee.substring(0, 2) == "./" && importer) {
-                    const pkg = importer.substring(
-                      0,
-                      importer.lastIndexOf("/") + 1
-                    );
-                    source = pkg + source.substring(2, importee.length);
-                  }
-                  if (modules.hasOwnProperty(source)) {
-                    return source;
+                  if (importee == "react" || importee == "react-dom") {
+                    return `https://esm.sh/stable/${importee}@18.2.0/es2022/${importee}.mjs`;
+                  } else {
+                    if (importee.substring(0, 2) == "./" && importer) {
+                      const pkg = importer.substring(
+                        0,
+                        importer.lastIndexOf("/") + 1
+                      );
+                      source = pkg + source.substring(2, importee.length);
+                    }
+                    if (modules.hasOwnProperty(source)) {
+                      return source;
+                    }
                   }
                 },
-                load(id) {
-                  if (modules.hasOwnProperty(id)) {
-                    return modules[id];
+                async load(resolved) {
+                  if (modules.hasOwnProperty(resolved)) {
+                    return modules[resolved];
+                  } else {
+                    const res = await fetch_if_uncached(resolved);
+                    return res?.body;
                   }
                 },
               },

@@ -8,7 +8,7 @@ From the project root:
 
 ```
 make install
-dune build @playground-runtime-js
+dune build @playground-assets
 ```
 
 Then, can work on the playground with:

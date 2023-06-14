@@ -2,5 +2,22 @@
  (target output)
  (alias playground-runtime-js)
  (libraries melange)
- (modules ) ; Empty, we just want to the js artifacts from the libraries
+ (modules) ; Empty, we just want to the js artifacts from the libraries
  (module_systems es6))
+
+(rule
+ (deps
+  %{bin:js_of_ocaml}
+  (:some-cmi %{lib:reason-react:melange/react.cmi}))
+ (target reason-react-cmijs.js)
+ (action
+  (bash
+   "find $(dirname %{some-cmi}) -name \"*.cmi\" -or -name \"*.cmj\" | xargs js_of_ocaml build-fs -o %{target}")))
+
+(rule
+ (alias playground-assets)
+ (deps
+  (alias playground-runtime-js)
+  reason-react-cmijs.js)
+ (action
+  (echo "assets generated")))
