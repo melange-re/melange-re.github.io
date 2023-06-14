@@ -52,8 +52,9 @@ let rec factorial = (n) =>
 
 Js.log(factorial(6));`,
   },
-  { name: "Random numbers",
-ml: `(* Based on https://rosettacode.org/wiki/Random_numbers#OCaml *)
+  {
+    name: "Random numbers",
+    ml: `(* Based on https://rosettacode.org/wiki/Random_numbers#OCaml *)
 let pi = 4. *. atan 1.
 
 let random_gaussian () =
@@ -63,7 +64,7 @@ let random_gaussian () =
 let _ =
   Belt.Array.makeBy 42 (fun _ -> random_gaussian ())
   |. Belt.Array.forEach Js.log`,
-re: `/* Based on https://rosettacode.org/wiki/Random_numbers#OCaml */
+    re: `/* Based on https://rosettacode.org/wiki/Random_numbers#OCaml */
 let pi = 4. *. atan(1.);
 
 let random_gaussian = () =>
@@ -71,7 +72,41 @@ let random_gaussian = () =>
   +. sqrt((-2.) *. log(Random.float(1.)))
   *. cos(2. *. pi *. Random.float(1.));
 
-Belt.Array.makeBy(42, _ => random_gaussian())->(Belt.Array.forEach(Js.log));`}
+Belt.Array.makeBy(42, _ => random_gaussian())->(Belt.Array.forEach(Js.log));`,
+  },
+  {
+    name: "React",
+    ml: `module Greeting = struct
+  let make () = (button ~children:[ React.string "Hello!" ] () [@JSX])
+    [@@react.component]
+end
+
+let element = ReactDOM.querySelector "#preview"
+
+let () =
+  match element with
+  | Some root ->
+      ReactDOM.render (Greeting.createElement ~children:[] () [@JSX]) root
+  | None ->
+      Js.Console.error
+        "Failed to start React: couldn't find the #preview element"
+  `,
+    re: `module Greeting = {
+  [@react.component]
+  let make = () => { 
+    <button> {React.string("Hello!")} </button>;
+  };  
+};
+ReactDOM.querySelector("#preview")
+->(
+    fun
+    | Some(root) => ReactDOM.render(<Greeting />, root)
+    | None =>
+      Js.Console.error(
+        "Failed to start React: couldn't find the #preview element",
+      )
+  );`,
+  },
 ];
 
 export default examples;

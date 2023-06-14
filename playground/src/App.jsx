@@ -111,11 +111,26 @@ function Sidebar({ onExampleClick }) {
   );
 }
 
+function Live() {
+  return (
+    <div id="preview" className="cleanslate">
+      <p>
+        This div has the ID <code>preview</code>.
+      </p>
+      <p>
+        Feel free to override its content, or choose "React Greetings" in the
+        Examples menu!
+      </p>
+    </div>
+  );
+}
+
 function App() {
   const [input, setInput] = React.useState({
     lang: langMap.OCaml,
     code: examples[0].ml,
   });
+  const [isLiveEnabled, setIsLiveEnabled] = React.useState(false);
   let output = undefined;
   try {
     output =
@@ -174,42 +189,19 @@ function App() {
   }, [monaco, output]);
 
   React.useEffect(() => {
-    const code = output.js_code;
-    const requireReactString = 'var React = require("react");';
-    const requireReasonReactString =
-      'var ReasonReact = require("stdlib/reasonReact");';
-    // the code to evaluate might be expensive, so we're sending it into a
-    // worker. But if it's DOM manipulation, then don't use it; worker
-    // doesn't have access to DOM
-    if (
-      code &&
-      (code.indexOf(requireReactString) >= 0 ||
-        code.indexOf(requireReasonReactString) >= 0)
-    ) {
+    if (state.bundledCode) {
       // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
       const eval2 = eval;
       try {
-        const codeWithExports = "const exports = {};" + code;
-        eval2(codeWithExports);
+        eval2(state.bundledCode);
       } catch (e) {
-        this.errorTimerId = setTimeout(
-          () =>
-            this.setState((_) => {
-              return {
-                reasonSyntaxError: null,
-                ocamlSyntaxError: null,
-                jsError: e,
-                js: "",
-                ocaml: "",
-                output: [],
-              };
-            }),
-          errorTimeout
-        );
+        console.error(e);
       }
-    } else {
-      dispatch({ type: "eval", code: output.js_code });
     }
+  }, [state.bundledCode]);
+
+  React.useEffect(() => {
+    dispatch({ type: "eval", code: output.js_code });
   }, [output.js_code]);
 
   return (
@@ -274,24 +266,33 @@ function App() {
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />
           <Panel collapsible={false} defaultSize={45}>
-            <div className="Toggle">Live | Generated code</div>
+            <div className="Toggle">
+              <button onClick={() => setIsLiveEnabled(true)}>Live</button>
+              <button onClick={() => setIsLiveEnabled(false)}>
+                Generated code
+              </button>
+            </div>
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  <div className="Editor">
-                    <Editor
-                      theme="vs-dark"
-                      options={{
-                        readOnly: true,
-                        minimap: {
-                          enabled: false,
-                        },
-                      }}
-                      height="100%"
-                      language={output.js_error_msg ? "text" : "javascript"}
-                      value={javascriptCode}
-                    />
-                  </div>
+                  {isLiveEnabled ? (
+                    <Live />
+                  ) : (
+                    <div className="Editor">
+                      <Editor
+                        theme="vs-dark"
+                        options={{
+                          readOnly: true,
+                          minimap: {
+                            enabled: false,
+                          },
+                        }}
+                        height="100%"
+                        language={output.js_error_msg ? "text" : "javascript"}
+                        value={javascriptCode}
+                      />
+                    </div>
+                  )}
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
                 <Panel collapsible={true} defaultSize={20}>

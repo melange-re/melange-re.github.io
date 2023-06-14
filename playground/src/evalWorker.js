@@ -84,18 +84,25 @@ initWorkerizedReducer(
                 name: "loader",
                 resolveId(importee, importer) {
                   var source = importee;
-                  if (importee == "react" || importee == "react-dom") {
-                    return `https://esm.sh/stable/${importee}@18.2.0/es2022/${importee}.mjs`;
+                  if (importee.substring(0, 2) == "./" && importer) {
+                    const pkg = importer.substring(
+                      0,
+                      importer.lastIndexOf("/") + 1
+                    );
+                    source = pkg + source.substring(2, importee.length);
+                  }
+                  if (modules.hasOwnProperty(source)) {
+                    return source;
                   } else {
-                    if (importee.substring(0, 2) == "./" && importer) {
-                      const pkg = importer.substring(
-                        0,
-                        importer.lastIndexOf("/") + 1
-                      );
-                      source = pkg + source.substring(2, importee.length);
-                    }
-                    if (modules.hasOwnProperty(source)) {
-                      return source;
+                    if (importee[0] == "/") {
+                      return "https://esm.sh" + importee;
+                    } else if (importee.substring(0, 8) != "https://") {
+                      return "https://esm.sh/" + importee;
+                    } else {
+                      // TODO: Improve versioning.
+                      // We are getting "react" and "react-dom" from stable,
+                      // which might change under our backs.
+                      return importee;
                     }
                   }
                 },
@@ -115,7 +122,16 @@ initWorkerizedReducer(
             name: "MelangeApp",
           });
           try {
-            eval2(output[0].code);
+            // bundling always happens in worker as it's expensive. Evaluation too,
+            // but if there is DOM manipulation, then defer evaluation to the 
+            // main thread, as worker doesn't have access to DOM
+            const requireReactString = "import * as React";
+            if (code.indexOf(requireReactString) >= 0) {
+              state.bundledCode = output[0].code;
+            } else {
+              state.bundledCode = undefined;
+              eval2(output[0].code);
+            }
           } catch (e) {
             console.log(e);
           }
