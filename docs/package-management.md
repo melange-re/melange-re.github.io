@@ -316,7 +316,7 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
 (melange.emit
  (target output)
  (alias react)
- (libraries melange reason-react)
+ (libraries melange lib reason-react)
  (preprocess
   (pps reactjs-jsx-ppx))
  (module_systems es6))
@@ -345,7 +345,7 @@ Once installed, the package name can be added to the `dune` file:
 (melange.emit
  (target output)
  (alias react)
- (libraries melange reason-react melange-fetch)
+ (libraries melange lib reason-react melange-fetch)
  (preprocess
   (pps reactjs-jsx-ppx))
  (module_systems es6))
