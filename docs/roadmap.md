@@ -4,7 +4,7 @@ Welcome to the roadmap for Melange! While Melange is now at version 1.0, our tea
 
 This page provides an overview of our development goals and tasks for each quarter. Our roadmap is designed to give you a clear understanding of what's coming next and the features and improvements we're working on.
 
-Please note that the roadmap is a rough outline and is subject to change. We encourage you to provide feedback, suggestions, and feature requests through our communication channels.
+Please note that the roadmap is a rough outline and is subject to change. We encourage you to provide feedback, suggestions, and feature requests through any of the [available communication channels](community.md).
 
 ## Q2 2023
 
