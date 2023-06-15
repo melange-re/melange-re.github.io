@@ -376,7 +376,7 @@ In order to get Dune to pick up and process the npm package so that it can be co
      (modes melange))))))
 ```
 
-(If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.)
+If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.
 Note the `(vendored_dirs @glennsl)` field in the stanza. This is used to silence warnings from vendored libraries, keeping the terminal output relevant to our application code.
 
 In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` package from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the package name to the `dune` file in the same folder, i.e., `src/lib/dune`:
