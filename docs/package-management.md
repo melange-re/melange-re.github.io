@@ -357,7 +357,7 @@ Depending on where the installed package is used will determine in which `dune` 
 
 A number of Melange compatible packages can be found on NPM. Many older, but still useful, compatible BuckleScript libraries can be found on NPM, e.g., `bs-json`. An NPM package is installed like any normal NPM package is: `npm install @glennsl/bs-json`, which will add the package to the `package.json` file at the root of our project.
 
-In order to get dune to pick up and process the NPM package so that it can be consumed in our application, the `dune` file at the root of our project must be updated with a `subdir` stanza:
+In order to get Dune to pick up and process the npm package so that it can be consumed in our application, the `dune` file at the root of our project must be updated with a `subdir` stanza:
 
 ```text
 (subdir
