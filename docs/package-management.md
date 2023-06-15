@@ -316,7 +316,7 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
 (melange.emit
  (target output)
  (alias react)
- (libraries melange lib reason-react)
+ (libraries lib reason-react)
  (preprocess
   (pps reactjs-jsx-ppx))
  (module_systems es6))
@@ -345,17 +345,15 @@ Once installed, the libraries included in the package can be added to the `dune`
 (melange.emit
  (target output)
  (alias react)
- (libraries melange lib reason-react melange-fetch)
+ (libraries lib reason-react melange-fetch)
  (preprocess
   (pps reactjs-jsx-ppx))
  (module_systems es6))
 ```
 
-Depending on where the installed package is used will determine in which `dune` file the package should be referenced. In the next section we will see how to reference a package from within a library subfolder.
-
 ### NPM packages
 
-A number of Melange compatible packages can be found on NPM. Many older, but still useful, compatible BuckleScript libraries can be found on NPM, e.g., `bs-json`. An NPM package is installed like any normal NPM package is: `npm install @glennsl/bs-json`, which will add the package to the `package.json` file at the root of our project.
+A number of Melange compatible packages can be found on npm. Many older, but still useful, compatible BuckleScript libraries can be found on npm, e.g., `bs-json`. An npm package is installed like any normal npm package is: `npm install @glennsl/bs-json`, which will add the package to the `package.json` file at the root of our project.
 
 In order to get Dune to pick up and process the npm package so that it can be consumed in our application, the `dune` file at the root of our project must be updated with a `subdir` stanza:
 
@@ -379,7 +377,7 @@ In order to get Dune to pick up and process the npm package so that it can be co
 If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.
 Note the `(vendored_dirs @glennsl)` field in the stanza. This is used to silence warnings from vendored libraries, keeping the terminal output relevant to our application code.
 
-In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` package from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the package name to the `dune` file in the same folder, i.e., `src/lib/dune`:
+In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the `dune` file in the same folder, i.e., `src/lib/dune`:
 
 ```text
 (library
@@ -388,8 +386,8 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
  (modes melange))
 ```
 
-Note that the package `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
+Note that the library `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
 
-If we install any more NPM packages then a new `subdir` stanza will have to be added to `dune` file in the root of our project and referenced in the `dune` file that lives next the code we want to use the package from. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple NPM packages.
+If we install any more npm packages then a new `subdir` stanza will have to be added to the `dune` file in the root of our project. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple npm packages.
 
 **The advantage of publishing packages on opam is that none of the these `subdir` and `vendored_dirs` configurations are necessary.**
