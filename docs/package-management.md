@@ -339,7 +339,7 @@ pin-depends: [
 ]
 ```
 
-Once installed, the package name can be added to the `dune` file:
+Once installed, the libraries included in the package can be added to the `dune` file:
 
 ```text
 (melange.emit
