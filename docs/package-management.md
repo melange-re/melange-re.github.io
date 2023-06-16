@@ -324,7 +324,7 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
 
 (Some packages, like `reason-react`, will need to be preprocessed using a ppx, which may also need to be installed via opam.)
 
-### Unpublished opam packages
+### Unpublished OPAM packages
 
 Some packages may have an `.opam` file, but they are not yet published in the official opam repository. These packages should be installed using `opam pin`, e.g., `opam pin add melange-fetch.dev https://github.com/melange-community/melange-fetch`. The project `.opam` file should then be updated in two places:
 
