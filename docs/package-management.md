@@ -269,7 +269,7 @@ over the way these JavaScript packages are downloaded and bundled.
 
 ## Finding and using Melange compatible packages
 
-### Opam packages
+### OPAM packages
 
 Ideally, Melange compatible packages should be published on opam. To search for a package on opam enter `opam search <package_name>`, e.g., `opam search reason-react`. If the package is found, install it by running `opam install reason-react`. As mentioned earlier, opam will not add the package to the `.opam` file, so remember to add the package after it is installed:
 
