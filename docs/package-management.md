@@ -388,6 +388,6 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
 
 Note that the library `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
 
-If we install any more npm packages then a new `subdir` stanza will have to be added to the `dune` file in the root of our project. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple npm packages.
+We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple npm packages.
 
 **The advantage of publishing packages on opam is that none of the these `subdir` and `vendored_dirs` configurations are necessary.**
