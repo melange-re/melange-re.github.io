@@ -360,22 +360,16 @@ Dune needs to be made aware of the newly installed package. The [`subdir`](https
 ```text
 (subdir
  node_modules
- (vendored_dirs @glennsl)
  (dirs @glennsl)
  (subdir
-  @glennsl
-  (subdir
-   bs-json
-   (subdir
-    src
-    (library
-     (name bs_json)
-     (wrapped false)
-     (modes melange))))))
+  @glennsl/bs-json/src
+  (library
+   (name bs_json)
+   (wrapped false)
+   (modes melange)))
 ```
 
 If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.
-Note the `(vendored_dirs @glennsl)` field in the stanza. This is used to silence warnings from vendored libraries, keeping the terminal output relevant to our application code.
 
 In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the `dune` file in the same folder, i.e., `src/lib/dune`:
 
