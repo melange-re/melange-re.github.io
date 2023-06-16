@@ -326,7 +326,7 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
 
 ### Unpublished OPAM packages
 
-Some packages may have an `.opam` file, but they are not yet published in the official opam repository. These packages should be installed using `opam pin`, e.g., `opam pin add melange-fetch.dev https://github.com/melange-community/melange-fetch`. The project `.opam` file should then be updated in two places:
+OPAM packages that have not yet been published may be installed with the `opam pin` command. For example, `opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch` will obtain `melange-fetch` from its Git repository and install it on your switch. Your `<your-project>.opam` file should then be updated in two places:
 
 ```text
 ...
