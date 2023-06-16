@@ -322,7 +322,7 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
  (module_systems es6))
 ```
 
-(Some packages, like `reason-react`, will need to be preprocessed using a ppx, which may also need to be installed via opam.)
+Some libraries will only work after being processed by an accompanying PPX. For example, `reason-react` requires preprocessing with `reactjs-jsx-ppx`. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.
 
 ### Unpublished OPAM packages
 
@@ -351,7 +351,7 @@ Once installed, the libraries included in the package can be added to the `dune`
  (module_systems es6))
 ```
 
-### NPM packages
+### npm packages
 
 A number of Melange compatible packages can be found on npm. Many older, but still useful, compatible BuckleScript libraries can be found on npm, e.g., `bs-json`. Run `npm install @glennsl/bs-json` to add the dependency locally and record it in the `package.json` file at the root of our project.
 
