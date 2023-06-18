@@ -31,8 +31,9 @@ nav:
     - API: api.md
   - Try:
     - Playground: try.md
-  - Talk:
+  - About:
     - Community: community.md
+    - Roadmap: roadmap.md
 
 extra_css:
   - css/extra.css
