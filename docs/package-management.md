@@ -382,4 +382,4 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
 
 Note that the library `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
 
-We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/psb/reason-react-hn-melange/blob/main/dune) for a larger example that uses multiple npm packages.
+We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune) for a larger example that uses multiple npm packages.
