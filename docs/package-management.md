@@ -269,9 +269,9 @@ over the way these JavaScript packages are downloaded and bundled.
 
 ## Finding and using Melange compatible packages
 
-### OPAM packages
+### opam packages
 
-Melange packages are usually available on [OPAM](https://opam.ocaml.org). Package search is available in the OPAM CLI via `opam search <package-name>`, e.g. `opam search reason-react`. You can run `opam install <package-name>` to download, build and install OPAM packages in your switch. Remember that OPAM won't automatically add the dependency to `<your-project>.opam` file, so it must be added manually:
+Melange packages are usually available on [opam](https://opam.ocaml.org). Package search is available in the opam CLI via `opam search <package-name>`, e.g. `opam search reason-react`. You can run `opam install <package-name>` to download, build and install opam packages in your switch. Remember that opam won't automatically add the dependency to `<your-project>.opam` file, so it must be added manually:
 
 ```text
 ...
@@ -322,11 +322,11 @@ then `react-reason` should be added to the `dune` file under the `src` folder:
  (module_systems es6))
 ```
 
-Some libraries will only work after being processed by an accompanying PPX. For example, `reason-react` requires preprocessing with `reactjs-jsx-ppx`. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.
+Some libraries will only work after being processed by an accompanying PPX, e.g., `reason-react` requires preprocessing with `reactjs-jsx-ppx`. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.
 
-### Unpublished OPAM packages
+### Unpublished opam packages
 
-OPAM packages that have not yet been published may be installed with the `opam pin` command. For example, `opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch` will obtain `melange-fetch` from its Git repository and install it on your switch. Your `<your-project>.opam` file should then be updated in two places:
+opam packages that have not yet been published may be installed with the `opam pin` command. For example, `opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch` will obtain `melange-fetch` from its Git repository and install it on your switch. Your `<your-project>.opam` file should then be updated in two places:
 
 ```text
 ...
@@ -383,5 +383,3 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
 Note that the library `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
 
 We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/jchavarri/pupilfirst/blob/b6fe6fa27814336b9e92f965449f3e010e148c4b/dune) for a larger example that uses multiple npm packages.
-
-**The advantage of publishing packages on opam is that none of the these `subdir` and `vendored_dirs` configurations are necessary.**
