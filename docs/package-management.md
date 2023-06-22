@@ -369,7 +369,7 @@ Dune needs to be made aware of the newly installed package. The [`subdir`](https
    (modes melange)))
 ```
 
-If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed.
+If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed, so that Dune can process the new Melange sources under the `node_modules` folder.
 
 In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the `dune` file in the same folder, i.e., `src/lib/dune`:
 
