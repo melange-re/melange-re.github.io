@@ -380,6 +380,6 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
  (modes melange))
 ```
 
-Note that the library `bs-json` was renamed to `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file.
+Note that the library `bs-json` was defined as `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file. This is necessary as Dune wrapped libraries [will only expose a single top-level module](https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated) named after the library, so the library name has to be a valid module name. This is why library names with characters like `-` are not valid.
 
 We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune) for a larger example that uses multiple npm packages.
