@@ -91,6 +91,16 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#finding-and-using-melange-compatible-packages">Finding and using Melange compatible packages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#opam-packages">opam packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#unpublished-opam-packages">Unpublished opam packages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#npm-packages">npm packages</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../build-system/">Build system</a>
@@ -338,6 +348,95 @@ or
 <p>The advantage of this approach —as opposed to vendoring the JavaScript packages
 inside the bindings— is that it gives users of the bindings complete flexibility
 over the way these JavaScript packages are downloaded and bundled.</p>
+<h2 id="finding-and-using-melange-compatible-packages">Finding and using Melange compatible packages</h2>
+<h3 id="opam-packages">opam packages</h3>
+<p>Melange packages are usually available on <a href="https://opam.ocaml.org">opam</a>. Package search is available in the opam CLI via <code>opam search &lt;package-name&gt;</code>, e.g. <code>opam search reason-react</code>. You can run <code>opam install &lt;package-name&gt;</code> to download, build and install opam packages in your switch. Remember that opam won't automatically add the dependency to <code>&lt;your-project&gt;.opam</code> file, so it must be added manually:</p>
+<pre><code class="language-text">...
+depends: [
+  ...
+  &quot;reason-react&quot; {&gt;= &quot;0.11.0&quot;}
+]
+</code></pre>
+<p>To use a library from the installed package, add the library name to the <code>dune</code> file under the <code>libraries</code> field. For example, if our project structure looks like:</p>
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── src
+│   ├── dune
+│   ├── ReactComponent1.ml
+│   ├── ReactComponent2.ml
+│   └── lib
+│        ├── dune
+│        └── data.ml
+├── dune-project
+├── dune
+├── package.json
+└── ...</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── src
+│   ├── dune
+│   ├── ReactComponent1.re
+│   ├── ReactComponent2.re
+│   └── lib
+│        ├── dune
+│        └── data.re
+├── dune-project
+├── dune
+├── package.json
+└── ...</code></pre>
+
+<p>then <code>react-reason</code> should be added to the <code>dune</code> file under the <code>src</code> folder:</p>
+<pre><code class="language-text">(melange.emit
+ (target output)
+ (alias react)
+ (libraries lib reason-react)
+ (preprocess
+  (pps reactjs-jsx-ppx))
+ (module_systems es6))
+</code></pre>
+<p>Some libraries will only work after being processed by an accompanying PPX, e.g., <code>reason-react</code> requires preprocessing with <code>reactjs-jsx-ppx</code>. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.</p>
+<h3 id="unpublished-opam-packages">Unpublished opam packages</h3>
+<p>opam packages that have not yet been published may be installed with the <code>opam pin</code> command. For example, <code>opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch</code> will obtain <code>melange-fetch</code> from its Git repository and install it on your switch. Your <code>&lt;your-project&gt;.opam</code> file should then be updated in two places:</p>
+<pre><code class="language-text">...
+depends: [
+  ...
+  &quot;melange-fetch&quot; {dev}
+]
+pin-depends: [
+  [ &quot;melange-fetch.dev&quot; &quot;git+https://github.com/melange-community/melange-fetch&quot; ]
+]
+</code></pre>
+<p>Once installed, the libraries included in the package can be added to the <code>dune</code> file:</p>
+<pre><code class="language-text">(melange.emit
+ (target output)
+ (alias react)
+ (libraries lib reason-react melange-fetch)
+ (preprocess
+  (pps reactjs-jsx-ppx))
+ (module_systems es6))
+</code></pre>
+<h3 id="npm-packages">npm packages</h3>
+<p>A number of Melange compatible packages can be found on npm. Many older, but still useful, compatible BuckleScript libraries can be found on npm, e.g., <code>bs-json</code>. Run <code>npm install @glennsl/bs-json</code> to add the dependency locally and record it in the <code>package.json</code> file at the root of our project.</p>
+<p>Dune needs to be made aware of the newly installed package. The <a href="https://dune.readthedocs.io/en/stable/dune-files.html#subdir"><code>subdir</code></a> stanza can be handy in these cases:</p>
+<pre><code class="language-text">(subdir
+ node_modules
+ (dirs @glennsl)
+ (subdir
+  @glennsl/bs-json/src
+  (library
+   (name bs_json)
+   (wrapped false)
+   (modes melange)))
+</code></pre>
+<p>If the <code>dune</code> file contains the line <code>(dirs :standard \ node_modules)</code>, it should be removed, so that Dune can process the new Melange sources under the <code>node_modules</code> folder.</p>
+<p>In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder <code>src/lib</code>. If we want use the <code>bs-json</code> library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the <code>dune</code> file in the same folder, i.e., <code>src/lib/dune</code>:</p>
+<pre><code class="language-text">(library
+ (name data)
+ (libraries bs_json)
+ (modes melange))
+</code></pre>
+<p>Note that the library <code>bs-json</code> was defined as <code>bs_json</code> in the <code>subdir</code> stanza and is referenced as <code>bs_json</code> in the <code>dune</code> file. This is necessary as Dune wrapped libraries <a href="https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated">will only expose a single top-level module</a> named after the library, so the library name has to be a valid module name. This is why library names with characters like <code>-</code> are not valid.</p>
+<p>We can add new <code>subdir</code> stanzas for every package we'd like to consume this way. See <a href="https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune">this dune file</a> for a larger example that uses multiple npm packages.</p>
               
             </div>
           </div><footer>
