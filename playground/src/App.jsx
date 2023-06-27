@@ -7,6 +7,9 @@ import "./App.css";
 import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import * as Router from './Router';
+import { useLocalStorage } from './LocalStorage';
+
 import examples from "./examples";
 import { language as mlLanguage } from "./ml_syntax";
 import { language as reLanguage } from "./re_syntax";
@@ -51,7 +54,7 @@ function MiniSidebarMenu() {
   );
 }
 
-function MaxiSidebarMenu({ onExampleClick }) {
+function MaxiSidebarMenu({ onShare, onExampleClick }) {
   const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
   return (
     <div className="Menu">
@@ -60,7 +63,7 @@ function MaxiSidebarMenu({ onExampleClick }) {
       </div>
       <div className="ActionMenu">
         <button>{"Format"}</button>
-        <button>{"Share"}</button>
+        <button onClick={(_) => onShare()}>{"Share"}</button>
         <hr className="Separator" />
         <button onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
           {"Examples"}
@@ -74,7 +77,7 @@ function MaxiSidebarMenu({ onExampleClick }) {
                 {example.name}
               </button>
             ))
-          : React.null}
+          : null}
         <button>{"Settings"}</button>
         <hr className="Separator" />
         <button>{"GitHub"}</button>
@@ -92,7 +95,7 @@ function MaxiSidebarMenu({ onExampleClick }) {
   );
 }
 
-function Sidebar({ onExampleClick }) {
+function Sidebar({ onShare, onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const root = "Sidebar " + (sidebarColapsed ? "colapsed" : "");
@@ -102,7 +105,7 @@ function Sidebar({ onExampleClick }) {
       {sidebarColapsed ? (
         <MiniSidebarMenu />
       ) : (
-        <MaxiSidebarMenu onExampleClick={onExampleClick} />
+        <MaxiSidebarMenu onExampleClick={onExampleClick} onShare={onShare} />
       )}
       <button onClick={(_) => toggleSidebar()}>
         {sidebarColapsed ? ">>>" : "<<<"}
@@ -125,25 +128,68 @@ function Live() {
   );
 }
 
+function useStore (defaultValue) {
+  /* This store gets the data from LocalStorage and the URL (queryParams),
+    and needs a defaultValue in case of both being empty.
+
+    The URL has preference over LocalStorage to make sure people who recieve
+    a URL with queryParams reads the values from the URL instead of the last LocalStorage session.
+
+    When updating the store, set's a React state and updates LocalStorage value.
+
+    If `updateUrl` is called, appends to the URL the current value of the store.
+  */
+  const LOCAL_STORAGE_ITEM = "__store"
+  const [search, setSearch] = Router.useSearchParams();
+  const [localStorage, setLocalStorage] = useLocalStorage(LOCAL_STORAGE_ITEM, defaultValue);
+  const keys = Object.keys(defaultValue);
+  /* Get only searchParams that we care (from defaultValue keys) */
+  const searchParams = keys.reduce((key, result) => {
+    if (search[key]) {
+      result[key] = search[key]
+    }
+  }, {});
+  const initialValue = { ...localStorage, ...searchParams };
+  const [state, setState] = React.useState(initialValue);
+
+  const setValue = (newValue) => {
+    setState(newValue);
+    setLocalStorage(newValue);
+  }
+
+  const updateURL = () => {
+    setSearch(state);
+  }
+
+  return [state, setValue, updateURL]
+};
+
 function App() {
-  const [input, setInput] = React.useState({
+  const [state, setState, updateURL] = useStore({
     lang: langMap.OCaml,
     code: examples[0].ml,
+    live: false,
   });
-  const [isLiveEnabled, setIsLiveEnabled] = React.useState(false);
+
+  const { lang, code, live } = state;
+  const setLang = (lang) => setState({ ...state, lang });
+  const setCode = (code) => setState({ ...state, code });
+  const setLive = (live) => setState({ ...state, live });
+  const setInput = ({lang, code}) => setState({ ...state, lang, code });
+
   let output = undefined;
   try {
     output =
-      input.lang == langMap.Reason
-        ? ocaml.compileRE(input.code)
-        : ocaml.compileML(input.code);
+      lang == langMap.Reason
+        ? ocaml.compileRE(code)
+        : ocaml.compileML(code);
   } catch (error) {
     output = { js_error_msg: error.message };
   }
   const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
   const problems = output.js_error_msg || "";
 
-  const [state, dispatch, busy] = useWorkerizedReducer(
+  const [workerState, dispatch, busy] = useWorkerizedReducer(
     worker,
     "eval", // Reducer name
     { logs: [] } // Initial state
@@ -189,16 +235,16 @@ function App() {
   }, [monaco, output]);
 
   React.useEffect(() => {
-    if (state.bundledCode) {
+    if (workerState.bundledCode) {
       // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
       const eval2 = eval;
       try {
-        eval2(state.bundledCode);
+        eval2(workerState.bundledCode);
       } catch (e) {
         console.error(e);
       }
     }
-  }, [state.bundledCode]);
+  }, [workerState.bundledCode]);
 
   React.useEffect(() => {
     dispatch({ type: "eval", code: output.js_code });
@@ -208,10 +254,12 @@ function App() {
     // <div className="App debug">
     <div className="App">
       <Sidebar
+        onShare={updateURL}
         onExampleClick={(example) => {
           let exampleCode =
-            input.lang == langMap.Reason ? example.re : example.ml;
-          setInput({ lang: input.lang, code: exampleCode });
+            lang == langMap.Reason ? example.re : example.ml;
+          setLang(lang);
+          setCode(exampleCode);
         }}
       />
       <div className="Layout">
@@ -219,16 +267,17 @@ function App() {
           <Panel collapsible={false} defaultSize={45}>
             <LanguageToggle
               onChange={(language) => {
-                if (language != input.lang) {
-                  let newCode = input.code;
+                if (language != lang) {
+                  let newCode = code;
                   if (language == langMap.Reason) {
                     try {
-                      newCode = ocaml.printRE(ocaml.parseML(input.code));
-                      setInput({ lang: langMap.Reason, code: newCode });
+                      newCode = ocaml.printRE(ocaml.parseML(code));
+                      setLang(langMap.Reason);
+                      setCode(newCode);
                     } catch (error) {}
                   } else {
                     try {
-                      newCode = ocaml.printML(ocaml.parseRE(input.code));
+                      newCode = ocaml.printML(ocaml.parseRE(code));
                       setInput({ lang: langMap.OCaml, code: newCode });
                     } catch (error) {}
                   }
@@ -247,11 +296,11 @@ function App() {
                       }}
                       theme="vs-dark"
                       height="100%"
-                      language={input.lang}
-                      value={input.code}
+                      language={lang}
+                      value={code}
                       onMount={handleEditorDidMount}
                       onChange={(code) =>
-                        setInput({ lang: input.lang, code: code })
+                        setInput({ lang: lang, code: code })
                       }
                     />
                   </div>
@@ -267,15 +316,15 @@ function App() {
           <PanelResizeHandle className="ResizeHandle" />
           <Panel collapsible={false} defaultSize={45}>
             <div className="Toggle">
-              <button onClick={() => setIsLiveEnabled(true)}>Live</button>
-              <button onClick={() => setIsLiveEnabled(false)}>
+              <button onClick={() => setLive(true)}>Live</button>
+              <button onClick={() => setLive(false)}>
                 Generated code
               </button>
             </div>
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  {isLiveEnabled ? (
+                  {live ? (
                     <Live />
                   ) : (
                     <div className="Editor">
@@ -298,7 +347,7 @@ function App() {
                 <Panel collapsible={true} defaultSize={20}>
                   Console
                   <div className="Console" />
-                  {state.logs.map((log, i) => (
+                  {workerState.logs.map((log, i) => (
                     <div key={i}>{log.items.join(" ")}</div>
                   ))}
                 </Panel>
