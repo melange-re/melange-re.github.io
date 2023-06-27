@@ -15,7 +15,7 @@ bug-reports: "https://github.com/melange-re/melange-re.github.io"
 depends: [
   "ocaml" {>= "4.14.0" & < "5.0.0"}
   "dune" {>= "3.8.0" & < "4.0.0"}
-  "reason-react" {>= "0.11.0"}
+  "reason-react" {dev}
   "js_of_ocaml"
   "reason" {dev}
   "cmarkit" {dev}
@@ -28,6 +28,7 @@ depends: [
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [
   [ "melange.dev" "git+https://github.com/melange-re/melange.git#df42b60cbc5d4a95a3541199011a9fb857d6af61" ]
+  [ "reason-react.dev" "git+https://github.com/reasonml/reason-react.git#dbc2f61f6626de47dd607609f13a678ecd59e462" ]
   [ "melange_playground.dev" "git+https://github.com/melange-re/melange.git#df42b60cbc5d4a95a3541199011a9fb857d6af61" ]
   [ "reactjs-jsx-ppx.dev" "git+https://github.com/reasonml/reason-react.git#6abef98552a9772a4214b52186dc4dfd0cfbeac9" ]
   [ "cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91" ]
