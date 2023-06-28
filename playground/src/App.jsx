@@ -305,8 +305,6 @@ function App() {
   }, [compilation.js_code]);
 
   const onLanguageToggle = (newLanguage) => {
-    console.log({newLanguage, language, code})
-
     const sameLanguage = newLanguage == language;
     if (sameLanguage) {
       return
@@ -334,10 +332,15 @@ function App() {
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("copied to clipboard!:\n\n" + window.location.href)
+  };
+
   return (
     <div className="App">
       <Sidebar
-        onShare={updateURL}
+        onShare={copyToClipboard}
         onExampleClick={(example) => {
           let code = language == languageMap.Reason ? example.re : example.ml;
           setInput({ language, code });
