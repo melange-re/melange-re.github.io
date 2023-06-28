@@ -161,6 +161,23 @@ function Live() {
   );
 }
 
+function ConsoleLogs ({ logs }) {
+  const bottomOfTheConsole = React.useRef(null);
+
+  React.useEffect(() => {
+    bottomOfTheConsole.current.scrollIntoView();
+  }, [logs]);
+
+  return (
+    <div className="Console">
+      {logs.map((log, i) => (
+        <div className="Item" key={i}>{log.items.join(" ")}</div>
+      ))}
+      <div ref={bottomOfTheConsole} />
+    </div>
+  )
+}
+
 const encodeCode = (store) => {
   try {
     let encoded = btoa(store?.code || "");
@@ -425,11 +442,7 @@ function App() {
                 <PanelResizeHandle className="ResizeHandle" />
                 <span>Console</span>
                 <Panel collapsible={true} defaultSize={20}>
-                  <div className="Console">
-                    {workerState.logs.map((log, i) => (
-                      <div key={i}>{log.items.join(" ")}</div>
-                    ))}
-                  </div>
+                  <ConsoleLogs logs={workerState.logs} />
                 </Panel>
               </PanelGroup>
             </div>
