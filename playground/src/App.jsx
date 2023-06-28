@@ -374,10 +374,21 @@ function App() {
     alert("copied to clipboard!:\n\n" + window.location.href)
   };
 
+  const formatCode = React.useCallback(() => {
+    if (language == languageMap.Reason) {
+      let newReasonCode = ocaml.printRE(ocaml.parseRE(code));
+      setInput({ language, code: newReasonCode });
+      setCode(newReasonCode);
+    } else {
+      alert("Formatting not supported for OCaml, yet")
+    }
+  }, [language, code]);
+
   return (
     <div className="App">
       <Sidebar
         onShare={copyToClipboard}
+        onFormat={formatCode}
         onExampleClick={(example) => {
           let code = language == languageMap.Reason ? example.re : example.ml;
           setInput({ language, code });
