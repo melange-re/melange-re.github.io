@@ -350,7 +350,6 @@ function App() {
     if (newLanguage == languageMap.Reason) {
       try {
         let newReasonCode = ocaml.printRE(ocaml.parseML(code))
-        console.log({newReasonCode})
         setInput({ language: newLanguage, code: newReasonCode });
       } catch (error) {
         setInput({ language: newLanguage, code });
@@ -430,6 +429,9 @@ function App() {
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />
           <Panel collapsible={false} defaultSize={45}>
+            <div className="Right">
+              <PanelGroup direction="vertical">
+                <Panel collapsible={false} defaultSize={80}>
             <div className="Toggle">
               <button
                 className={live === LIVE_PREVIEW.ON ? "active" : ""}
@@ -438,9 +440,6 @@ function App() {
                 className={live === LIVE_PREVIEW.OFF ? "active" : ""}
                 onClick={() => setLive(LIVE_PREVIEW.OFF)}>JavaScript output</button>
             </div>
-            <div className="Right">
-              <PanelGroup direction="vertical">
-                <Panel collapsible={false} defaultSize={80}>
                   <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
                     <Live />
                   </VisuallyHidden>
