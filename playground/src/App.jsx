@@ -8,6 +8,7 @@ import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
+import { useDebounce } from 'use-debounce';
 
 import * as Router from './Router';
 import { useLocalStorage } from './LocalStorage';
@@ -87,7 +88,7 @@ function MiniSidebarMenu() {
   );
 }
 
-function MaxiSidebarMenu({ onShare, onExampleClick }) {
+function MaxiSidebarMenu({ onFormat, onShare, onExampleClick }) {
   const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
   return (
     <div className="Menu">
@@ -95,7 +96,7 @@ function MaxiSidebarMenu({ onShare, onExampleClick }) {
         <p>{"Melange"}</p>
       </div>
       <div className="ActionMenu">
-        <button>{"Format"}</button>
+        <button onClick={onFormat}>{"Format"}</button>
         <button onClick={(_) => onShare()}>{"Share"}</button>
         <hr className="Separator" />
         <button onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
@@ -128,7 +129,7 @@ function MaxiSidebarMenu({ onShare, onExampleClick }) {
   );
 }
 
-function Sidebar({ onShare, onExampleClick }) {
+function Sidebar({ onFormat, onShare, onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const root = "Sidebar " + (sidebarColapsed ? "colapsed" : "");
@@ -138,7 +139,7 @@ function Sidebar({ onShare, onExampleClick }) {
       {sidebarColapsed ? (
         <MiniSidebarMenu />
       ) : (
-        <MaxiSidebarMenu onExampleClick={onExampleClick} onShare={onShare} />
+        <MaxiSidebarMenu onFormat={onFormat} onExampleClick={onExampleClick} onShare={onShare} />
       )}
       <button onClick={(_) => toggleSidebar()}>
         {sidebarColapsed ? ">>>" : "<<<"}
@@ -232,7 +233,9 @@ function useStore (defaultValue) {
   return [state, setState]
 };
 
-function OutputEditor ({ language, value, onMount }) {
+function OutputEditor ({ language, value }) {
+  const [debouncedValue] = useDebounce(value, 500);
+
   return (
     <div className="Editor">
       <Editor
@@ -245,8 +248,7 @@ function OutputEditor ({ language, value, onMount }) {
         }}
         height="100%"
         language={language}
-        value={value}
-        onMount={onMount}
+        value={debouncedValue}
       />
     </div>
   )

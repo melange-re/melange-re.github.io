@@ -1482,6 +1482,11 @@ update-browserslist-db@^1.0.11:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
+use-debounce@^9.0.4:
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-9.0.4.tgz#51d25d856fbdfeb537553972ce3943b897f1ac85"
+  integrity sha512-6X8H/mikbrt0XE8e+JXRtZ8yYVvKkdYRfmIhWZYsP8rcNs9hk3APV8Ua2mFkKRLcJKVdnX2/Vwrmg2GWKUQEaQ==
+
 use-workerized-reducer@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/use-workerized-reducer/-/use-workerized-reducer-0.0.7.tgz#19231815d47da4897245c935be35ea693fa94e95"
