@@ -30,6 +30,24 @@ const worker = new Worker(new URL("./Worker.js", import.meta.url), {
   type: "module",
 });
 
+function VisuallyHidden({ when, children }) {
+  return (
+    <div
+      style={when ? {
+        position: "absolute",
+        top: "-10000px",
+        left: "-10000px",
+        visibility: "hidden",
+      } : {
+        visibility: "visible",
+        height: "100%"
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function LanguageToggle({ language, onChange }) {
   return (
     <div className="Toggle">
@@ -393,15 +411,16 @@ function App() {
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  {live === LIVE_PREVIEW.ON ? (
+                  <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
                     <Live />
-                  ) : (
+                  </VisuallyHidden>
+                  <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                     <OutputEditor
                       language={compilation.js_error_msg ? "text" : "javascript"}
                       value={javascriptCode}
                       onMount={handleEditorDidMount}
                     />
-                  )}
+                  </VisuallyHidden>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
                 <span>Console</span>
