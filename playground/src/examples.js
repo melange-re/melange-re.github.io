@@ -93,9 +93,9 @@ let () =
   `,
     re: `module Greeting = {
   [@react.component]
-  let make = () => { 
+  let make = () => {
     <button> {React.string("Hello!")} </button>;
-  };  
+  };
 };
 ReactDOM.querySelector("#preview")
 ->(

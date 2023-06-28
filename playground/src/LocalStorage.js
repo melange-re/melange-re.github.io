@@ -29,7 +29,7 @@ export function useLocalStorage (key, defaultValue) {
         const oldValue = rawValueRef.current;
         rawValueRef.current = newValue;
         window.localStorage.setItem(key, newValue);
-        window.dispatchEvent(
+        /* window.dispatchEvent(
           new StorageEvent("storage", {
             storageArea: window.localStorage,
             url: window.location.href,
@@ -37,16 +37,16 @@ export function useLocalStorage (key, defaultValue) {
             newValue,
             oldValue,
           })
-        );
+        ); */
       } else {
         window.localStorage.removeItem(key);
-        window.dispatchEvent(
+        /* window.dispatchEvent(
           new StorageEvent("storage", {
             STORAGEAREA: window.localStorage,
             url: window.location.href,
             key,
           })
-        );
+        ); */
       }
     };
 
@@ -57,7 +57,7 @@ export function useLocalStorage (key, defaultValue) {
     }
   }, [value]);
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key !== key || e.storageArea !== window.localStorage) return;
 
@@ -75,7 +75,7 @@ export function useLocalStorage (key, defaultValue) {
 
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, [key]);
+  }, [key]); */
 
   return [value, setValue];
 }

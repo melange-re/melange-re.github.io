@@ -10,14 +10,13 @@ const rawModules = import.meta.glob(
     eager: true,
   }
 );
+
 Object.keys(rawModules).forEach((k) => {
   const value = rawModules[k];
   modules[
     k.replace("../../_build/default/playground/output/node_modules/", "")
   ] = value;
 });
-
-const _console = console;
 
 let buffer = [];
 
@@ -65,14 +64,14 @@ async function fetch_if_uncached(url) {
 }
 
 initWorkerizedReducer(
-  "eval", // Name of the reducer
+  "bundle", // Name of the reducer
   async (state, action) => {
     buffer = [];
     // Reducers can be async.
     // Manipulate `state` directly. ImmerJS will take
     // care of maintaining referential equality.
     switch (action.type) {
-      case "eval":
+      case "bundle":
         const code = action.code;
         if (code) {
           modules["main.js"] = code;
@@ -123,7 +122,7 @@ initWorkerizedReducer(
           });
           try {
             // bundling always happens in worker as it's expensive. Evaluation too,
-            // but if there is DOM manipulation, then defer evaluation to the 
+            // but if there is DOM manipulation, then defer evaluation to the
             // main thread, as worker doesn't have access to DOM
             const requireReactString = "import * as React";
             if (code.indexOf(requireReactString) >= 0) {

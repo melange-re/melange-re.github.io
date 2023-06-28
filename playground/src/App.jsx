@@ -7,29 +7,44 @@ import "./App.css";
 import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import * as Router from './Router';
-import { useLocalStorage } from './LocalStorage';
-
-import examples from "./examples";
-import { language as mlLanguage } from "./ml_syntax";
-import { language as reLanguage } from "./re_syntax";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 
-const langMap = {
+import * as Router from './Router';
+import { useLocalStorage } from './LocalStorage';
+import examples from "./examples";
+import { language as OCamlSyntax } from "./ml_syntax";
+import { language as ReasonSyntax } from "./re_syntax";
+
+const languageMap = {
   Reason: "Reason",
   OCaml: "OCaml",
 };
 
+const LIVE_PREVIEW = {
+  ON: "on",
+  OFF: "off",
+};
+
 // Spin up the worker running the reducers.
-const worker = new Worker(new URL("./evalWorker.js", import.meta.url), {
+const worker = new Worker(new URL("./Worker.js", import.meta.url), {
   type: "module",
 });
 
-function LanguageToggle({ onChange }) {
+function LanguageToggle({ language, onChange }) {
   return (
     <div className="Toggle">
-      <button onClick={() => onChange(langMap.OCaml)}>OCaml</button>
-      <button onClick={() => onChange(langMap.Reason)}>Reason</button>
+      <button
+        className={language === languageMap.OCaml ? "active" : ""}
+        onClick={() => onChange(languageMap.OCaml)}
+      >
+        OCaml
+      </button>
+      <button
+        className={language === languageMap.Reason ? "active" : ""}
+        onClick={() => onChange(languageMap.Reason)}
+      >
+        Reason
+      </button>
     </div>
   );
 }
@@ -47,8 +62,8 @@ function MiniSidebarMenu() {
         <button>{"E"}</button>
         <button>{"S"}</button>
         <hr className="Separator" />
-        <button>{"GitHub"}</button>
-        <button>{"OPAM"}</button>
+        <button>{"G"}</button>
+        <button>{"O"}</button>
       </div>
     </div>
   );
@@ -128,70 +143,107 @@ function Live() {
   );
 }
 
+const encodeCode = (store) => {
+  try {
+    let encoded = btoa(store?.code || "");
+    return { ...store, code: encoded }
+  } catch (e) {
+    return store
+  }
+};
+
+const decodeCode = (store) => {
+  try {
+    let decoded = atob(store?.code || "");
+    return { ...store, code: decoded }
+  } catch (e) {
+    return store
+  }
+};
+
 function useStore (defaultValue) {
   /* This store gets the data from LocalStorage and the URL (queryParams),
     and needs a defaultValue in case of both being empty.
 
-    The URL has preference over LocalStorage to make sure people who recieve
+    The URL has priority over LocalStorage: to make sure people who recieve
     a URL with queryParams reads the values from the URL instead of the last LocalStorage session.
 
-    When updating the store, set's a React state and updates LocalStorage value.
-
-    If `updateUrl` is called, appends to the URL the current value of the store.
+    When updating the store, set's a React state, updates LocalStorage and URL.
   */
   const LOCAL_STORAGE_ITEM = "__store"
   const [search, setSearch] = Router.useSearchParams();
   const [localStorage, setLocalStorage] = useLocalStorage(LOCAL_STORAGE_ITEM, defaultValue);
   const keys = Object.keys(defaultValue);
   /* Get only searchParams that we care (from defaultValue keys) */
-  const searchParams = keys.reduce((key, result) => {
-    if (search[key]) {
-      result[key] = search[key]
+  const knownSearchParams = Object.entries(search).map(([key, value]) => {
+    if (keys.includes(key)) {
+      return [key, value]
+    } else {
+      return null
     }
+  }).filter(a => !!a) || [];
+  const initialStateFromUrl = knownSearchParams.reduce((previous, [key, value]) => {
+    return { ...previous, [key]: value }
   }, {});
-  const initialValue = { ...localStorage, ...searchParams };
+  const initialValue = decodeCode({ ...localStorage, ...initialStateFromUrl });
   const [state, setState] = React.useState(initialValue);
 
-  const setValue = (newValue) => {
-    setState(newValue);
-    setLocalStorage(newValue);
-  }
+  React.useEffect(() => {
+    let encodedeState = encodeCode(state);
+    setSearch(encodedeState);
+    setLocalStorage(encodedeState);
+  }, [state])
 
-  const updateURL = () => {
-    setSearch(state);
-  }
-
-  return [state, setValue, updateURL]
+  return [state, setState]
 };
 
+function OutputEditor ({ language, value, onMount }) {
+  return (
+    <div className="Editor">
+      <Editor
+        theme="vs-dark"
+        options={{
+          readOnly: true,
+          minimap: {
+            enabled: false,
+          },
+        }}
+        height="100%"
+        language={language}
+        value={value}
+        onMount={onMount}
+      />
+    </div>
+  )
+}
+
 function App() {
-  const [state, setState, updateURL] = useStore({
-    lang: langMap.OCaml,
+  const defaultState = {
+    language: languageMap.OCaml,
     code: examples[0].ml,
-    live: false,
-  });
-
-  const { lang, code, live } = state;
-  const setLang = (lang) => setState({ ...state, lang });
-  const setCode = (code) => setState({ ...state, code });
+    live: LIVE_PREVIEW.OFF
+  };
+  const [state, setState, updateURL] = useStore(defaultState);
+  const { language, code, live } = state;
   const setLive = (live) => setState({ ...state, live });
-  const setInput = ({lang, code}) => setState({ ...state, lang, code });
+  const setCode = (code) => setState({ ...state, code });
+  const setInput = ({language, code}) => setState({ ...state, language, code });
 
-  let output = undefined;
+  let compilation = undefined;
   try {
-    output =
-      lang == langMap.Reason
+    compilation =
+      language == languageMap.Reason
         ? ocaml.compileRE(code)
         : ocaml.compileML(code);
   } catch (error) {
-    output = { js_error_msg: error.message };
+    compilation = { js_error_msg: error.message };
   }
-  const javascriptCode = output.js_code || 'Error: check the "Problems" panel';
-  const problems = output.js_error_msg || "";
+  const javascriptCode = compilation.js_code || compilation.js_error_msg || "";
+  const problems = compilation.js_error_msg || "";
 
   const [workerState, dispatch, busy] = useWorkerizedReducer(
     worker,
-    "eval", // Reducer name
+    "bundle", // Reducer name
     { logs: [] } // Initial state
   );
 
@@ -206,10 +258,10 @@ function App() {
   React.useEffect(() => {
     // or make sure that it exists by other ways
     if (monaco) {
-      monaco.languages.register({ id: langMap.OCaml });
-      monaco.languages.setMonarchTokensProvider(langMap.OCaml, mlLanguage);
-      monaco.languages.register({ id: langMap.Reason });
-      monaco.languages.setMonarchTokensProvider(langMap.Reason, reLanguage);
+      monaco.languages.register({ id: languageMap.OCaml });
+      monaco.languages.setMonarchTokensProvider(languageMap.OCaml, OCamlSyntax);
+      monaco.languages.register({ id: languageMap.Reason });
+      monaco.languages.setMonarchTokensProvider(languageMap.Reason, ReasonSyntax);
     }
   }, [monaco]);
 
@@ -217,14 +269,14 @@ function App() {
     // or make sure that it exists by other ways
     if (monaco && editorRef.current) {
       const owner = "playground";
-      if (output.js_error_msg) {
+      if (compilation.js_error_msg) {
         monaco.editor.setModelMarkers(editorRef.current.getModel(), owner, [
           {
-            startLineNumber: output.row + 1,
-            startColumn: output.column + 1,
-            endLineNumber: output.endRow + 1,
-            endColumn: output.endColumn + 1,
-            message: output.text,
+            startLineNumber: compilation.row + 1,
+            startColumn: compilation.column + 1,
+            endLineNumber: compilation.endRow + 1,
+            endColumn: compilation.endColumn + 1,
+            message: compilation.text,
             severity: monaco.MarkerSeverity.Error,
           },
         ]);
@@ -232,7 +284,7 @@ function App() {
         monaco.editor.removeAllMarkers(owner);
       }
     }
-  }, [monaco, output]);
+  }, [monaco, compilation]);
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
@@ -247,42 +299,56 @@ function App() {
   }, [workerState.bundledCode]);
 
   React.useEffect(() => {
-    dispatch({ type: "eval", code: output.js_code });
-  }, [output.js_code]);
+    if (compilation.js_code) {
+      dispatch({ type: "bundle", code: compilation.js_code });
+    }
+  }, [compilation.js_code]);
+
+  const onLanguageToggle = (newLanguage) => {
+    console.log({newLanguage, language, code})
+
+    const sameLanguage = newLanguage == language;
+    if (sameLanguage) {
+      return
+    }
+
+    if (newLanguage == languageMap.Reason) {
+      try {
+        let newReasonCode = ocaml.printRE(ocaml.parseML(code))
+        console.log({newReasonCode})
+        setInput({ language: newLanguage, code: newReasonCode });
+      } catch (error) {
+        setInput({ language: newLanguage, code });
+        console.log(error);
+      }
+    } else if (newLanguage == languageMap.OCaml) {
+      try {
+        let newOCamlCode = ocaml.printML(ocaml.parseRE(code));
+        setInput({ language: newLanguage, code: newOCamlCode });
+      } catch (error) {
+        setInput({ language: newLanguage, code });
+        console.log(error);
+      }
+    } else {
+      return
+    }
+  };
 
   return (
-    // <div className="App debug">
     <div className="App">
       <Sidebar
         onShare={updateURL}
         onExampleClick={(example) => {
-          let exampleCode =
-            lang == langMap.Reason ? example.re : example.ml;
-          setLang(lang);
-          setCode(exampleCode);
+          let code = language == languageMap.Reason ? example.re : example.ml;
+          setInput({ language, code });
         }}
       />
       <div className="Layout">
         <PanelGroup direction="horizontal">
           <Panel collapsible={false} defaultSize={45}>
             <LanguageToggle
-              onChange={(language) => {
-                if (language != lang) {
-                  let newCode = code;
-                  if (language == langMap.Reason) {
-                    try {
-                      newCode = ocaml.printRE(ocaml.parseML(code));
-                      setLang(langMap.Reason);
-                      setCode(newCode);
-                    } catch (error) {}
-                  } else {
-                    try {
-                      newCode = ocaml.printML(ocaml.parseRE(code));
-                      setInput({ lang: langMap.OCaml, code: newCode });
-                    } catch (error) {}
-                  }
-                }
-              }}
+              language={language}
+              onChange={onLanguageToggle}
             />
             <div className="Left">
               <PanelGroup direction="vertical">
@@ -296,18 +362,16 @@ function App() {
                       }}
                       theme="vs-dark"
                       height="100%"
-                      language={lang}
+                      language={language}
                       value={code}
                       onMount={handleEditorDidMount}
-                      onChange={(code) =>
-                        setInput({ lang: lang, code: code })
-                      }
+                      onChange={setCode}
                     />
                   </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
+                <span>Problems</span>
                 <Panel collapsible={true} defaultSize={20}>
-                  Problems
                   <div className="Problems">{problems}</div>
                 </Panel>
               </PanelGroup>
@@ -316,40 +380,34 @@ function App() {
           <PanelResizeHandle className="ResizeHandle" />
           <Panel collapsible={false} defaultSize={45}>
             <div className="Toggle">
-              <button onClick={() => setLive(true)}>Live</button>
-              <button onClick={() => setLive(false)}>
-                Generated code
-              </button>
+              <button
+                className={live === LIVE_PREVIEW.ON ? "active" : ""}
+                onClick={() => setLive(LIVE_PREVIEW.ON)}>Live</button>
+              <button
+                className={live === LIVE_PREVIEW.OFF ? "active" : ""}
+                onClick={() => setLive(LIVE_PREVIEW.OFF)}>JavaScript output</button>
             </div>
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  {live ? (
+                  {live === LIVE_PREVIEW.ON ? (
                     <Live />
                   ) : (
-                    <div className="Editor">
-                      <Editor
-                        theme="vs-dark"
-                        options={{
-                          readOnly: true,
-                          minimap: {
-                            enabled: false,
-                          },
-                        }}
-                        height="100%"
-                        language={output.js_error_msg ? "text" : "javascript"}
-                        value={javascriptCode}
-                      />
-                    </div>
+                    <OutputEditor
+                      language={compilation.js_error_msg ? "text" : "javascript"}
+                      value={javascriptCode}
+                      onMount={handleEditorDidMount}
+                    />
                   )}
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
+                <span>Console</span>
                 <Panel collapsible={true} defaultSize={20}>
-                  Console
-                  <div className="Console" />
-                  {workerState.logs.map((log, i) => (
-                    <div key={i}>{log.items.join(" ")}</div>
-                  ))}
+                  <div className="Console">
+                    {workerState.logs.map((log, i) => (
+                      <div key={i}>{log.items.join(" ")}</div>
+                    ))}
+                  </div>
                 </Panel>
               </PanelGroup>
             </div>
