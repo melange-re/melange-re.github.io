@@ -290,7 +290,7 @@ function App() {
     code: examples[0].ml,
     live: LIVE_PREVIEW.OFF
   };
-  const [state, setState, updateURL] = useStore(defaultState);
+  const [state, setState] = useStore(defaultState);
   const { language, code, live } = state;
   const setLive = (live) => setState({ ...state, live });
   const setCode = (code) => setState({ ...state, code });
@@ -462,14 +462,14 @@ function App() {
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-            <div className="Toggle">
-              <button
-                className={live === LIVE_PREVIEW.ON ? "active" : ""}
-                onClick={() => setLive(LIVE_PREVIEW.ON)}>Live</button>
-              <button
-                className={live === LIVE_PREVIEW.OFF ? "active" : ""}
-                onClick={() => setLive(LIVE_PREVIEW.OFF)}>JavaScript output</button>
-            </div>
+                <div className="Toggle">
+                  <button
+                    className={live === LIVE_PREVIEW.ON ? "active" : ""}
+                    onClick={() => setLive(LIVE_PREVIEW.ON)}>Live</button>
+                  <button
+                    className={live === LIVE_PREVIEW.OFF ? "active" : ""}
+                    onClick={() => setLive(LIVE_PREVIEW.OFF)}>JavaScript output</button>
+                </div>
                   <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
                     <Live />
                   </VisuallyHidden>
