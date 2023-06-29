@@ -16,6 +16,7 @@ depends: [
   "ocaml" {>= "4.14.0" & < "5.0.0"}
   "dune" {>= "3.8.0" & < "4.0.0"}
   "reason-react" {dev}
+  "ocamlformat"
   "js_of_ocaml"
   "reason" {dev}
   "cmarkit" {dev}
@@ -23,7 +24,6 @@ depends: [
   "melange_playground" {dev}
   "reactjs-jsx-ppx" {dev}
   "ocaml-lsp-server" {dev}
-  "ocamlformat" {dev}
 ]
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [

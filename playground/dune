@@ -14,6 +14,19 @@
   (bash
    "find $(dirname %{some-cmi}) -name \"*.cmi\" -or -name \"*.cmj\" | xargs js_of_ocaml build-fs -o %{target}")))
 
+(executable
+ (name format)
+ (modules format)
+ (modes js)
+ (flags
+  (:standard -open Ocamlformat_stdlib))
+ (libraries js_of_ocaml ocamlformat-lib))
+
+(install
+ (package documentation-site)
+ (section bin)
+ (files format.bc.js))
+
 (rule
  (alias playground-assets)
  (deps

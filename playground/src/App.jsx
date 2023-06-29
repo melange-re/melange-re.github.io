@@ -2,6 +2,7 @@ import "../../_opam/bin/jsoo_main.bc";
 import "../../_opam/bin/belt-cmijs";
 import "../../_opam/bin/runtime-cmijs";
 import "../../_opam/bin/stdlib-cmijs";
+import "../../_opam/bin/format.bc.js";
 import "../../_build/default/playground/reason-react-cmijs";
 import "./App.css";
 import * as React from "react";
@@ -230,8 +231,37 @@ function useStore (defaultValue) {
     setLocalStorage(encodedeState);
   }, [state])
 
-  return [state, setState]
+  return [state, setState];
 };
+
+function formatOCaml (code) {
+  let result = window.ocamlformat.format(code);
+  if (!Array.isArray(result)) {
+    return code;
+  }
+  // result is [int, string]
+  //           int -> represents (0) Ok, (1) Error
+  //           string -> the formated code or the error message
+  const kind = result[0];
+  const payload = result[1];
+  const OK = 0;
+  const ERROR = 1;
+  if (kind === OK) {
+    return payload
+  } else if (kind === ERROR) {
+    console.log(payload)
+    return code
+  }
+};
+
+const formatReason = (code) => {
+  try {
+    return ocaml.printRE(ocaml.parseRE(code));
+  } catch (e) {
+    console.log(e);
+    return code;
+  }
+}
 
 function OutputEditor ({ language, value }) {
   const [debouncedValue] = useDebounce(value, 500);
@@ -375,11 +405,11 @@ function App() {
 
   const formatCode = React.useCallback(() => {
     if (language == languageMap.Reason) {
-      let newReasonCode = ocaml.printRE(ocaml.parseRE(code));
-      setInput({ language, code: newReasonCode });
+      let newReasonCode = formatReason(code);
       setCode(newReasonCode);
     } else {
-      alert("Formatting not supported for OCaml, yet")
+      let newOCamlCode = formatOCaml(code);
+      setCode(newOCamlCode);
     }
   }, [language, code]);
 
