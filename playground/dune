@@ -31,6 +31,7 @@
  (alias playground-assets)
  (deps
   (alias playground-runtime-js)
+  format.bc.js
   reason-react-cmijs.js)
  (action
   (echo "assets generated")))
