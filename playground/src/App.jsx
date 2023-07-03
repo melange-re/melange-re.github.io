@@ -32,6 +32,18 @@ const worker = new Worker(new URL("./Worker.js", import.meta.url), {
   type: "module",
 });
 
+let buffer = [];
+const stringify = (value) => JSON.stringify(value) || String(value);
+
+const log = (type, items) => buffer.push({ type, items: items.map(stringify) });
+
+console = {
+  log: (...items) => log("log", items),
+  error: (...items) => log("error", items),
+  warn: (...items) => log("warn", items),
+  debug: (...items) => log("debug", items),
+};
+
 function VisuallyHidden({ when, children }) {
   return (
     <div
