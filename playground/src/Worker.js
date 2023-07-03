@@ -72,68 +72,70 @@ initWorkerizedReducer(
     // care of maintaining referential equality.
     switch (action.type) {
       case "bundle":
-        const code = action.code;
-        if (code) {
-          modules["main.js"] = code;
+      const code = action.code
+        if (!code) {
+          return
+        }
+        modules["main.js"] = code;
 
-          const bundle = await rollup({
-            input: "main.js",
-            plugins: [
-              {
-                name: "loader",
-                resolveId(importee, importer) {
-                  var source = importee;
-                  if (importee.substring(0, 2) == "./" && importer) {
-                    const pkg = importer.substring(
-                      0,
-                      importer.lastIndexOf("/") + 1
-                    );
-                    source = pkg + source.substring(2, importee.length);
-                  }
-                  if (modules.hasOwnProperty(source)) {
-                    return source;
+        const bundle = await rollup({
+          input: "main.js",
+          plugins: [
+            {
+              name: "loader",
+              resolveId(importee, importer) {
+                var source = importee;
+                const isRelative = importee.substring(0, 2) == "./";
+                if (isRelative && importer) {
+                  const pkg = importer.substring(
+                    0,
+                    importer.lastIndexOf("/") + 1
+                  );
+                  source = pkg + source.substring(2, importee.length);
+                }
+                if (modules.hasOwnProperty(source)) {
+                  return source;
+                } else {
+                  if (importee[0] == "/") {
+                    return "https://esm.sh" + importee;
+                  } else if (importee.substring(0, 8) != "https://") {
+                    return "https://esm.sh/" + importee;
                   } else {
-                    if (importee[0] == "/") {
-                      return "https://esm.sh" + importee;
-                    } else if (importee.substring(0, 8) != "https://") {
-                      return "https://esm.sh/" + importee;
-                    } else {
-                      // TODO: Improve versioning.
-                      // We are getting "react" and "react-dom" from stable,
-                      // which might change under our backs.
-                      return importee;
-                    }
+                    // TODO: Improve versioning.
+                    // We are getting "react" and "react-dom" from stable,
+                    // which might change under our backs.
+                    return importee;
                   }
-                },
-                async load(resolved) {
-                  if (modules.hasOwnProperty(resolved)) {
-                    return modules[resolved];
-                  } else {
-                    const res = await fetch_if_uncached(resolved);
-                    return res?.body;
-                  }
-                },
+                }
               },
-            ],
-          });
-          const { output } = await bundle.generate({
-            format: "iife",
-            name: "MelangeApp",
-          });
-          try {
-            // bundling always happens in worker as it's expensive. Evaluation too,
-            // but if there is DOM manipulation, then defer evaluation to the
-            // main thread, as worker doesn't have access to DOM
-            const requireReactString = "import * as React";
-            if (code.indexOf(requireReactString) >= 0) {
-              state.bundledCode = output[0].code;
-            } else {
-              state.bundledCode = undefined;
-              eval2(output[0].code);
-            }
-          } catch (e) {
-            console.log(e);
+              async load(resolved) {
+                if (modules.hasOwnProperty(resolved)) {
+                  return modules[resolved];
+                } else {
+                  const res = await fetch_if_uncached(resolved);
+                  return res?.body;
+                }
+              },
+            },
+          ],
+        });
+        const { output } = await bundle.generate({
+          format: "iife",
+          name: "MelangeApp",
+        });
+        try {
+          // bundling always happens in worker as it's expensive. Evaluation too,
+          // but if there is DOM manipulation, then defer evaluation to the
+          // main thread, as worker doesn't have access to DOM
+          const requireReactString = "import * as React";
+          if (code.indexOf(requireReactString) >= 0) {
+            state.bundledCode = output[0].code;
+          } else {
+            state.bundledCode = undefined;
+            eval2(output[0].code);
           }
+        } catch (e) {
+          console.log(e);
         }
         // We always set logs, if `code` is undefined we will erase them
         state.logs = buffer;

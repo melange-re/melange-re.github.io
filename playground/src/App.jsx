@@ -296,6 +296,39 @@ function OutputEditor ({ language, value }) {
   )
 }
 
+const compile = (language, code) => {
+  let compilation = undefined
+  try {
+    compilation = language == languageMap.Reason
+      ? ocaml.compileRE(code)
+      : ocaml.compileML(code);
+  } catch (error) {
+    compilation = { js_error_msg: error.message };
+  }
+
+  if (compilation) {
+    return {
+      javascriptCode: compilation.js_code || compilation.js_error_msg || "",
+      problems: compilation.js_error_msg || "",
+      row: compilation.row + 1,
+      column: compilation.column + 1,
+      endRow: compilation.endRow + 1,
+      endColumn: compilation.endColumn + 1,
+      text: compilation.text
+    };
+  } else {
+    return {
+      javascriptCode: "",
+      problems: "",
+      row: 0,
+      column: 0,
+      endRow: 0,
+      endColumn: 0,
+      text: ""
+    }
+  }
+};
+
 function App() {
   const defaultState = {
     language: languageMap.OCaml,
@@ -303,28 +336,22 @@ function App() {
     live: LIVE_PREVIEW.OFF
   };
   const [state, setState] = useStore(defaultState);
-  const { language, code, live } = state;
+  const { language, live } = state;
   const setLive = (live) => setState({ ...state, live });
   const setCode = (code) => setState({ ...state, code });
   const setInput = ({language, code}) => setState({ ...state, language, code });
+  const code = state.code;
+  const [debouncedCode] = useDebounce(state.code, 300);
 
-  let compilation = undefined;
-  try {
-    compilation =
-      language == languageMap.Reason
-        ? ocaml.compileRE(code)
-        : ocaml.compileML(code);
-  } catch (error) {
-    compilation = { js_error_msg: error.message };
-  }
-  const javascriptCode = compilation.js_code || compilation.js_error_msg || "";
-  const problems = compilation.js_error_msg || "";
+  const compilation = React.useMemo(() => compile(language, debouncedCode), [debouncedCode]);
 
   const [workerState, dispatch, busy] = useWorkerizedReducer(
     worker,
     "bundle", // Reducer name
     { logs: [] } // Initial state
   );
+
+  const logs = workerState.logs.concat(buffer);
 
   const editorRef = React.useRef(null);
 
@@ -348,13 +375,13 @@ function App() {
     // or make sure that it exists by other ways
     if (monaco && editorRef.current) {
       const owner = "playground";
-      if (compilation.js_error_msg) {
+      if (compilation?.problems) {
         monaco.editor.setModelMarkers(editorRef.current.getModel(), owner, [
           {
-            startLineNumber: compilation.row + 1,
-            startColumn: compilation.column + 1,
-            endLineNumber: compilation.endRow + 1,
-            endColumn: compilation.endColumn + 1,
+            startLineNumber: compilation.row,
+            startColumn: compilation.column,
+            endLineNumber: compilation.endRow,
+            endColumn: compilation.endColumn,
             message: compilation.text,
             severity: monaco.MarkerSeverity.Error,
           },
@@ -363,7 +390,7 @@ function App() {
         monaco.editor.removeAllMarkers(owner);
       }
     }
-  }, [monaco, compilation]);
+  }, [monaco, compilation?.problems]);
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
@@ -378,10 +405,10 @@ function App() {
   }, [workerState.bundledCode]);
 
   React.useEffect(() => {
-    if (compilation.js_code) {
-      dispatch({ type: "bundle", code: compilation.js_code });
+    if (compilation?.javascriptCode) {
+      dispatch({ type: "bundle", code: compilation?.javascriptCode });
     }
-  }, [compilation.js_code]);
+  }, [compilation?.javascriptCode]);
 
   const onLanguageToggle = (newLanguage) => {
     const sameLanguage = newLanguage == language;
@@ -464,7 +491,7 @@ function App() {
                 <PanelResizeHandle className="ResizeHandle" />
                 <span>Problems</span>
                 <Panel collapsible={true} defaultSize={20}>
-                  <div className="Problems">{problems}</div>
+                  <div className="Problems">{compilation?.problems}</div>
                 </Panel>
               </PanelGroup>
             </div>
@@ -487,8 +514,8 @@ function App() {
                   </VisuallyHidden>
                   <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                     <OutputEditor
-                      language={compilation.js_error_msg ? "text" : "javascript"}
-                      value={javascriptCode}
+                      language={compilation?.problems ? "text" : "javascript"}
+                      value={compilation?.javascriptCode}
                       onMount={handleEditorDidMount}
                     />
                   </VisuallyHidden>
@@ -496,7 +523,7 @@ function App() {
                 <PanelResizeHandle className="ResizeHandle" />
                 <span>Console</span>
                 <Panel collapsible={true} defaultSize={20}>
-                  <ConsoleLogs logs={workerState.logs} />
+                  <ConsoleLogs logs={logs} />
                 </Panel>
               </PanelGroup>
             </div>
