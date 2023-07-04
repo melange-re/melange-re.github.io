@@ -471,16 +471,16 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar
-        onShare={copyToClipboard}
-        onFormat={formatCode}
-        onExampleClick={(example) => {
-          let code = language == languageMap.Reason ? example.re : example.ml;
-          setInput({ language, code });
-        }}
-      />
       <div className="Layout">
         <PanelGroup direction="horizontal">
+        <Sidebar
+          onShare={copyToClipboard}
+          onFormat={formatCode}
+          onExampleClick={(example) => {
+            let code = language == languageMap.Reason ? example.re : example.ml;
+            setInput({ language, code });
+          }}
+        />
           <Panel collapsible={false} defaultSize={45}>
             <LanguageToggle
               language={language}
