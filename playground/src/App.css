@@ -93,11 +93,15 @@
   flex: 0 0 0.5em;
   position: relative;
   outline: none;
+  background-color: var(--background-color);
 
-  --background-color: transparent;
+  --background-color: rgba(255, 255, 255, 0.6);
+}
+.ResizeHandle:hover {
+  --background-color: rgba(255, 255, 255, 0.2);
 }
 .ResizeHandle[data-resize-handle-active] {
-  --background-color: rgba(255, 255, 255, 0.2);
+  --background-color: rgba(255, 255, 255, 0.3);
 }
 
 .Left,
@@ -117,6 +121,19 @@
   outline: 4px auto purple;
 }
 
+.ConsoleHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.ConsoleHeader .Clear {
+  font-size: 12px;
+}
+.ConsoleHeader .Left {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
 .Console {
   width: 100%;
   height: 100%;

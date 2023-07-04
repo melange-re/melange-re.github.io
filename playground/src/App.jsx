@@ -192,11 +192,7 @@ function ConsoleLogs ({ logs }) {
 }
 
 function ConsolePanel ({ logs, clearLogs }) {
-  const [_, reRender] = React.useState(null);
-  const onClick = (_) => {
-    clearLogs()
-    reRender()
-  };
+  const onClick = (_) => clearLogs();
   return (
     <>
       <div className="ConsoleHeader">
@@ -379,7 +375,7 @@ function App() {
   }
 
   function clearLogs () {
-    workerState.logs = [];
+    dispatch({ type: "clear.logs" });
     Console.flush();
   }
 

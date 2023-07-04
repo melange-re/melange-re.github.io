@@ -60,6 +60,10 @@ initWorkerizedReducer(
     // Manipulate `state` directly. ImmerJS will take
     // care of maintaining referential equality.
     switch (action.type) {
+      case "clear.logs":
+        Console.flush();
+        state.logs = [];
+        break;
       case "bundle":
         const code = action.code;
         if (!code) {
