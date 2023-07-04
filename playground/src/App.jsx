@@ -14,9 +14,10 @@ import { useDebounce } from 'use-debounce';
 import * as Console from "./Console";
 import * as Router from './Router';
 import { useLocalStorage } from './LocalStorage';
+import { useHover } from './Hover';
 import examples from "./examples";
-import { language as OCamlSyntax } from "./ml_syntax";
-import { language as ReasonSyntax } from "./re_syntax";
+import { language as OCamlSyntax } from "./syntax/ml";
+import { language as ReasonSyntax } from "./syntax/re";
 
 const languageMap = {
   Reason: "Reason",
@@ -49,6 +50,10 @@ function VisuallyHidden({ when, children }) {
       {children}
     </div>
   );
+}
+
+function Counter ({ count }) {
+  return <span className="Counter">{count}</span>;
 }
 
 function LanguageToggle({ language, onChange }) {
@@ -165,19 +170,46 @@ function Live() {
 }
 
 function ConsoleLogs ({ logs }) {
+  const [automaticScroll, setAutomaticScroll] = React.useState(true);
   const bottomOfTheConsole = React.useRef(null);
+  const rootElement = React.useRef(null);
+  useHover(rootElement, () => setAutomaticScroll(false));
 
   React.useEffect(() => {
-    bottomOfTheConsole.current.scrollIntoView();
-  }, [logs]);
+    if (automaticScroll) {
+      bottomOfTheConsole.current.scrollIntoView();
+    }
+  }, [logs, automaticScroll]);
 
   return (
-    <div className="Console">
+    <div ref={rootElement} className="Console">
       {logs.map((log, i) => (
         <div className="Item" key={i}>{log}</div>
       ))}
       <div ref={bottomOfTheConsole} />
     </div>
+  )
+}
+
+function ConsolePanel ({ logs, clearLogs }) {
+  const [_, reRender] = React.useState(null);
+  const onClick = (_) => {
+    clearLogs()
+    reRender()
+  };
+  return (
+    <>
+      <div className="ConsoleHeader">
+        <div className="Left">
+          <span>Console</span>
+          <Counter count={logs.length}/>
+        </div>
+        <button className="Clear" onClick={onClick}>{"clear"}</button>
+      </div>
+      <Panel collapsible={true} defaultSize={20}>
+        <ConsoleLogs logs={logs} />
+      </Panel>
+    </>
   )
 }
 
@@ -325,27 +357,30 @@ function App() {
     live: LIVE_PREVIEW.OFF
   };
   const [state, setState] = useStore(defaultState);
-  const { language, live } = state;
-  const setLive = (live) => setState({ ...state, live });
-  const setCode = (code) => setState({ ...state, code });
-  const setInput = ({language, code}) => setState({ ...state, language, code });
-  const code = state.code;
-  const [debouncedCode] = useDebounce(state.code, 300);
+  const { language, code, live } = state;
+  const [debouncedCode] = useDebounce(code, 300);
 
   const compilation = React.useMemo(() => compile(language, debouncedCode), [debouncedCode]);
 
-  const [workerState, dispatch, busy] = useWorkerizedReducer(
+  const [workerState, dispatch, _busy] = useWorkerizedReducer(
     worker,
     "bundle", // Reducer name
     { logs: [] } // Initial state
   );
 
-  const logs = workerState.logs;
+  const setLive = (live) => setState({ ...state, live });
+  const setCode = (code) => setState({ ...state, code });
+  const setInput = ({language, code}) => setState({ ...state, language, code });
 
   const editorRef = React.useRef(null);
 
   function handleEditorDidMount(editor, _monaco) {
     editorRef.current = editor;
+  }
+
+  function clearLogs () {
+    workerState.logs = [];
+    Console.flush();
   }
 
   const monaco = useMonaco();
@@ -512,10 +547,7 @@ function App() {
                   </VisuallyHidden>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
-                <span>Console</span>
-                <Panel collapsible={true} defaultSize={20}>
-                  <ConsoleLogs logs={logs} />
-                </Panel>
+                <ConsolePanel logs={workerState.logs} clearLogs={clearLogs} />
               </PanelGroup>
             </div>
           </Panel>

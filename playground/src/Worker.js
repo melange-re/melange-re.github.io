@@ -61,15 +61,15 @@ initWorkerizedReducer(
     // care of maintaining referential equality.
     switch (action.type) {
       case "bundle":
-        Console.start();
         const code = action.code;
+        if (!code) {
+          return
+        }
+        Console.start();
 
         /* Reset logs if there's some */
         Console.flush();
 
-        if (!code) {
-          return
-        }
         modules["main.js"] = code;
 
         const bundle = await rollup({
