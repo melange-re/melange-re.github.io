@@ -11,6 +11,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
 
+import * as Console from "./Console";
 import * as Router from './Router';
 import { useLocalStorage } from './LocalStorage';
 import examples from "./examples";
@@ -31,18 +32,6 @@ const LIVE_PREVIEW = {
 const worker = new Worker(new URL("./Worker.js", import.meta.url), {
   type: "module",
 });
-
-let buffer = [];
-const stringify = (value) => JSON.stringify(value) || String(value);
-
-const log = (type, items) => buffer.push({ type, items: items.map(stringify) });
-
-console = {
-  log: (...items) => log("log", items),
-  error: (...items) => log("error", items),
-  warn: (...items) => log("warn", items),
-  debug: (...items) => log("debug", items),
-};
 
 function VisuallyHidden({ when, children }) {
   return (
@@ -185,7 +174,7 @@ function ConsoleLogs ({ logs }) {
   return (
     <div className="Console">
       {logs.map((log, i) => (
-        <div className="Item" key={i}>{log.items.join(" ")}</div>
+        <div className="Item" key={i}>{log}</div>
       ))}
       <div ref={bottomOfTheConsole} />
     </div>
@@ -351,7 +340,7 @@ function App() {
     { logs: [] } // Initial state
   );
 
-  const logs = workerState.logs.concat(buffer);
+  const logs = workerState.logs;
 
   const editorRef = React.useRef(null);
 
@@ -394,6 +383,7 @@ function App() {
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
+      Console.start();
       // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
       const eval2 = eval;
       try {
@@ -401,6 +391,7 @@ function App() {
       } catch (e) {
         console.error(e);
       }
+      Console.stop();
     }
   }, [workerState.bundledCode]);
 

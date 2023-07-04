@@ -1,6 +1,8 @@
 import { initWorkerizedReducer } from "use-workerized-reducer";
 import { rollup } from "@rollup/browser";
 
+import * as Console from "./Console";
+
 const modules = {};
 
 const rawModules = import.meta.glob(
@@ -17,18 +19,6 @@ Object.keys(rawModules).forEach((k) => {
     k.replace("../../_build/default/playground/output/node_modules/", "")
   ] = value;
 });
-
-let buffer = [];
-
-const stringify = (value) => JSON.stringify(value) || String(value);
-
-const log = (type, items) => buffer.push({ type, items: items.map(stringify) });
-
-console = {
-  log: (...items) => log("log", items),
-  error: (...items) => log("error", items),
-  warn: (...items) => log("warn", items),
-};
 
 // https://rollupjs.org/troubleshooting/#avoiding-eval
 const eval2 = eval;
@@ -66,13 +56,17 @@ async function fetch_if_uncached(url) {
 initWorkerizedReducer(
   "bundle", // Name of the reducer
   async (state, action) => {
-    buffer = [];
     // Reducers can be async.
     // Manipulate `state` directly. ImmerJS will take
     // care of maintaining referential equality.
     switch (action.type) {
       case "bundle":
-      const code = action.code
+        Console.start();
+        const code = action.code;
+
+        /* Reset logs if there's some */
+        Console.flush();
+
         if (!code) {
           return
         }
@@ -138,7 +132,8 @@ initWorkerizedReducer(
           console.log(e);
         }
         // We always set logs, if `code` is undefined we will erase them
-        state.logs = buffer;
+        state.logs = Console.printCaptures(Console.getCaptures());
+        Console.stop();
         break;
       default:
         throw new Error();
