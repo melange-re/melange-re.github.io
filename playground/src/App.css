@@ -132,6 +132,7 @@
 .ConsoleHeader .Left {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 8px;
 }
 .Console {
@@ -153,4 +154,46 @@
   height: 100%;
   overflow: auto;
   background-color: #1e1e1e;
+  padding: 12px;
+}
+.ProblemsHeader .Left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.Scrollbar:not(:hover)::-webkit-scrollbar {
+  visibility: hidden;
+  width: 8px;
+}
+.Scrollbar:not(:hover)::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+.Scrollbar::-webkit-scrollbar {
+  width: 8px;
+  transition: all 0.2s ease-in-out;
+}
+.Scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  transition: all 0.2s ease-in-out;
+}
+.Scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+.Scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.Counter {
+  font-size: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
 }

@@ -169,7 +169,7 @@ function Live() {
   );
 }
 
-function ConsoleLogs ({ logs }) {
+function ConsolePanel ({ logs, clearLogs }) {
   const [automaticScroll, setAutomaticScroll] = React.useState(true);
   const bottomOfTheConsole = React.useRef(null);
   const rootElement = React.useRef(null);
@@ -181,18 +181,8 @@ function ConsoleLogs ({ logs }) {
     }
   }, [logs, automaticScroll]);
 
-  return (
-    <div ref={rootElement} className="Console">
-      {logs.map((log, i) => (
-        <div className="Item" key={i}>{log}</div>
-      ))}
-      <div ref={bottomOfTheConsole} />
-    </div>
-  )
-}
-
-function ConsolePanel ({ logs, clearLogs }) {
   const onClick = (_) => clearLogs();
+
   return (
     <>
       <div className="ConsoleHeader">
@@ -203,7 +193,12 @@ function ConsolePanel ({ logs, clearLogs }) {
         <button className="Clear" onClick={onClick}>{"clear"}</button>
       </div>
       <Panel collapsible={true} defaultSize={20}>
-        <ConsoleLogs logs={logs} />
+        <div ref={rootElement} className="Console Scrollbar">
+          {logs.map((log, i) => (
+            <div className="Item" key={i}>{log}</div>
+          ))}
+          <div ref={bottomOfTheConsole} />
+        </div>
       </Panel>
     </>
   )
@@ -511,9 +506,13 @@ function App() {
                   </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
-                <span>Problems</span>
+                <div className="ProblemsHeader">
+                  <div className="Left">
+                    <span>Problems</span>
+                  </div>
+                </div>
                 <Panel collapsible={true} defaultSize={20}>
-                  <div className="Problems">{compilation?.problems}</div>
+                  {compilation?.problems && compilation?.problems.length > 0 ? (<div className="Problems Scrollbar">{compilation?.problems}</div>) : <div className="Problems Empty">No problems!</div>}
                 </Panel>
               </PanelGroup>
             </div>
