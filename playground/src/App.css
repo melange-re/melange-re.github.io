@@ -16,15 +16,19 @@
   --colors-red9: hsl(10 78.0% 54.0%);
   --colors-orange7: hsl(24 92.4% 24.0%);
   --colors-orange9: hsl(24 94.0% 50.0%);
+
+  --colors-indigo9: hsl(226 70.0% 55.5%);
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
+  color: var(--colors-gray11);
+}
+a:visited {
+  color: var(--colors-gray11);
 }
 a:hover {
-  color: #535bf2;
+  color: var(--colors-indigo9);
 }
 
 h1 {
@@ -40,20 +44,23 @@ button {
   color: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: var(--colors-gray11);
 }
 button:hover {
-  border-color: #646cff;
+  color: var(--colors-gray12);
 }
+/*
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 .IconButton {
   display: inline-flex;
   gap: 6px;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
 }
 .IconButton svg {
   width: 14px;
@@ -68,15 +75,11 @@ button:focus-visible {
 }
 
 .Sidebar {
-  width: 100px;
   height: 100%;
   background-color: var(--colors-gray1);
   display: flex;
   flex-direction: column;
-  gap: 32px;
-}
-.Sidebar.colapsed {
-  width: 30px;
+  padding: 16px 0px;
 }
 
 .Logo {
@@ -110,6 +113,9 @@ button:focus-visible {
   flex-direction: column;
   gap: 8px;
 }
+.ActionItem {
+  padding: 0px 16px;
+}
 .Separator {
   width: 100%;
   height: 1px;
@@ -126,7 +132,14 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 0px 10px;
+}
+.Version {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+.Version .Number {
+  font-weight: 600;
 }
 
 .ResizeHandle {
@@ -135,7 +148,7 @@ button:focus-visible {
   z-index: 20;
   outline: none;
   --background-color: transparent;
-  background-color: var(--colors-gray3);
+  background-color: var(--colors-gray6);
 }
 .ResizeHandle:hover {
   background-color: var(--colors-gray9);
@@ -180,21 +193,22 @@ button:focus-visible {
 .Tabs button {
   background-color: transparent;
   padding-bottom: 1rem;
-  color: hsl(240 5% 60%);
   outline: none;
+  border-bottom: 1px solid transparent;
+  color: var(--colors-gray11);
 }
 .Tabs button:hover {
   border-color: transparent;
-  color: hsl(240 5% 80%);
+  color: var(--colors-gray12);
 }
 .Tabs button:focus,
 .Tabs button:focus-visible {
-  color: white;
+  color: var(--colors-gray10);
   outline: none;
 }
 .Tabs button.active {
-  color: hsl(240 5% 85%);
-  border-bottom: 1px solid white;
+  color: var(--colors-gray12);
+  border-bottom: 1px solid var(--colors-gray12);
   background-color: transparent;
 }
 .Tabs.ToEnd {
@@ -205,10 +219,10 @@ button:focus-visible {
   background: var(--colors-gray4);
   border-radius: 4px;
   padding: 4px;
-  height: calc(100% - 4px); /* 100% - (margin) */
-  margin-left: 4px;
-  margin-right: 4px;
-  margin-bottom: 4px;
+  height: calc(100% - 8px); /* 100% - (margin) */
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 .Live .EmptyPreview {
   overflow-wrap: anywhere;
@@ -224,13 +238,19 @@ button:focus-visible {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0px 8px;
+  padding: 8px;
   background-color: var(--colors-gray3);
 }
 .ConsoleHeader .Clear {
   font-size: 12px;
 }
-.ConsoleHeader .Left {
+.ConsoleHeader .Title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.ConsoleHeader .Actions {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -241,13 +261,16 @@ button:focus-visible {
   height: 100%;
   overflow: auto;
   background-color: var(--colors-gray3);
+  border-top: 1px solid var(--colors-gray6);
 }
 .Console .Item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 1px;
-  margin-top: 1px;
-  padding-bottom: 1px;
-  padding-top: 1px;
+  border-bottom: 1px solid var(--colors-gray6);
+  padding-bottom: 2px;
+  padding-top: 2px;
+  padding-left: 4px;
+}
+.Console .EmptyItem {
+  height: 22px;
 }
 
 .Problems {
@@ -264,7 +287,7 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 0px 8px;
+  padding: 8px;
   background-color: var(--colors-gray3);
 }
 
@@ -295,13 +318,14 @@ button:focus-visible {
 .Counter {
   font-size: 10px;
   font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--colors-gray5);
+  color: var(--colors-gray11);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  padding: 3px 6px;
+  margin: -3px 0px;
 }
 
 .Text-xs {
