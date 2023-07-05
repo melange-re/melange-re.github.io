@@ -1,38 +1,80 @@
-.debug * {
-  position: relative;
-  outline: 1px solid rgba(255, 255, 0, 0.2);
-  background-color: rgba(255, 255, 0, 0.1);
+:root {
+  --colors-gray1: hsl(0 0% 8.5%);
+  --colors-gray2: hsl(0 0% 11.0%);
+  --colors-gray3: hsl(0 0% 13.6%);
+  --colors-gray4: hsl(0 0% 15.8%);
+  --colors-gray5: hsl(0 0% 17.9%);
+  --colors-gray6: hsl(0 0% 20.5%);
+  --colors-gray7: hsl(0 0% 24.3%);
+  --colors-gray8: hsl(0 0% 31.2%);
+  --colors-gray9: hsl(0 0% 43.9%);
+  --colors-gray10: hsl(0 0% 49.4%);
+  --colors-gray11: hsl(0 0% 62.8%);
+  --colors-gray12: hsl(0 0% 93.0%);
+
+  --colors-red7: hsl(8 71.2% 29.1%);
+  --colors-red9: hsl(10 78.0% 54.0%);
+  --colors-orange7: hsl(24 92.4% 24.0%);
+  --colors-orange9: hsl(24 94.0% 50.0%);
 }
 
-.debug *::after {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  content: attr("class");
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
 }
 
-#root {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 0px;
+  border: none;
+  font-family: inherit;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.IconButton {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+.IconButton svg {
+  width: 14px;
+  height: 14px;
 }
 
 .App {
   width: 100vw;
   height: 100vh;
   display: flex;
+  background-color: var(--colors-gray1);
 }
 
 .Sidebar {
   width: 100px;
   height: 100%;
-  background-color: #1a1a1a;
+  background-color: var(--colors-gray1);
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
-
 .Sidebar.colapsed {
   width: 30px;
 }
@@ -47,6 +89,7 @@
   display: flex;
   flex: 1;
   height: 100%;
+  width: 100%;
 }
 
 .Editor {
@@ -67,37 +110,42 @@
   flex-direction: column;
   gap: 8px;
 }
-
-.ActionMenu .Separator {
+.Separator {
   width: 100%;
+  height: 1px;
   border: none;
+  background: var(--colors-gray3);
+  margin: 5px 0;
 }
 
 .Info {
   display: flex;
   flex-direction: column;
 }
-
 .Info .Versions {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 12px;
+  padding: 0px 10px;
 }
 
 .ResizeHandle {
-  flex: 0 0 0.5em;
+  flex: 0 0 1px;
   position: relative;
+  z-index: 20;
   outline: none;
-  background-color: var(--background-color);
-
-  --background-color: rgba(255, 255, 255, 0.6);
+  --background-color: transparent;
+  background-color: var(--colors-gray3);
 }
 .ResizeHandle:hover {
-  --background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--colors-gray9);
+  outline: 1px solid var(--colors-gray9);
+  outline-offset: 0px;
 }
 .ResizeHandle[data-resize-handle-active] {
-  --background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--colors-gray7);
+  outline: 1px solid var(--colors-gray7);
+  outline-offset: 0px;
 }
 
 .Left,
@@ -107,20 +155,77 @@
   height: 100%;
 }
 
-.Toggle {
-  width: 100%;
+.Right .Expand {
   display: flex;
-  justify-content: flex-end;
-  font-size: 12px;
+  flex-direction: column;
+  height: 100%;
 }
-.Toggle button.active {
-  outline: 4px auto purple;
+
+.Toolbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0px 8px;
+}
+
+.Tabs {
+  display: flex;
+  font-size: 12px;
+  padding-top: 1rem;
+  padding-right: 0.8rem;
+  padding-left: 0.8rem;
+  gap: 16px;
+  transition: color 0.25s;
+}
+.Tabs button {
+  background-color: transparent;
+  padding-bottom: 1rem;
+  color: hsl(240 5% 60%);
+  outline: none;
+}
+.Tabs button:hover {
+  border-color: transparent;
+  color: hsl(240 5% 80%);
+}
+.Tabs button:focus,
+.Tabs button:focus-visible {
+  color: white;
+  outline: none;
+}
+.Tabs button.active {
+  color: hsl(240 5% 85%);
+  border-bottom: 1px solid white;
+  background-color: transparent;
+}
+.Tabs.ToEnd {
+  justify-content: flex-end;
+}
+
+.Live {
+  background: var(--colors-gray4);
+  border-radius: 4px;
+  padding: 4px;
+  height: calc(100% - 4px); /* 100% - (margin) */
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.Live .EmptyPreview {
+  overflow-wrap: anywhere;
+  padding: 6px 12px;
+}
+.Live code {
+  background-color: var(--colors-gray5);
+  padding: 1px 5px;
+  border-radius: 4px;
 }
 
 .ConsoleHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 0px 8px;
+  background-color: var(--colors-gray3);
 }
 .ConsoleHeader .Clear {
   font-size: 12px;
@@ -135,7 +240,7 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: #1e1e1e;
+  background-color: var(--colors-gray3);
 }
 .Console .Item {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -150,15 +255,17 @@
   white-space: pre-line;
   height: 100%;
   overflow: auto;
-  background-color: #1e1e1e;
+  background-color: var(--colors-gray3);
   padding: 12px;
 }
-.ProblemsHeader .Left {
+.ProblemsHeader {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  padding: 0px 8px;
+  background-color: var(--colors-gray3);
 }
 
 .Scrollbar:not(:hover)::-webkit-scrollbar {
@@ -195,4 +302,40 @@
   justify-content: center;
   width: 16px;
   height: 16px;
+}
+
+.Text-xs {
+  font-size: 10px;
+  line-height: 14px;
+}
+.Text-m {
+  font-size: 12px;
+  line-height: 18px;
+}
+.Text-l {
+  font-size: 14px;
+  line-height: 22px;
+}
+.Text-xl {
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.SquareLogo {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 2px;
+}
+.active .SquareLogo.OCaml {
+  background-color: var(--colors-orange9);
+}
+.SquareLogo.OCaml {
+  background-color: var(--colors-orange7);
+}
+.active .SquareLogo.Reason {
+  background-color: var(--colors-red9);
+}
+.SquareLogo.Reason {
+  background-color: var(--colors-red7);
 }

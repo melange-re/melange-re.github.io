@@ -1,15 +1,17 @@
+import "./App.css";
 import "../../_build/default/playground/reason-react-cmijs";
 import "../../_opam/bin/jsoo_main.bc";
 import "../../_opam/bin/belt-cmijs";
 import "../../_opam/bin/runtime-cmijs";
 import "../../_opam/bin/stdlib-cmijs";
 import "../../_opam/bin/format.bc.js";
-import "./App.css";
 import * as React from "react";
+
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
+import { AlignLeft, Share, MenuSquare, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, GithubIcon, Github } from 'lucide-react';
 
 import * as Console from "./Console";
 import * as Router from './Router';
@@ -34,6 +36,25 @@ const worker = new Worker(new URL("./Worker.js", import.meta.url), {
   type: "module",
 });
 
+function OCamlLogo () {
+  return <span className="SquareLogo OCaml"></span>
+}
+function ReasonLogo () {
+  return <span className="SquareLogo Reason"></span>
+}
+
+const classNames = (...classes) =>
+  classes.reduce((className, current) =>
+    className.concat(
+      typeof current == 'string'
+        ? current
+        : Array.isArray(current)
+          ? classNames(...current)
+          : typeof current == 'object' && current
+            ? Object.keys(current).map(key => current[key] ? key : '')
+            : ''
+    ), []).join(' ');
+
 function VisuallyHidden({ when, children }) {
   return (
     <div
@@ -44,7 +65,7 @@ function VisuallyHidden({ when, children }) {
         visibility: "hidden",
       } : {
         visibility: "visible",
-        height: "100%"
+        flex: "1"
       }}
     >
       {children}
@@ -58,17 +79,24 @@ function Counter ({ count }) {
 
 function LanguageToggle({ language, onChange }) {
   return (
-    <div className="Toggle">
+    <div className="Tabs">
       <button
-        className={language === languageMap.OCaml ? "active" : ""}
+        className={
+            classNames(["IconButton",
+          language === languageMap.OCaml ? "active" : ""])}
         onClick={() => onChange(languageMap.OCaml)}
       >
+        <OCamlLogo />
         OCaml
       </button>
       <button
-        className={language === languageMap.Reason ? "active" : ""}
+        className={
+          classNames(["IconButton",
+            language === languageMap.Reason ? "active" : ""
+        ])}
         onClick={() => onChange(languageMap.Reason)}
       >
+        <ReasonLogo />
         Reason
       </button>
     </div>
@@ -82,7 +110,6 @@ function MiniSidebarMenu() {
         <p>{"M"}</p>
       </div>
       <div className="ActionMenu">
-        <button>{"F"}</button>
         <button>{"S"}</button>
         <hr className="Separator" />
         <button>{"E"}</button>
@@ -95,61 +122,55 @@ function MiniSidebarMenu() {
   );
 }
 
-function MaxiSidebarMenu({ onFormat, onShare, onExampleClick }) {
-  const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
-  return (
-    <div className="Menu">
-      <div className="Logo">
-        <p>{"Melange"}</p>
-      </div>
-      <div className="ActionMenu">
-        <button onClick={onFormat}>{"Format"}</button>
-        <button onClick={(_) => onShare()}>{"Share"}</button>
-        <hr className="Separator" />
-        <button onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
-          {"Examples"}
-        </button>
-        {isExamplesOpen
-          ? examples.map((example) => (
-              <button
-                key={example.name}
-                onClick={(_) => onExampleClick(example)}
-              >
-                {example.name}
-              </button>
-            ))
-          : null}
-        <button>{"Settings"}</button>
-        <hr className="Separator" />
-        <button>{"GitHub"}</button>
-        <button>{"OPAM"}</button>
-      </div>
-      <div className="Info">
-        <span>{"Info:"}</span>
-        <div className="Versions">
-          <span>{"Melange: v1.0"}</span>
-          <span>{"OCaml: v4.14.1"}</span>
-          <span>{"Reason: v3.9.0"}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Sidebar({ onFormat, onShare, onExampleClick }) {
+function Sidebar({ onShare, onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
+  const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const root = "Sidebar " + (sidebarColapsed ? "colapsed" : "");
+  const isExpanded = !sidebarColapsed;
 
   return (
     <div className={root}>
-      {sidebarColapsed ? (
-        <MiniSidebarMenu />
-      ) : (
-        <MaxiSidebarMenu onFormat={onFormat} onExampleClick={onExampleClick} onShare={onShare} />
-      )}
-      <button onClick={(_) => toggleSidebar()}>
-        {sidebarColapsed ? ">>>" : "<<<"}
+      <div className="Menu">
+        <div className="Logo">
+          <p>{"Melange"}</p>
+        </div>
+        <div className="ActionMenu">
+          <button className="IconButton" onClick={(_) => onShare()}>
+            <Share />
+            {isExpanded ? "Share" : null}
+          </button>
+          <hr className="Separator" />
+          <button className="IconButton" onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
+          <MenuSquare />
+            {isExpanded ? "Examples" : null}
+          </button>
+          {isExamplesOpen
+            ? examples.map((example) => (
+                <button
+                  key={example.name}
+                  onClick={(_) => onExampleClick(example)}
+                >
+                  {example.name}
+                </button>
+              ))
+            : null}
+          <button className="IconButton"><Settings />{isExpanded ? "Settings": null}</button>
+          <hr className="Separator" />
+          <button className="IconButton"><Github />{isExpanded ? "GitHub": null}</button>
+          <button className="IconButton"><Package />{isExpanded ? "OPAM": null}</button>
+        </div>
+        {isExpanded ? (<div className="Info">
+          <div className="Versions">
+            <span className="Text-xs">{"Melange: v1.0"}</span>
+            <span className="Text-xs">{"OCaml: v4.14.1"}</span>
+            <span className="Text-xs">{"Reason: v3.9.0"}</span>
+          </div>
+        </div>) : null}
+      </div>
+      <button className="IconButton" onClick={(_) => toggleSidebar()}>
+        {sidebarColapsed ?
+           <ArrowRightToLine /> : <ArrowLeftToLine />}
       </button>
     </div>
   );
@@ -157,14 +178,19 @@ function Sidebar({ onFormat, onShare, onExampleClick }) {
 
 function Live() {
   return (
-    <div id="preview" className="cleanslate">
-      <p>
-        This div has the ID <code>preview</code>.
-      </p>
-      <p>
-        Feel free to override its content, or choose "React Greetings" in the
-        Examples menu!
-      </p>
+    <div className="Live">
+      <div id="preview">
+        <div className="EmptyPreview">
+          <p className="Text-m">
+            This div has the ID selector <code>preview</code>.
+          </p>
+          <br />
+          <p className="Text-m">
+            Choose "React Greetings" in the Examples menu to see it in action, or
+            override by rendering into the element with <code>ReactDOM.querySelector("#preview")</code>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -187,10 +213,10 @@ function ConsolePanel ({ logs, clearLogs }) {
     <>
       <div className="ConsoleHeader">
         <div className="Left">
-          <span>Console</span>
+          <span className="Text-xs">Console</span>
           <Counter count={logs.length}/>
         </div>
-        <button className="Clear" onClick={onClick}>{"clear"}</button>
+        <button className="IconButton Clear" onClick={onClick}><Eraser /></button>
       </div>
       <Panel collapsible={true} defaultSize={20}>
         <div ref={rootElement} className="Console Scrollbar">
@@ -224,10 +250,8 @@ function ProblemsPanel ({ problems }) {
   return (
     <>
       <div className="ProblemsHeader">
-        <div className="Left">
-          <span>Problems</span>
-          <button onClick={toggle}>{isCollapsed ? "^" : "v"}</button>
-        </div>
+        <span className="Text-xs">Problems</span>
+        <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
         {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problems}</div>) : <div className="Problems Empty">No problems!</div>}
@@ -507,19 +531,21 @@ function App() {
         <PanelGroup direction="horizontal">
         <Sidebar
           onShare={copyToClipboard}
-          onFormat={formatCode}
           onExampleClick={(example) => {
             let code = language == languageMap.Reason ? example.re : example.ml;
             setInput({ language, code });
           }}
         />
-          <Panel collapsible={false} defaultSize={45}>
+          <Panel collapsible={false} defaultSize={45} minSize={15}>
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  <LanguageToggle
-                    language={language}
-                    onChange={onLanguageToggle}
-                  />
+                  <div className="Toolbar">
+                    <LanguageToggle
+                      language={language}
+                      onChange={onLanguageToggle}
+                    />
+                    <button className="IconButton" onClick={formatCode}><AlignLeft />{"Format"}</button>
+                  </div>
                   <div className="Left">
                     <div className="Editor">
                       <Editor
@@ -543,28 +569,34 @@ function App() {
               </PanelGroup>
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />
-          <Panel collapsible={false} defaultSize={45}>
+          <Panel collapsible={false} defaultSize={45} minSize={15}>
             <div className="Right">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                <div className="Toggle">
-                  <button
-                    className={live === LIVE_PREVIEW.ON ? "active" : ""}
-                    onClick={() => setLive(LIVE_PREVIEW.ON)}>Live</button>
-                  <button
-                    className={live === LIVE_PREVIEW.OFF ? "active" : ""}
-                    onClick={() => setLive(LIVE_PREVIEW.OFF)}>JavaScript output</button>
-                </div>
-                  <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
-                    <Live />
-                  </VisuallyHidden>
-                  <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
-                    <OutputEditor
-                      language={compilation?.problems ? "text" : "javascript"}
-                      value={compilation?.javascriptCode}
-                      onMount={handleEditorDidMount}
-                    />
-                  </VisuallyHidden>
+                  <div className="Expand">
+                    <div className="Tabs ToEnd">
+                      <button
+                      className={classNames(["IconButton", live === LIVE_PREVIEW.ON ? "active" : ""])}
+                        onClick={() => setLive(LIVE_PREVIEW.ON)}>
+                        <Zap />
+                        Live</button>
+                      <button
+                        className={classNames(["IconButton", live === LIVE_PREVIEW.OFF ? "active" : ""])}
+                        onClick={() => setLive(LIVE_PREVIEW.OFF)}>
+                        <Code2 />
+                        JavaScript output</button>
+                    </div>
+                    <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
+                      <Live />
+                    </VisuallyHidden>
+                    <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
+                      <OutputEditor
+                        language={compilation?.problems ? "text" : "javascript"}
+                        value={compilation?.javascriptCode}
+                        onMount={handleEditorDidMount}
+                      />
+                    </VisuallyHidden>
+                  </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
                 <ConsolePanel logs={workerState.logs} clearLogs={clearLogs} />
