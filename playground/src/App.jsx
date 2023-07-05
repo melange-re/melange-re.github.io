@@ -266,6 +266,8 @@ function ProblemsPanel({ problems }) {
     }
   };
 
+  const problemsWithoutFile = problems.replace(`File "_none_", l`, "L");
+
   return (
     <>
       <div className="ProblemsHeader">
@@ -273,7 +275,7 @@ function ProblemsPanel({ problems }) {
         <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
-        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problems}</div>) : <div className="Problems Empty">No problems!</div>}
+        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problemsWithoutFile}</div>) : <div className="Problems Empty">No problems!</div>}
       </Panel>
     </>
   )
