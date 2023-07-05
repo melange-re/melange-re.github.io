@@ -204,6 +204,38 @@ function ConsolePanel ({ logs, clearLogs }) {
   )
 }
 
+function ProblemsPanel ({ problems }) {
+  const defaultState = false;
+  const [isCollapsed, setIsCollapsed] = React.useState(defaultState);
+  const ref = React.useRef(null);
+
+  const toggle = (_) => {
+    const panel = ref.current;
+    const isCollapsed = panel?.getCollapsed();
+    if (panel && isCollapsed) {
+      panel.expand();
+      setIsCollapsed(false);
+    } else if (panel && !isCollapsed) {
+      panel.collapse();
+      setIsCollapsed(true);
+    }
+  };
+
+  return (
+    <>
+      <div className="ProblemsHeader">
+        <div className="Left">
+          <span>Problems</span>
+          <button onClick={toggle}>{isCollapsed ? "^" : "v"}</button>
+        </div>
+      </div>
+      <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
+        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problems}</div>) : <div className="Problems Empty">No problems!</div>}
+      </Panel>
+    </>
+  )
+}
+
 const encodeCode = (store) => {
   try {
     let encoded = btoa(store?.code || "");
@@ -482,40 +514,33 @@ function App() {
           }}
         />
           <Panel collapsible={false} defaultSize={45}>
-            <LanguageToggle
-              language={language}
-              onChange={onLanguageToggle}
-            />
-            <div className="Left">
               <PanelGroup direction="vertical">
                 <Panel collapsible={false} defaultSize={80}>
-                  <div className="Editor">
-                    <Editor
-                      options={{
-                        minimap: {
-                          enabled: false,
-                        },
-                      }}
-                      theme="vs-dark"
-                      height="100%"
-                      language={language}
-                      value={code}
-                      onMount={handleEditorDidMount}
-                      onChange={setCode}
-                    />
+                  <LanguageToggle
+                    language={language}
+                    onChange={onLanguageToggle}
+                  />
+                  <div className="Left">
+                    <div className="Editor">
+                      <Editor
+                        options={{
+                          minimap: {
+                            enabled: false,
+                          },
+                        }}
+                        theme="vs-dark"
+                        height="100%"
+                        language={language}
+                        value={code}
+                        onMount={handleEditorDidMount}
+                        onChange={setCode}
+                      />
+                    </div>
                   </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
-                <div className="ProblemsHeader">
-                  <div className="Left">
-                    <span>Problems</span>
-                  </div>
-                </div>
-                <Panel collapsible={true} defaultSize={20}>
-                  {compilation?.problems && compilation?.problems.length > 0 ? (<div className="Problems Scrollbar">{compilation?.problems}</div>) : <div className="Problems Empty">No problems!</div>}
-                </Panel>
+                <ProblemsPanel problems={compilation?.problems} />
               </PanelGroup>
-            </div>
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />
           <Panel collapsible={false} defaultSize={45}>
