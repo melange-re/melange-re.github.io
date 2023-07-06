@@ -1,9 +1,7 @@
 import "./App.css";
 import "../../_build/default/playground/reason-react-cmijs";
 import "../../_opam/bin/jsoo_main.bc";
-import "../../_opam/bin/belt-cmijs";
-import "../../_opam/bin/runtime-cmijs";
-import "../../_opam/bin/stdlib-cmijs";
+import "../../_opam/bin/melange-cmijs";
 import "../../_opam/bin/format.bc.js";
 import * as React from "react";
 
