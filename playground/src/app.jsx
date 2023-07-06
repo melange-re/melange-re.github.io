@@ -11,16 +11,16 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
-import { AlignLeft, Share, MenuSquare, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
+import { AlignLeft, Share, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
 
-import * as Console from "./_console";
+import * as Console from "./console";
 import * as Router from './router';
 import { useLocalStorage } from './local-storage';
 import { useHover } from './hover';
 import examples from "./examples";
 import { language as OCamlSyntax } from "./syntax/ml";
 import { language as ReasonSyntax } from "./syntax/re";
-/* import * as DropdownMenu from './dropdown.jsx'; */
+import DropdownMenu from './dropdown.jsx';
 
 const languageMap = {
   Reason: "Reason",
@@ -33,7 +33,7 @@ const LIVE_PREVIEW = {
 };
 
 // Spin up the worker running the reducers.
-const worker = new Worker(new URL("./Worker.js", import.meta.url), {
+const worker = new Worker(new URL("./worker.js", import.meta.url), {
   type: "module",
 });
 
@@ -106,7 +106,6 @@ function LanguageToggle({ language, onChange }) {
 
 function Sidebar({ onShare, onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
-  const [isExamplesOpen, setIsExamplesOpen] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const isExpanded = !sidebarColapsed;
 
@@ -123,21 +122,8 @@ function Sidebar({ onShare, onExampleClick }) {
           </div>
           <hr className="Separator" />
           <div className="ActionItem">
-            <button className="IconButton" onClick={() => setIsExamplesOpen(!isExamplesOpen)}>
-              <MenuSquare />
-              {isExpanded ? "Examples" : null}
-            </button>
+            <DropdownMenu isExpanded={isExpanded} onExampleClick={onExampleClick} />
           </div>
-          {isExamplesOpen
-            ? examples.map((example) => (
-              <button
-                key={example.name}
-                onClick={(_) => onExampleClick(example)}
-              >
-                {example.name}
-              </button>
-            ))
-            : null}
           <div className="ActionItem">
             <button className="IconButton" onClick={_ => alert("Nothing yet")}><Settings />{isExpanded ? "Settings" : null}</button>
           </div>

@@ -75,7 +75,7 @@ let random_gaussian = () =>
 Belt.Array.makeBy(42, _ => random_gaussian())->(Belt.Array.forEach(Js.log));`,
   },
   {
-    name: "React",
+    name: "React Greeting",
     ml: `module Greeting = struct
   let make () = (button ~children:[ React.string "Hello!" ] () [@JSX])
     [@@react.component]

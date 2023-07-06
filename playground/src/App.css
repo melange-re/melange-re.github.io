@@ -18,6 +18,8 @@
   --colors-orange9: hsl(24 94.0% 50.0%);
 
   --colors-indigo9: hsl(226 70.0% 55.5%);
+
+  --colors-blue10: hsl(209 100% 60.6%);
 }
 
 a {
@@ -49,11 +51,6 @@ button {
 button:hover {
   color: var(--colors-gray12);
 }
-/*
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
 
 .IconButton {
   display: inline-flex;
@@ -61,6 +58,7 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   font-weight: 500;
+  cursor: pointer;
 }
 .IconButton svg {
   width: 14px;
@@ -362,4 +360,35 @@ button:focus-visible {
 }
 .SquareLogo.Reason {
   background-color: var(--colors-red7);
+}
+
+/* Dropdown */
+
+.DropdownContent {
+  background-color: var(--colors-gray1);
+  border-radius: 4px;
+  border: 1px solid var(--colors-gray5);
+}
+.DropdownLabel {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--colors-gray5);
+}
+.DropdownGroup {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0px;
+}
+.DropdownItem {
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.DropdownItem svg {
+
+}
+.DropdownItem:hover {
+  background-color: var(--colors-gray3);
+  outline: none;
 }

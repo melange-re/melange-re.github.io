@@ -1,7 +1,7 @@
 import { initWorkerizedReducer } from "use-workerized-reducer";
 import { rollup } from "@rollup/browser";
 
-import * as Console from "./_console";
+import * as Console from "./console";
 
 const modules = {};
 
