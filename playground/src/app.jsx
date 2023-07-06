@@ -1,17 +1,15 @@
 import "./App.css";
 import "../../_build/default/playground/reason-react-cmijs";
 import "../../_opam/bin/jsoo_main.bc";
-import "../../_opam/bin/belt-cmijs";
-import "../../_opam/bin/runtime-cmijs";
-import "../../_opam/bin/stdlib-cmijs";
+import "../../_opam/bin/melange-cmijs";
 import "../../_opam/bin/format.bc.js";
-import * as React from "react";
 
+import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
-import { AlignLeft, Share, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
+import { AlignLeft, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
 
 import * as Console from "./console";
 import * as Router from './router';
@@ -20,7 +18,8 @@ import { useHover } from './hover';
 import examples from "./examples";
 import { language as OCamlSyntax } from "./syntax/ml";
 import { language as ReasonSyntax } from "./syntax/re";
-import DropdownMenu from './dropdown.jsx';
+import ExamplesDropdown from './examples-dropdown.jsx';
+import ShareToast from './share-toast';
 
 const languageMap = {
   Reason: "Reason",
@@ -104,7 +103,7 @@ function LanguageToggle({ language, onChange }) {
   );
 }
 
-function Sidebar({ onShare, onExampleClick }) {
+function Sidebar({ openToast, onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const isExpanded = !sidebarColapsed;
@@ -115,18 +114,15 @@ function Sidebar({ onShare, onExampleClick }) {
         <div className="ActionMenu">
           <hr className="Separator" />
           <div className="ActionItem">
-            <button className="IconButton" onClick={(_) => onShare()}>
-              <Share />
-              {isExpanded ? "Share" : null}
-            </button>
+            <ShareToast.Button setOpen={openToast} isExpanded={isExpanded} />
           </div>
           <hr className="Separator" />
           <div className="ActionItem">
-            <DropdownMenu isExpanded={isExpanded} onExampleClick={onExampleClick} />
+            <ExamplesDropdown isExpanded={isExpanded} onExampleClick={onExampleClick} />
           </div>
-          <div className="ActionItem">
+          {/* <div className="ActionItem">
             <button className="IconButton" onClick={_ => alert("Nothing yet")}><Settings />{isExpanded ? "Settings" : null}</button>
-          </div>
+          </div> */}
           <hr className="Separator" />
           <div className="ActionItem">
             <a className="IconButton" href="https://github.com/melange-re/melange" target="_blank"><Github />{isExpanded ? "GitHub" : null}</a>
@@ -220,8 +216,8 @@ function ConsolePanel({ logs, clearLogs }) {
           <Counter count={logs.length} />
         </div>
         <div className="Actions">
-          <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
           <button className="IconButton Clear" onClick={onClick}><Eraser /></button>
+          <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
         </div>
       </div>
       <Panel ref={panelRef} collapsible={true} defaultSize={20}>
@@ -423,6 +419,8 @@ function App() {
     { logs: [] } // Initial state
   );
 
+  const [isToastOpen, setToastOpen] = React.useState(true);
+
   const setLive = (live) => setState({ ...state, live });
   const setCode = (code) => setState({ ...state, code });
   const setInput = ({ language, code }) => setState({ ...state, language, code });
@@ -518,11 +516,6 @@ function App() {
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert("copied to clipboard!:\n\n" + window.location.href)
-  };
-
   const formatCode = React.useCallback(() => {
     if (language == languageMap.Reason) {
       let newReasonCode = formatReason(code);
@@ -536,9 +529,10 @@ function App() {
   return (
     <div className="App">
       <div className="Layout">
+        <ShareToast.Portal isOpen={isToastOpen} setOpen={setToastOpen} />
         <PanelGroup direction="horizontal">
           <Sidebar
-            onShare={copyToClipboard}
+            openToast={setToastOpen}
             onExampleClick={(example) => {
               let code = language == languageMap.Reason ? example.re : example.ml;
               setInput({ language, code });
