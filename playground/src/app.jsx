@@ -9,10 +9,11 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
-import { AlignLeft, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
+import { AlignLeft, Code2, Zap, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
 
 import * as Console from "./console";
 import * as Router from './router';
+import { Toaster } from './toaster';
 import { useLocalStorage } from './local-storage';
 import { useHover } from './hover';
 import examples from "./examples";
@@ -103,7 +104,7 @@ function LanguageToggle({ language, onChange }) {
   );
 }
 
-function Sidebar({ openToast, onExampleClick }) {
+function Sidebar({ onExampleClick }) {
   const [sidebarColapsed, setSidebarColapsed] = React.useState(false);
   const toggleSidebar = () => setSidebarColapsed(!sidebarColapsed);
   const isExpanded = !sidebarColapsed;
@@ -114,7 +115,7 @@ function Sidebar({ openToast, onExampleClick }) {
         <div className="ActionMenu">
           <hr className="Separator" />
           <div className="ActionItem">
-            <ShareToast.Button setOpen={openToast} isExpanded={isExpanded} />
+            <ShareToast isExpanded={isExpanded} />
           </div>
           <hr className="Separator" />
           <div className="ActionItem">
@@ -419,8 +420,6 @@ function App() {
     { logs: [] } // Initial state
   );
 
-  const [isToastOpen, setToastOpen] = React.useState(true);
-
   const setLive = (live) => setState({ ...state, live });
   const setCode = (code) => setState({ ...state, code });
   const setInput = ({ language, code }) => setState({ ...state, language, code });
@@ -485,6 +484,7 @@ function App() {
 
   React.useEffect(() => {
     if (compilation?.javascriptCode) {
+      console.log(compilation?.javascriptCode);
       dispatch({ type: "bundle", code: compilation?.javascriptCode });
     }
   }, [compilation?.javascriptCode]);
@@ -529,10 +529,9 @@ function App() {
   return (
     <div className="App">
       <div className="Layout">
-        <ShareToast.Portal isOpen={isToastOpen} setOpen={setToastOpen} />
+        <Toaster />
         <PanelGroup direction="horizontal">
           <Sidebar
-            openToast={setToastOpen}
             onExampleClick={(example) => {
               let code = language == languageMap.Reason ? example.re : example.ml;
               setInput({ language, code });
