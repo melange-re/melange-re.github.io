@@ -11,15 +11,16 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
-import { AlignLeft, Share, MenuSquare, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, GithubIcon, Github } from 'lucide-react';
+import { AlignLeft, Share, MenuSquare, Code2, Zap, Settings, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
 
-import * as Console from "./Console";
-import * as Router from './Router';
-import { useLocalStorage } from './LocalStorage';
-import { useHover } from './Hover';
+import * as Console from "./_console";
+import * as Router from './router';
+import { useLocalStorage } from './local-storage';
+import { useHover } from './hover';
 import examples from "./examples";
 import { language as OCamlSyntax } from "./syntax/ml";
 import { language as ReasonSyntax } from "./syntax/re";
+/* import * as DropdownMenu from './dropdown.jsx'; */
 
 const languageMap = {
   Reason: "Reason",
