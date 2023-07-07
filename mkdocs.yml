@@ -30,7 +30,7 @@ nav:
   - Reference:
     - API: api.md
   - Try:
-    - Playground: try.md
+    - Playground: playground
   - About:
     - Community: community.md
     - Roadmap: roadmap.md
