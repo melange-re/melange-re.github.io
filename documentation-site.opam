@@ -27,10 +27,10 @@ depends: [
 ]
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [
-  [ "melange.dev" "git+https://github.com/melange-re/melange.git#5d2731d90dd8baf0500bb1bfc69ea86dccc140c1" ]
+  [ "melange.dev" "git+https://github.com/melange-re/melange.git#6267c3ea5111ea6c3d6ae241f2dab34066738b28" ]
   [ "reason-react.dev" "git+https://github.com/reasonml/reason-react.git#9e70d7548918816f1c0d8be8bdc66b6deabd339a" ]
   [ "reason-react-ppx.dev" "git+https://github.com/reasonml/reason-react.git#9e70d7548918816f1c0d8be8bdc66b6deabd339a" ]
-  [ "melange-playground.dev" "git+https://github.com/melange-re/melange.git#5d2731d90dd8baf0500bb1bfc69ea86dccc140c1" ]
+  [ "melange-playground.dev" "git+https://github.com/melange-re/melange.git#6267c3ea5111ea6c3d6ae241f2dab34066738b28" ]
   [ "cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91" ]
   [ "reason.dev" "git+https://github.com/reasonml/reason.git#95485d5c4527641903d9bec81e80aa3c5dfb3d30"]
 ]
