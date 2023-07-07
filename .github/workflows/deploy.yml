@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - playground/deploy
     tags-ignore:
       - 'v*'
 
@@ -16,6 +17,11 @@ jobs:
         with:
           python-version: 3.x
       - run: python3 -m pip install -r ./pip-requirements.txt
+      - uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 4.14.x
+      - name: Build playground
+        run: make build-playground
       - name: Configure Git user
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
