@@ -7,5 +7,5 @@ export default defineConfig({
   build: {
     outDir: "../docs/playground",
   },
-  base: "/playground",
+  base: "./",
 });
