@@ -420,14 +420,27 @@ const compile = (language, code) => {
     } else if (compilation.warning_errors) {
       problems = compilation.warning_errors.map(problemFromCompile);
     }
-    return {
-      javascriptCode: compilation.js_code,
-      problems: problems,
-    };
+    if (problems) {
+      return {
+        problems: problems,
+      }
+    } else {
+      return {
+        javascriptCode: compilation.js_code,
+      }
+    }
   } else {
     return {
-      javascriptCode: "",
-      problems: "",
+      problems: [
+        {
+          js_error_msg: "No result was returned from compilation",
+          row,
+          column,
+          endRow,
+          endColumn,
+          text: "No result was returned from compilation",
+        },
+      ],
     }
   }
 };
@@ -617,7 +630,7 @@ function App() {
                     <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                       <OutputEditor
                         language={compilation?.problems ? "text" : "javascript"}
-                        value={compilation?.javascriptCode}
+                        value={compilation?.javascriptCode || "Check the 'Problems' panel."}
                         onMount={handleEditorDidMount}
                       />
                     </VisuallyHidden>
