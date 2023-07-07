@@ -254,7 +254,10 @@ function ProblemsPanel({ problems }) {
     }
   };
 
-  const problemsWithoutFile = problems.replace(`File "_none_", l`, "L");
+  const problemsString =
+  problems && problems.length > 0
+    ? problems.map((v) => v.msg).join("\n")
+    : "";
 
   return (
     <>
@@ -263,7 +266,7 @@ function ProblemsPanel({ problems }) {
         <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
-        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problemsWithoutFile}</div>) : <div className="Problems Empty">No problems!</div>}
+        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problemsString}</div>) : <div className="Problems Empty">No problems!</div>}
       </Panel>
     </>
   )
@@ -373,6 +376,33 @@ function OutputEditor({ language, value }) {
   )
 }
 
+const problemFromCompile = ({
+  js_error_msg,
+  row,
+  column,
+  endRow,
+  endColumn,
+  text,
+}) => ({
+  msg: js_error_msg,
+  loc: {
+    row: row + 1,
+    column: column + 1,
+    endRow: endRow + 1,
+    endColumn: endColumn + 1,
+    text: text,
+  },
+});
+
+const toMonaco = (problem) => ({
+  startLineNumber: problem.loc.row,
+  startColumn: problem.loc.column,
+  endLineNumber: problem.loc.endRow,
+  endColumn: problem.loc.endColumn,
+  message: problem.msg,
+  severity: monaco.MarkerSeverity.Error,
+});
+
 const compile = (language, code) => {
   let compilation = undefined
   try {
@@ -384,24 +414,20 @@ const compile = (language, code) => {
   }
 
   if (compilation) {
+    let problems = undefined;
+    if (compilation.js_error_msg) {
+      problems = [problemFromCompile(compilation)];
+    } else if (compilation.warning_errors) {
+      problems = compilation.warning_errors.map(problemFromCompile);
+    }
     return {
-      javascriptCode: compilation.js_code || compilation.js_error_msg || "",
-      problems: compilation.js_error_msg || "",
-      row: compilation.row + 1,
-      column: compilation.column + 1,
-      endRow: compilation.endRow + 1,
-      endColumn: compilation.endColumn + 1,
-      text: compilation.text
+      javascriptCode: compilation.js_code,
+      problems: problems,
     };
   } else {
     return {
       javascriptCode: "",
       problems: "",
-      row: 0,
-      column: 0,
-      endRow: 0,
-      endColumn: 0,
-      text: ""
     }
   }
 };
@@ -456,16 +482,11 @@ function App() {
     if (monaco && editorRef.current) {
       const owner = "playground";
       if (compilation?.problems) {
-        monaco.editor.setModelMarkers(editorRef.current.getModel(), owner, [
-          {
-            startLineNumber: compilation.row,
-            startColumn: compilation.column,
-            endLineNumber: compilation.endRow,
-            endColumn: compilation.endColumn,
-            message: compilation.text,
-            severity: monaco.MarkerSeverity.Error,
-          },
-        ]);
+        monaco.editor.setModelMarkers(
+          editorRef.current.getModel(),
+          owner,
+          compilation.problems.map(toMonaco)
+        );
       } else {
         monaco.editor.removeAllMarkers(owner);
       }
@@ -591,7 +612,7 @@ function App() {
                         JavaScript output</button>
                     </div>
                     <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
-                      <Live codeHasReact={compilation?.javascriptCode.includes(`"react-dom"`)} />
+                      <Live codeHasReact={compilation?.javascriptCode?.includes(`"react-dom"`)} />
                     </VisuallyHidden>
                     <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                       <OutputEditor
