@@ -39,3 +39,8 @@ format: ## Format the codebase with ocamlformat
 .PHONY: format-check
 format-check: ## Checks if format is correct
 	$(DUNE) build @fmt
+
+.PHONY: build-playground
+build-playground: install ## Builds the playground
+	$(DUNE) build @playground-assets
+	cd playground && yarn && yarn build

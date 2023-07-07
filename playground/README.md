@@ -18,9 +18,3 @@ cd playground && yarn dev
 ```
 
 To build, `yarn build`.
-
-## TODO
-
-* Documentation
-* Tests
-* Themeability

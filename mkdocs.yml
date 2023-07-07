@@ -30,8 +30,8 @@ nav:
   - Reference:
     - API: api.md
   - Try:
-    - Playground: try.md
-  - Talk:
+    - Playground: playground
+  - About:
     - Community: community.md
 
 extra_css:
