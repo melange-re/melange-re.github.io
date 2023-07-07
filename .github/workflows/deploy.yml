@@ -20,6 +20,7 @@ jobs:
       - uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: 4.14.x
+          dune-cache: true
       - name: Build playground
         run: make build-playground
       - name: Configure Git user
