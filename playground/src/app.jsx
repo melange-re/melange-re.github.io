@@ -160,21 +160,25 @@ function Sidebar({ onExampleClick }) {
   );
 }
 
-function Live() {
+function Live({ codeHasReact }) {
+  /* codeHasReact is a prop to trigger a re-render of #preview, since when
+  ReactDOM mounts a component under a React tree, you can't use `unmountComponentAtNode`
+  since React considers as part of VDOM. */
   return (
     <div className="Live">
-      <div id="preview">
-        <div className="EmptyPreview">
-          <p className="Text-m">
-            This div has the ID selector <code>preview</code>.
-          </p>
-          <br />
-          <p className="Text-m">
-            Choose "React Greetings" in the Examples menu to see it in action, or
-            override by rendering into the element with <code>ReactDOM.querySelector("#preview")</code>
-          </p>
-        </div>
-      </div>
+      {!codeHasReact ?
+        <div id="preview" key="empty">
+          <div className="EmptyPreview">
+            <p className="Text-m">
+              This div has the ID selector <code>preview</code>.
+            </p>
+            <br />
+            <p className="Text-m">
+              Choose "React Greetings" in the Examples menu to see it in action, or
+              override by rendering into the element with <code>ReactDOM.querySelector("#preview")</code>
+            </p>
+          </div>
+        </div> : <div id="preview" key="react" />}
     </div>
   );
 }
@@ -484,7 +488,6 @@ function App() {
 
   React.useEffect(() => {
     if (compilation?.javascriptCode) {
-      console.log(compilation?.javascriptCode);
       dispatch({ type: "bundle", code: compilation?.javascriptCode });
     }
   }, [compilation?.javascriptCode]);
@@ -588,7 +591,7 @@ function App() {
                         JavaScript output</button>
                     </div>
                     <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
-                      <Live />
+                      <Live codeHasReact={compilation?.javascriptCode.includes(`"react-dom"`)} />
                     </VisuallyHidden>
                     <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                       <OutputEditor
