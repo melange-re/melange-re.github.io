@@ -1,0 +1,37 @@
+(melange.emit
+ (target output)
+ (alias playground-runtime-js)
+ (libraries melange)
+ (modules) ; Empty, we just want to the js artifacts from the libraries
+ (module_systems es6))
+
+(rule
+ (deps
+  %{bin:js_of_ocaml}
+  (:some-cmi %{lib:reason-react:melange/react.cmi}))
+ (target reason-react-cmijs.js)
+ (action
+  (bash
+   "find $(dirname %{some-cmi}) -name \"*.cmi\" -or -name \"*.cmj\" | xargs js_of_ocaml build-fs -o %{target}")))
+
+(executable
+ (name format)
+ (modules format)
+ (modes js)
+ (flags
+  (:standard -open Ocamlformat_stdlib))
+ (libraries js_of_ocaml ocamlformat-lib))
+
+(install
+ (package documentation-site)
+ (section bin)
+ (files format.bc.js))
+
+(rule
+ (alias playground-assets)
+ (deps
+  (alias playground-runtime-js)
+  format.bc.js
+  reason-react-cmijs.js)
+ (action
+  (echo "assets generated")))
