@@ -24,8 +24,8 @@ install: ## Install development dependencies
 	opam install -y . --deps-only
 	opam pin -y add $(project_name).dev .
 
-.PHONY: re
-re: ## Generates and injects `reasonml` snippets after `ocaml` ones
+.PHONY: check-reason
+check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
 .PHONY: clean
