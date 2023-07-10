@@ -41,6 +41,6 @@ format-check: ## Checks if format is correct
 	$(DUNE) build @fmt
 
 .PHONY: build-playground
-build-playground: install ## Builds the playground
+build-playground: ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
