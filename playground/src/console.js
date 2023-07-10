@@ -2,7 +2,7 @@ const overridableFunctionNames = ['log', 'warn', 'info', 'debug', 'error'];
 
 console.original = {}
 
-let captures = [];
+globalThis.captures = [];
 let consoleOverriden = false;
 
 let saveLog = (functionName, args) => {
@@ -18,7 +18,7 @@ let saveLog = (functionName, args) => {
       return arg;
     }
   });
-  captures.push({
+  globalThis.captures.push({
     kind: functionName,
     args: finalArgs,
     date: Date.now(),
@@ -54,7 +54,7 @@ let resetToOriginalFunctions = () => {
 }
 
 export let start = (allowOriginalExecution = false) => {
-  captures = [];
+  globalThis.captures = [];
   setProxy(allowOriginalExecution);
 };
 
@@ -63,15 +63,15 @@ export let stop = () => {
 }
 
 export let flush = () => {
-  captures = [];
+  globalThis.captures = [];
 }
 
 export let getCaptures = () => {
-  return captures;
+  return globalThis.captures;
 }
 
-export let printCaptures = (captures) => {
-  return captures.map(capture => { return capture.args.join(" ") });
+export let printCaptures = () => {
+  return globalThis.captures.map(capture => { return capture.args.join(" ") });
 }
 
 let makeOriginalLog = (log) => {

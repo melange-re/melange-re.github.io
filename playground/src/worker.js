@@ -71,9 +71,6 @@ initWorkerizedReducer(
         }
         Console.start();
 
-        /* Reset logs if there's some */
-        Console.flush();
-
         modules["main.js"] = code;
 
         const bundle = await rollup({
@@ -136,7 +133,7 @@ initWorkerizedReducer(
           console.log(e);
         }
         // We always set logs, if `code` is undefined we will erase them
-        state.logs = Console.printCaptures(Console.getCaptures());
+        state.logs = Console.printCaptures();
         Console.stop();
         break;
       default:
