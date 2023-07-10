@@ -59,8 +59,7 @@ to produce "raw" JavaScript inside a Melange program:
 let add = [%bs.raw "a + b"]
 ```
 ```reasonml
-%bs.raw
-"var a = 1; var b = 2";
+[%%bs.raw "var a = 1; var b = 2"];
 let add = [%bs.raw "a + b"];
 ```
 
@@ -264,7 +263,7 @@ There are two pipe operators available in Melange:
 - A _pipe last_ operator `|>`, available [in
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
-
+  
 - A _pipe first_ operator <code class="text-ocaml">\|.</code><code
   class="text-reasonml">\-\></code>, available exclusively in Melange
 
@@ -856,8 +855,7 @@ For example:
 [%%bs.raw "var a = 1"]
 ```
 ```reasonml
-%bs.raw
-"var a = 1";
+[%%bs.raw "var a = 1"];
 ```
 
 ## Debugger
