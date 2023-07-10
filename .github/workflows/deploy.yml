@@ -1,4 +1,4 @@
-name: deploy
+name: check and deploy
 
 on:
   push:
@@ -20,6 +20,10 @@ jobs:
         with:
           ocaml-compiler: 4.14.x
           dune-cache: true
+      - name: Install all deps
+        run: make install
+      - name: Check Reason syntax
+        run: make check-reason
       - name: Build playground
         run: make build-playground
       - name: Configure Git user
