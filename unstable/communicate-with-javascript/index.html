@@ -315,8 +315,7 @@ to produce "raw" JavaScript inside a Melange program:</p>
 <pre><code class="language-ocaml">[%%bs.raw &quot;var a = 1; var b = 2&quot;]
 let add = [%bs.raw &quot;a + b&quot;]
 </code></pre>
-<pre><code class="language-reasonml">%bs.raw
-&quot;var a = 1; var b = 2&quot;;
+<pre><code class="language-reasonml">[%%bs.raw &quot;var a = 1; var b = 2&quot;];
 let add = [%bs.raw &quot;a + b&quot;];
 </code></pre>
 <p>Which will generate the following JavaScript code:</p>
@@ -995,8 +994,7 @@ or <a href="https://v2.ocaml.org/manual/moduleexamples.html#s%3Asignature">signa
 <p>For example:</p>
 <pre><code class="language-ocaml">[%%bs.raw &quot;var a = 1&quot;]
 </code></pre>
-<pre><code class="language-reasonml">%bs.raw
-&quot;var a = 1&quot;;
+<pre><code class="language-reasonml">[%%bs.raw &quot;var a = 1&quot;];
 </code></pre>
 <h2 id="debugger">Debugger</h2>
 <p>Melange allows you to inject a <code>debugger;</code> expression using the <code>bs.debugger</code>
