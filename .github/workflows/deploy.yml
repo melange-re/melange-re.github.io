@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - check-reason
     tags-ignore:
       - 'v*'
 
