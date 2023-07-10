@@ -356,8 +356,6 @@ const formatReason = (code) => {
 }
 
 function OutputEditor({ language, value }) {
-  const [debouncedValue] = useDebounce(value, 500);
-
   return (
     <div className="Editor">
       <Editor
@@ -370,7 +368,7 @@ function OutputEditor({ language, value }) {
         }}
         height="100%"
         language={language}
-        value={debouncedValue}
+        value={value}
       />
     </div>
   )
