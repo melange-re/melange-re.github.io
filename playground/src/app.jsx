@@ -353,8 +353,6 @@ const formatReason = (code) => {
 }
 
 function OutputEditor({ language, value }) {
-  const [debouncedValue] = useDebounce(value, 500);
-
   return (
     <div className="Editor">
       <Editor
@@ -367,7 +365,7 @@ function OutputEditor({ language, value }) {
         }}
         height="100%"
         language={language}
-        value={debouncedValue}
+        value={value}
       />
     </div>
   )
@@ -474,7 +472,6 @@ function App() {
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
-      Console.start();
       // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
       const eval2 = eval;
       try {
@@ -482,7 +479,6 @@ function App() {
       } catch (e) {
         console.error(e);
       }
-      Console.stop();
     }
   }, [workerState.bundledCode]);
 
