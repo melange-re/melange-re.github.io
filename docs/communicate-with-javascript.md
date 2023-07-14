@@ -464,7 +464,7 @@ This is how each Melange type is converted into JavaScript values:
 | [Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | Option.t `None` | `undefined` |
 | Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
-| <p>foo</p> | `2` |
+| Option.t <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
 | record <code class="text-ocaml">{x = 1; y = 2}</code><code class="text-reasonml">{x: 1; y: 2}</code> | object `{x: 1, y: 2}` |
 | int64 | array of 2 elements `[high, low]` high is signed, low unsigned |
 | char | `'a'` -\> `97` (ascii code) |
