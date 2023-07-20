@@ -17,7 +17,7 @@ After cloning the repository, install the necessary Python packages:
 python3 -m pip install -r ./pip-requirements.txt
 ```
 
-Then run `mkdocs serve .` from the folder where the repository lives.
+Then run `mkdocs serve` from the folder where the repository lives.
 
 ### (Optional) Tooling for docs generation
 

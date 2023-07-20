@@ -27,6 +27,10 @@ nav:
     - Build system: build-system.md
     - Communicate with JavaScript: communicate-with-javascript.md
     - Melange for X developers: melange-for-x-developers.md
+    - Melange Book:
+      - Introduction: melange-book/index.md
+      - Installation: melange-book/installation.md
+      - Counter, Part 1: melange-book/counter-1.md
   - Reference:
     - API: api.md
   - Try:
