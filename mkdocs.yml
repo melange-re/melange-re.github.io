@@ -31,6 +31,8 @@ nav:
       - Introduction: melange-book/index.md
       - Installation: melange-book/installation.md
       - Counter, Part 1: melange-book/counter-1.md
+      - Aside, Melange Playground: melange-book/melange-playground.md
+      - Aside, VS Code config: melange-book/vs-code-config.md
   - Reference:
     - API: api.md
   - Try:

@@ -46,4 +46,11 @@ Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-pl
 extension from OCaml Labs. To verify that the extension worked, open the
 melange-opam-template we downloaded in the last step in Visual Code. Code should
 be syntax highlighted, and you should see type annotations when you hover over
-variables.
+variables. Now open your User Settings JSON file and add this:
+
+```json
+"[reason]": {
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "ocamllabs.ocaml-platform"
+}
+```
