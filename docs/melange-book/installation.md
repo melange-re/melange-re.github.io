@@ -12,8 +12,9 @@ Linux](https://learn.microsoft.com/en-us/windows/wsl/)
 
 ## Opam
 
-We need opam, the OCaml Package Manager. There are many ways to install it
-depending on your platform, but let's go with the simplest method:
+We need [opam](https://opam.ocaml.org/), the OCaml Package Manager. There are
+many ways to install it depending on your platform, but let's go with the
+simplest method:
 
     bash -c "sh <(curl -fsSL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)"
     opam init
@@ -46,7 +47,9 @@ Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-pl
 extension from OCaml Labs. To verify that the extension worked, open the
 melange-opam-template we downloaded in the last step in Visual Code. Code should
 be syntax highlighted, and you should see type annotations when you hover over
-variables. Now open your User Settings JSON file and add this:
+variables. Now [open your User Settings JSON
+file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) and
+add this:
 
 ```json
 "[reason]": {

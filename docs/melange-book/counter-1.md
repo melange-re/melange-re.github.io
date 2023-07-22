@@ -26,7 +26,8 @@ we must wrap strings inside function calls to convert them to the
 `React.element` type. This is exactly what the `React.string` function does--if
 you hover over it, you'll see that it displays the type `string =>
 React.element`. The `make` function itself has the type `unit => React.element`,
-meaning it takes no arguments and returns an object of type `React.element`.
+meaning it takes `()` as the only argument and returns an object of type
+`React.element`.
 
 What's with the `module` business? OCaml's
 [modules](https://cs3110.github.io/textbook/chapters/modules/modules.html) are
