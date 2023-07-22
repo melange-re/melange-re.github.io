@@ -1,6 +1,6 @@
 # Counter, Part 1
 
-We're going build the classic starter app, the counter, using
+We're going build the classic frontend starter app, the counter, using
 [ReasonReact](https://reasonml.github.io/reason-react/). Let's clone the
 tutorial template and initialize it:
 
@@ -9,7 +9,7 @@ tutorial template and initialize it:
     make init
 
 To start webpack, run `make serve`. The app will be served at
-http://localhost:8081/. In another terminal window, start the Reason compiler in
+http://localhost:8080/. In another terminal window, start the Reason compiler in
 watch mode by running `make watch`.
 
 Open `Index.re` and you'll see this:
@@ -28,7 +28,13 @@ you hover over it, you'll see that it displays the type `string =>
 React.element`. The `make` function itself has the type `unit => React.element`,
 meaning it takes no arguments and returns an object of type `React.element`.
 
-A little bit further down, we'll use the `App` component:
+What's with the `module` business? OCaml's
+[modules](https://cs3110.github.io/textbook/chapters/modules/modules.html) are
+somewhat linke JavaScript modules, with one (of many) notable differences being
+that there can be multiples modules inside a single file. For now, you just need
+to know that all components in ReasonReact are modules.
+
+A little bit further down, we make use of the `App` component:
 
 ```reason
 let node = ReactDOM.querySelector("#root");
@@ -48,7 +54,9 @@ construct of the same name, and allows you to succinctly express:
 - Otherwise if `node` is `None`, log an error message
 
 Don't worry if this doesn't quite make sense yet, we'll talk more about `option`
-and other [variant types](something.com) in the next section.
+and other [variant
+types](https://cs3110.github.io/textbook/chapters/data/variants.html)
+later.
 
 Let's create a counter component by creating a new file called `Counter.re` in
 the same directory, with the following contents:
@@ -67,7 +75,10 @@ let make = () => {
 ```
 
 This is a component with a single `useState` hook. It should look fairly
-familiar if you've made hook-based components in React.
+familiar if you know about [hooks in React](https://react.dev/reference/react).
+Note that we didn't need to manually define a module for `Counter`, because all
+files in OCaml are automatically modules, with the name of the module being the
+same as the name of the file.
 
 Now let's modify `App` so that it uses our new `Counter` component:
 
@@ -87,8 +98,7 @@ better way:
 {counter->Int.to_string->React.string}
 ```
 
-This uses the [pipe first
-operator](https://melange.re/v1.0.0/communicate-with-javascript/#pipe-first),
+This uses the [pipe first operator](../communicate-with-javascript#pipe-first),
 which is useful for chaining function calls.
 
 Let's add a bit of styling to the root element of `Counter`:
@@ -108,10 +118,10 @@ Let's add a bit of styling to the root element of `Counter`:
 </div>
 ```
 
-Surprisingly, the `style` prop in ReasonReact doesn't take a string, instead it
-takes an object of type `ReactDOMStyle.t`. (what's the reason for this?)
-Obviously, this isn't an ideal way to style our app--we'll learn a better way to
-do it in a later section.
+Unlike in React, the `style` prop in ReasonReact doesn't take a generic object,
+instead it takes an object of type `ReactDOMStyle.t` that is created by calling
+`ReactDOMStyle.make`. Obviously, this isn't an ideal way to style our app--we'll
+learn a better way to do it in a later section.
 
 Congratulations! You've created your first ReasonReact app. We'll enhance this
 app in the coming sections.
@@ -125,3 +135,47 @@ app in the coming sections.
    style. What happens after the file is formatted?
 1. What happens if you rename the `_evt` variable inside the button callback to
    `evt`?
+1. Comment out the `[@react.component]` attribute in `Counter.re`. What happens?
+
+## Overview
+
+What we covered in this section:
+
+- How to create and run a basic ReasonReact app
+- ReasonReact components are also modules
+- OCaml has an `option` type whose value can be either `None` or `Some(_)`
+- The pipe first operator is an alternate way to invoke functions that enables
+  easy chaining of function calls
+- The `style` prop doesn't take generic objects
+
+## Solutions
+
+1. Removing the `| None` branch will result in a compilation error:
+   ```
+   Error (warning 8 [partial-match]): this pattern-matching is not exhaustive.
+   Here is an example of a case that is not matched:
+   None
+   ```
+   Basically, the compiler is telling you to handle the `None` case if you want
+   to ship your app. This is part of what makes OCaml such a type-safe language.
+1. If you use the pipe first operator, it becomes `"-"->React.string` (without
+   the braces). Whether you think this looks better is a matter of personal
+   taste.
+1. Renaming `_evt` to `evt` results in a compilation error:
+   ```
+   Error (warning 27 [unused-var-strict]): unused variable evt.
+   ```
+   OCaml wants you to use all the variables you declare, unless they being with
+   `_` (underscore).
+1. Commenting out `[@react.component]` in `Index.re`, at the place where
+   `Counter` is used:
+   ```
+   File "src/Index.re", line 3, characters 19-27:
+   3 |   let make = () => <Counter />;
+                          ^^^^^^^^
+   Error: Unbound value Counter.makeProps
+   ```
+   For now, just remember that you need to put the `[@react.component]`
+   attribute above your `make` function if you want your component to be usable
+   in JSX. We'll explain why later.
+

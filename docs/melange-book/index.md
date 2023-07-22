@@ -12,5 +12,5 @@ things at once.
 
 You should already know how to make frontend applications in JavaScript, and
 familiarity with React will be very helpful. You do not need to know
-OCaml/Reason, we'll slowly introduce the basics of the language throughout the
+OCaml--we'll slowly introduce the basics of the language throughout the
 tutorial.
