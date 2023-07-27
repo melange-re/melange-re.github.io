@@ -1,4 +1,4 @@
-# Counter, Part 1
+# Counter
 
 We're going build the classic frontend starter app, the counter, using
 [ReasonReact](https://reasonml.github.io/reason-react/). Let's clone the
@@ -9,8 +9,8 @@ tutorial template and initialize it:
     make init
 
 To start webpack, run `make serve`. The app will be served at
-http://localhost:8080/. In another terminal window, start the Reason compiler in
-watch mode by running `make watch`.
+http://localhost:8080/. In another terminal window, start the Melange compiler
+in watch mode by running `make watch`.
 
 Open `Index.re` and you'll see this:
 
@@ -31,7 +31,7 @@ meaning it takes `()` as the only argument and returns an object of type
 
 What's with the `module` business? OCaml's
 [modules](https://cs3110.github.io/textbook/chapters/modules/modules.html) are
-somewhat linke JavaScript modules, with one (of many) notable differences being
+somewhat like JavaScript modules, with one (of many) notable differences being
 that there can be multiples modules inside a single file. For now, you just need
 to know that all components in ReasonReact are modules.
 
@@ -48,8 +48,8 @@ switch (node) {
 `React.querySelector("#root")` returns an `option(Dom.element)`, meaning that if
 it doesn't find the element, it returns `None`, and if it does find the element,
 it returns `Some(Dom.element)`, i.e. the element wrapped in the `Some`
-constructor. The `switch` expression is only remotely related to the JavaScript
-construct of the same name, and allows you to succinctly express:
+constructor. The `switch` expression (despite the name, don't confuse it for the
+JavaScript construct of the same name), and allows you to succinctly express:
 
 - If `node` is `Some(Dom.element)`, render the `App` component to the DOM
 - Otherwise if `node` is `None`, log an error message
@@ -92,14 +92,14 @@ module App = {
 
 To display the number of the counter, we wrote
 `{React.string(Int.to_string(counter))}`, which converts an integer to a string,
-and then converts that string to `React.element`. But in Reason, there's a
+and then converts that string to `React.element`. But in OCaml, there's a
 better way:
 
 ```reason
-{counter->Int.to_string->React.string}
+{counter |> Int.to_string |> React.string}
 ```
 
-This uses the [pipe first operator](../communicate-with-javascript#pipe-first),
+This uses the [pipe last operator](../communicate-with-javascript#pipe-last),
 which is useful for chaining function calls.
 
 Let's add a bit of styling to the root element of `Counter`:
@@ -114,7 +114,7 @@ Let's add a bit of styling to the root element of `Counter`:
     (),
   )}>
   <button onClick={_evt => setCounter(v => v - 1)}> {React.string("-")} </button>
-  <span> {React.string(Int.to_string(counter))} </span>
+  <span> {counter |> Int.to_string |> React.string} </span>
   <button onClick={_evt => setCounter(v => v + 1)}> {React.string("+")} </button>
 </div>
 ```
@@ -124,16 +124,13 @@ instead it takes an object of type `ReactDOMStyle.t` that is created by calling
 `ReactDOMStyle.make`. Obviously, this isn't an ideal way to style our app--we'll
 learn a better way to do it in a later section.
 
-Congratulations! You've created your first ReasonReact app. We'll enhance this
-app in the coming sections.
+Congratulations! You've created your first ReasonReact app and component. We'll
+create more complex and interesting components in future chapters.
 
 ## Exercises
 
 1. There aren't any runtime errors in our app right now. But what happens if you
    try to remove the `| None` branch of the `switch (node)` expression?
-1. The pipe first operator isn't only useful for chaining function calls.
-   Convert the `{React.string("-")}` expression to use the pipe first invocation
-   style. What happens after the file is formatted?
 1. What happens if you rename the `_evt` variable inside the button callback to
    `evt`?
 1. Comment out the `[@react.component]` attribute in `Counter.re`. What happens?
@@ -145,7 +142,7 @@ What we covered in this section:
 - How to create and run a basic ReasonReact app
 - ReasonReact components are also modules
 - OCaml has an `option` type whose value can be either `None` or `Some(_)`
-- The pipe first operator is an alternate way to invoke functions that enables
+- The pipe last operator is an alternate way to invoke functions that enables
   easy chaining of function calls
 - The `style` prop doesn't take generic objects
 
@@ -159,9 +156,6 @@ What we covered in this section:
    ```
    Basically, the compiler is telling you to handle the `None` case if you want
    to ship your app. This is part of what makes OCaml such a type-safe language.
-1. If you use the pipe first operator, it becomes `"-"->React.string` (without
-   the braces). Whether you think this looks better is a matter of personal
-   taste.
 1. Renaming `_evt` to `evt` results in a compilation error:
    ```
    Error (warning 27 [unused-var-strict]): unused variable evt.
