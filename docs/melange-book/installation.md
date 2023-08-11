@@ -21,23 +21,26 @@ simplest method:
     eval $(opam env)
 
 While `opam init` is running, it will prompt you with something like "Do you
-want opam to modify ~/.profile?". Type `y` to agree.
+want opam to modify ~/.profile?". Type `y` to agree. After the installation
+completes, run `opam --version` to verify that it succeeded.
 
-## Melange opam template
+## Melange tutorial template
 
-Let's make sure that everything works by downloading and running
-[melange-opam-template](https://github.com/melange-re/melange-opam-template).
+Let's make sure that everything works by downloading and running our project
+template
+[melange-tutorial](https://github.com/melange-re/melange-tutorial).
 
-    git clone https://github.com/melange-re/melange-opam-template
-    cd melange-opam-template
+    git clone https://github.com/melange-re/melange-tutorial
+    cd melange-tutorial
     make init
     make build
     make serve
 
-While `make init` you can consider grabbing some coffee or other beverage, as it
-might take a while the first time. The last command, `make serve`, should open a
-tab in your default browser which points to http://localhost:8081/ and shows
-you a typical "Hello World" page.
+While `make init` is running, consider grabbing some coffee or other beverage,
+as it might take a while to fetch all the dependencies and build them. The last
+command, `make serve`, should open a tab in your default browser which points to
+http://localhost:8080/ and shows you a typical "Hello World" page. If you see
+this page, then the project was successfully installed!
 
 ## OCaml Platform Visual Studio Code Extension
 
@@ -45,11 +48,11 @@ Open the Extensions tab in Visual Studio Code and search for "ocaml". Install
 the [OCaml
 Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
 extension from OCaml Labs. To verify that the extension worked, open the
-melange-opam-template we downloaded in the last step in Visual Code. Code should
-be syntax highlighted, and you should see type annotations when you hover over
-variables. Now [open your User Settings JSON
+melange-tutorial project in Visual Studio Code. OCaml code should be syntax
+highlighted, and you should see type annotations when you hover over variables.
+Now [open your User Settings JSON
 file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) and
-add this:
+add this snippet:
 
 ```json
 "[reason]": {
