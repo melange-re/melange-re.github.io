@@ -1,16 +1,11 @@
 # Counter
 
 We're going build the classic frontend starter app, the counter, using
-[ReasonReact](https://reasonml.github.io/reason-react/). Let's clone the
-tutorial template and initialize it:
-
-    git clone https://github.com/melange-re/melange-tutorial
-    cd melange-tutorial
-    make init
-
-To start webpack, run `make serve`. The app will be served at
-http://localhost:8080/. In another terminal window, start the Melange compiler
-in watch mode by running `make watch`.
+[ReasonReact](https://reasonml.github.io/reason-react/). Go to the root
+directory of your melange-tutorial project, and run `make watch` to start the
+Melange compiler in watch mode. In another terminal window, start the webpack
+dev server by running `make watch`. As a side effect, it will open a browser tab
+pointed to http://localhost:8080/.
 
 Open `Index.re` and you'll see this:
 
@@ -49,15 +44,12 @@ switch (node) {
 it doesn't find the element, it returns `None`, and if it does find the element,
 it returns `Some(Dom.element)`, i.e. the element wrapped in the `Some`
 constructor. The `switch` expression (despite the name, don't confuse it for the
-JavaScript construct of the same name), and allows you to succinctly express:
+JavaScript construct of the same name) allows you to succinctly express:
 
 - If `node` is `Some(Dom.element)`, render the `App` component to the DOM
 - Otherwise if `node` is `None`, log an error message
 
-Don't worry if this doesn't quite make sense yet, we'll talk more about `option`
-and other [variant
-types](https://cs3110.github.io/textbook/chapters/data/variants.html)
-later.
+We'll talk more about `option` in the Celsius converter chapter (todo).
 
 Let's create a counter component by creating a new file called `Counter.re` in
 the same directory, with the following contents:
@@ -92,8 +84,9 @@ module App = {
 
 To display the number of the counter, we wrote
 `{React.string(Int.to_string(counter))}`, which converts an integer to a string,
-and then converts that string to `React.element`. But in OCaml, there's a
-better way:
+and then converts that string to `React.element`. In OCaml, there's a way
+to apply a sequence of operations over some data so that it can be
+read from left to right:
 
 ```reason
 {counter |> Int.to_string |> React.string}
@@ -121,8 +114,8 @@ Let's add a bit of styling to the root element of `Counter`:
 
 Unlike in React, the `style` prop in ReasonReact doesn't take a generic object,
 instead it takes an object of type `ReactDOMStyle.t` that is created by calling
-`ReactDOMStyle.make`. Obviously, this isn't an ideal way to style our app--we'll
-learn a better way to do it in a later section.
+`ReactDOMStyle.make`. This isn't a sustainable way to style our app--in future
+sections we will see how to style using CSS classes.
 
 Congratulations! You've created your first ReasonReact app and component. We'll
 create more complex and interesting components in future chapters.
@@ -172,5 +165,6 @@ What we covered in this section:
    ```
    For now, just remember that you need to put the `[@react.component]`
    attribute above your `make` function if you want your component to be usable
-   in JSX. We'll explain why later.
+   in JSX (it's a very common newbie mistake). See the PPX chapter (todo) for
+   more details.
 
