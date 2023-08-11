@@ -14,72 +14,81 @@ types.
 Unlike JavaScript, OCaml makes a clear and hard distinction between integer and
 float values. Try running the following program in the playground:
 
-```reason
+```reasonml
 let foo = 42;   // int
 let bar = 42.0; // float
 Js.log(foo == bar);
 ```
 
-You'll get a compiler error for the last line that says `This expression has
-type float but an expression was expected of type int`. Unlike JavaScript, there
-are no implicit conversions in OCaml. Therefore you cannot expect to compare an
-integer and a float together, unless you convert one of the values so that both
-values have the same type. To make the last line compile, you can change it to
+You'll get a compiler error for the last line that says
 
-```reason
+```
+This expression has type float but an expression was expected of type int
+```
+
+Unlike JavaScript, there are no implicit conversions in OCaml. Therefore you
+cannot expect to compare an integer and a float together, unless you convert one
+of the values so that both values have the same type. To make the last line
+compile, you can change it to
+
+```reasonml
 Js.log(foo == Int.of_float(bar));
 ```
 
 Another way to fix the last line is to convert `foo` from an int to a float:
 
-```reason
+```reasonml
 Js.log(Float.of_int(foo) == bar);
 ```
 
-What about addition? What from you've already seen, you can probably guess that
+What about addition? From what you've already seen, you can probably guess that
 `Js.log(42 + 16.0)` won't compile. However, you may be surprised to discover
 that `Js.log(42.0 + 16.0)` also won't compile! That's because OCaml uses
 separate arithmetic operators for floats. What will compile is this:
 
-```reason
+```reasonml
 Js.log(42.0 +. 16.0);
 ```
 
-Underneath the covers, `foo` and `bar` are both instances of JavaScript's Number
-type:
+Underneath the covers, `foo` and `bar` are both instances of JavaScript's `Number
+type`:
 
-```reason
+```reasonml
 Js.log(Js.typeof(foo)); // prints "number"
 Js.log(Js.typeof(bar)); // prints "number"
 ```
 
-## Overview
-
-- Melange Playground is a great way to play around with short OCaml programs
-- Integer and float are separate types in OCaml, but both translate to
-  JavaScript's Number type once your program is compiled
-- Float arithmetic operators are not the same as integer arithmetic operators
+Refer to the [Melange
+docs](../communicate-with-javascript.md#data-types-and-runtime-representation)
+for a complete rundown of how OCaml types get translated to JavaScript types.
 
 ## Exercises
 
 1. Convert the Counter component we created in the previous chapter to use float
    instead of integer. Make the `-` button decrement by `0.5` and the `+` button
    increment by `1.5`.
-1. Add an int64 value to your program (the underscore is added to make large
-   numbers more readable):
-   ```reason
+1. Add an int64 value to your program:
+   ```reasonml
    let baz = 42_000_000_000L; // int64
    Js.log(baz);
    ```
-   What is the JavaScript representation of int64?
+   Note the use of underscores to make the large number more readable. What is
+   the JavaScript representation of int64?
 1. How do you add two int64 values? Hint: Take a look at the standard library's
    [Int64 module](https://v2.ocaml.org/api/Int64.html).
+
+## Overview
+
+- Melange Playground is a great way to play around with short OCaml programs
+- Integer and float are separate types in OCaml, but both translate to
+  JavaScript's `Number` type once your program is compiled
+- Float arithmetic operators are not the same as integer arithmetic operators
 
 ## Solutions
 
 1. A Counter component that uses float instead of integer would look something
    like this:
-   ```reason
+   ```reasonml
    [@react.component]
    let make = () => {
      let (counter, setCounter) = React.useState(() => 0.0);
@@ -91,7 +100,7 @@ Js.log(Js.typeof(bar)); // prints "number"
       </div>;
    };
    ```
-1. Int64 values cannot be represented by JavaScript's Number type, which doesn't
-   have enough precision. They're instead represented by an array of two
+1. Int64 values cannot be represented by JavaScript's `Number`` type, which
+   doesn't have enough precision. They're instead represented by an array of two
    numbers `[high, low]`, where `high` is signed, `low` is unsigned.
 1. You can add two int64 values using `Int64.add`, e.g. `Int64.add(42L, 16L)`.

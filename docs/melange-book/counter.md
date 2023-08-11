@@ -9,7 +9,7 @@ pointed to http://localhost:8080/.
 
 Open `Index.re` and you'll see this:
 
-```reason
+```reasonml
 module App = {
   [@react.component]
   let make = () => <div> {React.string("welcome to my app")} </div>;
@@ -32,7 +32,7 @@ to know that all components in ReasonReact are modules.
 
 A little bit further down, we make use of the `App` component:
 
-```reason
+```reasonml
 let node = ReactDOM.querySelector("#root");
 switch (node) {
 | Some(root) => ReactDOM.render(<App />, root)
@@ -54,7 +54,7 @@ We'll talk more about `option` in the Celsius converter chapter (todo).
 Let's create a counter component by creating a new file called `Counter.re` in
 the same directory, with the following contents:
 
-```reason
+```reasonml
 [@react.component]
 let make = () => {
   let (counter, setCounter) = React.useState(() => 0);
@@ -75,7 +75,7 @@ same as the name of the file.
 
 Now let's modify `App` so that it uses our new `Counter` component:
 
-```reason
+```reasonml
 module App = {
   [@react.component]
   let make = () => <Counter />;
@@ -88,7 +88,7 @@ and then converts that string to `React.element`. In OCaml, there's a way
 to apply a sequence of operations over some data so that it can be
 read from left to right:
 
-```reason
+```reasonml
 {counter |> Int.to_string |> React.string}
 ```
 
@@ -97,7 +97,7 @@ which is useful for chaining function calls.
 
 Let's add a bit of styling to the root element of `Counter`:
 
-```reason
+```reasonml
 <div
   style={ReactDOMStyle.make(
     ~padding="1em",
