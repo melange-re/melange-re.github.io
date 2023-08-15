@@ -147,6 +147,10 @@ function Sidebar({ onExampleClick }) {
                 <span className="Text-xs">{"Reason"}</span>
                 <span className="Text-xs Number">{"v3.9.0"}</span>
               </span>
+              <span className="Version">
+                <span className="Text-xs">{"ReasonReact"}</span>
+                <span className="Text-xs Number">{"v0.11.0"}</span>
+              </span>
             </div>
           </div>) : null}
         </div>
@@ -356,8 +360,6 @@ const formatReason = (code) => {
 }
 
 function OutputEditor({ language, value }) {
-  const [debouncedValue] = useDebounce(value, 500);
-
   return (
     <div className="Editor">
       <Editor
@@ -370,7 +372,7 @@ function OutputEditor({ language, value }) {
         }}
         height="100%"
         language={language}
-        value={debouncedValue}
+        value={value}
       />
     </div>
   )
