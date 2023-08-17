@@ -126,14 +126,37 @@ Unlike in JavaScript, the if-else construct is an expression and always yields a
 value. Both branches must return a value of the same type or you'll get a
 compilation error.
 
+If we enter a value with a lot of decimals in it, e.g. `21.1223456`, we'll
+get a Fahrenheit value with a lot of decimals in it as well. We can limit the
+number of decimals in the converted value using
+[Js.Float.toFixedWithPrecision](todo):
+
+```reasonml
+switch (newCelsius |> float_of_string |> convert) {
+| exception _ => setFahrenheit(_ => "error")
+| newFahrenheit => setFahrenheit(_ => Js.Float.toFixedWithPrecision(newFahrenheit, ~digits=2))
+};
+```
+
+`Js.Float.toFixedWithPrecision` is a function that has one positional argument
+and one [labeled argument](../communicate-with-javascript.md#labeled-arguments).
+In this case, the labeled argument is named `digits` and it's receiving a value
+of `2`. It's not possible to pass in the value of a labeled argument without
+using the `~label=value` syntax. We'll see more of labeled arguments in the next
+chapter when we introduce how to add props to your components.
+
 We have a working component now, but catching exceptions isn't The OCaml Way! In
 the next chapter, you'll see how to rewrite the logic using `option`.
 
 ## Exercises
 
 1. Try changing `{js|°C = |js}` to `"°C = "`. What happens?
-1. tbd
-1. tbd
+1. Rewrite the `switch` expression so that `Js.Float.toFixedWithPrecision` is
+   put into the input part of the expression instead of the non-exception
+   branch. Hint: `Js.Float.toFixedWithPrecision(~digits=2)` is a function that
+   takes one `float` argument.
+1. Rewrite the ternary expression `{(fahrenheit == "error" ? fahrenheit : fahrenheit ++ {js| °F|js}) |> React.string}`
+   using `switch`.
 
 ## Overview
 
@@ -144,9 +167,37 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 - `switch` expressions can be used to catch exceptions
 - Ternary expressions are shorthand for if-else expressions
 - The two branches of if-else expressions must return values of the same type
+- Besides positional arguments, OCaml functions can also have labeled arguments
 
 ## Solutions
 
-1. tbd
-1. tbd
-1. tbd
+1. Changing it to `"°C = "` will result in a bit of gibberish being rendered:
+   "Â°C". We can't rely on OCaml strings to [deal with Unicode correctly](../communicate-with-javascript.md#strings), so any
+   string that doesn't contain only ASCII text must be delimited using `{js||js}`.
+1. Rewriting the `switch` expression with `Js.Float.toFixedWithPrecision` in the
+   input should look something like this:
+   ```reasonml
+   switch (newCelsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) {
+   | exception _ => setFahrenheit(_ => "error")
+   | newFahrenheit => setFahrenheit(_ => newFahrenheit)
+   };
+   ```
+   The reason that this works is because calling
+   `Js.Float.toFixedWithPrecision(~digits=2)` produces a new function that
+   accepts the remaining `float` positional argument. This is due to a feature
+   called [currying](../melange-for-x-developers.md#currying), which we'll
+   explain more in TODO.
+1. Rewriting the ternary expression using `switch` should result in something
+   like this:
+   ```reasonml
+   {(
+     switch (fahrenheit) {
+     | "error" => fahrenheit
+     | fahrenheit => fahrenheit ++ {js| °F|js}
+     }
+    )
+    |> React.string}
+   ```
+   This is just a different way to write the same logic, it's not necessarily
+   better than the original ternary expression. You can use either one based on
+   your personal preference.
