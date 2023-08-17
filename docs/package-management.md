@@ -310,7 +310,7 @@ To use a library from the installed package, add the library name to the `dune` 
 ├── package.json
 └── ...</code></pre>
 
-then `react-reason` should be added to the `dune` file under the `src` folder:
+then `reason-react` should be added to the `dune` file under the `src` folder:
 
 ```text
 (melange.emit
