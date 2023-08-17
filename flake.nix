@@ -43,7 +43,7 @@
       {
         devShells = {
           default = pkgs.mkShell {
-            nativeBuildInputs = with pkgs.ocamlPackages; [ ocaml findlib ];
+            nativeBuildInputs = with pkgs.ocamlPackages; [ ocaml findlib dune ];
             buildInputs = (with python3Packages; [
               beautifulsoup4
               mkdocs
@@ -59,6 +59,7 @@
               # ocaml-lsp
               merlin
               reason
+              cmarkit
             ]);
           };
         };
