@@ -19,7 +19,16 @@
       let
         pkgs = nixpkgs.legacyPackages."${system}".appendOverlays [
           (self: super: {
-            ocamlPackages = super.ocaml-ng.ocamlPackages_5_1;
+            ocamlPackages = super.ocaml-ng.ocamlPackages_5_1.overrideScope' (ocamlself: ocamlsuper: {
+              cmarkit = ocamlsuper.cmarkit.overrideAttrs (oldattrs: {
+                src = pkgs.fetchFromGitHub {
+                  owner = "dbuenzli";
+                  repo = "cmarkit";
+                  rev = "f37c8ea86fd0be8dba7a8babcee3682e0e047d91";
+                  hash = "sha256-3CD49b8jUFkytKZ9+2sEUQr4YsZL6zI6myMLNN5NQJ4=";
+                };
+              });
+            });
           })
           melange-flake.overlays.default
         ];
@@ -45,22 +54,20 @@
           default = pkgs.mkShell {
             nativeBuildInputs = with pkgs.ocamlPackages; [ ocaml findlib dune ];
             buildInputs = (with python3Packages; [
-              beautifulsoup4
               mkdocs
               mkdocs-print-site-plugin
-              tiktoken
-              pandas
-              tabulate
-              openai
-              numpy
-              markdownify
+              mike
             ]) ++ (with pkgs.ocamlPackages; [
-              melange
-              # ocaml-lsp
-              merlin
-              reason
               cmarkit
+              js_of_ocaml
+              melange
+              merlin
+              ocaml-lsp
+              ocamlformat-lib
+              reason
+              reason-react
             ]);
+            dontDetectOcamlConflicts = true;
           };
         };
       });
