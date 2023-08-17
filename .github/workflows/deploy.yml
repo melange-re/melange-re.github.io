@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - api-docs
     tags-ignore:
       - 'v*'
 
@@ -22,6 +23,8 @@ jobs:
           dune-cache: true
       - name: Install all deps
         run: make install
+      - name: Copy melange docs
+        run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs
       - name: Check Reason syntax
         run: make check-reason
       - name: Build playground
