@@ -23,6 +23,8 @@ jobs:
           dune-cache: true
       - name: Install all deps
         run: make install
+      - name: Generate melange docs
+        run: opam reinstall -y melange --with-doc
       - name: debug
         run: ls -la _opam && ls -la _opam/.opam-switch && ls -la _opam/.opam-switch/build/ && ls -la _opam/.opam-switch/build/melange.dev && ls -la _opam/.opam-switch/build/melange.dev/_build && ls -la _opam/.opam-switch/build/melange.dev/_build/default && ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc && ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html
       - name: Copy melange docs
