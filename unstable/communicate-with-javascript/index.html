@@ -560,9 +560,9 @@ operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">-></code>.</p>
 <p>As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.</p>
-<p>The functions in the <a href="/_html/melange/Belt"><code>Belt</code> library</a> included with Melange
-have been designed with the data-first convention in mind, so they work best
-with the pipe first operator.</p>
+<p>The functions in the <a href="../_html/melange/Belt"><code>Belt</code> library</a> included with
+Melange have been designed with the data-first convention in mind, so they work
+best with the pipe first operator.</p>
 <p>For example, we can rewrite the example above using <code>Belt.List.map</code> and the pipe
 first operator:</p>
 <pre><code class="language-ocaml">let sum_sq =
@@ -645,11 +645,11 @@ post</a>.</p>
 <td>boolean</td>
 </tr>
 <tr>
-<td><a href="/_html/melange/Js/Nullable">Js.Nullable.t</a></td>
+<td><a href="../_html/melange/Js/Nullable">Js.Nullable.t</a></td>
 <td><code>null</code> / <code>undefined</code></td>
 </tr>
 <tr>
-<td><a href="/_html/melange/Js/Re">Js.Re.t</a></td>
+<td><a href="../_html/melange/Js/Re">Js.Re.t</a></td>
 <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"><code>RegExp</code></a></td>
 </tr>
 <tr>
@@ -772,8 +772,8 @@ let helloWorld = {j|你好，$world|j};
 <p>You can surround the interpolation variable in parentheses too: <code>{j|你
 好，$(world)|j}</code>.</p>
 <p>To work with strings, the Melange standard library provides some utilities in
-the <a href="/_html/melange/Stdlib/String"><code>Stdlib.String</code> module</a>. The bindings to the
-native JavaScript functions to work with strings are in the <a href="/_html/melange/Js/String"><code>Js.String</code>
+the <a href="../_html/melange/Stdlib/String"><code>Stdlib.String</code> module</a>. The bindings to
+the native JavaScript functions to work with strings are in the <a href="../_html/melange/Js/String"><code>Js.String</code>
 module</a>.</p>
 <h4 id="floating-point-numbers">Floating-point numbers</h4>
 <p>OCaml floats are <a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format#IEEE_754_double-precision_binary_floating-point_format:_binary64">IEEE
@@ -782,10 +782,10 @@ with a 53-bit mantissa and exponents from -1022 to 1023. This happens to be the
 same encoding as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding">JavaScript
 numbers</a>,
 so values of these types can be used transparently between Melange code and
-JavaScript code. The Melange standard library provides a <a href="/_html/melange/Stdlib/Float"><code>Stdlib.Float</code>
+JavaScript code. The Melange standard library provides a <a href="../_html/melange/Stdlib/Float"><code>Stdlib.Float</code>
 module</a>. The bindings to the JavaScript APIs that
 manipulate float values can be found in the
-<a href="/_html/melange/Js/Float"><code>Js.Float</code></a> module.</p>
+<a href="../_html/melange/Js/Float"><code>Js.Float</code></a> module.</p>
 <h4 id="integers">Integers</h4>
 <p>In Melange, integers are limited to 32 bits due to the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#fixed-width_number_conversion">fixed-width
 conversion</a>
@@ -798,18 +798,18 @@ numbers</a>,
 allowing for a larger range of representable integers in JavaScript compared to
 Melange. When dealing with large numbers, it is advisable to use floats instead.
 For instance, floats are used in bindings like <code>Js.Date</code>.</p>
-<p>The Melange standard library provides a <a href="/_html/melange/Stdlib/Int"><code>Stdlib.Int</code>
+<p>The Melange standard library provides a <a href="../_html/melange/Stdlib/Int"><code>Stdlib.Int</code>
 module</a>. The bindings to work with JavaScript
-integers are in the <a href="/_html/melange/Js/Int"><code>Js.Int</code></a> module.</p>
+integers are in the <a href="../_html/melange/Js/Int"><code>Js.Int</code></a> module.</p>
 <h4 id="arrays">Arrays</h4>
 <p>Melange arrays compile to JavaScript arrays. But note that unlike JavaScript
 arrays, all the values in a Melange array need to have the same type.</p>
 <p>Another difference is that OCaml arrays are fixed-sized, but on Melange side
 this constraint is relaxed. You can change an array’s length using functions
 like <code>Js.Array.push</code>, available in the bindings to the JavaScript APIs in
-<a href="/_html/melange/Js/Array"><code>Js.Array</code></a>.</p>
+<a href="../_html/melange/Js/Array"><code>Js.Array</code></a>.</p>
 <p>Melange standard library also has a module to work with arrays, available in
-<a href="/_html/melange/Stdlib/Array"><code>Stdlib.Array</code></a> module.</p>
+<a href="../_html/melange/Stdlib/Array"><code>Stdlib.Array</code></a> module.</p>
 <h4 id="tuples">Tuples</h4>
 <p>OCaml tuples are compiled to JavaScript arrays. This is convenient when writing
 bindings that will use a JavaScript array with heterogeneous values, but that
@@ -847,7 +847,7 @@ JavaScript counterpart.</p>
 <pre><code class="language-js">var r = /b/g;
 </code></pre>
 <p>A regular expression like the above is of type <code>Js.Re.t</code>. The
-<a href="/_html/melange/Js/Re"><code>Js.Re</code></a> module provides the bindings to the JavaScript
+<a href="../_html/melange/Js/Re"><code>Js.Re</code></a> module provides the bindings to the JavaScript
 functions that operate over regular expressions.</p>
 <h2 id="non-shared-data-types">Non-shared data types</h2>
 <p>The following types differ too much between Melange and JavaScript, so while
@@ -859,11 +859,11 @@ them before doing so.</p>
   <a href="#generate-getters-setters-and-constructors">some helpers</a> to do so.</li>
 <li>Exceptions</li>
 <li>Option (a variant type): Better use the <code>Js.Nullable.fromOption</code> and
-  <code>Js.Nullable.toOption</code> functions in the <a href="/_html/melange/Js/Nullable"><code>Js.Nullable</code>
+  <code>Js.Nullable.toOption</code> functions in the <a href="../_html/melange/Js/Nullable"><code>Js.Nullable</code>
   module</a> to transform them into either <code>null</code> or
   <code>undefined</code> values.</li>
 <li>List (also a variant type): use <code>Array.of_list</code> and <code>Array.to_list</code> in the
-  <a href="/_html/melange/Stdlib/Array"><code>Array</code> module</a>.</li>
+  <a href="../_html/melange/Stdlib/Array"><code>Array</code> module</a>.</li>
 <li>Character</li>
 <li>Int64</li>
 <li>Lazy values</li>
@@ -1384,8 +1384,8 @@ console.log(i32arr[0]);
 </ul>
 <p>For this particular use case of JavaScript objects, Melange exposes a specific
 type <code>Js.Dict.t</code>. The values and functions to work with values of this type are
-defined in the <a href="/_html/melange/Js/Dict"><code>Js.Dict</code></a> module, with operations like
-<code>get</code>, <code>set</code>, etc.</p>
+defined in the <a href="../_html/melange/Js/Dict"><code>Js.Dict</code></a> module, with operations
+like <code>get</code>, <code>set</code>, etc.</p>
 <p>Values of the type <code>Js.Dict.t</code> compile to JavaScript objects.</p>
 <h3 id="javascript-classes">JavaScript classes</h3>
 <p>JavaScript classes are special kinds of objects. To interact with classes,
@@ -1439,7 +1439,7 @@ let () = clearTimeout(id);
 <blockquote>
 <p><strong><em>NOTE:</em></strong> The bindings to <code>setTimeout</code> and <code>clearTimeout</code> are shown here for
 learning purposes, but they are already available in the
-<a href="/_html/melange/Js/Global"><code>Js.Global</code></a> module.</p>
+<a href="../_html/melange/Js/Global"><code>Js.Global</code></a> module.</p>
 </blockquote>
 <p>Generates:</p>
 <pre><code class="language-javascript">var id = setTimeout(function (param) {

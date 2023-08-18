@@ -1377,9 +1377,9 @@ operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">-></code>.</p>
 <p>As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.</p>
-<p>The functions in the <a href="#_html-melange-belt"><code>Belt</code> library</a> included with Melange
-have been designed with the data-first convention in mind, so they work best
-with the pipe first operator.</p>
+<p>The functions in the <a href="#_html-melange-belt"><code>Belt</code> library</a> included with
+Melange have been designed with the data-first convention in mind, so they work
+best with the pipe first operator.</p>
 <p>For example, we can rewrite the example above using <code>Belt.List.map</code> and the pipe
 first operator:</p>
 <pre><code class="language-ocaml">let sum_sq =
@@ -1589,8 +1589,8 @@ let helloWorld = {j|你好，$world|j};
 <p>You can surround the interpolation variable in parentheses too: <code>{j|你
 好，$(world)|j}</code>.</p>
 <p>To work with strings, the Melange standard library provides some utilities in
-the <a href="#_html-melange-stdlib-string"><code>Stdlib.String</code> module</a>. The bindings to the
-native JavaScript functions to work with strings are in the <a href="#_html-melange-js-string"><code>Js.String</code>
+the <a href="#_html-melange-stdlib-string"><code>Stdlib.String</code> module</a>. The bindings to
+the native JavaScript functions to work with strings are in the <a href="#_html-melange-js-string"><code>Js.String</code>
 module</a>.</p>
 <h4 id="communicate-with-javascript-floating-point-numbers">Floating-point numbers</h4>
 <p>OCaml floats are <a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format#IEEE_754_double-precision_binary_floating-point_format:_binary64">IEEE
@@ -2201,8 +2201,8 @@ console.log(i32arr[0]);
 </ul>
 <p>For this particular use case of JavaScript objects, Melange exposes a specific
 type <code>Js.Dict.t</code>. The values and functions to work with values of this type are
-defined in the <a href="#_html-melange-js-dict"><code>Js.Dict</code></a> module, with operations like
-<code>get</code>, <code>set</code>, etc.</p>
+defined in the <a href="#_html-melange-js-dict"><code>Js.Dict</code></a> module, with operations
+like <code>get</code>, <code>set</code>, etc.</p>
 <p>Values of the type <code>Js.Dict.t</code> compile to JavaScript objects.</p>
 <h3 id="communicate-with-javascript-javascript-classes">JavaScript classes</h3>
 <p>JavaScript classes are special kinds of objects. To interact with classes,
