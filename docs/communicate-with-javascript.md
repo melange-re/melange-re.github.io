@@ -622,7 +622,7 @@ like `Js.Array.push`, available in the bindings to the JavaScript APIs in
 [`Js.Array`](/_html/melange/Js/Array).
 
 Melange standard library also has a module to work with arrays, available in
-`Stdlib.Array`(/_html/melange/Stdlib/Array) module.
+[`Stdlib.Array`](/_html/melange/Stdlib/Array) module.
 
 #### Tuples
 
