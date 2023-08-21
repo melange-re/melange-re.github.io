@@ -25,6 +25,11 @@ jobs:
         run: make install
       - name: Generate melange docs
         run: opam reinstall -y melange --with-doc --verbose
+      - name: Upload Build
+        uses: actions/upload-artifact@v3
+          with:
+            name: docs
+            path: _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange
       - name: debug
         run: ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange && ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange/Js
       - name: Copy melange docs
