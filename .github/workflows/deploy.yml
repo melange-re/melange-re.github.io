@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - api-docs
     tags-ignore:
       - 'v*'
 
@@ -20,17 +19,15 @@ jobs:
       - uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: 4.14.x
-          dune-cache: false
+          dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
       - name: Install all deps
         run: make install
       - name: Generate melange docs
-        run: OPAMVERBOSE=true opam reinstall -y melange --with-doc
+        run: opam reinstall -y melange --with-doc
       - uses: actions/upload-artifact@v3
         with:
           name: docs
           path: _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange
-      - name: debug
-        run: ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange && ls -la _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html/melange/Js
       - name: Copy melange docs
         run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs
       - name: Check Reason syntax
