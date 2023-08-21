@@ -4,3 +4,4 @@ _opam
 .DS_Store
 
 docs/playground
+docs/_html
