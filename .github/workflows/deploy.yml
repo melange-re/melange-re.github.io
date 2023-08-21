@@ -20,11 +20,11 @@ jobs:
       - uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: 4.14.x
-          dune-cache: true
+          dune-cache: false
       - name: Install all deps
         run: make install
       - name: Generate melange docs
-        run: opam reinstall -y melange --with-doc --verbose
+        run: OPAMVERBOSE=true opam reinstall -y melange --with-doc
       - name: Upload Build
         uses: actions/upload-artifact@v3
           with:
