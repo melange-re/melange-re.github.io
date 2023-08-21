@@ -44,3 +44,10 @@ format-check: ## Checks if format is correct
 build-playground: install ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
+
+.PHONY: move-v1.0.0-tag
+move-v1.0.0-tag: ## Moves the v1.0.0 tag to the latest commit, to be called from branch 1.0.0-patches
+	git push origin :refs/tags/v1.0.0
+	git tag -fa v1.0.0
+	git push origin --tags
+	
