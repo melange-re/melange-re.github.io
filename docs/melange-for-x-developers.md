@@ -583,8 +583,8 @@ Melange is compatible with the version 4.14 (as of May 2023).
 
 The [Melange
 roadmap](https://docs.google.com/document/d/1279euT9LeJIkwAUYqazqeh2lc8c7TLQap2_2vBNcK4w)
-for Q2 includes a milestone to upgrade to the latest version of the 
-compiler to the 5.x release line.
+for Q2 includes a milestone to upgrade to the latest version of the compiler to
+the 5.x release line.
 
 ### Editor integration
 
@@ -645,7 +645,8 @@ documented. Reason syntax is no longer supported.
 
 Melange supports and documents both Reason and OCaml syntaxes. It also includes
 a best-effort support for ReScript syntax for backwards compatibility, provided
-through the `rescript-syntax` package, available [in opam](todo-fix-me.md). To
-build any code written using ReScript syntax, the only requirement is to
-download this package, as Melange and Dune will already coordinate to make use
-of it when `res` or `resi` files are found.
+through the `rescript-syntax` package, available [in
+opam](https://opam.ocaml.org/packages/rescript-syntax/). To build any code
+written using ReScript syntax, the only requirement is to download this package,
+as Melange and Dune will already coordinate to make use of it when `res` or
+`resi` files are found.
