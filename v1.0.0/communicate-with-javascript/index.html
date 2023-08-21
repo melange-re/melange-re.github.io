@@ -236,7 +236,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Try</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="" href="../playground">Playground</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../playground/">Playground</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">About</span></p>
@@ -560,9 +560,9 @@ operator <code class="text-ocaml">|.</code><code
 class="text-reasonml">-></code>.</p>
 <p>As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.</p>
-<p>The functions in the <a href="todo-fix-me.md"><code>Belt</code> library</a> included with Melange have
-been designed with the data-first convention in mind, so they work best with the
-pipe first operator.</p>
+<p>The functions in the <a href="../_html/melange/Belt"><code>Belt</code> library</a> included with
+Melange have been designed with the data-first convention in mind, so they work
+best with the pipe first operator.</p>
 <p>For example, we can rewrite the example above using <code>Belt.List.map</code> and the pipe
 first operator:</p>
 <pre><code class="language-ocaml">let sum_sq =
@@ -645,11 +645,11 @@ post</a>.</p>
 <td>boolean</td>
 </tr>
 <tr>
-<td><a href="todo-fix-me.md">Js.Nullable.t</a></td>
+<td><a href="../_html/melange/Js/#module-Nullable">Js.Nullable.t</a></td>
 <td><code>null</code> / <code>undefined</code></td>
 </tr>
 <tr>
-<td><a href="todo-fix-me.md">Js.Re.t</a></td>
+<td><a href="../_html/melange/Js/#module-Re">Js.Re.t</a></td>
 <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"><code>RegExp</code></a></td>
 </tr>
 <tr>
@@ -772,8 +772,8 @@ let helloWorld = {j|你好，$world|j};
 <p>You can surround the interpolation variable in parentheses too: <code>{j|你
 好，$(world)|j}</code>.</p>
 <p>To work with strings, the Melange standard library provides some utilities in
-the <a href="todo-fix-me.md"><code>Stdlib.String</code> module</a>. The bindings to the native
-JavaScript functions to work with strings are in the <a href="todo-fix-me.md"><code>Js.String</code>
+the <a href="../_html/melange/Stdlib/String"><code>Stdlib.String</code> module</a>. The bindings to
+the native JavaScript functions to work with strings are in the <a href="../_html/melange/Js/#module-String"><code>Js.String</code>
 module</a>.</p>
 <h4 id="floating-point-numbers">Floating-point numbers</h4>
 <p>OCaml floats are <a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format#IEEE_754_double-precision_binary_floating-point_format:_binary64">IEEE
@@ -782,9 +782,10 @@ with a 53-bit mantissa and exponents from -1022 to 1023. This happens to be the
 same encoding as <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding">JavaScript
 numbers</a>,
 so values of these types can be used transparently between Melange code and
-JavaScript code. The Melange standard library provides a <a href="todo-fix-me.md"><code>Stdlib.Float</code>
-module</a>. The bindings to the JavaScript APIs that manipulate
-float values can be found in the <a href="todo-fix-me.md"><code>Js.Float</code></a> module.</p>
+JavaScript code. The Melange standard library provides a <a href="../_html/melange/Stdlib/Float"><code>Stdlib.Float</code>
+module</a>. The bindings to the JavaScript APIs that
+manipulate float values can be found in the
+<a href="../_html/melange/Js/#module-Float"><code>Js.Float</code></a> module.</p>
 <h4 id="integers">Integers</h4>
 <p>In Melange, integers are limited to 32 bits due to the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#fixed-width_number_conversion">fixed-width
 conversion</a>
@@ -797,18 +798,18 @@ numbers</a>,
 allowing for a larger range of representable integers in JavaScript compared to
 Melange. When dealing with large numbers, it is advisable to use floats instead.
 For instance, floats are used in bindings like <code>Js.Date</code>.</p>
-<p>The Melange standard library provides a <a href="todo-fix-me.md"><code>Stdlib.Int</code> module</a>.
-The bindings to work with JavaScript integers are in the
-<a href="todo-fix-me.md"><code>Js.Int</code></a> module.</p>
+<p>The Melange standard library provides a <a href="../_html/melange/Stdlib/Int"><code>Stdlib.Int</code>
+module</a>. The bindings to work with JavaScript
+integers are in the <a href="../_html/melange/Js/#module-Int"><code>Js.Int</code></a> module.</p>
 <h4 id="arrays">Arrays</h4>
 <p>Melange arrays compile to JavaScript arrays. But note that unlike JavaScript
 arrays, all the values in a Melange array need to have the same type.</p>
 <p>Another difference is that OCaml arrays are fixed-sized, but on Melange side
 this constraint is relaxed. You can change an array’s length using functions
 like <code>Js.Array.push</code>, available in the bindings to the JavaScript APIs in
-<a href="todo-fix-me.md"><code>Js.Array</code></a>.</p>
+<a href="../_html/melange/Js/#module-Array"><code>Js.Array</code></a>.</p>
 <p>Melange standard library also has a module to work with arrays, available in
-<code>Stdlib.Array</code>(todo-fix-me.md) module.</p>
+<a href="../_html/melange/Stdlib/Array"><code>Stdlib.Array</code></a> module.</p>
 <h4 id="tuples">Tuples</h4>
 <p>OCaml tuples are compiled to JavaScript arrays. This is convenient when writing
 bindings that will use a JavaScript array with heterogeneous values, but that
@@ -846,7 +847,7 @@ JavaScript counterpart.</p>
 <pre><code class="language-js">var r = /b/g;
 </code></pre>
 <p>A regular expression like the above is of type <code>Js.Re.t</code>. The
-<a href="todo-fix-me.md"><code>Js.Re</code></a> module provides the bindings to the JavaScript
+<a href="../_html/melange/Js/#module-Re"><code>Js.Re</code></a> module provides the bindings to the JavaScript
 functions that operate over regular expressions.</p>
 <h2 id="non-shared-data-types">Non-shared data types</h2>
 <p>The following types differ too much between Melange and JavaScript, so while
@@ -858,10 +859,11 @@ them before doing so.</p>
   <a href="#generate-getters-setters-and-constructors">some helpers</a> to do so.</li>
 <li>Exceptions</li>
 <li>Option (a variant type): Better use the <code>Js.Nullable.fromOption</code> and
-  <code>Js.Nullable.toOption</code> functions in the <a href="todo-fix-me.md"><code>Js.Nullable</code> module</a>
-  to transform them into either <code>null</code> or <code>undefined</code> values.</li>
+  <code>Js.Nullable.toOption</code> functions in the <a href="../_html/melange/Js/#module-Nullable"><code>Js.Nullable</code>
+  module</a> to transform them into either <code>null</code> or
+  <code>undefined</code> values.</li>
 <li>List (also a variant type): use <code>Array.of_list</code> and <code>Array.to_list</code> in the
-  <a href="todo-fix-me.md"><code>Array</code> module</a>.</li>
+  <a href="../_html/melange/Stdlib/Array"><code>Array</code> module</a>.</li>
 <li>Character</li>
 <li>Int64</li>
 <li>Lazy values</li>
@@ -885,9 +887,9 @@ for backwards compatibility. They will be updated to <code>mel.</code> in the fu
 <li><a href="#wrapping-returned-nullable-values"><code>bs.return</code></a>: automate conversion from
   nullable values to <code>Option.t</code> values</li>
 <li><a href="#calling-an-object-method"><code>bs.send</code></a>: call a JavaScript object method using
-  <a href="todo-fix-me.md">pipe first</a> convention</li>
+  <a href="#pipe-first">pipe first</a> convention</li>
 <li><a href="#calling-an-object-method"><code>bs.send.pipe</code></a>: call a JavaScript object method
-  using <a href="todo-fix-me.md">pipe last</a> convention</li>
+  using <a href="#pipe-last">pipe last</a> convention</li>
 <li><a href="#bind-to-object-properties"><code>bs.set</code></a>: set JavaScript object properties
   statically by name, using the dot notation <code>.</code></li>
 <li><a href="#bind-to-object-properties"><code>bs.set_index</code></a>: set JavaScript object properties
@@ -1383,8 +1385,8 @@ console.log(i32arr[0]);
 </ul>
 <p>For this particular use case of JavaScript objects, Melange exposes a specific
 type <code>Js.Dict.t</code>. The values and functions to work with values of this type are
-defined in the <a href="todo-fix-me.md"><code>Js.Dict</code></a> module, with operations like <code>get</code>,
-<code>set</code>, etc.</p>
+defined in the <a href="../_html/melange/Js/#module-Dict"><code>Js.Dict</code></a> module, with operations
+like <code>get</code>, <code>set</code>, etc.</p>
 <p>Values of the type <code>Js.Dict.t</code> compile to JavaScript objects.</p>
 <h3 id="javascript-classes">JavaScript classes</h3>
 <p>JavaScript classes are special kinds of objects. To interact with classes,
@@ -1438,7 +1440,7 @@ let () = clearTimeout(id);
 <blockquote>
 <p><strong><em>NOTE:</em></strong> The bindings to <code>setTimeout</code> and <code>clearTimeout</code> are shown here for
 learning purposes, but they are already available in the
-<a href="todo-fix-me.md"><code>Js.Global</code></a> module.</p>
+<a href="../_html/melange/Js/#module-Global"><code>Js.Global</code></a> module.</p>
 </blockquote>
 <p>Generates:</p>
 <pre><code class="language-javascript">var id = setTimeout(function (param) {
@@ -2091,9 +2093,13 @@ function <code>add</code>, which only takes one argument <code>x</code>, and <co
 discarded. The value returned from the operation would not be the addition of
 the two numbers, but rather the inner anonymous callback.</p>
 <p>To solve this mismatch between OCaml and JavaScript functions and their
-application, Melange provides a special attribute <code>@bs</code> that can be used to annotate
-external functions that need to be "uncurried".</p>
-<p><span class="text-reasonml">In Reason syntax, this attribute does not need to be written explicitly, as it is deeply integrated with the Reason parser. To specify some function type as "uncurried", one just needs to add the dot character <code>.</code> to the function type. For example, <code>(. 'a, 'b) =&gt; 'c</code> instead of <code>('a, 'b) =&gt; 'c</code>.</span></p>
+application, Melange provides a special attribute <code>@bs</code> that can be used to
+annotate external functions that need to be "uncurried".</p>
+<p><span class="text-reasonml">In Reason syntax, this attribute does not need to be
+written explicitly, as it is deeply integrated with the Reason parser. To
+specify some function type as "uncurried", one just needs to add the dot
+character <code>.</code> to the function type. For example, <code>(. 'a, 'b) =&gt; 'c</code> instead of
+<code>('a, 'b) =&gt; 'c</code>.</span></p>
 <p>In the example above:</p>
 <pre><code class="language-ocaml">external map : 'a array -&gt; 'b array -&gt; (('a -&gt; 'b -&gt; 'c)[@bs]) -&gt; 'c array
   = &quot;map&quot;
@@ -2102,7 +2108,12 @@ external functions that need to be "uncurried".</p>
 <pre><code class="language-reasonml">[@bs.val]
 external map: (array('a), array('b), (. 'a, 'b) =&gt; 'c) =&gt; array('c) = &quot;map&quot;;
 </code></pre>
-<p>Here <span class="text-ocaml"><code>('a -&gt; 'b -&gt; 'c [@bs])</code></span><span class="text-reasonml"><code>(. 'a, 'b) =&gt; 'c</code></span>will be interpreted as having arity 2. In general, <span class="text-ocaml"><code>'a0 -&gt; 'a1 ...​ 'aN -&gt; 'b0 [@bs]</code> is the same as <code>'a0 -&gt; 'a1 ...​ 'aN -&gt; 'b0</code></span><span class="text-reasonml"><code>. 'a0, 'a1, ...​ 'aN =&gt; 'b0</code> is the same as <code>'a0, 'a1, ...​ 'aN =&gt; 'b0</code></span> except the former’s arity is guaranteed to be N while the latter is unknown.</p>
+<p>Here <span class="text-ocaml"><code>('a -&gt; 'b -&gt; 'c [@bs])</code></span><span
+class="text-reasonml"><code>(. 'a, 'b) =&gt; 'c</code></span>will be interpreted as having
+arity 2. In general, <span class="text-ocaml"><code>'a0 -&gt; 'a1 ...​ 'aN -&gt; 'b0 [@bs]</code>
+is the same as <code>'a0 -&gt; 'a1 ...​ 'aN -&gt; 'b0</code></span><span class="text-reasonml"><code>.
+'a0, 'a1, ...​ 'aN =&gt; 'b0</code> is the same as <code>'a0, 'a1, ...​ 'aN =&gt; 'b0</code></span>
+except the former’s arity is guaranteed to be N while the latter is unknown.</p>
 <p>If we try now to call <code>map</code> using <code>add</code>:</p>
 <pre><code class="language-ocaml">let add x y = x + y
 let _ = map [||] [||] add
@@ -2116,7 +2127,8 @@ let _ = map([||], [||], add);
 This expression has type int -&gt; int -&gt; int
 but an expression was expected of type ('a -&gt; 'b -&gt; 'c) Js.Fn.arity2
 </code></pre>
-<p>To solve this, we add <span class="text-ocaml"><code>@bs</code></span><span class="text-reasonml"><code>.</code></span> in the function definition as well:</p>
+<p>To solve this, we add <span class="text-ocaml"><code>@bs</code></span><span
+class="text-reasonml"><code>.</code></span> in the function definition as well:</p>
 <pre><code class="language-ocaml">let add = fun [@bs] x y -&gt; x + y
 </code></pre>
 <pre><code class="language-reasonml">let add = (. x, y) =&gt; x + y;
@@ -2187,11 +2199,12 @@ let _ = set_onload(x, [@bs.this] (o, v) =&gt; Js.log(resp(o) + v));
 <p>Note that the first argument will be reserved for <code>this</code>.</p>
 <h3 id="wrapping-returned-nullable-values">Wrapping returned nullable values</h3>
 <p>JavaScript models <code>null</code> and <code>undefined</code> differently, whereas it can be useful
-to treat both as <code>'a option</code> in OCaml.</p>
-<p>Melange understands the <code>bs.return</code> attribute in externals to model how
-nullable return types should be wrapped at the OCaml &lt;-&gt; JavaScript boundary.
-An <code>external</code> value with <code>bs.return</code> converts the return value to an <code>option</code>
-type, avoiding the need for extra wrapping / unwrapping with functions such as
+to treat both as <span class="text-ocaml"><code>'a option</code></span><span
+class="text-reasonml"><code>option('a)</code></span> in Melange.</p>
+<p>Melange understands the <code>bs.return</code> attribute in externals to model how nullable
+return types should be wrapped at the bindings boundary. An <code>external</code> value
+with <code>bs.return</code> converts the return value to an <code>option</code> type, avoiding the
+need for extra wrapping / unwrapping with functions such as
 <code>Js.Nullable.toOption</code>.</p>
 <pre><code class="language-ocaml">type element
 type document
@@ -2227,9 +2240,11 @@ let test = document =&gt; {
   }
 }
 </code></pre>
-<p>The <code>bs.return</code> attribute takes an attribute payload, as seen with <code>[@@bs.return
-nullable]</code> above. Currently 4 directives are supported: <code>null_to_opt</code>,
-<code>undefined_to_opt</code>, <code>nullable</code> and <code>identity</code>.</p>
+<p>The <code>bs.return</code> attribute takes an attribute payload, as seen with <span
+class="text-ocaml"><code>[@@bs.return nullable]</code></span><span
+class="text-reasonml"><code>[@bs.return nullable]</code></span> above. Currently 4
+directives are supported: <code>null_to_opt</code>, <code>undefined_to_opt</code>, <code>nullable</code> and
+<code>identity</code>.</p>
 <p><code>nullable</code> is encouraged, as it will convert from <code>null</code> and <code>undefined</code> to
 <code>option</code> type.</p>
 <!-- When the return type is unit: the compiler will append its return value with an OCaml unit literal to make sure it does return unit. Its main purpose is to make the user consume FFI in idiomatic OCaml code, the cost is very very small and the compiler will do smart optimizations to remove it when the returned value is not used (mostly likely). -->
