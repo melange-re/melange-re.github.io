@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - reason-api-docs
     tags-ignore:
       - 'v*'
 
