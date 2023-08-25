@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Curry (melange.Curry)</title><link rel="stylesheet" href="../../odoc.support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../odoc.support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../index.html">melange</a> &#x00BB; Curry</nav><header class="odoc-preamble"><h1>Module <code><span>Curry</span></code></h1></header><div class="odoc-content"><div class="odoc-spec"><div class="spec value external anchored" id="val-function_length"><a href="#val-function_length" class="anchor"></a><code><span><span class="keyword">let</span> function_length: <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> int;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply_args"><a href="#val-apply_args" class="anchor"></a><code><span><span class="keyword">let</span> apply_args: <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'b</span>)</span> <span class="arrow">=&gt;</span></span> <span>array(<span class="type-var">_</span>) <span class="arrow">=&gt;</span></span> <span class="type-var">'b</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-app"><a href="#val-app" class="anchor"></a><code><span><span class="keyword">let</span> app: <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'b</span>)</span> <span class="arrow">=&gt;</span></span> <span>array(<span class="type-var">'c</span>) <span class="arrow">=&gt;</span></span> <span class="type-var">'d</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply1"><a href="#val-apply1" class="anchor"></a><code><span><span class="keyword">let</span> apply1: <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a1</span>)</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a1</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply2"><a href="#val-apply2" class="anchor"></a><code><span><span class="keyword">let</span> apply2: <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a2</span>)</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a2</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply3"><a href="#val-apply3" class="anchor"></a><code><span><span class="keyword">let</span> apply3: <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a3</span>)</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a3</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply4"><a href="#val-apply4" class="anchor"></a><code><span><span class="keyword">let</span> apply4: 
+  <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a4</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'a4</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply5"><a href="#val-apply5" class="anchor"></a><code><span><span class="keyword">let</span> apply5: 
+  <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a5</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'a5</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply6"><a href="#val-apply6" class="anchor"></a><code><span><span class="keyword">let</span> apply6: 
+  <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a6</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'a6</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply7"><a href="#val-apply7" class="anchor"></a><code><span><span class="keyword">let</span> apply7: 
+  <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a6</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a7</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a6</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'a7</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-apply8"><a href="#val-apply8" class="anchor"></a><code><span><span class="keyword">let</span> apply8: 
+  <span><span>(<span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a6</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a7</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'a8</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a0</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a1</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a2</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a3</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a4</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a5</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a6</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a7</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'a8</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_1"><a href="#val-_1" class="anchor"></a><code><span><span class="keyword">let</span> _1: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__1"><a href="#val-__1" class="anchor"></a><code><span><span class="keyword">let</span> __1: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_2"><a href="#val-_2" class="anchor"></a><code><span><span class="keyword">let</span> _2: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__2"><a href="#val-__2" class="anchor"></a><code><span><span class="keyword">let</span> __2: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'g</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'g</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_3"><a href="#val-_3" class="anchor"></a><code><span><span class="keyword">let</span> _3: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__3"><a href="#val-__3" class="anchor"></a><code><span><span class="keyword">let</span> __3: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'f</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'f</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_4"><a href="#val-_4" class="anchor"></a><code><span><span class="keyword">let</span> _4: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'l</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__4"><a href="#val-__4" class="anchor"></a><code><span><span class="keyword">let</span> __4: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'e</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'e</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_5"><a href="#val-_5" class="anchor"></a><code><span><span class="keyword">let</span> _5: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'l</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'m</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__5"><a href="#val-__5" class="anchor"></a><code><span><span class="keyword">let</span> __5: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'d</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'d</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_6"><a href="#val-_6" class="anchor"></a><code><span><span class="keyword">let</span> _6: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'l</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'m</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'n</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'h</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__6"><a href="#val-__6" class="anchor"></a><code><span><span class="keyword">let</span> __6: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'c</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'c</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_7"><a href="#val-_7" class="anchor"></a><code><span><span class="keyword">let</span> _7: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'h</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'i</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'l</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'m</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'n</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'o</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'p</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__7"><a href="#val-__7" class="anchor"></a><code><span><span class="keyword">let</span> __7: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'b</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'b</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-_8"><a href="#val-_8" class="anchor"></a><code><span><span class="keyword">let</span> _8: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'b</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'d</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'e</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'f</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'g</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'h</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'i</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'j</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'k</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'l</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'m</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'n</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'o</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'p</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'q</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'r</span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-__8"><a href="#val-__8" class="anchor"></a><code><span><span class="keyword">let</span> __8: 
+  <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span class="type-var">'b</span>)</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span>
+  <span class="type-var">'b</span>;</span></code></div></div></div></body></html>
