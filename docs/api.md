@@ -2,12 +2,17 @@
 
 Melange exposes three libraries:
 
-- A standard library, which mostly replicates that of OCaml for compatibility;
-see the docs: the [`Stdlib`](../_html/melange/Stdlib) library
-- Bindings to several browser and Node JavaScript APIs in the [`Js`
-  library](../_html/melange/Js).
-- Data structures and collection types in the [`Belt`
-  library](../_html/melange/Belt)
+- A standard library, which mostly replicates that of OCaml for compatibility:
+the <a class="text-ocaml" href="../api/ml/melange/Stdlib"><code>Stdlib</code>
+library</a><a class="text-reasonml"
+href="../api/re/melange/Stdlib"><code>Stdlib</code> library</a>
+- Bindings to several browser and Node JavaScript APIs in the <a
+class="text-ocaml" href="../api/ml/melange/Js"><code>Js</code> library</a><a
+class="text-reasonml" href="../api/re/melange/Js"><code>Js</code> library</a>
+- Data structures and collection types in the <a class="text-ocaml"
+href="../api/ml/melange/Belt"><code>Belt</code> library</a><a
+class="text-reasonml" href="../api/re/melange/Belt"><code>Belt</code>
+library</a>
 
 Using one or the other will depend on your application requirements, how much
 integration you need with existing JavaScript libraries, or other specific
