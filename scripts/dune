@@ -1,0 +1,11 @@
+(executable
+ (name process_md)
+ (public_name process_md)
+ (modules process_md)
+ (libraries cmarkit reason))
+
+(executable
+ (name add_canonical)
+ (public_name add_canonical)
+ (modules add_canonical)
+ (libraries str unix))
