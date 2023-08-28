@@ -2,6 +2,39 @@ open Printf
 open Unix
 open Str
 
+let to_v1_paths input =
+  let rec transform_helper acc = function
+    | [] -> List.rev acc
+    | 'm' :: 'e' :: 'l' :: 'a' :: 'n' :: 'g' :: 'e' :: '/' :: melange_rest -> (
+        match melange_rest with
+        | [] -> List.rev acc
+        | 'J' :: 's' :: '/' :: next :: rest ->
+            transform_helper
+              (Char.lowercase_ascii next :: '_' :: 's' :: 'J' :: '/' :: 'e'
+             :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              rest
+        | 'N' :: 'o' :: 'd' :: 'e' :: '/' :: next :: rest ->
+            transform_helper
+              (Char.lowercase_ascii next :: '_' :: 'e' :: 'd' :: 'o' :: 'N'
+             :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              rest
+        | 'D' :: 'o' :: 'm' :: '/' :: next :: rest ->
+            transform_helper
+              (Char.lowercase_ascii next :: '_' :: 'm' :: 'o' :: 'D' :: '/'
+             :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              rest
+        | 'B' :: 'e' :: 'l' :: 't' :: '/' :: next :: rest ->
+            transform_helper
+              (Char.lowercase_ascii next :: '_' :: 't' :: 'l' :: 'e' :: 'B'
+             :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              rest
+        | c :: rest -> transform_helper (c :: acc) rest)
+    | c :: rest -> transform_helper (c :: acc) rest
+  in
+  let input_chars = List.of_seq (String.to_seq input) in
+  let transformed_chars = transform_helper [] input_chars in
+  String.of_seq (List.to_seq transformed_chars)
+
 let relative_path base_path target_path =
   let base_parts = split (regexp_string Filename.dir_sep) base_path in
   let target_parts = split (regexp_string Filename.dir_sep) target_path in
@@ -34,10 +67,15 @@ let replace_in_file ~orig_path file_path search_str =
     let orig_permissions = (Unix.stat file_path).st_perm in
     let new_permissions = orig_permissions lor add_write_permission in
     Unix.chmod file_path new_permissions;
-    let relative_file_path = relative_path orig_path file_path in
+    let relative_file_path =
+      let path = relative_path orig_path file_path in
+      to_v1_paths path
+    in
+    (* Dom, Js, Node, Belt *)
     let canonical_link =
       Printf.sprintf
-        "<link rel=\"canonical\" href=\"https://melange.re/v1.0.0/api/%s\" /></head>"
+        "<link rel=\"canonical\" href=\"https://melange.re/v1.0.0/api/%s\" \
+         /></head>"
         (String.escaped relative_file_path)
     in
     let oc = open_out file_path in
