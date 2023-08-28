@@ -8,7 +8,7 @@ DUNE = opam exec -- dune
 help: ## Print this help message
 	@echo "List of available make commands";
 	@echo "";
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}';
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}';
 	@echo "";
 
 .PHONY: create-switch
@@ -27,6 +27,14 @@ install: ## Install development dependencies
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
+
+.PHONY: extract-code-blocks
+extract-code-blocks: ## Extracts code blocks from markdown and puts them in test files
+	$(DUNE) build @extract-code-blocks
+
+.PHONY: test
+test: ## Runs @runtest alias
+	$(DUNE) build @runtest
 
 .PHONY: clean
 clean: ## Clean build artifacts and other generated files

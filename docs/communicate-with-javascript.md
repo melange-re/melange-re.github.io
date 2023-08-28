@@ -2786,6 +2786,7 @@ Melange will generate a function for each field defined in the record. In this
 case, a function `name` that allows to get that field from any record of type
 `pet`:
 
+<!--PRELUDE--type pet = { name : string } [@@bs.deriving accessors]-->
 ```ocaml
 let name (param : pet) = param.name
 ```
