@@ -19,7 +19,7 @@ Test code snippets from the markdown files
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let print name = "Hello" ^ name
+  > let prifnt name = "Hello" ^ name
   > EOF
 
   $ dune build @melange

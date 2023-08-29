@@ -85,7 +85,8 @@ let input = String.concat "\n" (loop [])
 
 let () =
   print_endline
-    {|Test code snippets from the markdown files
+    {|This test file is automatically generated from its corresponding markdown
+file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > dune-project <<EOF
   > (lang dune 3.8)

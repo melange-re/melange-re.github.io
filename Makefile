@@ -28,9 +28,11 @@ install: ## Install development dependencies
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
-.PHONY: extract-code-blocks
-extract-code-blocks: ## Extracts code blocks from markdown and puts them in test files
-	$(DUNE) build @extract-code-blocks
+.PHONY: check-extracted-code-blocks
+check-extracted-code-blocks: ## Checks that code blocks extracted from markdown have been updated to latest
+	$(DUNE) build @extract-code-blocks --auto-promote
+	$(DUNE) build @runtest --auto-promote
+	git status --porcelain
 
 .PHONY: test
 test: ## Runs @runtest alias

@@ -30,8 +30,8 @@ jobs:
         run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/api/re
       - name: Check Reason syntax
         run: make check-reason
-      - name: Extract code blocks
-        run: make extract-code-blocks
+      - name: Check extracted code blocks
+        run: make check-extracted-code-blocks
       - name: Run tests
         run: make test
       - name: Build playground
