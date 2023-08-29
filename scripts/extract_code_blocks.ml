@@ -96,6 +96,7 @@ let () =
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
+  >  (libraries melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 |};

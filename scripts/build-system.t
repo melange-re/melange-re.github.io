@@ -8,6 +8,7 @@ Test code snippets from the markdown files
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
+  >  (libraries melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 
@@ -18,11 +19,6 @@ Test code snippets from the markdown files
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 11-31:
-  3 | let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
-                 ^^^^^^^^^^^^^^^^^^^^
-  Error: Unbound module Node
-  [1]
 
   $ cat > input.ml <<\EOF
   > let () = Js.log Lib.name
