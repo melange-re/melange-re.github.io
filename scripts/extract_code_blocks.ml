@@ -1,5 +1,5 @@
 module Prelude = struct
-  let prefix = "<!--PRELUDE--"
+  let prefix = "<!--#prelude#"
 
   let remove_prefix str =
     String.sub str (String.length prefix)
@@ -91,7 +91,7 @@ let () =
   > (lang dune 3.8)
   > (using melange 0.1)
   > EOF
-  
+
   $ cat > dune <<EOF
   > (melange.emit
   >  (emit_stdlib false)
