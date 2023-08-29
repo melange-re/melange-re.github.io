@@ -28,11 +28,19 @@ install: ## Install development dependencies
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
+.PHONY: 
+update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
+	$(DUNE) build @extract-code-blocks --auto-promote || true
+	$(DUNE) build @runtest --auto-promote || true
+
 .PHONY: check-extracted-code-blocks
-check-extracted-code-blocks: ## Checks that code blocks extracted from markdown have been updated to latest
-	$(DUNE) build @extract-code-blocks --auto-promote
-	$(DUNE) build @runtest --auto-promote
-	git status --porcelain
+check-extracted-code-blocks: update-extracted-code-blocks ## Checks that code blocks extracted from markdown have been updated to latest
+	@status=$$(git status --porcelain); \
+	if [ ! -z "$${status}" ]; \
+	then \
+		echo "Error - working directory is dirty. Make sure the auto-generated tests are updated ('make update-extracted-code-blocks')"; \
+		exit 1; \
+	fi
 
 .PHONY: test
 test: ## Runs @runtest alias
