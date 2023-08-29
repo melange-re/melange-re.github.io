@@ -25,6 +25,11 @@ Test add_canonical exe
   > <head></head>
   > EOF
 
+  $ mkdir -p melange/Belt
+  $ cat > ./melange/Belt/index.html  <<EOF
+  > <head></head>
+  > EOF
+
   $ mkdir -p melange/Belt/List
   $ cat > ./melange/Belt/List/index.html <<EOF
   > <head></head>
@@ -45,6 +50,9 @@ Test add_canonical exe
 
   $ cat ./melange/Dom/Storage2/index.html
   <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Dom_storage2/index.html" /></head>
+
+  $ cat ./melange/Belt/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt/index.html" /></head>
 
   $ cat ./melange/Belt/List/index.html
   <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_list/index.html" /></head>

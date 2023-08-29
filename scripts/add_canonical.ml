@@ -8,22 +8,26 @@ let to_v1_paths input =
     | 'm' :: 'e' :: 'l' :: 'a' :: 'n' :: 'g' :: 'e' :: '/' :: melange_rest -> (
         match melange_rest with
         | [] -> List.rev acc
-        | 'J' :: 's' :: '/' :: next :: rest ->
+        | 'J' :: 's' :: '/' :: next :: rest
+          when Char.uppercase_ascii next == next ->
             transform_helper
               (Char.lowercase_ascii next :: '_' :: 's' :: 'J' :: '/' :: 'e'
              :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
               rest
-        | 'N' :: 'o' :: 'd' :: 'e' :: '/' :: next :: rest ->
+        | 'N' :: 'o' :: 'd' :: 'e' :: '/' :: next :: rest
+          when Char.uppercase_ascii next == next ->
             transform_helper
               (Char.lowercase_ascii next :: '_' :: 'e' :: 'd' :: 'o' :: 'N'
              :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
               rest
-        | 'D' :: 'o' :: 'm' :: '/' :: next :: rest ->
+        | 'D' :: 'o' :: 'm' :: '/' :: next :: rest
+          when Char.uppercase_ascii next == next ->
             transform_helper
               (Char.lowercase_ascii next :: '_' :: 'm' :: 'o' :: 'D' :: '/'
              :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
               rest
-        | 'B' :: 'e' :: 'l' :: 't' :: '/' :: next :: rest ->
+        | 'B' :: 'e' :: 'l' :: 't' :: '/' :: next :: rest
+          when Char.uppercase_ascii next == next ->
             transform_helper
               (Char.lowercase_ascii next :: '_' :: 't' :: 'l' :: 'e' :: 'B'
              :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
