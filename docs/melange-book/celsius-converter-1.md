@@ -1,6 +1,6 @@
 # Celsius Converter, pt 1
 
-This time, we'll create a widget that take a temperature value in Celsius and
+This time, we'll create a widget that takes a temperature value in Celsius and
 converts it to Fahrenheit. Create a new file called `CelsiusConverter.re`:
 
 ```reasonml
@@ -9,7 +9,6 @@ let convert = celsius => 9.0 /. 5.0 *. celsius +. 32.0;
 [@react.component]
 let make = () => {
   let (celsius, setCelsius) = React.useState(() => "");
-  let (fahrenheit, setFahrenheit) = React.useState(() => "?");
 
   <div>
     <input
@@ -20,7 +19,7 @@ let make = () => {
       }}
     />
     {React.string({js|°C = |js})}
-    {React.string(fahrenheit)}
+    {React.string({js|? °F|js})}
   </div>;
 };
 ```
@@ -51,33 +50,25 @@ can't be used as anything other than a string.
 Another thing to note about `onChange` is that after the `evt` argument, the
 body of the callback function is surrounded by braces ({}). OCaml functions are
 like JavaScript's arrow functions--if they contain more than one line, they need
-to be enclosesd by braces.
+to be enclosed by braces.
 
-Let's add some lines to the `onChange` handler to update the Fahrenheit
-value:
+Let's change the render logic to update the Fahrenheit display:
 
 ```reasonml
-onChange={evt => {
-  let newCelsius = getValueFromEvent(evt);
-  setCelsius(_ => newCelsius);
-  let newFahrenheit = newCelsius |> float_of_string |> convert |> string_of_float;
-  setFahrenheit(_ => newFahrenheit);
-}}
+{celsius |> float_of_string |> convert |> string_of_float |> React.string}
 ```
 
-The pipe last operator (`|>`) is very useful here, allowing us to convert a
+The pipe last operator (`|>`) is very handy here, allowing us to convert a
 string to float, then convert that float to another float (Celsius ->
-Fahrenheit), and convert back to string, all in one line.
+Fahrenheit), convert back to string, and finally convert the string to
+`React.element`, all in one line.
 
 We should probably put °F after the Fahrenheit value so that it's clear to the
 user what unit of measure they're seeing. We can do so using the string
 concatenation operator (`++`):
 
 ```reasonml
-{React.string(fahrenheit ++ {js| °F|js})}
-
-// This would also work:
-{fahrenheit ++ {js| °F|js} |> React.string}
+{(celsius |> float_of_string |> convert |> string_of_float) ++ {js| °F|js} |> React.string}
 ```
 
 However, there's a bug in this code: it will crash if you enter anything into
@@ -85,10 +76,13 @@ the input that can't be converted to a float. We can remedy this by catching the
 exception using a `switch` expression:
 
 ```reasonml
-switch (newCelsius |> float_of_string |> convert |> string_of_float) {
-| exception _ => setFahrenheit(_ => "error")
-| newFahrenheit => setFahrenheit(_ => newFahrenheit)
-};
+{(
+  switch (celsius |> float_of_string |> convert |> string_of_float) {
+  | exception _ => "error"
+  | fahrenheit => fahrenheit ++ {js| °F|js}
+  }
+)
+|> React.string}
 ```
 
 The `| exception _` branch will execute if there is any exception. The
@@ -97,26 +91,41 @@ wanted to be specific about which exception we want to catch, we could instead
 write
 
 ```reasonml
-| exception (Failure(_)) => ()
+| exception (Failure(_)) => "error"
 ```
 
-Note that when an error occurs, we show "error °F" which looks a little weird.
-It's nicer sense to just show "error" in that case:
+Right now it correctly renders "error" when you enter an invalid value, but it
+also renders "error" if the input is blank. It might be bit more user-friendly
+to instead show "? °F" like before. We can do that by wrapping the switch
+expression in a ternary expression:
 
 ```reasonml
-{(fahrenheit == "error" ? fahrenheit : fahrenheit ++ {js| °F|js}) |> React.string}
+{(
+    celsius == ""
+      ? {js|? °F|js}
+      : (
+        switch (celsius |> float_of_string |> convert |> string_of_float) {
+        | exception _ => "error"
+        | fahrenheit => fahrenheit ++ {js| °F|js}
+        }
+      )
+  )
+  |> React.string}
 ```
 
 The ternary expression (`condition ? a : b`) works the same as in JavaScript,
 but in OCaml, it's just a shorthand for an if-else expression (`if (condition) {
-a; } else { b; }`):
+a; } else { b; }`). So we could rewrite it as this:
 
 ```reasonml
 {(
-  if (fahrenheit == "error") {
-    fahrenheit;
+  if (celsius == "") {
+    {js|? °F|js};
   } else {
-    fahrenheit ++ {js| °F|js};
+    switch (celsius |> float_of_string |> convert |> string_of_float) {
+    | exception _ => "error"
+    | fahrenheit => fahrenheit ++ {js| °F|js}
+    };
   }
 )
 |> React.string}
@@ -124,17 +133,20 @@ a; } else { b; }`):
 
 Unlike in JavaScript, the if-else construct is an expression and always yields a
 value. Both branches must return a value of the same type or you'll get a
-compilation error.
+compilation error. In practice, if-else expressions aren't very common in OCaml
+code because in simple cases you can use ternary, and in more complex cases you
+can use switch. But it's a nice, familiar fallback you can rely on when you
+haven't quite gotten used to OCaml syntax yet.
 
 If we enter a value with a lot of decimals in it, e.g. `21.1223456`, we'll
 get a Fahrenheit value with a lot of decimals in it as well. We can limit the
 number of decimals in the converted value using
-[Js.Float.toFixedWithPrecision](todo):
+[Js.Float.toFixedWithPrecision](https://melange.re/v1.0.0/api/re/melange/Js_float/index.html#val-toFixedWithPrecision):
 
 ```reasonml
-switch (newCelsius |> float_of_string |> convert) {
-| exception _ => setFahrenheit(_ => "error")
-| newFahrenheit => setFahrenheit(_ => Js.Float.toFixedWithPrecision(newFahrenheit, ~digits=2))
+switch (celsius |> float_of_string |> convert) {
+| exception _ => "error"
+| fahrenheit => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
 };
 ```
 
@@ -142,8 +154,38 @@ switch (newCelsius |> float_of_string |> convert) {
 and one [labeled argument](../communicate-with-javascript.md#labeled-arguments).
 In this case, the labeled argument is named `digits` and it's receiving a value
 of `2`. It's not possible to pass in the value of a labeled argument without
-using the `~label=value` syntax. We'll see more of labeled arguments in the next
-chapter when we introduce how to add props to your components.
+using the `~label=value` syntax. We'll see more of labeled arguments in the
+following chapters when we introduce props (todo).
+
+You might have noticed that the function chain feeding the switch expression got
+a bit shorter, from
+
+```reasonml
+celsius |> float_of_string |> convert |> string_of_float
+```
+
+to
+
+```reasonml
+celsius |> float_of_string |> convert
+```
+
+This happened because `string_of_float`, which takes a single argument, was
+replaced by `Js.Float.toFixedWithPrecision`, which takes two arguments, and
+functions chained using `|>` can only take a single argument. But this
+one-argument restriction actually doesn't prevent us from putting
+`Js.Float.toFixedWithPrecision` in the chain! We can take advantage of OCaml's
+[partial
+application](https://reasonml.github.io/docs/en/function#partial-application)
+feature to create a one-argument function by writing
+`Js.Float.toFixedWithPrecision(~digits=2)`. Then our switch expression becomes
+
+```reasonml
+switch (celsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) {
+| exception _ => "error"
+| fahrenheit => fahrenheit ++ {js| °F|js}
+}
+```
 
 We have a working component now, but catching exceptions isn't The OCaml Way! In
 the next chapter, you'll see how to rewrite the logic using `option`.
@@ -151,53 +193,46 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 ## Exercises
 
 1. Try changing `{js|°C = |js}` to `"°C = "`. What happens?
-1. Rewrite the `switch` expression so that `Js.Float.toFixedWithPrecision` is
-   put into the input part of the expression instead of the non-exception
-   branch. Hint: `Js.Float.toFixedWithPrecision(~digits=2)` is a function that
-   takes one `float` argument.
-1. Rewrite the ternary expression `{(fahrenheit == "error" ? fahrenheit : fahrenheit ++ {js| °F|js}) |> React.string}`
-   using `switch`.
+1. Rewrite the `onChange` callback so that it doesn't need any braces enclosing
+   its body.
+1. Rewrite the ternary expression using `switch`.
+1. It's possible to use partial application with most functions in OCaml, even
+   operators. Take a look at the following program:
+   ```reasonml
+   let addFive = (+)(5);
+   Js.log(addFive(2));
+   Js.log(addFive(7));
+   Js.log(addFive(10));
+   ```
+   What do you think it outputs? Run it in [Melange
+   Playground](https://melange.re/v1.0.0/playground) to confirm your hypothesis.
+1. Use the pipe last operator (`|>`) and partial application to write a function that takes an integer
+   argument `x`, subtracts `x` from 10, and converts that result to binary.
+   Hint: Use the
+   [Js.Int.toStringWithRadix](https://melange.re/v1.0.0/api/re/melange/Js_int/index.html#val-toStringWithRadix)
+   function.
 
 ## Overview
 
-- Objects (`{.. }`) can have fields of any name and type
-  - You access fields of an object using the `##` operator
-  - You can use type annotations to make use of objects safer
-- Concatenate strings using the `++` operator
-- `switch` expressions can be used to catch exceptions
-- Ternary expressions are shorthand for if-else expressions
-- The two branches of if-else expressions must return values of the same type
-- Besides positional arguments, OCaml functions can also have labeled arguments
+- Objects (`{.. }`) can have fields of any name and type.
+  - You access fields of an object using the `##` operator.
+  - You can use type annotations to make the use of objects safer.
+- Concatenate strings using the `++` operator.
+- Switch expressions can be used to catch exceptions.
+- Ternary expressions are shorthand for if-else expressions.
+- The two branches of if-else expressions must return values of the same type.
+- Besides positional arguments, OCaml functions can also have labeled arguments.
+- If a function takes two arguments, we can supply one of them and get a
+  function that takes only one argument. This is called partial application.
 
 ## Solutions
 
 1. Changing it to `"°C = "` will result in a bit of gibberish being rendered:
    "Â°C". We can't rely on OCaml strings to [deal with Unicode correctly](../communicate-with-javascript.md#strings), so any
    string that doesn't contain only ASCII text must be delimited using `{js||js}`.
-1. Rewriting the `switch` expression with `Js.Float.toFixedWithPrecision` in the
-   input should look something like this:
+1. Rewriting `onChange` handler without braces around its body should look something like this:
    ```reasonml
-   switch (newCelsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) {
-   | exception _ => setFahrenheit(_ => "error")
-   | newFahrenheit => setFahrenheit(_ => newFahrenheit)
-   };
+   <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
    ```
-   The reason that this works is because calling
-   `Js.Float.toFixedWithPrecision(~digits=2)` produces a new function that
-   accepts the remaining `float` positional argument. This is due to a feature
-   called [currying](../melange-for-x-developers.md#currying), which we'll
-   explain more in TODO.
-1. Rewriting the ternary expression using `switch` should result in something
-   like this:
-   ```reasonml
-   {(
-     switch (fahrenheit) {
-     | "error" => fahrenheit
-     | fahrenheit => fahrenheit ++ {js| °F|js}
-     }
-    )
-    |> React.string}
-   ```
-   This is just a different way to write the same logic, it's not necessarily
-   better than the original ternary expression. You can use either one based on
-   your personal preference.
+1. [Define an addFive function using partial application](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
+1. [Define a function that subtracts from 10 and converts to binary](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)
