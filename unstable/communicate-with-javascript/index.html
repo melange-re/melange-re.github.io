@@ -2475,6 +2475,8 @@ let () = pets-&gt;(Belt.Array.map(name))-&gt;(Js.Array2.joinWith(&quot;&amp;&quo
 <p>Melange will generate a function for each field defined in the record. In this
 case, a function <code>name</code> that allows to get that field from any record of type
 <code>pet</code>:</p>
+<!--#prelude#type pet = { name : string } [@@deriving accessors]-->
+
 <pre><code class="language-ocaml">let name (param : pet) = param.name
 </code></pre>
 <pre><code class="language-reasonml">let name = (param: pet) =&gt; param.name;
@@ -2529,15 +2531,15 @@ annotations on the OCaml type definition.</p>
 <p>Let’s see an example. Considering this Melange code:</p>
 <pre><code class="language-ocaml">type person = {
   name : string;
-  age : int; [@bs.optional]
+  age : int option; [@optional]
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 </code></pre>
-<pre><code class="language-reasonml">[@bs.deriving abstract]
+<pre><code class="language-reasonml">[@deriving abstract]
 type person = {
   name: string,
-  [@bs.optional]
-  age: int,
+  [@optional]
+  age: option(int),
 };
 </code></pre>
 <p>Melange will make the <code>person</code> type abstract and generate constructor, getter
@@ -2564,6 +2566,14 @@ possible way to create values of this type, since Melange makes it abstract.
 Using literals like <code>{ name = "Alice"; age = None }</code> directly doesn’t type
 check.</p>
 <p>Here is an example of how we can use it:</p>
+<!--#prelude#
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+-->
+
 <pre><code class="language-ocaml">let alice = person ~name:&quot;Alice&quot; ~age:20 ()
 let bob = person ~name:&quot;Bob&quot; ()
 </code></pre>
@@ -2588,6 +2598,16 @@ application. Further details about optional labeled arguments can be found in
 <a href="https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments">the corresponding section of the OCaml
 manual</a>.</p>
 <p>The functions <code>nameGet</code> and <code>ageGet</code> are accessors for each record field:</p>
+<!--#prelude#
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+let alice = person ~name:"Alice" ~age:20 ()
+let bob = person ~name:"Bob" ()
+-->
+
 <pre><code class="language-ocaml">let twenty = ageGet alice
 
 let bob = nameGet bob
