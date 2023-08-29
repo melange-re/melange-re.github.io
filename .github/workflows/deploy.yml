@@ -34,6 +34,10 @@ jobs:
         run: opam exec -- dune exec add_canonical docs/api
       - name: Check Reason syntax
         run: make check-reason
+      - name: Extract code blocks
+        run: make extract-code-blocks
+      - name: Run tests
+        run: make test
       - name: Build playground
         run: make build-playground
       - name: Configure Git user
