@@ -394,45 +394,24 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > external document : document = "document" [@@bs.val]
   > external get_by_id : document -> string -> Dom.element = "getElementById"
-  >   [@@bs.send]
+  > [@@mel.send]
   > external style : Dom.element -> style = "style" [@@bs.get]
   > external transition_timing_function :
   >   style ->
-  >   [ `ease
-  >   | `easeIn [@bs.as "ease-in"]
-  >   | `easeOut [@bs.as "ease-out"]
-  >   | `easeInOut [@bs.as "ease-in-out"]
-  >   | `linear
-  >   ] ->
+  >   ([ `ease
+  >    | `easeIn [@mel.as "ease-in"]
+  >    | `easeOut [@mel.as "ease-out"]
+  >    | `easeInOut [@mel.as "ease-in-out"]
+  >    | `linear ]
+  >   [@mel.string]) ->
   >   unit = "transitionTimingFunction"
-  >   [@@bs.set]
+  > [@@mel.set]
   > 
   > let element_style = style (get_by_id document "my-id")
   > let () = transition_timing_function element_style `easeIn
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 11, characters 14-19:
-  11 |   | `easeIn [@bs.as "ease-in"]
-                     ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 12, characters 15-20:
-  12 |   | `easeOut [@bs.as "ease-out"]
-                      ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 13, characters 17-22:
-  13 |   | `easeInOut [@bs.as "ease-in-out"]
-                        ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > external read_file_sync :

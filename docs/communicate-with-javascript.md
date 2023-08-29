@@ -2062,18 +2062,18 @@ type style
 
 external document : document = "document" [@@bs.val]
 external get_by_id : document -> string -> Dom.element = "getElementById"
-  [@@bs.send]
+[@@mel.send]
 external style : Dom.element -> style = "style" [@@bs.get]
 external transition_timing_function :
   style ->
-  [ `ease
-  | `easeIn [@bs.as "ease-in"]
-  | `easeOut [@bs.as "ease-out"]
-  | `easeInOut [@bs.as "ease-in-out"]
-  | `linear
-  ] ->
+  ([ `ease
+   | `easeIn [@mel.as "ease-in"]
+   | `easeOut [@mel.as "ease-out"]
+   | `easeInOut [@mel.as "ease-in-out"]
+   | `linear ]
+  [@mel.string]) ->
   unit = "transitionTimingFunction"
-  [@@bs.set]
+[@@mel.set]
 
 let element_style = style (get_by_id document "my-id")
 let () = transition_timing_function element_style `easeIn
@@ -2083,18 +2083,18 @@ type document;
 type style;
 
 [@bs.val] external document: document = "document";
-[@bs.send]
+[@mel.send]
 external get_by_id: (document, string) => Dom.element = "getElementById";
 [@bs.get] external style: Dom.element => style = "style";
-[@bs.set]
+[@mel.set]
 external transition_timing_function:
   (
     style,
-    [
+    [@mel.string] [
       | `ease
-      | [@bs.as "ease-in"] `easeIn
-      | [@bs.as "ease-out"] `easeOut
-      | [@bs.as "ease-in-out"] `easeInOut
+      | [@mel.as "ease-in"] `easeIn
+      | [@mel.as "ease-out"] `easeOut
+      | [@mel.as "ease-in-out"] `easeInOut
       | `linear
     ]
   ) =>
