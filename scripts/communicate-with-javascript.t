@@ -31,24 +31,17 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int;
   > }
-  > [@@bs.deriving abstract]
+  > [@@deriving abstract]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving abstract]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > type person = {
   >   name : string;
   >   mutable age : int;
   > }
-  > [@@bs.deriving abstract]
+  > [@@deriving abstract]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > 
@@ -56,42 +49,23 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving abstract]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 7, characters 12-18:
-  7 | let alice = person ~name:"Alice" ~age:20
-                  ^^^^^^
-  Error: Unbound value person
-  [1]
 
   $ cat > input.ml <<\EOF
   > type person = {
   >   name : string;
   >   age : int;
   > }
-  > [@@bs.deriving { abstract = light }]
+  > [@@deriving { abstract = light }]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > let aliceName = name alice
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving { abstract = light }]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 7, characters 12-18:
-  7 | let alice = person ~name:"Alice" ~age:20
-                  ^^^^^^
-  Error: Unbound value person
+  File "input.ml", line 5, characters 12-32:
+  5 | [@@deriving { abstract = light }]
+                  ^^^^^^^^^^^^^^^^^^^^
+  Error: tuple expected
   [1]
 
   $ cat > input.ml <<\EOF
@@ -169,7 +143,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > type pet = { name : string } [@@bs.deriving accessors]
+  > type pet = { name : string } [@@deriving accessors]
   > 
   > let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
   > 
@@ -177,18 +151,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 32-43:
-  1 | type pet = { name : string } [@@bs.deriving accessors]
-                                      ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 5, characters 32-36:
-  5 | let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
-                                      ^^^^
-  Error: Unbound value name
-  [1]
 
   $ cat > input.ml <<\EOF
   > val actionToJs : action -> string
@@ -210,24 +172,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   | `Submit [@bs.as "submit"]
   >   | `Cancel
   >   ]
-  > [@@bs.deriving jsConverter]
+  > [@@deriving jsConverter]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 14-19:
-  3 |   | `Submit [@bs.as "submit"]
-                    ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 6, characters 3-14:
-  6 | [@@bs.deriving jsConverter]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > val actionToJs : action -> abs_action
@@ -248,24 +196,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   | Click
   >   | Submit [@bs.as 3]
   >   | Cancel
-  > [@@bs.deriving { jsConverter = newType }]
+  > [@@deriving jsConverter {  newType }]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 13-18:
-  3 |   | Submit [@bs.as 3]
-                   ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving { jsConverter = newType }]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > val actionToJs : action -> int
@@ -286,24 +220,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   | Click
   >   | Submit [@bs.as 3]
   >   | Cancel
-  > [@@bs.deriving jsConverter]
+  > [@@deriving jsConverter]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 13-18:
-  3 |   | Submit [@bs.as 3]
-                   ^^^^^
-  Alert unused: Unused attribute [@bs.as]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving jsConverter]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > type action =
@@ -323,17 +243,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   | Click
   >   | Submit of string
   >   | Cancel
-  > [@@bs.deriving accessors]
+  > [@@deriving accessors]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving accessors]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > type element

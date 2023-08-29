@@ -793,11 +793,11 @@ and more:
   external functions](#using-polymorphic-variants-to-bind-to-enums) or [in type
   definitions](#polymorphic-variants)) and [record
   fields](#objects-with-static-shape-record-like).
-- [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
+- [`deriving`](#generate-getters-setters-and-constructors): generate getters
   and setters for some types
 - [`bs.inline`](#inlining-constant-values): forcefully inline constant values
-- [`bs.optional`](#convert-records-into-abstract-types): omit fields in a record
-  (combines with `bs.deriving`)
+- [`optional`](#convert-records-into-abstract-types): omit fields in a record
+  (combines with `deriving`)
 
 **Extension nodes:**
 
@@ -2540,18 +2540,18 @@ value. It is rarely used, but introduced here for debugging purposes.
 As we saw in a [previous section](#non-shared-data-types), there are some types
 in Melange that compile to values that are not easy to manipulate from
 JavaScript. To facilitate the communication from JavaScript code with values of
-these types, Melange includes an attribute `bs.deriving` that helps generating
+these types, Melange includes an attribute `deriving` that helps generating
 conversion functions, as well as functions to create values from these types. In
 particular, for variants and polymorphic variants.
 
-Additionally, `bs.deriving` can be used with record types, to generate setters
+Additionally, `deriving` can be used with record types, to generate setters
 and getters as well as creation functions.
 
 ### Variants
 
 #### Creating values
 
-Use `@bs.deriving accessors` on a variant type to create constructor values for
+Use `@deriving accessors` on a variant type to create constructor values for
 each branch.
 
 ```ocaml
@@ -2559,10 +2559,10 @@ type action =
   | Click
   | Submit of string
   | Cancel
-[@@bs.deriving accessors]
+[@@deriving accessors]
 ```
 ```reasonml
-[@bs.deriving accessors]
+[@deriving accessors]
 type action =
   | Click
   | Submit(string)
@@ -2577,7 +2577,7 @@ follows:
 - For variant tags without payloads, it will be a constant with the runtime
   value of the tag.
 
-Given the `action` type definition above, annotated with `bs.deriving`, Melange
+Given the `action` type definition above, annotated with `deriving`, Melange
 will generate something similar to the following code:
 
 ```ocaml
@@ -2628,11 +2628,11 @@ const click = generators.click;
 
 #### Conversion functions
 
-Use `@bs.deriving jsConverter` on a variant type to create converter functions
+Use `@deriving jsConverter` on a variant type to create converter functions
 that allow to transform back and forth between JavaScript integers and Melange
 variant values.
 
-There are a few differences with `@bs.deriving accessors`:
+There are a few differences with `@deriving accessors`:
 
 - `jsConverter` works with the `bs.as` attribute, while `accessors` does not
 - `jsConverter` does not support variant tags with payload, while `accessors`
@@ -2648,10 +2648,10 @@ type action =
   | Click
   | Submit [@bs.as 3]
   | Cancel
-[@@bs.deriving jsConverter]
+[@@deriving jsConverter]
 ```
 ```reasonml
-[@bs.deriving jsConverter]
+[@deriving jsConverter]
 type action =
   | Click
   | [@bs.as 3] Submit
@@ -2682,18 +2682,18 @@ be converted into a variant tag of the `action` type.
 ##### Hide runtime types
 
 For extra type safety, we can hide the runtime representation of variants
-(`int`) from the generated functions, by using `{ jsConverter = newType }`
-payload with `@bs.deriving`:
+(`int`) from the generated functions, by using `jsConverter {  newType }`
+payload with `@deriving`:
 
 ```ocaml
 type action =
   | Click
   | Submit [@bs.as 3]
   | Cancel
-[@@bs.deriving { jsConverter = newType }]
+[@@deriving jsConverter {  newType }]
 ```
 ```reasonml
-[@bs.deriving {jsConverter: newType}]
+[@deriving jsConverter({newType: newType})]
 type action =
   | Click
   | [@bs.as 3] Submit
@@ -2720,10 +2720,10 @@ way to create an `abs_action` is by calling the `actionToJs` function.
 
 ### Polymorphic variants
 
-The `@bs.deriving jsConverter` attribute is applicable to polymorphic variants
+The `@deriving jsConverter` attribute is applicable to polymorphic variants
 as well.
 
-> **_NOTE:_** Similarly to variants, the `@bs.deriving jsConverter` attribute
+> **_NOTE:_** Similarly to variants, the `@deriving jsConverter` attribute
 > cannot be used when the polymorphic variant tags have payloads. Refer to the
 > [section on runtime representation](#data-types-and-runtime-representation) to
 > learn more about how polymorphic variants are represented in JavaScript.
@@ -2736,10 +2736,10 @@ type action =
   | `Submit [@bs.as "submit"]
   | `Cancel
   ]
-[@@bs.deriving jsConverter]
+[@@deriving jsConverter]
 ```
 ```reasonml
-[@bs.deriving jsConverter]
+[@deriving jsConverter]
 type action = [ | `Click | [@bs.as "submit"] `Submit | `Cancel];
 ```
 
@@ -2756,25 +2756,25 @@ external actionToJs: action => string = ;
 external actionFromJs: string => option(action) = ;
 ```
 
-The `{ jsConverter = newType }` payload can also be used with polymorphic
+The `jsConverter {  newType }` payload can also be used with polymorphic
 variants.
 
 ### Records
 
 #### Accessing fields
 
-Use `@bs.deriving accessors` on a record type to create accessor functions for
+Use `@deriving accessors` on a record type to create accessor functions for
 its record field names.
 
 ```ocaml
-type pet = { name : string } [@@bs.deriving accessors]
+type pet = { name : string } [@@deriving accessors]
 
 let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
 
 let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
 ```
 ```reasonml
-[@bs.deriving accessors]
+[@deriving accessors]
 type pet = {name: string};
 
 let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
@@ -2842,14 +2842,14 @@ An example of this use-case would be expecting `{ name = "John"; age = None }`
 to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
 appear.
 
-The `@bs.deriving abstract` attribute exists to solve this problem. When present
-in a record type, `@bs.deriving abstract` makes the record definition abstract
+The `@deriving abstract` attribute exists to solve this problem. When present
+in a record type, `@deriving abstract` makes the record definition abstract
 and generates the following functions instead:
 
 - A constructor function for creating values of the type
 - Getters and setters for accessing the record fields
 
-`@bs.deriving abstract` effectively models a record-shaped JavaScript object
+`@deriving abstract` effectively models a record-shaped JavaScript object
 exclusively through a set of (generated) functions derived from attribute
 annotations on the OCaml type definition.
 
@@ -2971,20 +2971,20 @@ var bob = bob.name;
 The functions are named by appending `Get` to the field names of the record to
 prevent potential clashes with other values within the module. If shorter names
 are preferred for the getter functions, there is an alternate `{ abstract =
-light }` payload that can be passed to `bs.deriving`:
+light }` payload that can be passed to `deriving`:
 
 ```ocaml
 type person = {
   name : string;
   age : int;
 }
-[@@bs.deriving { abstract = light }]
+[@@deriving { abstract = light }]
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@bs.deriving {abstract: light}]
+[@deriving {abstract: light}]
 type person = {
   name: string,
   age: int,
@@ -3011,16 +3011,16 @@ function no longer requires the final `unit` argument since we have excluded the
 optional field in this case.
 
 > **_NOTE:_** The `bs.as` attribute can still be applied to record fields when
-> the record type is annotated with `bs.deriving`, allowing for the renaming of
+> the record type is annotated with `deriving`, allowing for the renaming of
 > fields in the resulting JavaScript objects, as demonstrated in the section
 > about [binding to objects with static
 > shape](#objects-with-static-shape-record-like). However, the option to pass
 > indices to the `bs.as` decorator (like `[@bs.as "0"]`) to change the runtime
-> representation to an array is not available when using `bs.deriving`.
+> representation to an array is not available when using `deriving`.
 
 ##### Compatibility with OCaml features
 
-The `@bs.deriving abstract` attribute and its lightweight variant can be used
+The `@deriving abstract` attribute and its lightweight variant can be used
 with [mutable
 fields](https://v2.ocaml.org/manual/coreexamples.html#s:imperative-features) and
 [private types](https://v2.ocaml.org/manual/privatetypes.html), which are
@@ -3034,14 +3034,14 @@ type person = {
   name : string;
   mutable age : int;
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 
 let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person = {
   name: string,
   mutable age: int,
@@ -3075,10 +3075,10 @@ type person = private {
   name : string;
   age : int;
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person =
   pri {
     name: string,
