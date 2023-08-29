@@ -28,7 +28,10 @@ let to_v1_paths input =
               (Char.lowercase_ascii next :: '_' :: 't' :: 'l' :: 'e' :: 'B'
              :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
               rest
-        | c :: rest -> transform_helper (c :: acc) rest)
+        | c :: rest ->
+            transform_helper
+              (c :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              rest)
     | c :: rest -> transform_helper (c :: acc) rest
   in
   let input_chars = List.of_seq (String.to_seq input) in
