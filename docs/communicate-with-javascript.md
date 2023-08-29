@@ -2786,7 +2786,7 @@ Melange will generate a function for each field defined in the record. In this
 case, a function `name` that allows to get that field from any record of type
 `pet`:
 
-<!--PRELUDE--type pet = { name : string } [@@bs.deriving accessors]-->
+<!--PRELUDE--type pet = { name : string } [@@deriving accessors]-->
 ```ocaml
 let name (param : pet) = param.name
 ```
@@ -2858,16 +2858,16 @@ Let’s see an example. Considering this Melange code:
 ```ocaml
 type person = {
   name : string;
-  age : int; [@bs.optional]
+  age : int option; [@optional]
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person = {
   name: string,
-  [@bs.optional]
-  age: int,
+  [@optional]
+  age: option(int),
 };
 ```
 
@@ -2901,6 +2901,13 @@ check.
 
 Here is an example of how we can use it:
 
+<!--PRELUDE--
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+-->
 ```ocaml
 let alice = person ~name:"Alice" ~age:20 ()
 let bob = person ~name:"Bob" ()
@@ -2933,6 +2940,15 @@ manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The functions `nameGet` and `ageGet` are accessors for each record field:
 
+<!--PRELUDE--
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+let alice = person ~name:"Alice" ~age:20 ()
+let bob = person ~name:"Bob" ()
+-->
 ```ocaml
 let twenty = ageGet alice
 

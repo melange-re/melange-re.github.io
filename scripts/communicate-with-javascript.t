@@ -8,6 +8,7 @@ Test code snippets from the markdown files
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
+  >  (libraries melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 
@@ -92,29 +93,35 @@ Test code snippets from the markdown files
   [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > type person = {
+  >   name : string;
+  >   age : int option; [@optional]
+  > }
+  > [@@deriving abstract]
+  > let alice = person ~name:"Alice" ~age:20 ()
+  > let bob = person ~name:"Bob" ()
+  > 
   > let twenty = ageGet alice
   > 
   > let bob = nameGet bob
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 13-19:
-  1 | let twenty = ageGet alice
-                   ^^^^^^
-  Error: Unbound value ageGet
-  [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > type person = {
+  >   name : string;
+  >   age : int option; [@optional]
+  > }
+  > [@@deriving abstract]
+  > 
   > let alice = person ~name:"Alice" ~age:20 ()
   > let bob = person ~name:"Bob" ()
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 12-18:
-  1 | let alice = person ~name:"Alice" ~age:20 ()
-                  ^^^^^^
-  Error: Unbound value person
-  [1]
 
   $ cat > input.ml <<\EOF
   > type person
@@ -136,26 +143,12 @@ Test code snippets from the markdown files
   $ cat > input.ml <<\EOF
   > type person = {
   >   name : string;
-  >   age : int; [@bs.optional]
+  >   age : int option; [@optional]
   > }
-  > [@@bs.deriving abstract]
+  > [@@deriving abstract]
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 15-26:
-  3 |   age : int; [@bs.optional]
-                     ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.optional]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 5, characters 3-14:
-  5 | [@@bs.deriving abstract]
-         ^^^^^^^^^^^
-  Alert unused: Unused attribute [@bs.deriving]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
 
   $ cat > input.ml <<\EOF
   > type person = {
@@ -167,15 +160,11 @@ Test code snippets from the markdown files
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > type pet = { name : string } [@@deriving accessors]
   > let name (param : pet) = param.name
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 18-21:
-  1 | let name (param : pet) = param.name
-                        ^^^
-  Error: Unbound type constructor pet
-  [1]
 
   $ cat > input.ml <<\EOF
   > type pet = { name : string } [@@bs.deriving accessors]
