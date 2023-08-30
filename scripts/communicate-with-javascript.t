@@ -191,7 +191,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   | Click
   >   | Submit [@mel.as 3]
   >   | Cancel
-  > [@@deriving jsConverter {  newType }]
+  > [@@deriving jsConverter { newType }]
   > EOF
 
   $ dune build @melange

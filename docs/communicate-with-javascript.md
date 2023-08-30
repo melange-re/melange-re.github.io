@@ -180,7 +180,7 @@ it usually refers to a C function with that name. For Melange, it refers to the
 functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.
 
-In Melange, externals can be used to [binding to global JavaScript
+In Melange, externals can be used to [bind to global JavaScript
 objects](#bind-to-global-javascript-functions-or-values). They can also be
 decorated with certain `[@mel.xxx]` attributes to facilitate the creation of
 bindings in specific scenarios. Each one of the [available
@@ -2672,7 +2672,7 @@ be converted into a variant tag of the `action` type.
 ##### Hide runtime types
 
 For extra type safety, we can hide the runtime representation of variants
-(`int`) from the generated functions, by using `jsConverter {  newType }`
+(`int`) from the generated functions, by using `jsConverter { newType }`
 payload with `@deriving`:
 
 ```ocaml
@@ -2680,7 +2680,7 @@ type action =
   | Click
   | Submit [@mel.as 3]
   | Cancel
-[@@deriving jsConverter {  newType }]
+[@@deriving jsConverter { newType }]
 ```
 ```reasonml
 [@deriving jsConverter({newType: newType})]
@@ -2746,7 +2746,7 @@ external actionToJs: action => string = ;
 external actionFromJs: string => option(action) = ;
 ```
 
-The `jsConverter {  newType }` payload can also be used with polymorphic
+The `jsConverter { newType }` payload can also be used with polymorphic
 variants.
 
 ### Records
