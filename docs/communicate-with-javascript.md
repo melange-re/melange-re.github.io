@@ -2314,7 +2314,7 @@ discarded. The value returned from the operation would not be the addition of
 the two numbers, but rather the inner anonymous callback.
 
 To solve this mismatch between OCaml and JavaScript functions and their
-application, Melange provides a special attribute `@bs` that can be used to
+application, Melange provides a special attribute `@u` that can be used to
 annotate external functions that need to be "uncurried".
 
 <span class="text-reasonml">In Reason syntax, this attribute does not need to be
@@ -2326,16 +2326,16 @@ character `.` to the function type. For example, `(. 'a, 'b) => 'c` instead of
 In the example above:
 
 ```ocaml
-external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array
   = "map"
 ```
 ```reasonml
 external map: (array('a), array('b), (. 'a, 'b) => 'c) => array('c) = "map";
 ```
 
-Here <span class="text-ocaml">`('a -> 'b -> 'c [@bs])`</span><span
+Here <span class="text-ocaml">`('a -> 'b -> 'c [@u])`</span><span
 class="text-reasonml">`(. 'a, 'b) => 'c`</span>will be interpreted as having
-arity 2. In general, <span class="text-ocaml">`'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]`
+arity 2. In general, <span class="text-ocaml">`'a0 -> 'a1 ...​ 'aN -> 'b0 [@u]`
 is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`</span><span class="text-reasonml">`.
 'a0, 'a1, ...​ 'aN => 'b0` is the same as `'a0, 'a1, ...​ 'aN => 'b0`</span>
 except the former’s arity is guaranteed to be N while the latter is unknown.
@@ -2359,11 +2359,11 @@ This expression has type int -> int -> int
 but an expression was expected of type ('a -> 'b -> 'c) Js.Fn.arity2
 ```
 
-To solve this, we add <span class="text-ocaml">`@bs`</span><span
+To solve this, we add <span class="text-ocaml">`@u`</span><span
 class="text-reasonml">`.`</span> in the function definition as well:
 
 ```ocaml
-let add = fun [@bs] x y -> x + y
+let add = fun [@u] x y -> x + y
 ```
 ```reasonml
 let add = (. x, y) => x + y;
@@ -2376,7 +2376,7 @@ To work around the verbosity, Melange offers another attribute called
 `mel.uncurry`.
 
 Let’s see how we could use it in the previous example. We just need to replace
-`bs` with `mel.uncurry`:
+`u` with `mel.uncurry`:
 
 ```ocaml
 external map :
@@ -2401,10 +2401,10 @@ let _ = map([||], [||], add);
 
 Everything works fine now, without having to attach any attributes to `add`.
 
-The main difference between `bs` and `mel.uncurry` is that the latter only works
+The main difference between `u` and `mel.uncurry` is that the latter only works
 with externals. `mel.uncurry` is the recommended option to use for bindings,
-while `bs` remains useful for those use cases where performance is crucial and
-we want the JavaScript functions generated from OCaml ones to not be applied
+while `u` remains useful for those use cases where performance is crucial and we
+want the JavaScript functions generated from OCaml ones to not be applied
 partially.
 
 ### Modeling `this`\-based Callbacks

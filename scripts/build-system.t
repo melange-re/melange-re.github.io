@@ -15,17 +15,12 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ cat > input.ml <<\EOF
-  > let dir = [%bs.raw "__dirname"]
+  > let dir = [%mel.raw "__dirname"]
   > let file = "name.txt"
   > let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 12-18:
-  1 | let dir = [%bs.raw "__dirname"]
-                  ^^^^^^
-  Error: Uninterpreted extension 'bs.raw'.
-  [1]
 
   $ cat > input.ml <<\EOF
   > let () = Js.log Lib.name

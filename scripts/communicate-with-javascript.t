@@ -299,15 +299,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let add = fun [@bs] x y -> x + y
+  > let add = fun [@u] x y -> x + y
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 16-18:
-  1 | let add = fun [@bs] x y -> x + y
-                      ^^
-  Alert deprecated: The `[@bs]' uncurry attribute is deprecated and will be removed in the next release.
-  Use `[@u]' instead.
 
   $ cat > input.ml <<\EOF
   > let add x y = x + y
@@ -323,16 +318,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   [1]
 
   $ cat > input.ml <<\EOF
-  > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
+  > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array
   >   = "map"
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 58-60:
-  1 | external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
-                                                                ^^
-  Alert deprecated: The `[@bs]' uncurry attribute is deprecated and will be removed in the next release.
-  Use `[@u]' instead.
 
   $ cat > input.ml <<\EOF
   > let add x = let partial y = x + y in partial
