@@ -403,7 +403,7 @@ That string has a specific meaning depending on the context. For native OCaml,
 it usually refers to a C function with that name. For Melange, it refers to the
 functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.</p>
-<p>In Melange, externals can be used to <a href="#bind-to-global-javascript-functions-or-values">binding to global JavaScript
+<p>In Melange, externals can be used to <a href="#bind-to-global-javascript-functions-or-values">bind to global JavaScript
 objects</a>. They can also be
 decorated with certain <code>[@mel.xxx]</code> attributes to facilitate the creation of
 bindings in specific scenarios. Each one of the <a href="#list-of-attributes-and-extension-nodes">available
@@ -2387,13 +2387,13 @@ polymorphic variants</a>.</p>
 be converted into a variant tag of the <code>action</code> type.</p>
 <h5 id="hide-runtime-types">Hide runtime types</h5>
 <p>For extra type safety, we can hide the runtime representation of variants
-(<code>int</code>) from the generated functions, by using <code>jsConverter {  newType }</code>
+(<code>int</code>) from the generated functions, by using <code>jsConverter { newType }</code>
 payload with <code>@deriving</code>:</p>
 <pre><code class="language-ocaml">type action =
   | Click
   | Submit [@mel.as 3]
   | Cancel
-[@@deriving jsConverter {  newType }]
+[@@deriving jsConverter { newType }]
 </code></pre>
 <pre><code class="language-reasonml">[@deriving jsConverter({newType: newType})]
 type action =
@@ -2443,7 +2443,7 @@ val actionFromJs : string -&gt; action option
 
 external actionFromJs: string =&gt; option(action) = ;
 </code></pre>
-<p>The <code>jsConverter {  newType }</code> payload can also be used with polymorphic
+<p>The <code>jsConverter { newType }</code> payload can also be used with polymorphic
 variants.</p>
 <h3 id="records_1">Records</h3>
 <h4 id="accessing-fields">Accessing fields</h4>
