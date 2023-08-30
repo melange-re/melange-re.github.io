@@ -1345,8 +1345,8 @@ notation `[]`:
 ```ocaml
 type t
 external create : int -> t = "Int32Array" [@@mel.new]
-external get : t -> int -> int = "get" [@@mel.get_index]
-external set : t -> int -> int -> unit = "set" [@@mel.set_index]
+external get : t -> int -> int = "" [@@mel.get_index]
+external set : t -> int -> int -> unit = "" [@@mel.set_index]
 
 let () =
   let i32arr = (create 3) in
@@ -1356,8 +1356,8 @@ let () =
 ```reasonml
 type t;
 [@mel.new] external create: int => t = "Int32Array";
-[@mel.get_index] external get: (t, int) => int = "get";
-[@mel.set_index] external set: (t, int, int) => unit = "set";
+[@mel.get_index] external get: (t, int) => int;
+[@mel.set_index] external set: (t, int, int) => unit;
 
 let () = {
   let i32arr = create(3);
@@ -2968,13 +2968,13 @@ type person = {
   name : string;
   age : int;
 }
-[@@deriving { abstract = light }]
+[@@deriving abstract { light }]
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@deriving {abstract: light}]
+[@deriving abstract({light: light})]
 type person = {
   name: string,
   age: int,

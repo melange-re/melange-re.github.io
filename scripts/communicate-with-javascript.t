@@ -55,18 +55,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int;
   > }
-  > [@@deriving { abstract = light }]
+  > [@@deriving abstract { light }]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > let aliceName = name alice
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 12-32:
-  5 | [@@deriving { abstract = light }]
-                  ^^^^^^^^^^^^^^^^^^^^
-  Error: tuple expected
-  [1]
 
   $ cat > input.ml <<\EOF
   > 
@@ -632,8 +627,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type t
   > external create : int -> t = "Int32Array" [@@mel.new]
-  > external get : t -> int -> int = "get" [@@mel.get_index]
-  > external set : t -> int -> int -> unit = "set" [@@mel.set_index]
+  > external get : t -> int -> int = "" [@@mel.get_index]
+  > external set : t -> int -> int -> unit = "" [@@mel.set_index]
   > 
   > let () =
   >   let i32arr = (create 3) in
@@ -642,11 +637,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 42-55:
-  3 | external get : t -> int -> int = "get" [@@mel.get_index]
-                                                ^^^^^^^^^^^^^
-  Error: @get_index this particular external's name needs to be a placeholder empty string
-  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` value *)
