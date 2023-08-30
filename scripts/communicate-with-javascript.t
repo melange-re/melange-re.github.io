@@ -10,7 +10,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
-  >  (libraries melange.node)
+  >  (libraries melange.dom melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 
@@ -407,11 +407,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 43-54:
-  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
-                                                 ^^^^^^^^^^^
-  Error: Unbound module Dom
-  [1]
 
   $ cat > input.ml <<\EOF
   > external read_file_sync :
@@ -483,11 +478,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 31-42:
-  5 | external get_by_id : string -> Dom.element = "getElementById"
-                                     ^^^^^^^^^^^
-  Error: Unbound module Dom
-  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
@@ -504,11 +494,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 43-54:
-  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
-                                                 ^^^^^^^^^^^
-  Error: Unbound module Dom
-  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
@@ -522,11 +507,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 31-42:
-  5 | external get_by_id : string -> Dom.element = "getElementById"
-                                     ^^^^^^^^^^^
-  Error: Unbound module Dom
-  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
@@ -540,11 +520,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 43-54:
-  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
-                                                 ^^^^^^^^^^^
-  Error: Unbound module Dom
-  [1]
 
   $ cat > input.ml <<\EOF
   > external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"

@@ -1716,7 +1716,11 @@ MyGame.draw(10, 20, undefined);
 ### Calling an object method
 
 If we need to call a JavaScript method, Melange provides the attribute
-`mel.send`:
+`mel.send`.
+
+> In the following snippets, we will be referring to a type `Dom.element`, which
+> is provided within the library `melange.dom`. You can add it to your project
+> by including `(libraries melange.dom)` to your `dune` file:
 
 ```ocaml
 (* Abstract type for the `document` global *)
