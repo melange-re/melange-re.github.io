@@ -95,9 +95,9 @@ removeAssoc [1,&quot;a&quot;; 2, &quot;b&quot;; 3, &quot;c&quot; ] 99 (=) =
   <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span>
   <span><a href="../../Js/Fn/index.html#type-arity2">Js.Fn.arity2</a>(<span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> bool)</span>) <span class="arrow">=&gt;</span></span>
   <a href="#type-t">t</a>(<span>(<span class="type-var">'a</span>, <span class="type-var">'c</span>)</span>);</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-setAssoc"><a href="#val-setAssoc" class="anchor"></a><code><span><span class="keyword">let</span> setAssoc: <span><a href="#type-t">t</a>(<span>(<span class="type-var">'a</span>, <span class="type-var">'c</span>)</span>) <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'c</span> <span class="arrow">=&gt;</span></span> <span><span>(<span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">=&gt;</span></span> bool)</span> <span class="arrow">=&gt;</span></span> <a href="#type-t">t</a>(<span>(<span class="type-var">'a</span>, <span class="type-var">'c</span>)</span>);</span></code></div><div class="spec-doc"><p><code>setAssoc xs k v eq</code> if <code>k</code> exists in <code>xs</code> by satisfying the <code>eq</code> predicate, return a new list with the key and value replaced by the new <code>k</code> and <code>v</code>; otherwise, return a new list with the pair <code>k, v</code> added to the head of <code>xs</code>.</p><pre class="language-ocaml"><code>setAssoc [1,&quot;a&quot;; 2, &quot;b&quot;; 3, &quot;c&quot;] 2 &quot;x&quot; (=) =
-[1,&quot;a&quot;; 2, &quot;x&quot;; 3,&quot;c&quot;] ;; 
+[1,&quot;a&quot;; 2, &quot;x&quot;; 3,&quot;c&quot;] ;;
 
-setAssoc [1,&quot;a&quot;; 3, &quot;c&quot;] 2 &quot;b&quot; (=) = 
+setAssoc [1,&quot;a&quot;; 3, &quot;c&quot;] 2 &quot;b&quot; (=) =
 [2,&quot;b&quot;; 1,&quot;a&quot;; 3, &quot;c&quot;]
 
 setAssoc [9, &quot;morning&quot;; 3, &quot;morning?!&quot;; 22, &quot;night&quot;] 15 &quot;afternoon&quot;

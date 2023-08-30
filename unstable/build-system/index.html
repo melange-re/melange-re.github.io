@@ -446,11 +446,11 @@ Finally, update <code>lib/lib.ml</code> to read from the recently added file:
 Finally, update <code>lib/lib.re</code> to read from the recently added file:
 </div>
 
-<pre><code class="language-ocaml">let dir = [%bs.raw &quot;__dirname&quot;]
+<pre><code class="language-ocaml">let dir = [%mel.raw &quot;__dirname&quot;]
 let file = &quot;name.txt&quot;
 let name = Node.Fs.readFileSync (dir ^ &quot;/&quot; ^ file) `ascii
 </code></pre>
-<pre><code class="language-reasonml">let dir = [%bs.raw &quot;__dirname&quot;];
+<pre><code class="language-reasonml">let dir = [%mel.raw &quot;__dirname&quot;];
 let file = &quot;name.txt&quot;;
 let name = Node.Fs.readFileSync(dir ++ &quot;/&quot; ++ file, `ascii);
 </code></pre>

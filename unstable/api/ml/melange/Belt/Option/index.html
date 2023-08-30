@@ -10,7 +10,7 @@ map None (fun x -&gt; x * x) = None;;</code></pre></div></div><div class="odoc-s
       Some (sqrt x)
     else
       None;;
-  
+
 flatMap (Some 4.0) f = Some 2.0;;
 flatMap (Some (-4.0)) f = None;;
 flatMap None f = None;;</code></pre></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-getWithDefault"><a href="#val-getWithDefault" class="anchor"></a><code><span><span class="keyword">val</span> getWithDefault : <span><span><span class="type-var">'a</span> option</span> <span class="arrow">&#45;&gt;</span></span> <span><span class="type-var">'a</span> <span class="arrow">&#45;&gt;</span></span> <span class="type-var">'a</span></span></code></div><div class="spec-doc"><p><code>getWithDefault optionalValue default</code></p><p>If <code>optionalValue</code> is <code>Some value</code>, returns <code>value</code>, otherwise <code>default</code></p><pre class="language-ocaml"><code>getWithDefault (Some 1812) 1066 = 1812;;
