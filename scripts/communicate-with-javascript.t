@@ -169,7 +169,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type action =
   >   [ `Click
-  >   | `Submit [@bs.as "submit"]
+  >   | `Submit [@mel.as "submit"]
   >   | `Cancel
   >   ]
   > [@@deriving jsConverter]
@@ -194,7 +194,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type action =
   >   | Click
-  >   | Submit [@bs.as 3]
+  >   | Submit [@mel.as 3]
   >   | Cancel
   > [@@deriving jsConverter {  newType }]
   > EOF
@@ -218,7 +218,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type action =
   >   | Click
-  >   | Submit [@bs.as 3]
+  >   | Submit [@mel.as 3]
   >   | Cancel
   > [@@deriving jsConverter]
   > EOF
@@ -252,7 +252,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type element
   > type document
   > external get_by_id : document -> string -> element option = "getElementById"
-  >   [@@bs.send] [@@bs.return nullable]
+  >   [@@mel.send] [@@mel.return nullable]
   > 
   > let test document =
   >   let elem = get_by_id document "header" in
@@ -265,14 +265,14 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type x
-  > external x : x = "x" [@@bs.val]
-  > external set_onload : x -> ((x -> int -> unit)[@bs.this]) -> unit = "onload"
-  >   [@@bs.set]
-  > external resp : x -> int = "response" [@@bs.get]
+  > external x : x = "x"
+  > external set_onload : x -> ((x -> int -> unit)[@mel.this]) -> unit = "onload"
+  >   [@@mel.set]
+  > external resp : x -> int = "response" [@@mel.get]
   > let _ =
   >   set_onload x
   >     begin
-  >       fun [@bs.this] o v -> Js.log (resp o + v)
+  >       fun [@mel.this] o v -> Js.log (resp o + v)
   >     end
   > EOF
 
@@ -293,8 +293,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external map :
-  >   'a array -> 'b array -> (('a -> 'b -> 'c)[@bs.uncurry]) -> 'c array = "map"
-  >   [@@bs.val]
+  >   'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
   > EOF
 
   $ dune build @melange
@@ -304,6 +303,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 1, characters 16-18:
+  1 | let add = fun [@bs] x y -> x + y
+                      ^^
+  Alert deprecated: The `[@bs]' uncurry attribute is deprecated and will be removed in the next release.
+  Use `[@u]' instead.
 
   $ cat > input.ml <<\EOF
   > let add x y = x + y
@@ -321,10 +325,14 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
   >   = "map"
-  >   [@@bs.val]
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 1, characters 58-60:
+  1 | external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
+                                                                ^^
+  Alert deprecated: The `[@bs]' uncurry attribute is deprecated and will be removed in the next release.
+  Use `[@u]' instead.
 
   $ cat > input.ml <<\EOF
   > let add x = let partial y = x + y in partial
@@ -334,7 +342,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external map : 'a array -> 'b array -> ('a -> 'b -> 'c) -> 'c array = "map"
-  >   [@@bs.val]
   > EOF
 
   $ dune build @melange
@@ -346,9 +353,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external process_on_exit : (_[@bs.as "exit"]) -> (int -> unit) -> unit
+  > external process_on_exit : (_[@mel.as "exit"]) -> (int -> unit) -> unit
   >   = "process.on"
-  >   [@@bs.val]
   > 
   > let () =
   >   process_on_exit (fun exit_code ->
@@ -362,9 +368,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > external on :
   >   readline ->
-  >   ([ `close of unit -> unit | `line of string -> unit ][@bs.string]) ->
+  >   ([ `close of unit -> unit | `line of string -> unit ][@mel.string]) ->
   >   readline = "on"
-  >   [@@bs.send]
+  >   [@@mel.send]
   > 
   > let register rl =
   >   rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
@@ -379,9 +385,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external test_int_type :
-  >   ([ `on_closed | `on_open [@bs.as 20] | `in_bin ][@bs.int]) -> int
+  >   ([ `on_closed | `on_open [@mel.as 20] | `in_bin ][@mel.int]) -> int
   >   = "testIntType"
-  >   [@@bs.val]
   > 
   > let value = test_int_type `on_open
   > EOF
@@ -392,10 +397,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type document
   > type style
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > external get_by_id : document -> string -> Dom.element = "getElementById"
   > [@@mel.send]
-  > external style : Dom.element -> style = "style" [@@bs.get]
+  > external style : Dom.element -> style = "style" [@@mel.get]
   > external transition_timing_function :
   >   style ->
   >   ([ `ease
@@ -412,29 +417,34 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 5, characters 43-54:
+  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
+                                                 ^^^^^^^^^^^
+  Error: Unbound module Dom
+  [1]
 
   $ cat > input.ml <<\EOF
   > external read_file_sync :
-  >   name:string -> ([ `utf8 | `ascii ][@bs.string]) -> string = "readFileSync"
-  >   [@@bs.module "fs"]
+  >   name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  >   [@@mel.module "fs"]
   > 
   > let _ = read_file_sync ~name:"xx.txt" `ascii
   > EOF
 
   $ dune build @melange
   File "input.ml", line 2, characters 18-36:
-  2 |   name:string -> ([ `utf8 | `ascii ][@bs.string]) -> string = "readFileSync"
+  2 |   name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
                         ^^^^^^^^^^^^^^^^^^
-  Alert redundant: [@bs.string] is redundant here, you can safely remove it
+  Alert redundant: [@mel.string] is redundant here, you can safely remove it
 
   $ cat > input.ml <<\EOF
   > external padLeft:
   >   string
   >   -> ([ `Str of string
   >       | `Int of int
-  >       ] [@bs.unwrap])
+  >       ] [@mel.unwrap])
   >   -> string
-  >   = "padLeft" [@@bs.val]
+  >   = "padLeft"
   > 
   > let _ = padLeft "Hello World" (`Int 4)
   > let _ = padLeft "Hello World" (`Str "Message from Melange: ")
@@ -443,10 +453,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external drawCat : unit -> unit = "draw" [@@bs.module "MyGame"]
-  > external drawDog : giveName:string -> unit = "draw" [@@bs.module "MyGame"]
+  > external drawCat : unit -> unit = "draw" [@@mel.module "MyGame"]
+  > external drawDog : giveName:string -> unit = "draw" [@@mel.module "MyGame"]
   > external draw : string -> useRandomAnimal:bool -> unit = "draw"
-  >   [@@bs.module "MyGame"]
+  >   [@@mel.module "MyGame"]
   > EOF
 
   $ dune build @melange
@@ -454,7 +464,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type hide = Hide : 'a -> hide [@@unboxed]
   > 
-  > external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.variadic]
+  > external join : hide array -> string = "join" [@@mel.module "path"] [@@mel.variadic]
   > 
   > let v = join [| Hide "a"; Hide 2 |]
   > EOF
@@ -463,7 +473,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external join : string array -> string = "join"
-  >   [@@bs.module "path"] [@@bs.variadic]
+  >   [@@mel.module "path"] [@@mel.variadic]
   > let v = join [| "a"; "b" |]
   > EOF
 
@@ -473,58 +483,78 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (* Abstract type for the `document` global *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > external get_by_id : string -> Dom.element = "getElementById"
-  >   [@@bs.send.pipe: document]
+  >   [@@mel.send.pipe: document]
   > external get_by_classname : string -> Dom.element = "getElementsByClassName"
-  >   [@@bs.send.pipe: Dom.element]
+  >   [@@mel.send.pipe: Dom.element]
   > 
   > let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 5, characters 31-42:
+  5 | external get_by_id : string -> Dom.element = "getElementById"
+                                     ^^^^^^^^^^^
+  Error: Unbound module Dom
+  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > external get_by_id : document -> string -> Dom.element = "getElementById"
-  >   [@@bs.send]
+  >   [@@mel.send]
   > external get_by_classname : Dom.element -> string -> Dom.element
   >   = "getElementsByClassName"
-  >   [@@bs.send]
+  >   [@@mel.send]
   > 
   > let el = document |. get_by_id "my-id" |. get_by_classname "my-class"
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 5, characters 43-54:
+  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
+                                                 ^^^^^^^^^^^
+  Error: Unbound module Dom
+  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > external get_by_id : string -> Dom.element = "getElementById"
-  >   [@@bs.send.pipe: document]
+  >   [@@mel.send.pipe: document]
   > 
   > let el = get_by_id "my-id" document
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 5, characters 31-42:
+  5 | external get_by_id : string -> Dom.element = "getElementById"
+                                     ^^^^^^^^^^^
+  Error: Unbound module Dom
+  [1]
 
   $ cat > input.ml <<\EOF
   > (* Abstract type for the `document` global *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > external get_by_id : document -> string -> Dom.element = "getElementById"
-  >   [@@bs.send]
+  >   [@@mel.send]
   > 
   > let el = get_by_id document "my-id"
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 5, characters 43-54:
+  5 | external get_by_id : document -> string -> Dom.element = "getElementById"
+                                                 ^^^^^^^^^^^
+  Error: Unbound module Dom
+  [1]
 
   $ cat > input.ml <<\EOF
   > external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
@@ -549,7 +579,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type t
   > 
   > external create : unit -> t = "GUI"
-  >   [@@bs.new] [@@bs.scope "default"] [@@bs.module "dat.gui"]
+  >   [@@mel.new] [@@mel.scope "default"] [@@mel.module "dat.gui"]
   > 
   > let gui = create ()
   > EOF
@@ -557,7 +587,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external imul : int -> int -> int = "imul" [@@bs.val] [@@bs.scope "Math"]
+  > external imul : int -> int -> int = "imul" [@@mel.scope "Math"]
   > 
   > let res = imul 1 2
   > EOF
@@ -568,7 +598,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type t
   > 
   > external back : t = "back"
-  >   [@@bs.module "expo-camera"] [@@bs.scope "Camera", "Constants", "Type"]
+  >   [@@mel.module "expo-camera"] [@@mel.scope "Camera", "Constants", "Type"]
   > 
   > let camera_type_back = back
   > EOF
@@ -578,19 +608,19 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type param
   > external executeCommands : string -> param array -> unit = ""
-  >   [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.variadic]
+  >   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
   > 
   > let f a b c = executeCommands "hi" [| a; b; c |]
   > EOF
 
   $ dune build @melange
-  File "input.ml", lines 2-3, characters 0-64:
+  File "input.ml", lines 2-3, characters 0-67:
   2 | external executeCommands : string -> param array -> unit = ""
-  3 |   [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.variadic]
+  3 |   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
   Alert fragile: executeCommands : the external name is inferred from val name is unsafe from refactoring when changing value name
 
   $ cat > input.ml <<\EOF
-  > external dirname : string -> string = "dirname" [@@bs.module "path"]
+  > external dirname : string -> string = "dirname" [@@mel.module "path"]
   > let root = dirname "/User/github"
   > EOF
 
@@ -600,7 +630,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (* Abstract type for `document` *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > let document = document
   > EOF
 
@@ -610,8 +640,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (* Abstract type for `timeoutId` *)
   > type timeoutId
   > external setTimeout : (unit -> unit) -> int -> timeoutId = "setTimeout"
-  >   [@@bs.val]
-  > external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+  > external clearTimeout : timeoutId -> unit = "clearTimeout"
   > 
   > let id = setTimeout (fun () -> Js.log "hello") 100
   > let () = clearTimeout id
@@ -621,7 +650,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type t
-  > external book : unit -> t = "Book" [@@bs.new] [@@bs.module]
+  > external book : unit -> t = "Book" [@@mel.new] [@@mel.module]
   > let myBook = book ()
   > EOF
 
@@ -629,7 +658,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type t
-  > external create_date : unit -> t = "Date" [@@bs.new]
+  > external create_date : unit -> t = "Date" [@@mel.new]
   > let date = create_date ()
   > EOF
 
@@ -637,9 +666,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type t
-  > external create : int -> t = "Int32Array" [@@bs.new]
-  > external get : t -> int -> int = "get" [@@bs.get_index]
-  > external set : t -> int -> int -> unit = "set" [@@bs.set_index]
+  > external create : int -> t = "Int32Array" [@@mel.new]
+  > external get : t -> int -> int = "get" [@@mel.get_index]
+  > external set : t -> int -> int -> unit = "set" [@@mel.set_index]
   > 
   > let () =
   >   let i32arr = (create 3) in
@@ -648,9 +677,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 42-54:
-  3 | external get : t -> int -> int = "get" [@@bs.get_index]
-                                                ^^^^^^^^^^^^
+  File "input.ml", line 3, characters 42-55:
+  3 | external get : t -> int -> int = "get" [@@mel.get_index]
+                                                ^^^^^^^^^^^^^
   Error: @get_index this particular external's name needs to be a placeholder empty string
   [1]
 
@@ -658,10 +687,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (* Abstract type for the `document` value *)
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
+  > external document : document = "document"
   > 
-  > external set_title : document -> string -> unit = "title" [@@bs.set]
-  > external get_title : document -> string = "title" [@@bs.get]
+  > external set_title : document -> string -> unit = "title" [@@mel.set]
+  > external get_title : document -> string = "title" [@@mel.get]
   > 
   > let current = get_title document
   > let () = set_title document "melange"
@@ -688,7 +717,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   ?options:< .. > ->
   >   unit ->
   >   _ = ""
-  >   [@@bs.obj]
+  >   [@@mel.obj]
   > EOF
 
   $ dune build @melange
@@ -696,14 +725,14 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > let name_extended obj = obj##name ^ " wayne"
   > 
-  > let one = name_extended [%bs.obj { name = "john"; age = 99 }]
-  > let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
+  > let one = name_extended [%mel.obj { name = "john"; age = 99 }]
+  > let two = name_extended [%mel.obj { name = "jane"; address = "1 infinite loop" }]
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let john = [%bs.obj { name = "john"; age = 99 }]
+  > let john = [%mel.obj { name = "john"; age = 99 }]
   > let t = john##name
   > EOF
 
@@ -711,8 +740,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type t = {
-  >   foo : int; [@bs.as "0"]
-  >   bar : string; [@bs.as "1"]
+  >   foo : int; [@mel.as "0"]
+  >   bar : string; [@mel.as "1"]
   > }
   > 
   > let value = { foo = 7; bar = "baz" }
@@ -722,7 +751,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type action = {
-  >   type_ : string [@bs.as "type"]
+  >   type_ : string [@mel.as "type"]
   > }
   > 
   > let action = { type_ = "ADD_USER" }
@@ -737,26 +766,26 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   age : int;
   > }
   > 
-  > external john : person = "john" [@@bs.module "MySchool"]
+  > external john : person = "john" [@@mel.module "MySchool"]
   > let john_name = john.name
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external node_env : string = "NODE_ENV" [@@bs.val] [@@bs.scope "process", "env"]
+  > external node_env : string = "NODE_ENV" [@@mel.scope "process", "env"]
   > 
   > let development = "development"
   > let () = if node_env <> development then Js.log "Only in Production"
   > 
-  > let development_inline = "development" [@@bs.inline]
+  > let development_inline = "development" [@@mel.inline]
   > let () = if node_env <> development_inline then Js.log "Only in Production"
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let () = match [%bs.external __filename] with
+  > let () = match [%mel.external __filename] with
   > | Some f -> Js.log f
   > | None -> Js.log "non-node environment"
   > EOF
@@ -764,7 +793,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let () = match [%bs.external __DEV__] with
+  > let () = match [%mel.external __DEV__] with
   > | Some _ -> Js.log "dev mode"
   > | None -> Js.log "production mode"
   > EOF
@@ -773,26 +802,26 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > let f x y =
-  >   [%bs.debugger];
+  >   [%mel.debugger];
   >   x + y
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > [%%bs.raw "var a = 1"]
+  > [%%mel.raw "var a = 1"]
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let f : unit -> int = [%bs.raw "function() {return 1}"]
+  > let f : unit -> int = [%mel.raw "function() {return 1}"]
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let add = [%bs.raw {|
+  > let add = [%mel.raw {|
   >   function(a, b) {
   >     console.log("hello from raw JavaScript!");
   >     return a + b;
@@ -805,7 +834,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let r = [%bs.re "/b/g"]
+  > let r = [%mel.re "/b/g"]
   > EOF
 
   $ dune build @melange
@@ -959,8 +988,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type document
   > 
-  > external document : document = "document" [@@bs.val]
-  > external set_title : document -> string -> unit = "title" [@@bs.set]
+  > external document : document = "document"
+  > external set_title : document -> string -> unit = "title" [@@mel.set]
   > EOF
 
   $ dune build @melange
@@ -986,20 +1015,16 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+  > type document
+  > external setTitleDom : document -> string -> unit = "title" [@@mel.set]
   > 
   > type t = {
-  >   age : int; [@bs.as "a"]
-  >   name : string; [@bs.as "n"]
+  >   age : int; [@mel.as "a"]
+  >   name : string; [@mel.as "n"]
   > }
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 24-33:
-  1 | external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
-                              ^^^^^^^^^
-  Error: Unbound type constructor timeoutId
-  [1]
 
   $ cat > input.ml <<\EOF
   > type name =
@@ -1010,8 +1035,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > [%%bs.raw "var a = 1; var b = 2"]
-  > let add = [%bs.raw "a + b"]
+  > [%%mel.raw "var a = 1; var b = 2"]
+  > let add = [%mel.raw "a + b"]
   > EOF
 
   $ dune build @melange

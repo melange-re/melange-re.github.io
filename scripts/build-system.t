@@ -21,6 +21,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 1, characters 12-18:
+  1 | let dir = [%bs.raw "__dirname"]
+                  ^^^^^^
+  Error: Uninterpreted extension 'bs.raw'.
+  [1]
 
   $ cat > input.ml <<\EOF
   > let () = Js.log Lib.name
