@@ -40,6 +40,31 @@ Test add_canonical exe
   > <head></head>
   > EOF
 
+  $ mkdir -p melange/Js/TypedArray2
+  $ cat > ./melange/Js/TypedArray2/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js/Typed_array
+  $ cat > ./melange/Js/Typed_array/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js/TypedArray2
+  $ cat > ./melange/Js/TypedArray2/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js/WeakSet
+  $ cat > ./melange/Js/WeakSet/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js/Fn
+  $ cat > ./melange/Js/Fn/index.html  <<EOF
+  > <head></head>
+  > EOF
+
   $ add_canonical .
 
   $ cat ./melange/Js/Global/index.html
@@ -55,7 +80,19 @@ Test add_canonical exe
   <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt/index.html" /></head>
 
   $ cat ./melange/Belt/List/index.html
-  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_list/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_List/index.html" /></head>
 
   $ cat ./melange/Stdlib/Int/index.html
   <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Stdlib/Int/index.html" /></head>
+
+  $ cat ./melange/Js/Typed_array/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Js_typed_array/index.html" /></head>
+
+  $ cat ./melange/Js/TypedArray2/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Js_typed_array2/index.html" /></head>
+
+  $ cat ./melange/Js/WeakSet/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Js_weakset/index.html" /></head>
+
+  $ cat ./melange/Js/Fn/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Js/Fn/index.html" /></head>

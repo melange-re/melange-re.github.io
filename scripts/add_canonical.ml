@@ -29,8 +29,8 @@ let to_v1_paths input =
         | 'B' :: 'e' :: 'l' :: 't' :: '/' :: next :: rest
           when Char.uppercase_ascii next == next ->
             transform_helper
-              (Char.lowercase_ascii next :: '_' :: 't' :: 'l' :: 'e' :: 'B'
-             :: '/' :: 'e' :: 'g' :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
+              (next :: '_' :: 't' :: 'l' :: 'e' :: 'B' :: '/' :: 'e' :: 'g'
+             :: 'n' :: 'a' :: 'l' :: 'e' :: 'm' :: acc)
               rest
         | c :: rest ->
             transform_helper
@@ -41,6 +41,10 @@ let to_v1_paths input =
   let input_chars = List.of_seq (String.to_seq input) in
   let transformed_chars = transform_helper [] input_chars in
   String.of_seq (List.to_seq transformed_chars)
+  |> global_replace (regexp_string "Js_fn") "Js/Fn"
+  |> global_replace (regexp_string "Js_weakSet") "Js_weakset"
+  |> global_replace (regexp_string "Js_weakMap") "Js_weakmap"
+  |> global_replace (regexp_string "Js_typedArray2") "Js_typed_array2"
 
 let relative_path base_path target_path =
   let base_parts = split (regexp_string Filename.dir_sep) base_path in
