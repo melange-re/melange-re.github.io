@@ -86,7 +86,7 @@ syntaxes:
 
 | JavaScript            | OCaml (Reason syntax)              |
 |-----------------------|------------------------------------|
-| `[1, 2, 3]`           | <code>\[|1, 2, 3|\]</code> |
+| `[1, 2, 3]`           | <code>\[\|1, 2, 3\|\]</code> |
 | `myArray[1] = 10`     | Same                               |
 | `[1, "Bob", true]` \* | `(1, "Bob", true)`                 |
 | No immutable list     | `[1, 2, 3]`                        |
