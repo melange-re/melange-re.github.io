@@ -10,12 +10,12 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
-  >  (libraries melange.node)
+  >  (libraries melange.dom melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 
   $ cat > input.ml <<\EOF
-  > let dir = [%bs.raw "__dirname"]
+  > let dir = [%mel.raw "__dirname"]
   > let file = "name.txt"
   > let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
   > EOF
