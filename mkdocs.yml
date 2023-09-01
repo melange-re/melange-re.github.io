@@ -26,6 +26,7 @@ nav:
     - Package management: package-management.md
     - Build system: build-system.md
     - Communicate with JavaScript: communicate-with-javascript.md
+    - How-to guides: how-to-guides.md
     - Melange for X developers: melange-for-x-developers.md
   - Reference:
     - API: api.md
