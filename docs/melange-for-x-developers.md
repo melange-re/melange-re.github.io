@@ -519,7 +519,7 @@ On the upside, in Melange:
   [ReactJS](https://github.com/reasonml/reason-react/) or GraphQL clients.
 - The generated JavaScript bundles are generally smaller.
 - The generated JavaScript code is generally more readable.
-- Melange can generate ES6 or commonjs while jsoo generates an IIFE (Immediately Invoked Function Expression) (as of Sep 2023)
+- Melange can generate ES6 or commonjs while Js\_of\_ocaml generates an IIFE (Immediately Invoked Function Expression) (as of Sep 2023)
 - Straight-forward integration with modern JavaScript tooling like Webpack,
   NextJS, etc. This is possible thanks to the 1 module \<-\> 1 JavaScript file
   compilation model.
