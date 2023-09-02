@@ -9,7 +9,7 @@ time goes by, as some of the most recent features of ReScript might not be
 directly convertible to make them work with Melange.
 
 For this reason, the recommendation is to migrate libraries at a time where they
-were compatible with past versions of ReScript, for example v9 or at least v10.
+were compatible with past versions of ReScript, for example v9 (or v10 at most).
 
 These are the steps to follow:
 
@@ -17,7 +17,7 @@ These are the steps to follow:
 - Add a `dune-project` file
 - Replace the `bsconfig.json` file with one or multiple `dune` files
 - (Optional) Migrate from ReScript syntax to Reason or OCaml syntaxes
-- Make sure everything works: `dune build @all`
+- Make sure everything works: `dune build`
 - Final step: remove `bsconfig.json` and adapt `package.json`
 
 Let's go through them in detail:
@@ -305,13 +305,13 @@ modules are written using Reason syntax, remember to install it first using
 `opam install reason` before performing the conversion, and also adding it to
 your library `opam` file as well.
 
-### Make sure everything works: `dune build @all`
+### Make sure everything works: `dune build`
 
 Once you have performed the above steps, you can test that everything works by
 running
 
 ```bash
-dune build @all
+dune build
 ```
 
 Throughout the process, you might run into some errors, these are the most
@@ -329,7 +329,7 @@ arg with a positional one.
 #### Warning 69 [unused-field] triggered from bindings types
 
 Sometimes, types for bindings will trigger `(warning 69 [unused-field]): record
-field sitekey is never read.` errors.
+field foo is never read.` errors.
 
 **Fix**: silence the warning in the type definition, e.g.
 
@@ -360,7 +360,7 @@ common setup is having all artifacts inside the `_build` folder. If your library
 is using some asset such as:
 
 ```ocaml
-external bkgImage : string = "default" [@@bs.module "./icons/overview.svg"]
+external myImage : string = "default" [@@bs.module "./icons/overview.svg"]
 ```
 
 You can include it by using the `melange.runtime_deps` field of the library:
