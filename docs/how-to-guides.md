@@ -221,7 +221,7 @@ stanzas would be enough to start using it.
 Dune allows to work inside monorepos naturally, so there is no need for pinned
 dependencies.
 [Packages](https://dune.readthedocs.io/en/stable/reference/packages.html) can be
-defined in the `dune-project` file using the `packages`, and multiple
+defined in the `dune-project` file using the `packages` stanza, and multiple
 `dune-project` files can be added across a single codebase to work in a monorepo
 setup.
 
@@ -339,18 +339,18 @@ dune build
 Throughout the process, you might run into some errors, these are the most
 common ones:
 
-#### Warning 16 (unerasable-opt-argument) is triggered more often than before
+#### Warning 16 [unerasable-opt-argument] is triggered more often than before
 
-Melange triggers warning 16 (unerasable-opt-argument) more often than before, as
-the type system in OCaml 4.12 was improved. You can read more about this in this
-[OCaml PR](https://github.com/ocaml/ocaml/pull/9783).
+Melange triggers `Warning 16: this optional argument cannot be erased` more
+often than before, as the type system in OCaml 4.12 was improved. You can read
+more about this in this [OCaml PR](https://github.com/ocaml/ocaml/pull/9783).
 
 **Fix**: either add `()` as final param of the function, or replace one labelled
 arg with a positional one.
 
 #### Warning 69 [unused-field] triggered from bindings types
 
-Sometimes, types for bindings will trigger `(warning 69 [unused-field]): record
+Sometimes, types for bindings will trigger `Warning 69 [unused-field]: record
 field foo is never read.` errors.
 
 **Fix**: silence the warning in the type definition, e.g.
@@ -385,7 +385,8 @@ is using some asset such as:
 external myImage : string = "default" [@@bs.module "./icons/overview.svg"]
 ```
 
-You can include it by using the `melange.runtime_deps` field of the library:
+**Fix**: You can include it by using the `melange.runtime_deps` field of the
+library:
 
 ```text
 (library
