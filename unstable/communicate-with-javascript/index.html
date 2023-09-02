@@ -157,8 +157,10 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#bind-to-global-javascript-functions-or-values">Bind to global JavaScript functions or values</a>
+    <li class="toctree-l2"><a class="reference internal" href="#bind-to-javascript-functions-or-values">Bind to JavaScript functions or values</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#using-global-functions-or-values">Using global functions or values</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#using-functions-from-other-javascript-modules">Using functions from other JavaScript modules</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#binding-to-properties-inside-a-module-or-global">Binding to properties inside a module or global</a>
@@ -403,10 +405,10 @@ That string has a specific meaning depending on the context. For native OCaml,
 it usually refers to a C function with that name. For Melange, it refers to the
 functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.</p>
-<p>In Melange, externals can be used to <a href="#bind-to-global-javascript-functions-or-values">bind to global JavaScript
-objects</a>. They can also be
-decorated with certain <code>[@mel.xxx]</code> attributes to facilitate the creation of
-bindings in specific scenarios. Each one of the <a href="#list-of-attributes-and-extension-nodes">available
+<p>In Melange, externals can be used to <a href="#using-global-functions-or-values">bind to global JavaScript
+objects</a>. They can also be decorated with
+certain <code>[@mel.xxx]</code> attributes to facilitate the creation of bindings in
+specific scenarios. Each one of the <a href="#list-of-attributes-and-extension-nodes">available
 attributes</a> will be further explained
 in the next sections.</p>
 <p>Once declared, one can use an <code>external</code> as a normal value. Melange external
@@ -457,8 +459,8 @@ external document: document = &quot;document&quot;;
 [@mel.set] external set_title: (document, string) =&gt; unit = &quot;title&quot;;
 </code></pre>
 <p>Subsequent sections delve into the details about the
-<a href="#bind-to-object-properties"><code>mel.set</code></a> attribute and <a href="#bind-to-global-javascript-functions-or-values">how to bind to global
-values</a> like <code>document</code>. s.</p>
+<a href="#bind-to-object-properties"><code>mel.set</code></a> attribute and <a href="#using-global-functions-or-values">how to bind to global
+values</a> like <code>document</code>.</p>
 <p>For a comprehensive understanding of abstract types and their usefulness, refer
 to the "Encapsulation" section of the <a href="https://cs3110.github.io/textbook/chapters/modules/encapsulation.html">OCaml Cornell
 textbook</a>.</p>
@@ -1443,7 +1445,8 @@ let myBook = book();
 <pre><code class="language-js">var Book = require(&quot;Book&quot;);
 var myBook = new Book();
 </code></pre>
-<h2 id="bind-to-global-javascript-functions-or-values">Bind to global JavaScript functions or values</h2>
+<h2 id="bind-to-javascript-functions-or-values">Bind to JavaScript functions or values</h2>
+<h3 id="using-global-functions-or-values">Using global functions or values</h3>
 <p>Binding to a JavaScript function available globally makes use of <code>external</code>,
 like with objects. But unlike objects, there is no need to add any attributes:</p>
 <pre><code class="language-ocaml">(* Abstract type for `timeoutId` *)
@@ -2387,8 +2390,8 @@ polymorphic variants</a>.</p>
 be converted into a variant tag of the <code>action</code> type.</p>
 <h5 id="hide-runtime-types">Hide runtime types</h5>
 <p>For extra type safety, we can hide the runtime representation of variants
-(<code>int</code>) from the generated functions, by using <code>jsConverter { newType }</code>
-payload with <code>@deriving</code>:</p>
+(<code>int</code>) from the generated functions, by using <code>jsConverter { newType }</code> payload
+with <code>@deriving</code>:</p>
 <pre><code class="language-ocaml">type action =
   | Click
   | Submit [@mel.as 3]
