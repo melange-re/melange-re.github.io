@@ -1,6 +1,6 @@
 # Melange for X developers
 
-If you are familiar with other languages, here you will find sections that
+If you are familiar with other languages/platforms, here you will find sections that
 compare Melange to a few of them, so it might help you get up and running
 quickly. In particular:
 
