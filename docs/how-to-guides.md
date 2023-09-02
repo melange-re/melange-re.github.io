@@ -196,22 +196,25 @@ package as well.
 
 #### `bs-dev-dependencies`
 
-There is no such thing as `bs-dev-dependencies` in Dune. If you need to bring
-some libraries or packages for development, you can just `opam install` them, or
-use the [upcoming `--with-dev-setup`
-configuration](https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup) in
-opam 2.2. For example, to add `melange-jest` as dev dependency, you could add
-this in your library `opam` file:
+Most of the times, `bs-dev-dependencies` is used to define dependencies required
+for testing. For this scenario, opam provides the `with-test` variable.
+
+Supposing we want to add `melange-jest` as a dependency to use for tests, you
+could add this in your library `opam` file:
 
 ```text
 depends: [
-  "melange-jest" {with-dev-setup}
+  "melange-jest" {with-test}
 ]
 ```
 
-Then, the library `melange-jest` would become available to your library tests.
-One just needs to make sure these tests are not part of a public library, if
-they are supposed to stay private.
+The packages marked with this variable [become
+dependencies](https://opam.ocaml.org/doc/Manual.html#opamfield-depends) when
+`opam install` is called with the `--with-test` flag.
+
+Once the library `melange-jest` has been installed by opam, it is available in
+Dune, so adding `(libraries melange-jest)` to your `library` or `melange.emit`
+stanzas would be enough to start using it.
 
 #### `pinned-dependencies`
 
@@ -370,7 +373,7 @@ PR](https://github.com/melange-re/melange/pull/161) with the explanation.
 
 This is also another change due to OCaml compiler moving forward.
 
-**Fix**: Use `Stdlib`
+**Fix**: Use `Stdlib` instead.
 
 #### Runtime assets are missing
 
