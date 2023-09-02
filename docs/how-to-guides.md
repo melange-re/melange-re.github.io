@@ -84,7 +84,7 @@ this:
 
 ```text
 (library
- (name lib)
+ (name things)
  (modes melange))
 ```
 
@@ -126,7 +126,7 @@ So for example, if your library had this configuration in its `bsconfig.json`:
 
 ```json
 {
-  "sources": ["src", "lib"]
+  "sources": ["src", "helper"]
 }
 ```
 
@@ -134,14 +134,14 @@ You might translate this to a `dune` file with the following configuration:
 
 ```text
 (include_subdirs unqualified)
-(dirs src lib)
+(dirs src helper)
 (library
- (name lib)
+ (name things)
  (modes melange))
 ```
 
 Alternatively, depending on the case, you could place two separate `dune` files,
-one in `src` and one in `lib`, and define one `library` on each. In that case,
+one in `src` and one in `helper`, and define one `library` on each. In that case,
 `include_subdirs` and `dirs` would not be necessary.
 
 Regarding the `"type" : "dev"` configuration in ReScript, the way Dune solves
@@ -167,7 +167,7 @@ Your `dune` file will look something like:
 
 ```text
 (library
- (name lib)
+ (name things)
  (libraries reason-react)
  (modes melange))
 ```
@@ -259,7 +259,7 @@ You can define a similar configuration in your library `dune` file like this:
 
 ```text
 (library
- (name lib)
+ (name things)
  (modes melange)
  (melange.compile_flags :standard -w +5-44-102))
 ```
@@ -367,7 +367,7 @@ You can include it by using the `melange.runtime_deps` field of the library:
 
 ```text
 (library
- (name lib)
+ (name things)
  (modes melange)
  (melange.runtime_deps icons/overview.svg))
 ```
