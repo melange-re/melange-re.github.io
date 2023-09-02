@@ -181,9 +181,9 @@ functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.
 
 In Melange, externals can be used to [bind to global JavaScript
-objects](#bind-to-global-javascript-functions-or-values). They can also be
-decorated with certain `[@mel.xxx]` attributes to facilitate the creation of
-bindings in specific scenarios. Each one of the [available
+objects](#using-global-functions-or-values). They can also be decorated with
+certain `[@mel.xxx]` attributes to facilitate the creation of bindings in
+specific scenarios. Each one of the [available
 attributes](#list-of-attributes-and-extension-nodes) will be further explained
 in the next sections.
 
@@ -254,7 +254,7 @@ external document: document = "document";
 
 Subsequent sections delve into the details about the
 [`mel.set`](#bind-to-object-properties) attribute and [how to bind to global
-values](#bind-to-global-javascript-functions-or-values) like `document`. s.
+values](#using-global-functions-or-values) like `document`.
 
 For a comprehensive understanding of abstract types and their usefulness, refer
 to the "Encapsulation" section of the [OCaml Cornell
@@ -1433,7 +1433,9 @@ var Book = require("Book");
 var myBook = new Book();
 ```
 
-## Bind to global JavaScript functions or values
+## Bind to JavaScript functions or values
+
+### Using global functions or values
 
 Binding to a JavaScript function available globally makes use of `external`,
 like with objects. But unlike objects, there is no need to add any attributes:
@@ -2672,8 +2674,8 @@ be converted into a variant tag of the `action` type.
 ##### Hide runtime types
 
 For extra type safety, we can hide the runtime representation of variants
-(`int`) from the generated functions, by using `jsConverter { newType }`
-payload with `@deriving`:
+(`int`) from the generated functions, by using `jsConverter { newType }` payload
+with `@deriving`:
 
 ```ocaml
 type action =
