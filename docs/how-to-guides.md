@@ -233,9 +233,29 @@ melange-re/melange#620](https://github.com/melange-re/melange/issues/620).
 
 #### `js-post-build`
 
-There is no direct mapping of this functionality in Melange, but you can use
-Dune rules to perform actions, that produce some targets, given some
-dependencies. To read more about Dune rules, check [Dune
+You can use Dune rules to perform actions, that produce some targets, given some
+dependencies.
+
+For example, if you had something like this in `bsconfig.json`:
+
+```json
+{
+  "js-post-build": {
+    "cmd": "node ../../postProcessTheFile.js"
+  }
+}
+```
+
+This could be expressed in a `dune` file with something like:
+
+```text
+(rule 
+  (deps (alias melange))
+  (action (run node ../../postProcessTheFile.js))
+)
+```
+
+To read more about Dune rules, check [the
 documentation](https://dune.readthedocs.io/en/stable/dune-files.html#rule).
 
 #### `package-specs`
