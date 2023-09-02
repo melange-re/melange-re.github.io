@@ -103,6 +103,25 @@ of your `bsconfig.json` had `"namespace": false`, you can add `(wrapped false)`
 to your library, although wrapped libraries are heavily encouraged to avoid
 global namespace pollution.
 
+It's important to note that the permissible character range for naming
+conventions differs between ReScript namespaces and Dune libraries. Dune library
+names must adhere to the naming criteria set for OCaml modules. For instance, if
+your `bsconfig.json` configuration includes a naming scheme like this:
+
+```json
+{
+  "namespace": "foo-bar"
+}
+```
+
+It should be converted into something like:
+
+```text
+(library
+ (name fooBar) # or (name foo_bar)
+ (modes melange))
+```
+
 #### `sources`
 
 Dune works slightly differently than ReScript when it comes down to including
@@ -141,8 +160,8 @@ You might translate this to a `dune` file with the following configuration:
 ```
 
 Alternatively, depending on the case, you could place two separate `dune` files,
-one in `src` and one in `helper`, and define one `library` on each. In that case,
-`include_subdirs` and `dirs` would not be necessary.
+one in `src` and one in `helper`, and define one `library` on each. In that
+case, `include_subdirs` and `dirs` would not be necessary.
 
 Regarding the `"type" : "dev"` configuration in ReScript, the way Dune solves
 that is with public and private libraries. If a `library` stanza includes a
