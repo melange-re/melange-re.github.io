@@ -85,7 +85,8 @@ this:
 ```text
 (library
  (name things)
- (modes melange))
+ (modes melange)
+ (preprocess (pps melange.ppx)))
 ```
 
 Let's see how the most common configurations in `bsconfig.json` (or
@@ -119,7 +120,8 @@ It should be converted into something like:
 ```text
 (library
  (name fooBar) # or (name foo_bar)
- (modes melange))
+ (modes melange)
+ (preprocess (pps melange.ppx)))
 ```
 
 #### `sources`
@@ -156,7 +158,8 @@ You might translate this to a `dune` file with the following configuration:
 (dirs src helper)
 (library
  (name things)
- (modes melange))
+ (modes melange)
+ (preprocess (pps melange.ppx)))
 ```
 
 Alternatively, depending on the case, you could place two separate `dune` files,
@@ -188,7 +191,8 @@ Your `dune` file will look something like:
 (library
  (name things)
  (libraries reason-react)
- (modes melange))
+ (modes melange)
+ (preprocess (pps melange.ppx)))
 ```
 
 Remember that you will have to add all dependencies to your library `opam`
@@ -303,6 +307,7 @@ You can define a similar configuration in your library `dune` file like this:
 (library
  (name things)
  (modes melange)
+ (preprocess (pps melange.ppx))
  (melange.compile_flags :standard -w +5-44-102))
 ```
 
@@ -412,6 +417,7 @@ library:
 (library
  (name things)
  (modes melange)
+ (preprocess (pps melange.ppx))
  (melange.runtime_deps icons/overview.svg))
 ```
 
@@ -423,4 +429,4 @@ assets](./build-system.md#handling-assets) section.
 If everything went well, you can remove the `bsconfig.json` file, and remove any
 dependencies needed by Melange from the `package.json`, as they will be
 appearing in the `opam` file instead, as it was mentioned in the
-`bs-dependencies` section.
+[`bs-dependencies` section](#bs-dependencies).
