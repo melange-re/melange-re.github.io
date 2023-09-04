@@ -231,7 +231,7 @@ You can use the [`with-dev-setup`
 field](https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup) to define
 dependencies that are only required at development time. For example:
 
-```
+```text
 depends: [
   "ocamlformat" {with-dev-setup}
 ]
@@ -366,7 +366,7 @@ Dune needs to be made aware of the newly installed package. The [`subdir`](https
   (library
    (name bs_json)
    (wrapped false)
-   (modes melange)))
+   (modes melange))))
 ```
 
 If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed, so that Dune can process the new Melange sources under the `node_modules` folder.
