@@ -65,6 +65,36 @@ Test add_canonical exe
   > <head></head>
   > EOF
 
+  $ mkdir -p melange/Belt/Set/String
+  $ cat > ./melange/Belt/Set/String/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Belt/Map/Dict
+  $ cat > ./melange/Belt/Map/Dict/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Belt/SortArray/Int
+  $ cat > ./melange/Belt/SortArray/Int/index.html  <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Belt/SortArray/Int
+  $ cat > ./melange/Belt/SortArray/Int/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Melange_ppx/Ast_literal
+  $ cat > ./melange/Melange_ppx/Ast_literal/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Melange_ppx/External
+  $ cat > ./melange/Melange_ppx/External/index.html <<EOF
+  > <head></head>
+  > EOF
+
   $ add_canonical .
 
   $ cat ./melange/Js/Global/index.html
@@ -96,3 +126,18 @@ Test add_canonical exe
 
   $ cat ./melange/Js/Fn/index.html
   <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Js/Fn/index.html" /></head>
+
+  $ cat ./melange/Belt/Set/String/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_SetString/index.html" /></head>
+
+  $ cat ./melange/Belt/Map/Dict/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_MapDict/index.html" /></head>
+
+  $ cat ./melange/Belt/SortArray/Int/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Belt_SortArrayInt/index.html" /></head>
+
+  $ cat ./melange/Melange_ppx/Ast_literal/index.html
+  <head></head>
+
+  $ cat ./melange/Melange_ppx/External/index.html
+  <head><link rel="canonical" href="https://melange.re/v1.0.0/api/melange/Melange_ppx/External/index.html" /></head>
