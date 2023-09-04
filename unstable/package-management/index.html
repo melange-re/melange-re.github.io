@@ -107,6 +107,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../how-to-guides/">How-to guides</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
                   </li>
               </ul>
@@ -321,7 +323,7 @@ no package name is given.</p>
 <p>You can use the <a href="https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup"><code>with-dev-setup</code>
 field</a> to define
 dependencies that are only required at development time. For example:</p>
-<pre><code>depends: [
+<pre><code class="language-text">depends: [
   &quot;ocamlformat&quot; {with-dev-setup}
 ]
 </code></pre>
@@ -426,7 +428,7 @@ pin-depends: [
   (library
    (name bs_json)
    (wrapped false)
-   (modes melange)))
+   (modes melange))))
 </code></pre>
 <p>If the <code>dune</code> file contains the line <code>(dirs :standard \ node_modules)</code>, it should be removed, so that Dune can process the new Melange sources under the <code>node_modules</code> folder.</p>
 <p>In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder <code>src/lib</code>. If we want use the <code>bs-json</code> library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the <code>dune</code> file in the same folder, i.e., <code>src/lib/dune</code>:</p>
