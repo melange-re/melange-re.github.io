@@ -430,3 +430,114 @@ If everything went well, you can remove the `bsconfig.json` file, and remove any
 dependencies needed by Melange from the `package.json`, as they will be
 appearing in the `opam` file instead, as it was mentioned in the
 [`bs-dependencies` section](#bs-dependencies).
+
+## Migrate
+
+This section contains information about migrating from older versions of Melange
+to newer ones.
+
+### To v2 from v1
+
+Melange v2 is only compatible with OCaml 5.1. In order to upgrade, let's update
+the local opam switch first, to make sure the local repository gets the versions
+v2 of Melange and 5.1 of OCaml:
+
+```bash
+opam update
+```
+
+Now, update the version of the OCaml compiler in the local switch to 5.1:
+
+```bash
+opam install --update-invariant ocaml-base-compiler.5.1.0
+```
+
+Finally, we can upgrade all packages to get Melange v2 and the latest version of
+all libraries:
+
+```bash
+opam upgrade
+```
+
+To make sure you have the latest version of Melange, you can use the `opam list`
+subcommand:
+
+```bash
+opam list --installed melange
+# Packages matching: name-match(melange) & installed
+# Name  # Installed    # Synopsis
+melange 2.0.0          Toolchain to produce JS from Reason/OCaml
+```
+
+Before building, we have to update some parts of the configuration to make it
+work with v2.
+
+#### `melange.ppx` includes now most syntax transformations
+
+Most of the attributes used to write bindings are now handled by `melange.ppx`.
+If you get errors of the kind `Unused attribute`, then you probably need to add
+`melange.ppx` to your `library` or ` melange.emit` stanzas.
+
+```
+(library
+ ...
+ (preprocess
+  (pps melange.ppx)))
+```
+
+#### Warnings have been turned to alerts
+
+Some warnings were turned into alerts, so they might be visible even if using
+`vendored_dirs`. To silence these alerts, either fix the root cause or silence
+them using `melange.compile_flags`.
+
+#### Wrapped libraries
+
+Melange libraries like Belt and Js are now wrapped, so the access to modules
+inside them need to be adapted. Some examples:
+
+- `Js_foo` modules need to be replaced with `Js.Foo` (same for `Belt_*` modules) 
+- `Belt_MapInt` is now `Belt.Map.Int`
+
+#### Changes in `deriving`
+
+The `bs.deriving` attribute is replaced with `deriving`. Also, the payload taken
+by this attribute has been adapted to conform to ppxlib requirements.
+
+Here is a table showing how the payload has changed in both OCaml and Reason
+syntaxes:
+
+| Syntax | Before  | After |
+|---------------|---------------|---------------|
+| `ml`  | `[@@bs.deriving { jsConverter =  newType  }]` | `[@@deriving  jsConverter {  newType }  ]` |
+| `re`  | `[@bs.deriving {jsConverter: newType}]` | `[@deriving jsConverter({newType: newType})]`  |
+| `ml`  | `[@@deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
+| `re`  | `[@deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
+
+#### Changes in `bs` prefix for attributes and extension nodes
+
+All attributes or extension nodes prefixed with `bs` are now prefixed with
+`mel`.
+
+For example `@bs.as` becomes `@mel.as`, and `%bs.raw` becomes `%mel.raw`. The
+only exception is the `@bs` attribute, which becomes `@u`, for uncurried
+application (see the ["Binding to callbacks"
+section](./communicate-with-javascript.md#binding-to-callbacks)).
+
+#### `@bs.val` is gone
+
+The `@bs.val` attribute is no longer necessary, and can be removed from
+`external` definitions. See more information in the ["Using global functions or
+values"](./communicate-with-javascript.md#using-global-functions-or-values)
+section.
+
+#### `Dom` and `Node` are in their own libraries
+
+The namespaces `Dom` and `Node` are now in the libraries `melange.dom` and
+`melange.node` respectively. These libraries are not included by default by
+Melange, and will have to be added to the `libraries` field to enable their
+usage.
+
+#### Effects handlers 
+
+???
