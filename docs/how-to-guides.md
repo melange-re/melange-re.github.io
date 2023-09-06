@@ -513,7 +513,7 @@ In Ocaml syntax:
 | Before  | After |
 |---------------|---------------|
 | `[@@bs.deriving { jsConverter =  newType  }]` | `[@@deriving  jsConverter {  newType }  ]` |
-| `[@@deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
+| `[@@bs.deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
 
 
 In Reason syntax:
@@ -521,7 +521,7 @@ In Reason syntax:
 | Before  | After |
 |---------------|---------------|
 | `[@bs.deriving {jsConverter: newType}]` | `[@deriving jsConverter({newType: newType})]`  |
-| `[@deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
+| `[@bs.deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
 
 #### `bs.*` attributes and extensions become `mel.*`
 
