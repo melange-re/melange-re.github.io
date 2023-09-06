@@ -475,8 +475,9 @@ work with v2.
 #### `melange.ppx` now includes most syntax transformations
 
 Most of the attributes used to write bindings are now handled by `melange.ppx`.
-If you get errors of the kind `Unused attribute`, then you probably need to add
-`melange.ppx` to your `library` or ` melange.emit` stanzas.
+If you get errors of the kind `Unused attribute`, or type errors in externals
+that don't make much sense, then you probably need to add `melange.ppx` to your
+`library` or ` melange.emit` stanzas.
 
 ```
 (library
@@ -489,40 +490,54 @@ If you get errors of the kind `Unused attribute`, then you probably need to add
 
 Some warnings were turned into alerts, so they might be visible even if using
 `vendored_dirs`. To silence these alerts, either fix the root cause or silence
-them using `melange.compile_flags`.
+them using `(preprocess (pps melange.ppx -alert -deprecated))`.
 
 #### Wrapped libraries
 
 Melange libraries like Belt and Js are now wrapped, so the access to modules
 inside them need to be adapted. Some examples:
 
-- `Js_foo` modules need to be replaced with `Js.Foo` (same for `Belt_*` modules) 
+- `Js_string` needs to be replaced with `Js.String`
 - `Belt_MapInt` is now `Belt.Map.Int`
 
 #### Changes in `deriving`
 
 The `bs.deriving` attribute is replaced with `deriving`. Also, the payload taken
-by this attribute has been adapted to conform to ppxlib requirements.
+by this attribute has been adapted to conform to ppxlib requirements. Note that
+`mel.deriving` is not accepted.
 
-Here is a table showing how the payload has changed in both OCaml and Reason
-syntaxes:
+Let's see how the payload has changed in both OCaml and Reason syntaxes.
 
-| Syntax | Before  | After |
-|---------------|---------------|---------------|
-| `ml`  | `[@@bs.deriving { jsConverter =  newType  }]` | `[@@deriving  jsConverter {  newType }  ]` |
-| `re`  | `[@bs.deriving {jsConverter: newType}]` | `[@deriving jsConverter({newType: newType})]`  |
-| `ml`  | `[@@deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
-| `re`  | `[@deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
+In Ocaml syntax:
+
+| Before  | After |
+|---------------|---------------|
+| `[@@bs.deriving { jsConverter =  newType  }]` | `[@@deriving  jsConverter {  newType }  ]` |
+| `[@@deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
+
+
+In Reason syntax:
+
+| Before  | After |
+|---------------|---------------|
+| `[@bs.deriving {jsConverter: newType}]` | `[@deriving jsConverter({newType: newType})]`  |
+| `[@deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
 
 #### `bs.*` attributes and extensions become `mel.*`
 
-All attributes or extension nodes prefixed with `bs` are now prefixed with
-`mel` instead.
+All attributes or extension nodes prefixed with `bs` are now prefixed with `mel`
+instead.
 
-For example `@bs.as` becomes `@mel.as`, and `%bs.raw` becomes `%mel.raw`. The
-only exception is the `@bs` attribute, which becomes `@u`, for uncurried
-application (see the ["Binding to callbacks"
-section](./communicate-with-javascript.md#binding-to-callbacks)).
+For example `@bs.as` becomes `@mel.as`, and `%bs.raw` becomes `%mel.raw`.
+
+Note that attributes in the deprecated form (`@bs.*`) are still accepted until
+v3, but node extensions (`%bs.*`) are not.
+
+#### `@bs` attribute becomes `@u`
+
+The `@bs` attribute, used for uncurried application (see the ["Binding to
+callbacks" section](./communicate-with-javascript.md#binding-to-callbacks)),
+becomes `@u`.
 
 #### `@bs.val` is gone
 
@@ -539,4 +554,6 @@ Melange, and will need to be added to the `libraries` field explicitly.
 
 #### Effect handlers 
 
-???
+Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
+for compiling effect handlers to JavaScript. Until it does, they are disabled at
+the compiler level, and their APIs are not accessible.
