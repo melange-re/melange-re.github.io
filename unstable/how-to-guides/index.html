@@ -125,6 +125,32 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#migrate">Migrate</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#to-v2-from-v1">To v2 from v1</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#melangeppx-now-includes-most-syntax-transformations">melange.ppx now includes most syntax transformations</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#warnings-have-been-turned-into-alerts">Warnings have been turned into alerts</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#wrapped-libraries">Wrapped libraries</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#changes-in-deriving">Changes in deriving</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-attributes-and-extensions-become-mel">bs.* attributes and extensions become mel.*</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-attribute-becomes-u">@bs attribute becomes @u</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bsval-is-gone">@bs.val is gone</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dom-and-node-are-in-their-own-libraries">Dom and Node are in their own libraries</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#effect-handlers">Effect handlers</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
@@ -476,6 +502,118 @@ assets</a> section.</p>
 dependencies needed by Melange from the <code>package.json</code>, as they will be
 appearing in the <code>opam</code> file instead, as it was mentioned in the
 <a href="#bs-dependencies"><code>bs-dependencies</code> section</a>.</p>
+<h2 id="migrate">Migrate</h2>
+<p>This section contains information about migrating from older versions of Melange
+to newer ones.</p>
+<h3 id="to-v2-from-v1">To v2 from v1</h3>
+<p>Melange v2 is only compatible with OCaml 5.1. In order to upgrade, let's update
+the local opam switch first, to make sure the local repository gets the versions
+v2 of Melange and 5.1 of OCaml:</p>
+<pre><code class="language-bash">opam update
+</code></pre>
+<p>Now, update the version of the OCaml compiler in the local switch to 5.1:</p>
+<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.0
+</code></pre>
+<p>Finally, we can upgrade all packages to get Melange v2 and the latest version of
+all libraries:</p>
+<pre><code class="language-bash">opam upgrade
+</code></pre>
+<p>To make sure you have the latest version of Melange, you can use the <code>opam list</code>
+subcommand:</p>
+<pre><code class="language-bash">opam list --installed melange
+# Packages matching: name-match(melange) &amp; installed
+# Name  # Installed    # Synopsis
+melange 2.0.0          Toolchain to produce JS from Reason/OCaml
+</code></pre>
+<p>Before building, we have to update some parts of the configuration to make it
+work with v2.</p>
+<h4 id="melangeppx-now-includes-most-syntax-transformations"><code>melange.ppx</code> now includes most syntax transformations</h4>
+<p>Most of the attributes used to write bindings are now handled by <code>melange.ppx</code>.
+If you get errors of the kind <code>Unused attribute</code>, or type errors in externals
+that don't make much sense, then you probably need to add <code>melange.ppx</code> to your
+<code>library</code> or <code>melange.emit</code> stanzas.</p>
+<pre><code>(library
+ ...
+ (preprocess
+  (pps melange.ppx)))
+</code></pre>
+<h4 id="warnings-have-been-turned-into-alerts">Warnings have been turned into alerts</h4>
+<p>Some warnings were turned into alerts, so they might be visible even if using
+<code>vendored_dirs</code>. To silence these alerts, either fix the root cause or silence
+them using <code>(preprocess (pps melange.ppx -alert -deprecated))</code>.</p>
+<h4 id="wrapped-libraries">Wrapped libraries</h4>
+<p>Melange libraries like Belt and Js are now wrapped, so the access to modules
+inside them need to be adapted. Some examples:</p>
+<ul>
+<li><code>Js_string</code> needs to be replaced with <code>Js.String</code></li>
+<li><code>Belt_MapInt</code> is now <code>Belt.Map.Int</code></li>
+</ul>
+<h4 id="changes-in-deriving">Changes in <code>deriving</code></h4>
+<p>The <code>bs.deriving</code> attribute is replaced with <code>deriving</code>. Also, the payload taken
+by this attribute has been adapted to conform to ppxlib requirements. Note that
+<code>mel.deriving</code> is not accepted.</p>
+<p>Let's see how the payload has changed in both OCaml and Reason syntaxes.</p>
+<p>In Ocaml syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[@@bs.deriving { jsConverter =  newType  }]</code></td>
+<td><code>[@@deriving  jsConverter {  newType }  ]</code></td>
+</tr>
+<tr>
+<td><code>[@@bs.deriving { abstract = light }]</code></td>
+<td><code>[@@deriving abstract { light }]</code></td>
+</tr>
+</tbody>
+</table>
+<p>In Reason syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[@bs.deriving {jsConverter: newType}]</code></td>
+<td><code>[@deriving jsConverter({newType: newType})]</code></td>
+</tr>
+<tr>
+<td><code>[@bs.deriving {abstract: light}]</code></td>
+<td><code>[@deriving abstract({light: light})]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="bs-attributes-and-extensions-become-mel"><code>bs.*</code> attributes and extensions become <code>mel.*</code></h4>
+<p>All attributes or extension nodes prefixed with <code>bs</code> are now prefixed with <code>mel</code>
+instead.</p>
+<p>For example <code>@bs.as</code> becomes <code>@mel.as</code>, and <code>%bs.raw</code> becomes <code>%mel.raw</code>.</p>
+<p>Note that attributes in the deprecated form (<code>@bs.*</code>) are still accepted until
+v3, but node extensions (<code>%bs.*</code>) are not.</p>
+<h4 id="bs-attribute-becomes-u"><code>@bs</code> attribute becomes <code>@u</code></h4>
+<p>The <code>@bs</code> attribute, used for uncurried application (see the <a href="../communicate-with-javascript/#binding-to-callbacks">"Binding to
+callbacks" section</a>),
+becomes <code>@u</code>.</p>
+<h4 id="bsval-is-gone"><code>@bs.val</code> is gone</h4>
+<p>The <code>@bs.val</code> attribute is no longer necessary, and can be removed from
+<code>external</code> definitions. See more information in the <a href="../communicate-with-javascript/#using-global-functions-or-values">"Using global functions or
+values"</a>
+section.</p>
+<h4 id="dom-and-node-are-in-their-own-libraries"><code>Dom</code> and <code>Node</code> are in their own libraries</h4>
+<p>The namespaces <code>Dom</code> and <code>Node</code> are now in the libraries <code>melange.dom</code> and
+<code>melange.node</code> respectively. These libraries are not included by default by
+Melange, and will need to be added to the <code>libraries</code> field explicitly.</p>
+<h4 id="effect-handlers">Effect handlers</h4>
+<p>Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
+for compiling effect handlers to JavaScript. Until it does, they are disabled at
+the compiler level, and their APIs are not accessible.</p>
               
             </div>
           </div><footer>
