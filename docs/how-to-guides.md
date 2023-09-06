@@ -472,7 +472,7 @@ melange 2.0.0          Toolchain to produce JS from Reason/OCaml
 Before building, we have to update some parts of the configuration to make it
 work with v2.
 
-#### `melange.ppx` includes now most syntax transformations
+#### `melange.ppx` now includes most syntax transformations
 
 Most of the attributes used to write bindings are now handled by `melange.ppx`.
 If you get errors of the kind `Unused attribute`, then you probably need to add
@@ -485,7 +485,7 @@ If you get errors of the kind `Unused attribute`, then you probably need to add
   (pps melange.ppx)))
 ```
 
-#### Warnings have been turned to alerts
+#### Warnings have been turned into alerts
 
 Some warnings were turned into alerts, so they might be visible even if using
 `vendored_dirs`. To silence these alerts, either fix the root cause or silence
@@ -514,10 +514,10 @@ syntaxes:
 | `ml`  | `[@@deriving { abstract = light }]` | `[@@deriving abstract { light }]` |
 | `re`  | `[@deriving {abstract: light}]` | `[@deriving abstract({light: light})]`  |
 
-#### Changes in `bs` prefix for attributes and extension nodes
+#### `bs.*` attributes and extensions become `mel.*`
 
 All attributes or extension nodes prefixed with `bs` are now prefixed with
-`mel`.
+`mel` instead.
 
 For example `@bs.as` becomes `@mel.as`, and `%bs.raw` becomes `%mel.raw`. The
 only exception is the `@bs` attribute, which becomes `@u`, for uncurried
@@ -535,9 +535,8 @@ section.
 
 The namespaces `Dom` and `Node` are now in the libraries `melange.dom` and
 `melange.node` respectively. These libraries are not included by default by
-Melange, and will have to be added to the `libraries` field to enable their
-usage.
+Melange, and will need to be added to the `libraries` field explicitly.
 
-#### Effects handlers 
+#### Effect handlers 
 
 ???
