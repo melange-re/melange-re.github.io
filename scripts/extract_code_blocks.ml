@@ -1,3 +1,5 @@
+type code_block_info = OCaml | Reason
+
 module Prelude = struct
   let prefix = "<!--#prelude#"
 
@@ -10,22 +12,22 @@ module Prelude = struct
     String.sub str 0 (String.length str - String.length comment_ending)
 end
 
-let ocaml_code_blocks doc =
+let code_blocks ~code_block_info doc =
   let open Cmarkit in
   let module String_set = Set.Make (String) in
   let last = ref None in
   let block _m acc = function
     | Block.Code_block (cb, _) ->
         let acc =
-          match Block.Code_block.info_string cb with
-          | Some ("ocaml", _) -> (
+          match (Block.Code_block.info_string cb, code_block_info) with
+          | Some ("ocaml", _), OCaml | Some ("reasonml", _), Reason -> (
               match !last with
               | Some (Block.Html_block ((first_line :: _ as hb), _))
                 when String.starts_with ~prefix:Prelude.prefix
                        (Block_line.to_string first_line) ->
                   (cb, Some hb) :: acc
               | _ -> (cb, None) :: acc)
-          | Some _ | None -> acc
+          | Some _, _ | None, _ -> acc
         in
         last := None;
         Folder.ret acc
@@ -36,13 +38,17 @@ let ocaml_code_blocks doc =
   let folder = Folder.make ~block () in
   Folder.fold_doc folder [] doc
 
-let process_cmark : strict:bool -> string -> unit =
- fun ~strict md ->
+let process_cmark :
+    code_block_info:code_block_info -> strict:bool -> string -> unit =
+ fun ~code_block_info ~strict md ->
   let doc = Cmarkit.Doc.of_string ~layout:true ~strict md in
-  let code_blocks = ocaml_code_blocks doc in
+  let code_blocks = code_blocks ~code_block_info doc in
   List.iter
     (fun (cb, prelude) ->
-      print_endline "  $ cat > input.ml <<\\EOF";
+      let suffix =
+        match code_block_info with OCaml -> "ml" | Reason -> "re"
+      in
+      print_endline (Printf.sprintf "  $ cat > input.%s <<\\EOF" suffix);
 
       let () =
         let open Prelude in
@@ -84,8 +90,23 @@ let rec loop acc =
 let input = String.concat "\n" (loop [])
 
 let () =
-  print_endline
-    {|This test file is automatically generated from its corresponding markdown
+  let open Printf in
+  if Array.length Sys.argv <> 2 then
+    eprintf "Usage: %s code_block_info_string (\"ocaml\" or \"reason\")\n"
+      Sys.argv.(0)
+  else
+    let code_block_info_string = Sys.argv.(1) in
+    let code_block_info =
+      match code_block_info_string with
+      | "ocaml" -> OCaml
+      | "reason" -> Reason
+      | _ ->
+          eprintf "Usage: %s code_block_info_string (\"ocaml\" or \"reason\")\n"
+            Sys.argv.(0);
+          failwith "Invalid code_block_info_string"
+    in
+    print_endline
+      {|This test file is automatically generated from its corresponding markdown
 file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > dune-project <<EOF
@@ -101,4 +122,4 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >  (preprocess (pps melange.ppx)))
   > EOF
 |};
-  process_cmark ~strict:false input
+    process_cmark ~code_block_info ~strict:false input
