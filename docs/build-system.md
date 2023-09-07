@@ -383,12 +383,12 @@ Finally, update <code>lib/lib.re</code> to read from the recently added file:
 </div>
 
 ```ocaml
-let dir = [%bs.raw "__dirname"]
+let dir = [%mel.raw "__dirname"]
 let file = "name.txt"
 let name = Node.Fs.readFileSync (dir ^ "/" ^ file) `ascii
 ```
 ```reasonml
-let dir = [%bs.raw "__dirname"];
+let dir = [%mel.raw "__dirname"];
 let file = "name.txt";
 let name = Node.Fs.readFileSync(dir ++ "/" ++ file, `ascii);
 ```

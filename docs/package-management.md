@@ -231,7 +231,7 @@ You can use the [`with-dev-setup`
 field](https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup) to define
 dependencies that are only required at development time. For example:
 
-```
+```text
 depends: [
   "ocamlformat" {with-dev-setup}
 ]
@@ -310,7 +310,7 @@ To use a library from the installed package, add the library name to the `dune` 
 ├── package.json
 └── ...</code></pre>
 
-then `react-reason` should be added to the `dune` file under the `src` folder:
+then `reason-react` should be added to the `dune` file under the `src` folder:
 
 ```text
 (melange.emit
@@ -366,7 +366,7 @@ Dune needs to be made aware of the newly installed package. The [`subdir`](https
   (library
    (name bs_json)
    (wrapped false)
-   (modes melange)))
+   (modes melange))))
 ```
 
 If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed, so that Dune can process the new Melange sources under the `node_modules` folder.

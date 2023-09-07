@@ -1,0 +1,53 @@
+(executable
+ (name process_md)
+ (public_name process_md)
+ (modules process_md)
+ (libraries cmarkit reason))
+
+(executable
+ (name extract_code_blocks)
+ (public_name extract_code_blocks)
+ (modules extract_code_blocks)
+ (libraries cmarkit))
+
+(executable
+ (name add_canonical)
+ (public_name add_canonical)
+ (modules add_canonical)
+ (libraries str unix))
+
+(cram
+ (applies_to add_canonical)
+ (deps %{bin:add_canonical}))
+
+(rule
+ (deps ../docs/communicate-with-javascript.md)
+ (target communicate-with-javascript.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff
+   communicate-with-javascript.t
+   communicate-with-javascript.md.processed)))
+
+(rule
+ (deps ../docs/build-system.md)
+ (target build-system.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff build-system.t build-system.md.processed)))

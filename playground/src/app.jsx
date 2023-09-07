@@ -137,15 +137,15 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"v1.0"}</span>
+                <span className="Text-xs Number">{"unreleased"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
-                <span className="Text-xs Number">{"v4.14.1"}</span>
+                <span className="Text-xs Number">{"v5.1.0~rc2"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"Reason"}</span>
-                <span className="Text-xs Number">{"v3.9.0"}</span>
+                <span className="Text-xs Number">{"unreleased"}</span>
               </span>
             </div>
           </div>) : null}

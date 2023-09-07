@@ -8,12 +8,12 @@ DUNE = opam exec -- dune
 help: ## Print this help message
 	@echo "List of available make commands";
 	@echo "";
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}';
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}';
 	@echo "";
 
 .PHONY: create-switch
 create-switch: ## Create opam switch
-	opam switch create . 4.14.1 -y --deps-only
+	opam switch create . 5.1.0~rc2 -y --deps-only
 
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
@@ -27,6 +27,24 @@ install: ## Install development dependencies
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
+
+.PHONY: 
+update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
+	$(DUNE) build @extract-code-blocks --auto-promote || true
+	$(DUNE) build @runtest --auto-promote || true
+
+.PHONY: check-extracted-code-blocks
+check-extracted-code-blocks: update-extracted-code-blocks ## Checks that code blocks extracted from markdown have been updated to latest
+	@status=$$(git status --porcelain); \
+	if [ ! -z "$${status}" ]; \
+	then \
+		echo "Error - working directory is dirty. Make sure the auto-generated tests are updated ('make update-extracted-code-blocks')"; \
+		exit 1; \
+	fi
+
+.PHONY: test
+test: ## Runs @runtest alias
+	$(DUNE) build @runtest
 
 .PHONY: clean
 clean: ## Clean build artifacts and other generated files

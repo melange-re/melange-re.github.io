@@ -26,6 +26,7 @@ nav:
     - Package management: package-management.md
     - Build system: build-system.md
     - Communicate with JavaScript: communicate-with-javascript.md
+    - How-to guides: how-to-guides.md
     - Melange for X developers: melange-for-x-developers.md
   - Melange for React Developers:
     - Introduction: melange-book/index.md
@@ -37,7 +38,7 @@ nav:
   - Reference:
     - API: api.md
   - Try:
-    - Playground: playground
+    - Playground: playground/index.html
   - About:
     - Community: community.md
     - Roadmap: roadmap.md

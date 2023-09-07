@@ -55,12 +55,12 @@ An example where Melange uses extension nodes to communicate with JavaScript is
 to produce "raw" JavaScript inside a Melange program:
 
 ```ocaml
-[%%bs.raw "var a = 1; var b = 2"]
-let add = [%bs.raw "a + b"]
+[%%mel.raw "var a = 1; var b = 2"]
+let add = [%mel.raw "a + b"]
 ```
 ```reasonml
-[%%bs.raw "var a = 1; var b = 2"];
-let add = [%bs.raw "a + b"];
+[%%mel.raw "var a = 1; var b = 2"];
+let add = [%mel.raw "a + b"];
 ```
 
 Which will generate the following JavaScript code:
@@ -120,10 +120,10 @@ Melange as well.
 ##### Defining new attributes
 
 The second approach is introducing new attributes specifically designed for
-Melange, such as the [`bs.val`
-attribute](#bind-to-global-javascript-functions-or-values) used to bind to
-global JavaScript values. The complete list of attributes introduced by Melange
-can be found [here](#list-of-attributes-and-extension-nodes).
+Melange, such as the [`mel.set` attribute](#bind-to-object-properties) used to
+bind to properties of JavaScript objects. The complete list of attributes
+introduced by Melange can be found
+[here](#list-of-attributes-and-extension-nodes).
 
 Attribute annotations can use one, two or three `@` characters depending on
 their placement in the code and which kind of syntax tree node they are
@@ -131,24 +131,25 @@ annotating. More information about attributes can be found in the [dedicated
 OCaml manual page](https://v2.ocaml.org/manual/attributes.html).
 
 Here are some samples using Melange attributes
-[`bs.val`](#bind-to-global-javascript-functions-or-values) and
-[`bs.as`](#using-ocaml-records):
+[`mel.set`](#bind-to-object-properties) and [`mel.as`](#using-ocaml-records):
 
 ```ocaml
-external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+type document
+external setTitleDom : document -> string -> unit = "title" [@@mel.set]
 
 type t = {
-  age : int; [@bs.as "a"]
-  name : string; [@bs.as "n"]
+  age : int; [@mel.as "a"]
+  name : string; [@mel.as "n"]
 }
 ```
 ```reasonml
-[@bs.val] external clearTimeout: timeoutId => unit = "clearTimeout";
+type document;
+[@mel.set] external setTitleDom: (document, string) => unit = "title";
 
 type t = {
-  [@bs.as "a"]
+  [@mel.as "a"]
   age: int,
-  [@bs.as "n"]
+  [@mel.as "n"]
   name: string,
 };
 ```
@@ -179,16 +180,19 @@ it usually refers to a C function with that name. For Melange, it refers to the
 functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.
 
-Melange externals are always decorated with certain `[@bs.xxx]` attributes. Each
-one of the [available attributes](#list-of-attributes-and-extension-nodes) will
-be further explained in the next sections.
+In Melange, externals can be used to [bind to global JavaScript
+objects](#using-global-functions-or-values). They can also be decorated with
+certain `[@mel.xxx]` attributes to facilitate the creation of bindings in
+specific scenarios. Each one of the [available
+attributes](#list-of-attributes-and-extension-nodes) will be further explained
+in the next sections.
 
 Once declared, one can use an `external` as a normal value. Melange external
 functions are turned into the expected JavaScript values, inlined into their
 callers during compilation, and completely erased afterwards. They don’t appear
 in the JavaScript output, so there are no costs on bundling size.
 
-**Note**: it is recommended to use external functions and the `[@bs.xxx]`
+**Note**: it is recommended to use external functions and the `[@mel.xxx]`
 attributes in the interface files as well, as this allows some optimizations
 where the resulting JavaScript values can be directly inlined at the call sites.
 
@@ -238,19 +242,19 @@ properties. Consider the following example:
 ```ocaml
 type document
 
-external document : document = "document" [@@bs.val]
-external set_title : document -> string -> unit = "title" [@@bs.set]
+external document : document = "document"
+external set_title : document -> string -> unit = "title" [@@mel.set]
 ```
 ```reasonml
 type document;
 
-[@bs.val] external document: document = "document";
-[@bs.set] external set_title: (document, string) => unit = "title";
+external document: document = "document";
+[@mel.set] external set_title: (document, string) => unit = "title";
 ```
 
-Subsequent sections delve into the details of the
-[`bs.val`](#bind-to-global-javascript-functions-or-values) and
-[`bs.set`](#bind-to-object-properties) attributes.
+Subsequent sections delve into the details about the
+[`mel.set`](#bind-to-object-properties) attribute and [how to bind to global
+values](#using-global-functions-or-values) like `document`.
 
 For a comprehensive understanding of abstract types and their usefulness, refer
 to the "Encapsulation" section of the [OCaml Cornell
@@ -391,9 +395,11 @@ class="text-reasonml">\-\></code>.
 As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.
 
-The functions in the [`Belt` library](todo-fix-me.md) included with Melange have
-been designed with the data-first convention in mind, so they work best with the
-pipe first operator.
+The functions in the <a class="text-ocaml"
+href="../api/ml/melange/Belt"><code>Belt</code> library</a><a
+class="text-reasonml" href="../api/re/melange/Belt"><code>Belt</code>
+library</a> included with Melange have been designed with the data-first
+convention in mind, so they work best with the pipe first operator.
 
 For example, we can rewrite the example above using `Belt.List.map` and the pipe
 first operator:
@@ -460,8 +466,8 @@ This is how each Melange type is converted into JavaScript values:
 | array | array |
 | tuple `(3, 4)` | array `[3, 4]` |
 | bool | boolean |
-| [Js.Nullable.t](todo-fix-me.md) | `null` / `undefined` |
-| [Js.Re.t](todo-fix-me.md) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
+| <a class="text-ocaml" href="../api/ml/melange/Js/Nullable">Js.Nullable.t</a><a class="text-reasonml" href="../api/re/melange/Js/Nullable">Js.Nullable.t</a> | `null` / `undefined` | 
+| <a class="text-ocaml" href="../api/ml/melange/Js/Re">Js.Re.t</a><a class="text-reasonml" href="../api/re/melange/Js/Re">Js.Re.t</a> | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | Option.t `None` | `undefined` |
 | Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
 | Option.t <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
@@ -576,9 +582,14 @@ You can surround the interpolation variable in parentheses too: `{j|你
 好，$(world)|j}`.
 
 To work with strings, the Melange standard library provides some utilities in
-the [`Stdlib.String` module](todo-fix-me.md). The bindings to the native
-JavaScript functions to work with strings are in the [`Js.String`
-module](todo-fix-me.md).
+the <a class="text-ocaml"
+href="../api/ml/melange/Stdlib/String"><code>Stdlib.String</code> module</a><a
+class="text-reasonml"
+href="../api/re/melange/Stdlib/String"><code>Stdlib.String</code> module</a>.
+The bindings to the native JavaScript functions to work with strings are in the
+<a class="text-ocaml" href="../api/ml/melange/Js/String"><code>Js.String</code>
+module</a><a class="text-reasonml"
+href="../api/re/melange/Js/String"><code>Js.String</code> module</a>.
 
 #### Floating-point numbers
 
@@ -588,9 +599,14 @@ with a 53-bit mantissa and exponents from -1022 to 1023. This happens to be the
 same encoding as [JavaScript
 numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding),
 so values of these types can be used transparently between Melange code and
-JavaScript code. The Melange standard library provides a [`Stdlib.Float`
-module](todo-fix-me.md). The bindings to the JavaScript APIs that manipulate
-float values can be found in the [`Js.Float`](todo-fix-me.md) module.
+JavaScript code. The Melange standard library provides a <a class="text-ocaml"
+href="../api/ml/melange/Stdlib/Float"><code>Stdlib.Float</code> module</a><a
+class="text-reasonml"
+href="../api/re/melange/Stdlib/Float"><code>Stdlib.Float</code> module</a>. The
+bindings to the JavaScript APIs that manipulate float values can be found in the
+<a class="text-ocaml" href="../api/ml/melange/Js/Float"><code>Js.Float</code>
+module</a><a class="text-reasonml"
+href="../api/re/melange/Js/Float"><code>Js.Float</code> module</a>.
 
 #### Integers
 
@@ -606,9 +622,14 @@ allowing for a larger range of representable integers in JavaScript compared to
 Melange. When dealing with large numbers, it is advisable to use floats instead.
 For instance, floats are used in bindings like `Js.Date`.
 
-The Melange standard library provides a [`Stdlib.Int` module](todo-fix-me.md).
-The bindings to work with JavaScript integers are in the
-[`Js.Int`](todo-fix-me.md) module.
+The Melange standard library provides a <a class="text-ocaml"
+href="../api/ml/melange/Stdlib/Int"><code>Stdlib.Int</code> module</a><a
+class="text-reasonml"
+href="../api/re/melange/Stdlib/Int"><code>Stdlib.Int</code> module</a>. The
+bindings to work with JavaScript integers are in the <a class="text-ocaml"
+href="../api/ml/melange/Js/Int"><code>Js.Int</code> module</a><a
+class="text-reasonml" href="../api/re/melange/Js/Int"><code>Js.Int</code>
+module</a>.
 
 #### Arrays
 
@@ -617,11 +638,16 @@ arrays, all the values in a Melange array need to have the same type.
 
 Another difference is that OCaml arrays are fixed-sized, but on Melange side
 this constraint is relaxed. You can change an array’s length using functions
-like `Js.Array.push`, available in the bindings to the JavaScript APIs in
-[`Js.Array`](todo-fix-me.md).
+like `Js.Array.push`, available in the bindings to the JavaScript APIs in the <a
+class="text-ocaml" href="../api/ml/melange/Js/Array"><code>Js.Array</code>
+module</a><a class="text-reasonml"
+href="../api/re/melange/Js/Array"><code>Js.Array</code> module</a>.
 
-Melange standard library also has a module to work with arrays, available in
-`Stdlib.Array`(todo-fix-me.md) module.
+Melange standard library also has a module to work with arrays, available in the
+<a class="text-ocaml"
+href="../api/ml/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a><a
+class="text-reasonml"
+href="../api/re/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a>.
 
 #### Tuples
 
@@ -665,16 +691,16 @@ can be found in [the section below](#bind-to-js-object).
 
 #### Regular expressions
 
-Regular expressions created using the `%bs.re` extension node compile to their
+Regular expressions created using the `%mel.re` extension node compile to their
 JavaScript counterpart.
 
 For example:
 
 ```ocaml
-let r = [%bs.re "/b/g"]
+let r = [%mel.re "/b/g"]
 ```
 ```reasonml
-let r = [%bs.re "/b/g"];
+let r = [%mel.re "/b/g"];
 ```
 
 Will compile to:
@@ -683,9 +709,11 @@ Will compile to:
 var r = /b/g;
 ```
 
-A regular expression like the above is of type `Js.Re.t`. The
-[`Js.Re`](todo-fix-me.md) module provides the bindings to the JavaScript
-functions that operate over regular expressions.
+A regular expression like the above is of type `Js.Re.t`. The <a
+class="text-ocaml" href="../api/ml/melange/Js/Re"><code>Js.Re</code>
+module</a><a class="text-reasonml"
+href="../api/re/melange/Js/Re"><code>Js.Re</code> module</a> provides the
+bindings to the JavaScript functions that operate over regular expressions.
 
 ## Non-shared data types
 
@@ -698,76 +726,78 @@ them before doing so.
   [some helpers](#generate-getters-setters-and-constructors) to do so.
 - Exceptions
 - Option (a variant type): Better use the `Js.Nullable.fromOption` and
-  `Js.Nullable.toOption` functions in the [`Js.Nullable` module](todo-fix-me.md)
-  to transform them into either `null` or `undefined` values.
-- List (also a variant type): use `Array.of_list` and `Array.to_list` in the
-  [`Array` module](todo-fix-me.md).
+  `Js.Nullable.toOption` functions in the <a class="text-ocaml"
+  href="../api/ml/melange/Js/Nullable"><code>Js.Nullable</code> module</a><a
+  class="text-reasonml"
+  href="../api/re/melange/Js/Nullable"><code>Js.Nullable</code> module</a> to
+  transform them into either `null` or `undefined` values.
+- List (also a variant type): use `Array.of_list` and `Array.to_list` in the <a
+  class="text-ocaml"
+  href="../api/ml/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a><a
+  class="text-reasonml"
+  href="../api/re/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a>.
 - Character
 - Int64
 - Lazy values
 
 ## List of attributes and extension nodes
 
-> **_NOTE:_** All these attributes and extension nodes are prefixed with `bs.`
-> for backwards compatibility. They will be updated to `mel.` in the future.
-
 **Attributes:**
 
 These attributes are used to annotate `external` definitions:
 
-- [`bs.get`](#bind-to-object-properties): read JavaScript object properties
+- [`mel.get`](#bind-to-object-properties): read JavaScript object properties
   statically by name, using the dot notation `.`
-- [`bs.get_index`](#bind-to-object-properties): read a JavaScript object’s
+- [`mel.get_index`](#bind-to-object-properties): read a JavaScript object’s
   properties dynamically by using the bracket notation `[]`
-- [`bs.module`](#using-functions-from-other-javascript-modules): bind to a value
-  from a JavaScript module
-- [`bs.new`](#javascript-classes): bind to a JavaScript class constructor
-- [`bs.obj`](#using-external-functions): create a JavaScript object
-- [`bs.return`](#wrapping-returned-nullable-values): automate conversion from
+- [`mel.module`](#using-functions-from-other-javascript-modules): bind to a
+  value from a JavaScript module
+- [`mel.new`](#javascript-classes): bind to a JavaScript class constructor
+- [`mel.obj`](#using-external-functions): create a JavaScript object
+- [`mel.return`](#wrapping-returned-nullable-values): automate conversion from
   nullable values to `Option.t` values
-- [`bs.send`](#calling-an-object-method): call a JavaScript object method using
-  [pipe first](todo-fix-me.md) convention
-- [`bs.send.pipe`](#calling-an-object-method): call a JavaScript object method
-  using [pipe last](todo-fix-me.md) convention
-- [`bs.set`](#bind-to-object-properties): set JavaScript object properties
+- [`mel.send`](#calling-an-object-method): call a JavaScript object method using
+  [pipe first](#pipe-first) convention
+- [`mel.send.pipe`](#calling-an-object-method): call a JavaScript object method
+  using [pipe last](#pipe-last) convention
+- [`mel.set`](#bind-to-object-properties): set JavaScript object properties
   statically by name, using the dot notation `.`
-- [`bs.set_index`](#bind-to-object-properties): set JavaScript object properties
-  dynamically by using the bracket notation `[]`
-- [`bs.scope`](#binding-to-properties-inside-a-module-or-global): reach to
+- [`mel.set_index`](#bind-to-object-properties): set JavaScript object
+  properties dynamically by using the bracket notation `[]`
+- [`mel.scope`](#binding-to-properties-inside-a-module-or-global): reach to
   deeper properties inside a JavaScript object
-- [`bs.splice`](#variadic-function-arguments): a deprecated attribute, is an
-  alternate form of `bs.variadic`
-- [`bs.val`](#bind-to-global-javascript-functions-or-values): bind to global
-  JavaScript functions or other values
-- [`bs.variadic`](#variadic-function-arguments): bind to a function taking
+- [`mel.splice`](#variadic-function-arguments): a deprecated attribute, is an
+  alternate form of `mel.variadic`
+- [`mel.variadic`](#variadic-function-arguments): bind to a function taking
   variadic arguments from an array
 
 These attributes are used to annotate arguments in `external` definitions:
 
-- [`bs`](#binding-to-callbacks): define function arguments as uncurried (manual)
-- [`bs.int`](#using-polymorphic-variants-to-bind-to-enums): compile function
+- [`u`](#binding-to-callbacks): define function arguments as uncurried (manual)
+- [`mel.int`](#using-polymorphic-variants-to-bind-to-enums): compile function
   argument to an int
-- [`bs.string`](#using-polymorphic-variants-to-bind-to-enums): compile function
+- [`mel.string`](#using-polymorphic-variants-to-bind-to-enums): compile function
   argument to a string
-- [`bs.this`](#modeling-this-based-callbacks): bind to `this` based callbacks
-- [`bs.uncurry`](#binding-to-callbacks): define function arguments as uncurried
+- [`mel.this`](#modeling-this-based-callbacks): bind to `this` based callbacks
+- [`mel.uncurry`](#binding-to-callbacks): define function arguments as uncurried
   (automated)
-- [`bs.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant values
+- [`mel.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant
+  values
 
 These attributes are used in places like records, fields, arguments, functions,
 and more:
 
-- `bs.as`: redefine the name generated in the JavaScript output code. Used in
+- `mel.as`: redefine the name generated in the JavaScript output code. Used in
   [constant function arguments](#constant-values-as-arguments),
   [variants](#conversion-functions), polymorphic variants (either [inlined in
   external functions](#using-polymorphic-variants-to-bind-to-enums) or [in type
   definitions](#polymorphic-variants)) and [record
   fields](#objects-with-static-shape-record-like).
-- [`bs.deriving`](#generate-getters-setters-and-constructors): generate getters
-  and setters for some types
-- [`bs.inline`](#inlining-constant-values): forcefully inline constant values
-- [`bs.optional`](#convert-records-into-abstract-types): omit fields in a record
-  (combines with `bs.deriving`)
+- [`deriving`](#generate-getters-setters-and-constructors): generate getters and
+  setters for some types
+- [`mel.inline`](#inlining-constant-values): forcefully inline constant values
+- [`optional`](#convert-records-into-abstract-types): omit fields in a record
+  (combines with `deriving`)
 
 **Extension nodes:**
 
@@ -787,22 +817,22 @@ The same field `preprocess` can be added to `melange.emit`.
 
 Here is the list of all the extension nodes supported by Melange:
 
-- [`bs.debugger`](#debugger): insert `debugger` statements
-- [`bs.external`](#detect-global-variables): read global values
-- [`bs.obj`](#using-jst-objects): create JavaScript object literals
-- [`bs.raw`](#generate-raw-javascript): write raw JavaScript code
-- [`bs.re`](#regular-expressions): insert regular expressions
+- [`mel.debugger`](#debugger): insert `debugger` statements
+- [`mel.external`](#detect-global-variables): read global values
+- [`mel.obj`](#using-jst-objects): create JavaScript object literals
+- [`mel.raw`](#generate-raw-javascript): write raw JavaScript code
+- [`mel.re`](#regular-expressions): insert regular expressions
 
 ## Generate raw JavaScript
 
 It is possible to directly write JavaScript code from a Melange file. This is
 unsafe, but it can be useful for prototyping or as an escape hatch.
 
-To do it, we will use the `bs.raw`
+To do it, we will use the `mel.raw`
 [extension](https://v2.ocaml.org/manual/extensionnodes.html):
 
 ```ocaml
-let add = [%bs.raw {|
+let add = [%mel.raw {|
   function(a, b) {
     console.log("hello from raw JavaScript!");
     return a + b;
@@ -812,7 +842,7 @@ let add = [%bs.raw {|
 let () = Js.log (add 1 2)
 ```
 ```reasonml
-let add = [%bs.raw
+let add = [%mel.raw
   {|
   function(a, b) {
     console.log("hello from raw JavaScript!");
@@ -831,46 +861,46 @@ there is no need to escape characters inside the string.
 
 Using <span class="text-ocaml">one percentage sign</span><span
 class="text-reasonml">the extension name between square brackets</span>
-(`[%bs.raw <string>]`) is useful to define expressions (function bodies, or
+(`[%mel.raw <string>]`) is useful to define expressions (function bodies, or
 other values) where the implementation is directly JavaScript. This is useful as
 we can attach the type signature already in the same line, to make our code
 safer. For example:
 
 ```ocaml
-let f : unit -> int = [%bs.raw "function() {return 1}"]
+let f : unit -> int = [%mel.raw "function() {return 1}"]
 ```
 ```reasonml
-let f: unit => int = ([%bs.raw "function() {return 1}"]: unit => int);
+let f: unit => int = ([%mel.raw "function() {return 1}"]: unit => int);
 ```
 
-Using <span class="text-ocaml">two percentage signs (`[%%bs.raw
+Using <span class="text-ocaml">two percentage signs (`[%%mel.raw
 <string>]`)</span><span class="text-reasonml">the extension name without square
-brackets (`%bs.raw <string>`)</span> is reserved for definitions in a
+brackets (`%mel.raw <string>`)</span> is reserved for definitions in a
 [structure](https://v2.ocaml.org/manual/moduleexamples.html#s:module:structures)
 or [signature](https://v2.ocaml.org/manual/moduleexamples.html#s%3Asignature).
 
 For example:
 
 ```ocaml
-[%%bs.raw "var a = 1"]
+[%%mel.raw "var a = 1"]
 ```
 ```reasonml
-[%%bs.raw "var a = 1"];
+[%%mel.raw "var a = 1"];
 ```
 
 ## Debugger
 
-Melange allows you to inject a `debugger;` expression using the `bs.debugger`
+Melange allows you to inject a `debugger;` expression using the `mel.debugger`
 extension:
 
 ```ocaml
 let f x y =
-  [%bs.debugger];
+  [%mel.debugger];
   x + y
 ```
 ```reasonml
 let f = (x, y) => {
-  [%bs.debugger];
+  [%mel.debugger];
   x + y;
 };
 ```
@@ -887,21 +917,21 @@ function f (x,y) {
 ## Detect global variables
 
 Melange provides a relatively type safe approach to use globals that might be
-defined either in the JavaScript runtime environment: `bs.external`.
+defined either in the JavaScript runtime environment: `mel.external`.
 
-`[%bs.external id]` will check if the JavaScript value `id` is `undefined` or
+`[%mel.external id]` will check if the JavaScript value `id` is `undefined` or
 not, and return an `Option.t` value accordingly.
 
 For example:
 
 ```ocaml
-let () = match [%bs.external __DEV__] with
+let () = match [%mel.external __DEV__] with
 | Some _ -> Js.log "dev mode"
 | None -> Js.log "production mode"
 ```
 ```reasonml
 let () =
-  switch ([%bs.external __DEV__]) {
+  switch ([%mel.external __DEV__]) {
   | Some(_) => Js.log("dev mode")
   | None => Js.log("production mode")
   };
@@ -910,13 +940,13 @@ let () =
 Another example:
 
 ```ocaml
-let () = match [%bs.external __filename] with
+let () = match [%mel.external __filename] with
 | Some f -> Js.log f
 | None -> Js.log "non-node environment"
 ```
 ```reasonml
 let () =
-  switch ([%bs.external __filename]) {
+  switch ([%mel.external __filename]) {
   | Some(f) => Js.log(f)
   | None => Js.log("non-node environment")
   };
@@ -944,21 +974,20 @@ if ("development" !== "production") {
 In this case, bundlers such as Webpack can tell that the `if` statement always
 evaluates to a specific branch and eliminate the others.
 
-Melange provides the `bs.inline` attribute to achieve the same goal in generated
-JavaScript. Let’s look at an example:
+Melange provides the `mel.inline` attribute to achieve the same goal in
+generated JavaScript. Let’s look at an example:
 
 ```ocaml
-external node_env : string = "NODE_ENV" [@@bs.val] [@@bs.scope "process", "env"]
+external node_env : string = "NODE_ENV" [@@mel.scope "process", "env"]
 
 let development = "development"
 let () = if node_env <> development then Js.log "Only in Production"
 
-let development_inline = "development" [@@bs.inline]
+let development_inline = "development" [@@mel.inline]
 let () = if node_env <> development_inline then Js.log "Only in Production"
 ```
 ```reasonml
-[@bs.val] [@bs.scope ("process", "env")]
-external node_env: string = "NODE_ENV";
+[@mel.scope ("process", "env")] external node_env: string = "NODE_ENV";
 
 let development = "development";
 let () =
@@ -966,7 +995,7 @@ let () =
     Js.log("Only in Production");
   };
 
-[@bs.inline]
+[@mel.inline]
 let development_inline = "development";
 let () =
   if (node_env != development_inline) {
@@ -1029,7 +1058,7 @@ type person = {
   age : int;
 }
 
-external john : person = "john" [@@bs.module "MySchool"]
+external john : person = "john" [@@mel.module "MySchool"]
 let john_name = john.name
 ```
 ```reasonml
@@ -1039,7 +1068,7 @@ type person = {
   age: int,
 };
 
-[@bs.module "MySchool"] external john: person = "john";
+[@mel.module "MySchool"] external john: person = "john";
 let john_name = john.name;
 ```
 
@@ -1052,22 +1081,22 @@ var john_name = MySchool.john.name;
 ```
 
 External functions are documented in [a previous section](#external-functions).
-The `bs.module` attribute is documented
+The `mel.module` attribute is documented
 [here](#using-functions-from-other-javascript-modules).
 
 If you want or need to use different field names on the Melange and the
-JavaScript sides, you can use the `bs.as` decorator:
+JavaScript sides, you can use the `mel.as` decorator:
 
 ```ocaml
 type action = {
-  type_ : string [@bs.as "type"]
+  type_ : string [@mel.as "type"]
 }
 
 let action = { type_ = "ADD_USER" }
 ```
 ```reasonml
 type action = {
-  [@bs.as "type"]
+  [@mel.as "type"]
   type_: string,
 };
 
@@ -1087,21 +1116,21 @@ Melange, for example, where the JavaScript name we want to generate is a
 [reserved keyword](https://v2.ocaml.org/manual/lex.html#sss:keywords).
 
 It is also possible to map a Melange record to a JavaScript array by passing
-indices to the `bs.as` decorator:
+indices to the `mel.as` decorator:
 
 ```ocaml
 type t = {
-  foo : int; [@bs.as "0"]
-  bar : string; [@bs.as "1"]
+  foo : int; [@mel.as "0"]
+  bar : string; [@mel.as "1"]
 }
 
 let value = { foo = 7; bar = "baz" }
 ```
 ```reasonml
 type t = {
-  [@bs.as "0"]
+  [@mel.as "0"]
   foo: int,
-  [@bs.as "1"]
+  [@mel.as "1"]
   bar: string,
 };
 
@@ -1128,11 +1157,11 @@ advance, which can be helpful for prototyping or quickly generating JavaScript
 object literals.
 
 Melange provides some ways to create `Js.t` object values, as well as accessing
-the properties inside them. To create values, the `[%bs.obj]` extension is used,
-and the `##` infix operator allows to read from the object properties:
+the properties inside them. To create values, the `[%mel.obj]` extension is
+used, and the `##` infix operator allows to read from the object properties:
 
 ```ocaml
-let john = [%bs.obj { name = "john"; age = 99 }]
+let john = [%mel.obj { name = "john"; age = 99 }]
 let t = john##name
 ```
 ```reasonml
@@ -1163,8 +1192,8 @@ types that include a field `name` that is of type string, e.g.:
 ```ocaml
 let name_extended obj = obj##name ^ " wayne"
 
-let one = name_extended [%bs.obj { name = "john"; age = 99 }]
-let two = name_extended [%bs.obj { name = "jane"; address = "1 infinite loop" }]
+let one = name_extended [%mel.obj { name = "john"; age = 99 }]
+let two = name_extended [%mel.obj { name = "jane"; address = "1 infinite loop" }]
 ```
 ```reasonml
 let name_extended = obj => obj##name ++ " wayne";
@@ -1180,9 +1209,9 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 #### Using external functions
 
 We have already explored one approach for creating JavaScript object literals by
-using [`Js.t` values and the `bs.obj` extension](#using-jst-objects).
+using [`Js.t` values and the `mel.obj` extension](#using-jst-objects).
 
-Melange additionally offers the `bs.obj` attribute, which can be used in
+Melange additionally offers the `mel.obj` attribute, which can be used in
 combination with external functions to create JavaScript objects. When these
 functions are called, they generate objects with fields corresponding to the
 labeled arguments of the function.
@@ -1214,10 +1243,10 @@ external route :
   ?options:< .. > ->
   unit ->
   _ = ""
-  [@@bs.obj]
+  [@@mel.obj]
 ```
 ```reasonml
-[@bs.obj]
+[@mel.obj]
 external route:
   (
     ~_type: string,
@@ -1246,8 +1275,8 @@ In the route function, the `_type` argument starts with an underscore. When
 binding to JavaScript objects with fields that are reserved keywords in OCaml,
 Melange allows the use of an underscore prefix for the labeled arguments. The
 resulting JavaScript object will have the underscore removed from the field
-names. This is only required for the `bs.obj` attribute, while for other cases,
-the `bs.as` attribute can be used to rename fields.
+names. This is only required for the `mel.obj` attribute, while for other cases,
+the `mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
@@ -1275,16 +1304,16 @@ var homeRoute = {
 #### Bind to object properties
 
 If you need to bind only to the property of a JavaScript object, you can use
-`bs.get` and `bs.set` to access it using the dot notation `.`:
+`mel.get` and `mel.set` to access it using the dot notation `.`:
 
 ```ocaml
 (* Abstract type for the `document` value *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 
-external set_title : document -> string -> unit = "title" [@@bs.set]
-external get_title : document -> string = "title" [@@bs.get]
+external set_title : document -> string -> unit = "title" [@@mel.set]
+external get_title : document -> string = "title" [@@mel.get]
 
 let current = get_title document
 let () = set_title document "melange"
@@ -1293,10 +1322,10 @@ let () = set_title document "melange"
 /* Abstract type for the `document` value */
 type document;
 
-[@bs.val] external document: document = "document";
+external document: document = "document";
 
-[@bs.set] external set_title: (document, string) => unit = "title";
-[@bs.get] external get_title: document => string = "title";
+[@mel.set] external set_title: (document, string) => unit = "title";
+[@mel.get] external get_title: document => string = "title";
 
 let current = get_title(document);
 let () = set_title(document, "melange");
@@ -1310,14 +1339,14 @@ document.title = "melange";
 ```
 
 Alternatively, if some dynamism is required on the way the property is accessed,
-you can use `bs.get_index` and `bs.set_index` to access it using the bracket
+you can use `mel.get_index` and `mel.set_index` to access it using the bracket
 notation `[]`:
 
 ```ocaml
 type t
-external create : int -> t = "Int32Array" [@@bs.new]
-external get : t -> int -> int = "get" [@@bs.get_index]
-external set : t -> int -> int -> unit = "set" [@@bs.set_index]
+external create : int -> t = "Int32Array" [@@mel.new]
+external get : t -> int -> int = "" [@@mel.get_index]
+external set : t -> int -> int -> unit = "" [@@mel.set_index]
 
 let () =
   let i32arr = (create 3) in
@@ -1326,9 +1355,9 @@ let () =
 ```
 ```reasonml
 type t;
-[@bs.new] external create: int => t = "Int32Array";
-[@bs.get_index] external get: (t, int) => int = "get";
-[@bs.set_index] external set: (t, int, int) => unit = "set";
+[@mel.new] external create: int => t = "Int32Array";
+[@mel.get_index] external get: (t, int) => int;
+[@mel.set_index] external set: (t, int, int) => unit;
 
 let () = {
   let i32arr = create(3);
@@ -1354,24 +1383,26 @@ Sometimes JavaScript objects are used as dictionaries. In these cases:
 
 For this particular use case of JavaScript objects, Melange exposes a specific
 type `Js.Dict.t`. The values and functions to work with values of this type are
-defined in the [`Js.Dict`](todo-fix-me.md) module, with operations like `get`,
-`set`, etc.
+defined in the <a class="text-ocaml"
+href="../api/ml/melange/Js/Dict"><code>Js.Dict</code> module</a><a
+class="text-reasonml" href="../api/re/melange/Js/Dict"><code>Js.Dict</code>
+module</a>, with operations like `get`, `set`, etc.
 
 Values of the type `Js.Dict.t` compile to JavaScript objects.
 
 ### JavaScript classes
 
 JavaScript classes are special kinds of objects. To interact with classes,
-Melange exposes `bs.new` to emulate e.g. `new Date()`:
+Melange exposes `mel.new` to emulate e.g. `new Date()`:
 
 ```ocaml
 type t
-external create_date : unit -> t = "Date" [@@bs.new]
+external create_date : unit -> t = "Date" [@@mel.new]
 let date = create_date ()
 ```
 ```reasonml
 type t;
-[@bs.new] external create_date: unit => t = "Date";
+[@mel.new] external create_date: unit => t = "Date";
 let date = create_date();
 ```
 
@@ -1381,17 +1412,17 @@ Which generates:
 var date = new Date();
 ```
 
-You can chain `bs.new` and `bs.module` if the JavaScript class you want to work
-with is in a separate JavaScript module:
+You can chain `mel.new` and `mel.module` if the JavaScript class you want to
+work with is in a separate JavaScript module:
 
 ```ocaml
 type t
-external book : unit -> t = "Book" [@@bs.new] [@@bs.module]
+external book : unit -> t = "Book" [@@mel.new] [@@mel.module]
 let myBook = book ()
 ```
 ```reasonml
 type t;
-[@bs.new] [@bs.module] external book: unit => t = "Book";
+[@mel.new] [@mel.module] external book: unit => t = "Book";
 let myBook = book();
 ```
 
@@ -1402,18 +1433,18 @@ var Book = require("Book");
 var myBook = new Book();
 ```
 
-## Bind to global JavaScript functions or values
+## Bind to JavaScript functions or values
 
-Binding to a JavaScript function makes use of `external`, like with objects. If
-we want to bind to a function available globally, Melange offers the `bs.val`
-attribute:
+### Using global functions or values
+
+Binding to a JavaScript function available globally makes use of `external`,
+like with objects. But unlike objects, there is no need to add any attributes:
 
 ```ocaml
 (* Abstract type for `timeoutId` *)
 type timeoutId
 external setTimeout : (unit -> unit) -> int -> timeoutId = "setTimeout"
-  [@@bs.val]
-external clearTimeout : timeoutId -> unit = "clearTimeout" [@@bs.val]
+external clearTimeout : timeoutId -> unit = "clearTimeout"
 
 let id = setTimeout (fun () -> Js.log "hello") 100
 let () = clearTimeout id
@@ -1421,16 +1452,18 @@ let () = clearTimeout id
 ```reasonml
 /* Abstract type for `timeoutId` */
 type timeoutId;
-[@bs.val] external setTimeout: (unit => unit, int) => timeoutId = "setTimeout";
-[@bs.val] external clearTimeout: timeoutId => unit = "clearTimeout";
+external setTimeout: (unit => unit, int) => timeoutId = "setTimeout";
+external clearTimeout: timeoutId => unit = "clearTimeout";
 
 let id = setTimeout(() => Js.log("hello"), 100);
 let () = clearTimeout(id);
 ```
 
 > **_NOTE:_** The bindings to `setTimeout` and `clearTimeout` are shown here for
-> learning purposes, but they are already available in the
-> [`Js.Global`](todo-fix-me.md) module.
+> learning purposes, but they are already available in the <a class="text-ocaml"
+> href="../api/ml/melange/Js/Global"><code>Js.Global</code> module</a><a
+> class="text-reasonml"
+> href="../api/re/melange/Js/Global"><code>Js.Global</code> module</a>.
 
 Generates:
 
@@ -1448,14 +1481,14 @@ Global bindings can also be applied to values:
 (* Abstract type for `document` *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 let document = document
 ```
 ```reasonml
 /* Abstract type for `document` */
 type document;
 
-[@bs.val] external document: document = "document";
+external document: document = "document";
 let document = document;
 ```
 
@@ -1467,15 +1500,15 @@ var doc = document;
 
 ### Using functions from other JavaScript modules
 
-`bs.module` is like the `bs.val` attribute, but it accepts a string with the
-name of the module, or the relative path to it.
+`mel.module` allows to bind to values that belong to another JavaScript module.
+It accepts a string with the name of the module, or the relative path to it.
 
 ```ocaml
-external dirname : string -> string = "dirname" [@@bs.module "path"]
+external dirname : string -> string = "dirname" [@@mel.module "path"]
 let root = dirname "/User/github"
 ```
 ```reasonml
-[@bs.module "path"] external dirname: string => string = "dirname";
+[@mel.module "path"] external dirname: string => string = "dirname";
 let root = dirname("/User/github");
 ```
 
@@ -1489,7 +1522,7 @@ var root = Path.dirname("/User/github");
 ### Binding to properties inside a module or global
 
 For cases when we need to create bindings for a property within a module or a
-global JavaScript object, Melange provides the `bs.scope` attribute.
+global JavaScript object, Melange provides the `mel.scope` attribute.
 
 For example, if we want to write some bindings for a specific property
 `commands` from [the `vscode`
@@ -1499,13 +1532,13 @@ can do:
 ```ocaml
 type param
 external executeCommands : string -> param array -> unit = ""
-  [@@bs.scope "commands"] [@@bs.module "vscode"] [@@bs.variadic]
+  [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
 
 let f a b c = executeCommands "hi" [| a; b; c |]
 ```
 ```reasonml
 type param;
-[@bs.scope "commands"] [@bs.module "vscode"] [@bs.variadic]
+[@mel.scope "commands"] [@mel.module "vscode"] [@mel.variadic]
 external executeCommands: (string, array(param)) => unit;
 
 let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
@@ -1521,8 +1554,8 @@ function f(a, b, c) {
 }
 ```
 
-The `bs.scope` attribute can take multiple arguments as payload, in case we want
-to reach deeper into the object from the module we are importing.
+The `mel.scope` attribute can take multiple arguments as payload, in case we
+want to reach deeper into the object from the module we are importing.
 
 For example:
 
@@ -1530,14 +1563,14 @@ For example:
 type t
 
 external back : t = "back"
-  [@@bs.module "expo-camera"] [@@bs.scope "Camera", "Constants", "Type"]
+  [@@mel.module "expo-camera"] [@@mel.scope "Camera", "Constants", "Type"]
 
 let camera_type_back = back
 ```
 ```reasonml
 type t;
 
-[@bs.module "expo-camera"] [@bs.scope ("Camera", "Constants", "Type")]
+[@mel.module "expo-camera"] [@mel.scope ("Camera", "Constants", "Type")]
 external back: t = "back";
 
 let camera_type_back = back;
@@ -1551,16 +1584,16 @@ var ExpoCamera = require("expo-camera");
 var camera_type_back = ExpoCamera.Camera.Constants.Type.back;
 ```
 
-It can also be used in combination with other attributes besides `bs.module`,
-like `bs.val`:
+It can be used without `mel.module`, to created scoped bindings to global
+values:
 
 ```ocaml
-external imul : int -> int -> int = "imul" [@@bs.val] [@@bs.scope "Math"]
+external imul : int -> int -> int = "imul" [@@mel.scope "Math"]
 
 let res = imul 1 2
 ```
 ```reasonml
-[@bs.val] [@bs.scope "Math"] external imul: (int, int) => int = "imul";
+[@mel.scope "Math"] external imul: (int, int) => int = "imul";
 
 let res = imul(1, 2);
 ```
@@ -1571,20 +1604,20 @@ Which produces:
 var res = Math.imul(1, 2);
 ```
 
-Or it can be used together with `bs.new`:
+Or it can be used together with `mel.new`:
 
 ```ocaml
 type t
 
 external create : unit -> t = "GUI"
-  [@@bs.new] [@@bs.scope "default"] [@@bs.module "dat.gui"]
+  [@@mel.new] [@@mel.scope "default"] [@@mel.module "dat.gui"]
 
 let gui = create ()
 ```
 ```reasonml
 type t;
 
-[@bs.new] [@bs.scope "default"] [@bs.module "dat.gui"]
+[@mel.new] [@mel.scope "default"] [@mel.module "dat.gui"]
 external create: unit => t = "GUI";
 
 let gui = create();
@@ -1685,15 +1718,19 @@ MyGame.draw(10, 20, undefined);
 ### Calling an object method
 
 If we need to call a JavaScript method, Melange provides the attribute
-`bs.send`:
+`mel.send`.
+
+> In the following snippets, we will be referring to a type `Dom.element`, which
+> is provided within the library `melange.dom`. You can add it to your project
+> by including `(libraries melange.dom)` to your `dune` file:
 
 ```ocaml
 (* Abstract type for the `document` global *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 external get_by_id : document -> string -> Dom.element = "getElementById"
-  [@@bs.send]
+  [@@mel.send]
 
 let el = get_by_id document "my-id"
 ```
@@ -1701,8 +1738,8 @@ let el = get_by_id document "my-id"
 /* Abstract type for the `document` global */
 type document;
 
-[@bs.val] external document: document = "document";
-[@bs.send]
+external document: document = "document";
+[@mel.send]
 external get_by_id: (document, string) => Dom.element = "getElementById";
 
 let el = get_by_id(document, "my-id");
@@ -1714,23 +1751,23 @@ Generates:
 var el = document.getElementById("my-id");
 ```
 
-When using `bs.send`, the first argument will be the object that holds the
+When using `mel.send`, the first argument will be the object that holds the
 property with the function we want to call. This combines well with the pipe
 first operator <code class="text-ocaml">\|.</code><code
 class="text-reasonml">\-\></code>, see the ["Chaining"](#chaining) section
 below.
 
 If we want to design our bindings to be used with OCaml pipe last operator `|>`,
-there is an alternate `bs.send.pipe` attribute. Let’s rewrite the example above
+there is an alternate `mel.send.pipe` attribute. Let’s rewrite the example above
 using it:
 
 ```ocaml
 (* Abstract type for the `document` global *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 external get_by_id : string -> Dom.element = "getElementById"
-  [@@bs.send.pipe: document]
+  [@@mel.send.pipe: document]
 
 let el = get_by_id "my-id" document
 ```
@@ -1738,14 +1775,14 @@ let el = get_by_id "my-id" document
 /* Abstract type for the `document` global */
 type document;
 
-[@bs.val] external document: document = "document";
-[@bs.send.pipe: document]
+external document: document = "document";
+[@mel.send.pipe: document]
 external get_by_id: string => Dom.element = "getElementById";
 
 let el = get_by_id("my-id", document);
 ```
 
-Generates the same code as `bs.send`:
+Generates the same code as `mel.send`:
 
 ```js
 var el = document.getElementById("my-id");
@@ -1757,10 +1794,10 @@ It is common to find this kind of API in JavaScript: `foo().bar().baz()`. This
 kind of API can be designed with Melange externals. Depending on which
 convention we want to use, there are two attributes available:
 
-- For a data-first convention, the `bs.send` attribute, in combination with [the
-  pipe first operator](#pipe-first) <code class="text-ocaml">\|.</code><code
-  class="text-reasonml">\-\></code>
-- For a data-last convention, the `bs.send.pipe` attribute, in combination with
+- For a data-first convention, the `mel.send` attribute, in combination with
+  [the pipe first operator](#pipe-first) <code
+  class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>
+- For a data-last convention, the `mel.send.pipe` attribute, in combination with
   OCaml [pipe last operator](#pipe-last) `|>`.
 
 Let’s see first an example of chaining using data-first convention with the pipe
@@ -1771,12 +1808,12 @@ class="text-reasonml">\-\></code>:
 (* Abstract type for the `document` global *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 external get_by_id : document -> string -> Dom.element = "getElementById"
-  [@@bs.send]
+  [@@mel.send]
 external get_by_classname : Dom.element -> string -> Dom.element
   = "getElementsByClassName"
-  [@@bs.send]
+  [@@mel.send]
 
 let el = document |. get_by_id "my-id" |. get_by_classname "my-class"
 ```
@@ -1784,10 +1821,10 @@ let el = document |. get_by_id "my-id" |. get_by_classname "my-class"
 /* Abstract type for the `document` global */
 type document;
 
-[@bs.val] external document: document = "document";
-[@bs.send]
+external document: document = "document";
+[@mel.send]
 external get_by_id: (document, string) => Dom.element = "getElementById";
-[@bs.send]
+[@mel.send]
 external get_by_classname: (Dom.element, string) => Dom.element =
   "getElementsByClassName";
 
@@ -1806,11 +1843,11 @@ Now with pipe last operator `|>`:
 (* Abstract type for the `document` global *)
 type document
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 external get_by_id : string -> Dom.element = "getElementById"
-  [@@bs.send.pipe: document]
+  [@@mel.send.pipe: document]
 external get_by_classname : string -> Dom.element = "getElementsByClassName"
-  [@@bs.send.pipe: Dom.element]
+  [@@mel.send.pipe: Dom.element]
 
 let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
 ```
@@ -1818,10 +1855,10 @@ let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
 /* Abstract type for the `document` global */
 type document;
 
-[@bs.val] external document: document = "document";
-[@bs.send.pipe: document]
+external document: document = "document";
+[@mel.send.pipe: document]
 external get_by_id: string => Dom.element = "getElementById";
-[@bs.send.pipe: Dom.element]
+[@mel.send.pipe: Dom.element]
 external get_by_classname: string => Dom.element = "getElementsByClassName";
 
 let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
@@ -1836,17 +1873,17 @@ var el = document.getElementById("my-id").getElementsByClassName("my-class");
 ### Variadic function arguments
 
 Sometimes JavaScript functions take an arbitrary amount of arguments. For these
-cases, Melange provides the `bs.variadic` attribute, which can be attached to
+cases, Melange provides the `mel.variadic` attribute, which can be attached to
 the `external` declaration. However, there is one caveat: all the variadic
 arguments need to belong to the same type.
 
 ```ocaml
 external join : string array -> string = "join"
-  [@@bs.module "path"] [@@bs.variadic]
+  [@@mel.module "path"] [@@mel.variadic]
 let v = join [| "a"; "b" |]
 ```
 ```reasonml
-[@bs.module "path"] [@bs.variadic]
+[@mel.module "path"] [@mel.variadic]
 external join: array(string) => string = "join";
 let v = join([|"a", "b"|]);
 ```
@@ -1867,7 +1904,7 @@ mentioned [in the OCaml attributes section](#reusing-ocaml-attributes):
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
 
-external join : hide array -> string = "join" [@@bs.module "path"] [@@bs.variadic]
+external join : hide array -> string = "join" [@@mel.module "path"] [@@mel.variadic]
 
 let v = join [| Hide "a"; Hide 2 |]
 ```
@@ -1876,7 +1913,7 @@ let v = join [| Hide "a"; Hide 2 |]
 type hide =
   | Hide('a): hide;
 
-[@bs.module "path"] [@bs.variadic]
+[@mel.module "path"] [@mel.variadic]
 external join: array(hide) => string = "join";
 
 let v = join([|Hide("a"), Hide(2)|]);
@@ -1902,25 +1939,25 @@ If it is possible to enumerate the many forms an overloaded JavaScript function
 can take, a flexible approach is to bind to each form individually:
 
 ```ocaml
-external drawCat : unit -> unit = "draw" [@@bs.module "MyGame"]
-external drawDog : giveName:string -> unit = "draw" [@@bs.module "MyGame"]
+external drawCat : unit -> unit = "draw" [@@mel.module "MyGame"]
+external drawDog : giveName:string -> unit = "draw" [@@mel.module "MyGame"]
 external draw : string -> useRandomAnimal:bool -> unit = "draw"
-  [@@bs.module "MyGame"]
+  [@@mel.module "MyGame"]
 ```
 ```reasonml
-[@bs.module "MyGame"] external drawCat: unit => unit = "draw";
-[@bs.module "MyGame"] external drawDog: (~giveName: string) => unit = "draw";
-[@bs.module "MyGame"]
+[@mel.module "MyGame"] external drawCat: unit => unit = "draw";
+[@mel.module "MyGame"] external drawDog: (~giveName: string) => unit = "draw";
+[@mel.module "MyGame"]
 external draw: (string, ~useRandomAnimal: bool) => unit = "draw";
 ```
 
 Note how all three externals bind to the same JavaScript function, `draw`.
 
-#### Approach 2: Polymorphic variant + `bs.unwrap`
+#### Approach 2: Polymorphic variant + `mel.unwrap`
 
 In some cases, the function has a constant number of arguments but the type of
 the argument can vary. For cases like this, we can model the argument as a
-variant and use the `bs.unwrap` attribute in the external.
+variant and use the `mel.unwrap` attribute in the external.
 
 Let’s say we want to bind to the following JavaScript function:
 
@@ -1937,7 +1974,7 @@ function padLeft(value, padding) {
 ```
 
 As the `padding` argument can be either a number or a string, we can use
-`bs.unwrap` to define it. It is important to note that `bs.unwrap` imposes
+`mel.unwrap` to define it. It is important to note that `mel.unwrap` imposes
 certain requirements on the type it is applied to:
 
 - It needs to be a [polymorphic
@@ -1951,17 +1988,16 @@ external padLeft:
   string
   -> ([ `Str of string
       | `Int of int
-      ] [@bs.unwrap])
+      ] [@mel.unwrap])
   -> string
-  = "padLeft" [@@bs.val]
+  = "padLeft"
 
 let _ = padLeft "Hello World" (`Int 4)
 let _ = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
 ```reasonml
-[@bs.val]
 external padLeft:
-  (string, [@bs.unwrap] [ | `Str(string) | `Int(int)]) => string =
+  (string, [@mel.unwrap] [ | `Str(string) | `Int(int)]) => string =
   "padLeft";
 
 let _ = padLeft("Hello World", `Int(4));
@@ -1977,7 +2013,7 @@ padLeft("Hello World", "Message from Melange: ");
 
 As we saw in the [Non-shared data types](#non-shared-data-types) section, we
 should rather avoid passing variants directly to the JavaScript side. By using
-`bs.unwrap` we get the best of both worlds: from Melange we can use variants,
+`mel.unwrap` we get the best of both worlds: from Melange we can use variants,
 while JavaScript gets the raw values inside them.
 
 ### Using polymorphic variants to bind to enums
@@ -1994,19 +2030,19 @@ not prevent consumers of the external function from calling it using values that
 are unsupported by the JavaScript function. Let’s see how we can use polymorphic
 variants to avoid runtime errors.
 
-If the values are strings, we can use the `bs.string` attribute:
+If the values are strings, we can use the `mel.string` attribute:
 
 ```ocaml
 external read_file_sync :
-  name:string -> ([ `utf8 | `ascii ][@bs.string]) -> string = "readFileSync"
-  [@@bs.module "fs"]
+  name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  [@@mel.module "fs"]
 
 let _ = read_file_sync ~name:"xx.txt" `ascii
 ```
 ```reasonml
-[@bs.module "fs"]
+[@mel.module "fs"]
 external read_file_sync:
-  (~name: string, [@bs.string] [ | `utf8 | `ascii]) => string =
+  (~name: string, [@mel.string] [ | `utf8 | `ascii]) => string =
   "readFileSync";
 
 let _ = read_file_sync(~name="xx.txt", `ascii);
@@ -2019,27 +2055,27 @@ var Fs = require("fs");
 Fs.readFileSync("xx.txt", "ascii");
 ```
 
-This technique can be combined with the `bs.as` attribute to modify the strings
+This technique can be combined with the `mel.as` attribute to modify the strings
 produced from the polymorphic variant values. For example:
 
 ```ocaml
 type document
 type style
 
-external document : document = "document" [@@bs.val]
+external document : document = "document"
 external get_by_id : document -> string -> Dom.element = "getElementById"
-  [@@bs.send]
-external style : Dom.element -> style = "style" [@@bs.get]
+[@@mel.send]
+external style : Dom.element -> style = "style" [@@mel.get]
 external transition_timing_function :
   style ->
-  [ `ease
-  | `easeIn [@bs.as "ease-in"]
-  | `easeOut [@bs.as "ease-out"]
-  | `easeInOut [@bs.as "ease-in-out"]
-  | `linear
-  ] ->
+  ([ `ease
+   | `easeIn [@mel.as "ease-in"]
+   | `easeOut [@mel.as "ease-out"]
+   | `easeInOut [@mel.as "ease-in-out"]
+   | `linear ]
+  [@mel.string]) ->
   unit = "transitionTimingFunction"
-  [@@bs.set]
+[@@mel.set]
 
 let element_style = style (get_by_id document "my-id")
 let () = transition_timing_function element_style `easeIn
@@ -2048,19 +2084,19 @@ let () = transition_timing_function element_style `easeIn
 type document;
 type style;
 
-[@bs.val] external document: document = "document";
-[@bs.send]
+external document: document = "document";
+[@mel.send]
 external get_by_id: (document, string) => Dom.element = "getElementById";
-[@bs.get] external style: Dom.element => style = "style";
-[@bs.set]
+[@mel.get] external style: Dom.element => style = "style";
+[@mel.set]
 external transition_timing_function:
   (
     style,
-    [
+    [@mel.string] [
       | `ease
-      | [@bs.as "ease-in"] `easeIn
-      | [@bs.as "ease-out"] `easeOut
-      | [@bs.as "ease-in-out"] `easeInOut
+      | [@mel.as "ease-in"] `easeIn
+      | [@mel.as "ease-out"] `easeOut
+      | [@mel.as "ease-in-out"] `easeInOut
       | `linear
     ]
   ) =>
@@ -2079,30 +2115,28 @@ var element_style = document.getElementById("my-id").style;
 element_style.transitionTimingFunction = "ease-in";
 ```
 
-Aside from producing string values, Melange also offers `bs.int` to produce
-integer values. `bs.int` can also be combined with `bs.as`:
+Aside from producing string values, Melange also offers `mel.int` to produce
+integer values. `mel.int` can also be combined with `mel.as`:
 
 ```ocaml
 external test_int_type :
-  ([ `on_closed | `on_open [@bs.as 20] | `in_bin ][@bs.int]) -> int
+  ([ `on_closed | `on_open [@mel.as 20] | `in_bin ][@mel.int]) -> int
   = "testIntType"
-  [@@bs.val]
 
 let value = test_int_type `on_open
 ```
 ```reasonml
-[@bs.val]
 external test_int_type:
-  ([@bs.int] [ | `on_closed | [@bs.as 20] `on_open | `in_bin]) => int =
+  ([@mel.int] [ | `on_closed | [@mel.as 20] `on_open | `in_bin]) => int =
   "testIntType";
 
 let value = test_int_type(`on_open);
 ```
 
 In this example, `on_closed` will be encoded as 0, `on_open` will be 20 due to
-the attribute `bs.as` and `in_bin` will be 21, because if no `bs.as` annotation
-is provided for a variant tag, the compiler continues assigning values counting
-up from the previous one.
+the attribute `mel.as` and `in_bin` will be 21, because if no `mel.as`
+annotation is provided for a variant tag, the compiler continues assigning
+values counting up from the previous one.
 
 This code generates:
 
@@ -2120,9 +2154,9 @@ type readline
 
 external on :
   readline ->
-  ([ `close of unit -> unit | `line of string -> unit ][@bs.string]) ->
+  ([ `close of unit -> unit | `line of string -> unit ][@mel.string]) ->
   readline = "on"
-  [@@bs.send]
+  [@@mel.send]
 
 let register rl =
   rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
@@ -2130,11 +2164,11 @@ let register rl =
 ```reasonml
 type readline;
 
-[@bs.send]
+[@mel.send]
 external on:
   (
     readline,
-    [@bs.string] [ | `close(unit => unit) | `line(string => unit)]
+    [@mel.string] [ | `close(unit => unit) | `line(string => unit)]
   ) =>
   readline =
   "on";
@@ -2158,21 +2192,19 @@ function register(rl) {
 ### Constant values as arguments
 
 Sometimes we want to call a JavaScript function and make sure one of the
-arguments is always constant. For this, the `[@bs.as]` attribute can be combined
-with the wildcard pattern `_`:
+arguments is always constant. For this, the `[@mel.as]` attribute can be
+combined with the wildcard pattern `_`:
 
 ```ocaml
-external process_on_exit : (_[@bs.as "exit"]) -> (int -> unit) -> unit
+external process_on_exit : (_[@mel.as "exit"]) -> (int -> unit) -> unit
   = "process.on"
-  [@@bs.val]
 
 let () =
   process_on_exit (fun exit_code ->
     Js.log ("error code: " ^ string_of_int exit_code))
 ```
 ```reasonml
-[@bs.val]
-external process_on_exit: ([@bs.as "exit"] _, int => unit) => unit =
+external process_on_exit: ([@mel.as "exit"] _, int => unit) => unit =
   "process.on";
 
 let () =
@@ -2189,11 +2221,11 @@ process.on("exit", function (exitCode) {
 });
 ```
 
-The `bs.as "exit"` and the wildcard `_` pattern together will tell Melange to
+The `mel.as "exit"` and the wildcard `_` pattern together will tell Melange to
 compile the first argument of the JavaScript function to the string `"exit"`.
 
-You can also use any JSON literal by passing a quoted string to `bs.as`: `bs.as
-{json|true|json}` or `bs.as {json|{"name": "John"}|json}`.
+You can also use any JSON literal by passing a quoted string to `mel.as`:
+`mel.as {json|true|json}` or `mel.as {json|{"name": "John"}|json}`.
 
 ### Binding to callbacks
 
@@ -2247,10 +2279,8 @@ A naive external function declaration could be as below:
 
 ```ocaml
 external map : 'a array -> 'b array -> ('a -> 'b -> 'c) -> 'c array = "map"
-  [@@bs.val]
 ```
 ```reasonml
-[@bs.val]
 external map: (array('a), array('b), ('a, 'b) => 'c) => array('c) = "map";
 ```
 
@@ -2290,24 +2320,31 @@ discarded. The value returned from the operation would not be the addition of
 the two numbers, but rather the inner anonymous callback.
 
 To solve this mismatch between OCaml and JavaScript functions and their
-application, Melange provides a special attribute `@bs` that can be used to annotate
-external functions that need to be "uncurried".
+application, Melange provides a special attribute `@u` that can be used to
+annotate external functions that need to be "uncurried".
 
-<span class="text-reasonml">In Reason syntax, this attribute does not need to be written explicitly, as it is deeply integrated with the Reason parser. To specify some function type as "uncurried", one just needs to add the dot character `.` to the function type. For example, `(. 'a, 'b) => 'c` instead of `('a, 'b) => 'c`.</span>
+<span class="text-reasonml">In Reason syntax, this attribute does not need to be
+written explicitly, as it is deeply integrated with the Reason parser. To
+specify some function type as "uncurried", one just needs to add the dot
+character `.` to the function type. For example, `(. 'a, 'b) => 'c` instead of
+`('a, 'b) => 'c`.</span>
 
 In the example above:
 
 ```ocaml
-external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@bs]) -> 'c array
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array
   = "map"
-  [@@bs.val]
 ```
 ```reasonml
-[@bs.val]
 external map: (array('a), array('b), (. 'a, 'b) => 'c) => array('c) = "map";
 ```
 
-Here <span class="text-ocaml">`('a -> 'b -> 'c [@bs])`</span><span class="text-reasonml">`(. 'a, 'b) => 'c`</span>will be interpreted as having arity 2. In general, <span class="text-ocaml">`'a0 -> 'a1 ...​ 'aN -> 'b0 [@bs]` is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`</span><span class="text-reasonml">`. 'a0, 'a1, ...​ 'aN => 'b0` is the same as `'a0, 'a1, ...​ 'aN => 'b0`</span> except the former’s arity is guaranteed to be N while the latter is unknown.
+Here <span class="text-ocaml">`('a -> 'b -> 'c [@u])`</span><span
+class="text-reasonml">`(. 'a, 'b) => 'c`</span>will be interpreted as having
+arity 2. In general, <span class="text-ocaml">`'a0 -> 'a1 ...​ 'aN -> 'b0 [@u]`
+is the same as `'a0 -> 'a1 ...​ 'aN -> 'b0`</span><span class="text-reasonml">`.
+'a0, 'a1, ...​ 'aN => 'b0` is the same as `'a0, 'a1, ...​ 'aN => 'b0`</span>
+except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
@@ -2328,10 +2365,11 @@ This expression has type int -> int -> int
 but an expression was expected of type ('a -> 'b -> 'c) Js.Fn.arity2
 ```
 
-To solve this, we add <span class="text-ocaml">`@bs`</span><span class="text-reasonml">`.`</span> in the function definition as well:
+To solve this, we add <span class="text-ocaml">`@u`</span><span
+class="text-reasonml">`.`</span> in the function definition as well:
 
 ```ocaml
-let add = fun [@bs] x y -> x + y
+let add = fun [@u] x y -> x + y
 ```
 ```reasonml
 let add = (. x, y) => x + y;
@@ -2341,20 +2379,18 @@ Annotating function definitions can be quite cumbersome when writing a lot of
 externals.
 
 To work around the verbosity, Melange offers another attribute called
-`bs.uncurry`.
+`mel.uncurry`.
 
 Let’s see how we could use it in the previous example. We just need to replace
-`bs` with `bs.uncurry`:
+`u` with `mel.uncurry`:
 
 ```ocaml
 external map :
-  'a array -> 'b array -> (('a -> 'b -> 'c)[@bs.uncurry]) -> 'c array = "map"
-  [@@bs.val]
+  'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
 ```
 ```reasonml
-[@bs.val]
 external map:
-  (array('a), array('b), [@bs.uncurry] (('a, 'b) => 'c)) => array('c) =
+  (array('a), array('b), [@mel.uncurry] (('a, 'b) => 'c)) => array('c) =
   "map";
 ```
 
@@ -2371,10 +2407,10 @@ let _ = map([||], [||], add);
 
 Everything works fine now, without having to attach any attributes to `add`.
 
-The main difference between `bs` and `bs.uncurry` is that the latter only works
-with externals. `bs.uncurry` is the recommended option to use for bindings,
-while `bs` remains useful for those use cases where performance is crucial and
-we want the JavaScript functions generated from OCaml ones to not be applied
+The main difference between `u` and `mel.uncurry` is that the latter only works
+with externals. `mel.uncurry` is the recommended option to use for bindings,
+while `u` remains useful for those use cases where performance is crucial and we
+want the JavaScript functions generated from OCaml ones to not be applied
 partially.
 
 ### Modeling `this`\-based Callbacks
@@ -2391,27 +2427,27 @@ x.onload = function(v) {
 
 Inside the `x.onload` callback, `this` would be pointing to `x`. It would not be
 correct to declare `x.onload` of type `unit -> unit`. Instead, Melange
-introduces a special attribute, `bs.this`, which allows to type `x` as this:
+introduces a special attribute, `mel.this`, which allows to type `x` as this:
 
 ```ocaml
 type x
-external x : x = "x" [@@bs.val]
-external set_onload : x -> ((x -> int -> unit)[@bs.this]) -> unit = "onload"
-  [@@bs.set]
-external resp : x -> int = "response" [@@bs.get]
+external x : x = "x"
+external set_onload : x -> ((x -> int -> unit)[@mel.this]) -> unit = "onload"
+  [@@mel.set]
+external resp : x -> int = "response" [@@mel.get]
 let _ =
   set_onload x
     begin
-      fun [@bs.this] o v -> Js.log (resp o + v)
+      fun [@mel.this] o v -> Js.log (resp o + v)
     end
 ```
 ```reasonml
 type x;
-[@bs.val] external x: x = "x";
-[@bs.set]
-external set_onload: (x, [@bs.this] ((x, int) => unit)) => unit = "onload";
-[@bs.get] external resp: x => int = "response";
-let _ = set_onload(x, [@bs.this] (o, v) => Js.log(resp(o) + v));
+external x: x = "x";
+[@mel.set]
+external set_onload: (x, [@mel.this] ((x, int) => unit)) => unit = "onload";
+[@mel.get] external resp: x => int = "response";
+let _ = set_onload(x, [@mel.this] (o, v) => Js.log(resp(o) + v));
 ```
 
 Which generates:
@@ -2428,19 +2464,20 @@ Note that the first argument will be reserved for `this`.
 ### Wrapping returned nullable values
 
 JavaScript models `null` and `undefined` differently, whereas it can be useful
-to treat both as <span class="text-ocaml">`'a option`</span><span class="text-reasonml">`option('a)`</span> in Melange.
+to treat both as <span class="text-ocaml">`'a option`</span><span
+class="text-reasonml">`option('a)`</span> in Melange.
 
-Melange understands the `bs.return` attribute in externals to model how
-nullable return types should be wrapped at the bindings boundary.
-An `external` value with `bs.return` converts the return value to an `option`
-type, avoiding the need for extra wrapping / unwrapping with functions such as
+Melange understands the `mel.return` attribute in externals to model how
+nullable return types should be wrapped at the bindings boundary. An `external`
+value with `mel.return` converts the return value to an `option` type, avoiding
+the need for extra wrapping / unwrapping with functions such as
 `Js.Nullable.toOption`.
 
 ```ocaml
 type element
 type document
 external get_by_id : document -> string -> element option = "getElementById"
-  [@@bs.send] [@@bs.return nullable]
+  [@@mel.send] [@@mel.return nullable]
 
 let test document =
   let elem = get_by_id document "header" in
@@ -2451,7 +2488,7 @@ let test document =
 ```reasonml
 type element;
 type document;
-[@bs.send] [@bs.return nullable]
+[@mel.send] [@mel.return nullable]
 external get_by_id: (document, string) => option(element) = "getElementById";
 
 let test = document => {
@@ -2476,7 +2513,11 @@ function test($$document) {
 }
 ```
 
-The `bs.return` attribute takes an attribute payload, as seen with <span class="text-ocaml">`[@@bs.return nullable]`</span><span class="text-reasonml">`[@bs.return nullable]`</span> above. Currently 4 directives are supported: `null_to_opt`, `undefined_to_opt`, `nullable` and `identity`.
+The `mel.return` attribute takes an attribute payload, as seen with <span
+class="text-ocaml">`[@@mel.return nullable]`</span><span
+class="text-reasonml">`[@mel.return nullable]`</span> above. Currently 4
+directives are supported: `null_to_opt`, `undefined_to_opt`, `nullable` and
+`identity`.
 
 `nullable` is encouraged, as it will convert from `null` and `undefined` to
 `option` type.
@@ -2491,18 +2532,18 @@ value. It is rarely used, but introduced here for debugging purposes.
 As we saw in a [previous section](#non-shared-data-types), there are some types
 in Melange that compile to values that are not easy to manipulate from
 JavaScript. To facilitate the communication from JavaScript code with values of
-these types, Melange includes an attribute `bs.deriving` that helps generating
+these types, Melange includes an attribute `deriving` that helps generating
 conversion functions, as well as functions to create values from these types. In
 particular, for variants and polymorphic variants.
 
-Additionally, `bs.deriving` can be used with record types, to generate setters
-and getters as well as creation functions.
+Additionally, `deriving` can be used with record types, to generate setters and
+getters as well as creation functions.
 
 ### Variants
 
 #### Creating values
 
-Use `@bs.deriving accessors` on a variant type to create constructor values for
+Use `@deriving accessors` on a variant type to create constructor values for
 each branch.
 
 ```ocaml
@@ -2510,10 +2551,10 @@ type action =
   | Click
   | Submit of string
   | Cancel
-[@@bs.deriving accessors]
+[@@deriving accessors]
 ```
 ```reasonml
-[@bs.deriving accessors]
+[@deriving accessors]
 type action =
   | Click
   | Submit(string)
@@ -2528,7 +2569,7 @@ follows:
 - For variant tags without payloads, it will be a constant with the runtime
   value of the tag.
 
-Given the `action` type definition above, annotated with `bs.deriving`, Melange
+Given the `action` type definition above, annotated with `deriving`, Melange
 will generate something similar to the following code:
 
 ```ocaml
@@ -2579,13 +2620,13 @@ const click = generators.click;
 
 #### Conversion functions
 
-Use `@bs.deriving jsConverter` on a variant type to create converter functions
-that allow to transform back and forth between JavaScript integers and Melange
+Use `@deriving jsConverter` on a variant type to create converter functions that
+allow to transform back and forth between JavaScript integers and Melange
 variant values.
 
-There are a few differences with `@bs.deriving accessors`:
+There are a few differences with `@deriving accessors`:
 
-- `jsConverter` works with the `bs.as` attribute, while `accessors` does not
+- `jsConverter` works with the `mel.as` attribute, while `accessors` does not
 - `jsConverter` does not support variant tags with payload, while `accessors`
   does
 - `jsConverter` generates functions to transform values back and forth, while
@@ -2597,15 +2638,15 @@ given the constraints above:
 ```ocaml
 type action =
   | Click
-  | Submit [@bs.as 3]
+  | Submit [@mel.as 3]
   | Cancel
-[@@bs.deriving jsConverter]
+[@@deriving jsConverter]
 ```
 ```reasonml
-[@bs.deriving jsConverter]
+[@deriving jsConverter]
 type action =
   | Click
-  | [@bs.as 3] Submit
+  | [@mel.as 3] Submit
   | Cancel;
 ```
 
@@ -2623,8 +2664,8 @@ external actionFromJs: int => option(action) = ;
 ```
 
 `actionToJs` returns integers from values of `action` type. It will start with 0
-for `Click`, 3 for `Submit` (because it was annotated with `bs.as`), and then 4
-for `Cancel`, in the same way that we described when [using `bs.int` with
+for `Click`, 3 for `Submit` (because it was annotated with `mel.as`), and then 4
+for `Cancel`, in the same way that we described when [using `mel.int` with
 polymorphic variants](#using-polymorphic-variants-to-bind-to-enums).
 
 `actionFromJs` returns a value of type `option`, because not every integer can
@@ -2633,21 +2674,21 @@ be converted into a variant tag of the `action` type.
 ##### Hide runtime types
 
 For extra type safety, we can hide the runtime representation of variants
-(`int`) from the generated functions, by using `{ jsConverter = newType }`
-payload with `@bs.deriving`:
+(`int`) from the generated functions, by using `jsConverter { newType }` payload
+with `@deriving`:
 
 ```ocaml
 type action =
   | Click
-  | Submit [@bs.as 3]
+  | Submit [@mel.as 3]
   | Cancel
-[@@bs.deriving { jsConverter = newType }]
+[@@deriving jsConverter { newType }]
 ```
 ```reasonml
-[@bs.deriving {jsConverter: newType}]
+[@deriving jsConverter({newType: newType})]
 type action =
   | Click
-  | [@bs.as 3] Submit
+  | [@mel.as 3] Submit
   | Cancel;
 ```
 
@@ -2671,10 +2712,10 @@ way to create an `abs_action` is by calling the `actionToJs` function.
 
 ### Polymorphic variants
 
-The `@bs.deriving jsConverter` attribute is applicable to polymorphic variants
-as well.
+The `@deriving jsConverter` attribute is applicable to polymorphic variants as
+well.
 
-> **_NOTE:_** Similarly to variants, the `@bs.deriving jsConverter` attribute
+> **_NOTE:_** Similarly to variants, the `@deriving jsConverter` attribute
 > cannot be used when the polymorphic variant tags have payloads. Refer to the
 > [section on runtime representation](#data-types-and-runtime-representation) to
 > learn more about how polymorphic variants are represented in JavaScript.
@@ -2684,14 +2725,14 @@ Let’s see an example:
 ```ocaml
 type action =
   [ `Click
-  | `Submit [@bs.as "submit"]
+  | `Submit [@mel.as "submit"]
   | `Cancel
   ]
-[@@bs.deriving jsConverter]
+[@@deriving jsConverter]
 ```
 ```reasonml
-[@bs.deriving jsConverter]
-type action = [ | `Click | [@bs.as "submit"] `Submit | `Cancel];
+[@deriving jsConverter]
+type action = [ | `Click | [@mel.as "submit"] `Submit | `Cancel];
 ```
 
 Akin to the variant example, the following two functions will be generated:
@@ -2707,25 +2748,25 @@ external actionToJs: action => string = ;
 external actionFromJs: string => option(action) = ;
 ```
 
-The `{ jsConverter = newType }` payload can also be used with polymorphic
+The `jsConverter { newType }` payload can also be used with polymorphic
 variants.
 
 ### Records
 
 #### Accessing fields
 
-Use `@bs.deriving accessors` on a record type to create accessor functions for
-its record field names.
+Use `@deriving accessors` on a record type to create accessor functions for its
+record field names.
 
 ```ocaml
-type pet = { name : string } [@@bs.deriving accessors]
+type pet = { name : string } [@@deriving accessors]
 
 let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
 
 let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
 ```
 ```reasonml
-[@bs.deriving accessors]
+[@deriving accessors]
 type pet = {name: string};
 
 let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
@@ -2737,6 +2778,7 @@ Melange will generate a function for each field defined in the record. In this
 case, a function `name` that allows to get that field from any record of type
 `pet`:
 
+<!--#prelude#type pet = { name : string } [@@deriving accessors]-->
 ```ocaml
 let name (param : pet) = param.name
 ```
@@ -2792,14 +2834,14 @@ An example of this use-case would be expecting `{ name = "John"; age = None }`
 to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
 appear.
 
-The `@bs.deriving abstract` attribute exists to solve this problem. When present
-in a record type, `@bs.deriving abstract` makes the record definition abstract
-and generates the following functions instead:
+The `@deriving abstract` attribute exists to solve this problem. When present in
+a record type, `@deriving abstract` makes the record definition abstract and
+generates the following functions instead:
 
 - A constructor function for creating values of the type
 - Getters and setters for accessing the record fields
 
-`@bs.deriving abstract` effectively models a record-shaped JavaScript object
+`@deriving abstract` effectively models a record-shaped JavaScript object
 exclusively through a set of (generated) functions derived from attribute
 annotations on the OCaml type definition.
 
@@ -2808,16 +2850,16 @@ Let’s see an example. Considering this Melange code:
 ```ocaml
 type person = {
   name : string;
-  age : int; [@bs.optional]
+  age : int option; [@optional]
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person = {
   name: string,
-  [@bs.optional]
-  age: int,
+  [@optional]
+  age: option(int),
 };
 ```
 
@@ -2851,6 +2893,13 @@ check.
 
 Here is an example of how we can use it:
 
+<!--#prelude#
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+-->
 ```ocaml
 let alice = person ~name:"Alice" ~age:20 ()
 let bob = person ~name:"Bob" ()
@@ -2883,6 +2932,15 @@ manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The functions `nameGet` and `ageGet` are accessors for each record field:
 
+<!--#prelude#
+type person = {
+  name : string;
+  age : int option; [@optional]
+}
+[@@deriving abstract]
+let alice = person ~name:"Alice" ~age:20 ()
+let bob = person ~name:"Bob" ()
+-->
 ```ocaml
 let twenty = ageGet alice
 
@@ -2905,20 +2963,20 @@ var bob = bob.name;
 The functions are named by appending `Get` to the field names of the record to
 prevent potential clashes with other values within the module. If shorter names
 are preferred for the getter functions, there is an alternate `{ abstract =
-light }` payload that can be passed to `bs.deriving`:
+light }` payload that can be passed to `deriving`:
 
 ```ocaml
 type person = {
   name : string;
   age : int;
 }
-[@@bs.deriving { abstract = light }]
+[@@deriving abstract { light }]
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@bs.deriving {abstract: light}]
+[@deriving abstract({light: light})]
 type person = {
   name: string,
   age: int,
@@ -2944,18 +3002,18 @@ Another distinction from the previous example is that the `person` constructor
 function no longer requires the final `unit` argument since we have excluded the
 optional field in this case.
 
-> **_NOTE:_** The `bs.as` attribute can still be applied to record fields when
-> the record type is annotated with `bs.deriving`, allowing for the renaming of
+> **_NOTE:_** The `mel.as` attribute can still be applied to record fields when
+> the record type is annotated with `deriving`, allowing for the renaming of
 > fields in the resulting JavaScript objects, as demonstrated in the section
 > about [binding to objects with static
 > shape](#objects-with-static-shape-record-like). However, the option to pass
-> indices to the `bs.as` decorator (like `[@bs.as "0"]`) to change the runtime
-> representation to an array is not available when using `bs.deriving`.
+> indices to the `mel.as` decorator (like `[@mel.as "0"]`) to change the runtime
+> representation to an array is not available when using `deriving`.
 
 ##### Compatibility with OCaml features
 
-The `@bs.deriving abstract` attribute and its lightweight variant can be used
-with [mutable
+The `@deriving abstract` attribute and its lightweight variant can be used with
+[mutable
 fields](https://v2.ocaml.org/manual/coreexamples.html#s:imperative-features) and
 [private types](https://v2.ocaml.org/manual/privatetypes.html), which are
 features inherited by Melange from OCaml.
@@ -2968,14 +3026,14 @@ type person = {
   name : string;
   mutable age : int;
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 
 let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person = {
   name: string,
   mutable age: int,
@@ -3009,10 +3067,10 @@ type person = private {
   name : string;
   age : int;
 }
-[@@bs.deriving abstract]
+[@@deriving abstract]
 ```
 ```reasonml
-[@bs.deriving abstract]
+[@deriving abstract]
 type person =
   pri {
     name: string,

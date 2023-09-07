@@ -4,3 +4,5 @@ _opam
 .DS_Store
 
 docs/playground
+docs/api/ml
+docs/api/re

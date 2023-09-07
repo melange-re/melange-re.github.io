@@ -1,6 +1,6 @@
 # Melange for X developers
 
-If you are familiar with other languages, here you will find sections that
+If you are familiar with other languages/platforms, here you will find sections that
 compare Melange to a few of them, so it might help you get up and running
 quickly. In particular:
 
@@ -86,7 +86,7 @@ syntaxes:
 
 | JavaScript            | OCaml (Reason syntax)              |
 |-----------------------|------------------------------------|
-| `[1, 2, 3]`           | <code>\[|1, 2, 3|\]</code> |
+| `[1, 2, 3]`           | <code>\[\|1, 2, 3\|\]</code> |
 | `myArray[1] = 10`     | Same                               |
 | `[1, "Bob", true]` \* | `(1, "Bob", true)`                 |
 | No immutable list     | `[1, 2, 3]`                        |
@@ -519,6 +519,7 @@ On the upside, in Melange:
   [ReactJS](https://github.com/reasonml/reason-react/) or GraphQL clients.
 - The generated JavaScript bundles are generally smaller.
 - The generated JavaScript code is generally more readable.
+- Melange can generate ES6 or commonjs while Js\_of\_ocaml generates an IIFE (Immediately Invoked Function Expression) (as of Sep 2023)
 - Straight-forward integration with modern JavaScript tooling like Webpack,
   NextJS, etc. This is possible thanks to the 1 module \<-\> 1 JavaScript file
   compilation model.
@@ -583,8 +584,8 @@ Melange is compatible with the version 4.14 (as of May 2023).
 
 The [Melange
 roadmap](https://docs.google.com/document/d/1279euT9LeJIkwAUYqazqeh2lc8c7TLQap2_2vBNcK4w)
-for Q2 includes a milestone to upgrade to the latest version of the 
-compiler to the 5.x release line.
+for Q2 includes a milestone to upgrade to the latest version of the compiler to
+the 5.x release line.
 
 ### Editor integration
 
@@ -645,7 +646,8 @@ documented. Reason syntax is no longer supported.
 
 Melange supports and documents both Reason and OCaml syntaxes. It also includes
 a best-effort support for ReScript syntax for backwards compatibility, provided
-through the `rescript-syntax` package, available [in opam](todo-fix-me.md). To
-build any code written using ReScript syntax, the only requirement is to
-download this package, as Melange and Dune will already coordinate to make use
-of it when `res` or `resi` files are found.
+through the `rescript-syntax` package, available [in
+opam](https://opam.ocaml.org/packages/rescript-syntax/). To build any code
+written using ReScript syntax, the only requirement is to download this package,
+as Melange and Dune will already coordinate to make use of it when `res` or
+`resi` files are found.
