@@ -122,11 +122,13 @@ create more complex and interesting components in future chapters.
 
 ## Exercises
 
-1. There aren't any runtime errors in our app right now. But what happens if you
+<b>1.</b> There aren't any runtime errors in our app right now. But what happens if you
    try to remove the `| None` branch of the `switch (node)` expression?
-1. What happens if you rename the `_evt` variable inside the button callback to
+
+<b>2.</b> What happens if you rename the `_evt` variable inside the button callback to
    `evt`?
-1. Comment out the `[@react.component]` attribute in `Counter.re`. What happens?
+
+<b>3.</b> Comment out the `[@react.component]` attribute in `Counter.re`. What happens?
 
 ## Overview
 
@@ -141,30 +143,37 @@ What we covered in this section:
 
 ## Solutions
 
-1. Removing the `| None` branch will result in a compilation error:
-   ```
-   Error (warning 8 [partial-match]): this pattern-matching is not exhaustive.
-   Here is an example of a case that is not matched:
-   None
-   ```
-   Basically, the compiler is telling you to handle the `None` case if you want
-   to ship your app. This is part of what makes OCaml such a type-safe language.
-1. Renaming `_evt` to `evt` results in a compilation error:
-   ```
-   Error (warning 27 [unused-var-strict]): unused variable evt.
-   ```
-   OCaml wants you to use all the variables you declare, unless they being with
-   `_` (underscore).
-1. Commenting out `[@react.component]` in `Index.re`, at the place where
-   `Counter` is used:
-   ```
-   File "src/Index.re", line 3, characters 19-27:
-   3 |   let make = () => <Counter />;
-                          ^^^^^^^^
-   Error: Unbound value Counter.makeProps
-   ```
-   For now, just remember that you need to put the `[@react.component]`
-   attribute above your `make` function if you want your component to be usable
-   in JSX (it's a very common newbie mistake). See the PPX chapter (todo) for
-   more details.
+<b>1.</b> Removing the `| None` branch will result in a compilation error:
 
+```
+Error (warning 8 [partial-match]): this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+None
+```
+
+Basically, the compiler is telling you to handle the `None` case if you want
+to ship your app. This is part of what makes OCaml such a type-safe language.
+
+<b>2.</b> Renaming `_evt` to `evt` results in a compilation error:
+
+```
+Error (warning 27 [unused-var-strict]): unused variable evt.
+```
+
+OCaml wants you to use all the variables you declare, unless they being with
+`_` (underscore).
+
+<b>3.</b> Commenting out `[@react.component]` in `Index.re`, at the place where
+`Counter` is used:
+
+```
+File "src/Index.re", line 3, characters 19-27:
+3 |   let make = () => <Counter />;
+                      ^^^^^^^^
+Error: Unbound value Counter.makeProps
+```
+
+For now, just remember that you need to put the `[@react.component]`
+attribute above your `make` function if you want your component to be usable
+in JSX (it's a very common newbie mistake). See the PPX chapter (todo) for
+more details.

@@ -192,25 +192,30 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 
 ## Exercises
 
-1. Try changing `{js|°C = |js}` to `"°C = "`. What happens?
-1. Rewrite the `onChange` callback so that it doesn't need any braces enclosing
-   its body.
-1. Rewrite the ternary expression using `switch`.
-1. It's possible to use partial application with most functions in OCaml, even
-   operators. Take a look at the following program:
-   ```reasonml
-   let addFive = (+)(5);
-   Js.log(addFive(2));
-   Js.log(addFive(7));
-   Js.log(addFive(10));
-   ```
-   What do you think it outputs? Run it in [Melange
-   Playground](https://melange.re/v1.0.0/playground) to confirm your hypothesis.
-1. Use the pipe last operator (`|>`) and partial application to write a function that takes an integer
-   argument `x`, subtracts `x` from 10, and converts that result to binary.
-   Hint: Use the
-   [Js.Int.toStringWithRadix](https://melange.re/v1.0.0/api/re/melange/Js_int/index.html#val-toStringWithRadix)
-   function.
+<b>1.</b> Try changing `{js|°C = |js}` to `"°C = "`. What happens?
+
+<b>2.</b> Rewrite the `onChange` callback so that it doesn't need any braces
+enclosing its body.
+
+<b>3.</b> It's possible to use partial application with most functions in OCaml,
+even operators. Take a look at the following program:
+
+```reasonml
+let addFive = (+)(5);
+Js.log(addFive(2));
+Js.log(addFive(7));
+Js.log(addFive(10));
+```
+
+What do you think it outputs? Run it in [Melange
+Playground](https://melange.re/v1.0.0/playground) to confirm your hypothesis.
+
+<b>4.</b> Use the pipe last operator (`|>`) and partial application to write a
+function that takes an integer
+argument `x`, subtracts `x` from 10, and converts that result to binary. Hint:
+Use the
+[Js.Int.toStringWithRadix](https://melange.re/v1.0.0/api/re/melange/Js_int/index.html#val-toStringWithRadix)
+function.
 
 ## Overview
 
@@ -227,12 +232,18 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 
 ## Solutions
 
-1. Changing it to `"°C = "` will result in a bit of gibberish being rendered:
-   "Â°C". We can't rely on OCaml strings to [deal with Unicode correctly](../communicate-with-javascript.md#strings), so any
-   string that doesn't contain only ASCII text must be delimited using `{js||js}`.
-1. Rewriting `onChange` handler without braces around its body should look something like this:
-   ```reasonml
-   <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
-   ```
-1. [Define an addFive function using partial application](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
-1. [Define a function that subtracts from 10 and converts to binary](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)
+<b>1.</b> Changing it to `"°C = "` will result in a bit of gibberish being rendered:
+"Â°C". We can't rely on OCaml strings to [deal with Unicode
+correctly](../communicate-with-javascript.md#strings), so any string that
+doesn't contain only ASCII text must be delimited using `{js||js}`.
+
+<b>2.</b> Rewriting `onChange` handler without braces around its body should
+look something like this:
+
+```reasonml
+<input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
+```
+
+<b>3.</b> [Define an addFive function using partial application](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
+
+<b>4.</b> [Define a function that subtracts from 10 and converts to binary](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)

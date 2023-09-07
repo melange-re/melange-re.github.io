@@ -163,14 +163,16 @@ components.
 
 ## Exercises
 
-1. If you enter a space in the input, it'll unintuitively produce a Fahrenheit
-   value of 32.00 degrees (because `float_of_string_opt(" ") == Some(0.)`).
-   Handle this case correctly by showing "? °F" instead. Hint: Use the
-   `String.trim` function.
-1. Add another branch with a `when` guard that renders "Unreasonably cold" if
-   the temperature is less than -128.6°F.
-1. Use `Js.Float.fromString` instead of `float_of_string_opt` to parse a string
-   to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
+<b>1.</b> If you enter a space in the input, it'll unintuitively produce a
+Fahrenheit value of 32.00 degrees (because `float_of_string_opt(" ") ==
+Some(0.)`). Handle this case correctly by showing "? °F" instead. Hint: Use the
+`String.trim` function.
+
+<b>2.</b> Add another branch with a `when` guard that renders "Unreasonably
+cold" if the temperature is less than -128.6°F.
+
+<b>3.</b> Use `Js.Float.fromString` instead of `float_of_string_opt` to parse a
+string to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
 
 ## Overview
 
@@ -183,49 +185,57 @@ components.
 
 ## Solutions
 
-1. To prevent a space from producing 32.00 degrees Fahrenheit, just add a call
-   to `String.trim` in your render logic:
-   ```reasonml
-   {(
-      String.trim(celsius) == ""
-        ? {js|? °F|js}
-        : (
-          switch (celsius |> float_of_string_opt |> Option.map(convert)) {
-          | None => "error"
-          | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-          | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
-          }
-        )
+<b>1.</b> To prevent a space from producing 32.00 degrees Fahrenheit, just add a
+call to `String.trim` in your render logic:
+
+```reasonml
+{(
+  String.trim(celsius) == ""
+    ? {js|? °F|js}
+    : (
+      switch (celsius |> float_of_string_opt |> Option.map(convert)) {
+      | None => "error"
+      | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
+      | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+      }
     )
-    |> React.string}
-   ```
-1. To render "Unreasonably cold" when the temperature is less than -128.6°F, you
-   can add another `Some(fahrenheit)` branch:
-    ```reasonml
-    switch (celsius |> float_of_string_opt |> Option.map(convert)) {
-    | None => "error"
-    | Some(fahrenheit) when fahrenheit < (-128.6) => "Unreasonably cold"
-    | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-    | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
-    }
-    ```
-1. To use `Js.Float.fromString` instead of `float_of_string_opt`, you can define
-   a new helper function that takes a `string` and returns `option`:
-   ```reasonml
-    let floatFromString = text =>
-      switch (Js.Float.fromString(text)) {
-      | value when Js.Float.isNaN(value) => None
-      | value => Some(value)
-      };
-   ```
-   Then substitute `float_of_string_opt` for `floatFromString` in your switch
-   expression. You might be tempted to match directly on `Js.Float._NaN`:
-   ```reasonml
-    let floatFromString = text =>
-      switch (Js.Float.fromString(text)) {
-      | Js.Float._NaN => None
-      | value => Some(value)
-      };
-   ```
-   But this produces a syntax error because you can't do equality checks of
-   variables in OCaml pattern matching. So the `when` guard is necessary here.
+)
+|> React.string}
+```
+
+<b>2.</b> To render "Unreasonably cold" when the temperature is less than
+-128.6°F, you can add another `Some(fahrenheit)` branch:
+
+```reasonml
+switch (celsius |> float_of_string_opt |> Option.map(convert)) {
+| None => "error"
+| Some(fahrenheit) when fahrenheit < (-128.6) => "Unreasonably cold"
+| Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
+| Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+}
+```
+
+<b>3.</b> To use `Js.Float.fromString` instead of `float_of_string_opt`, you can
+define a new helper function that takes a `string` and returns `option`:
+
+```reasonml
+let floatFromString = text =>
+  switch (Js.Float.fromString(text)) {
+  | value when Js.Float.isNaN(value) => None
+  | value => Some(value)
+  };
+```
+
+Then substitute `float_of_string_opt` for `floatFromString` in your switch
+expression. You might be tempted to match directly on `Js.Float._NaN`:
+
+```reasonml
+let floatFromString = text =>
+  switch (Js.Float.fromString(text)) {
+  | Js.Float._NaN => None
+  | value => Some(value)
+  };
+```
+
+But this produces a syntax error because you can't do equality checks of
+variables in OCaml pattern matching. So the `when` guard is necessary here.
