@@ -50,8 +50,8 @@ separate arithmetic operators for floats. What will compile is this:
 Js.log(42.0 +. 16.0);
 ```
 
-Underneath the covers, `foo` and `bar` are both instances of JavaScript's `Number
-type`:
+Underneath the covers, `foo` and `bar` are both instances of JavaScript's
+`Number` type:
 
 ```reasonml
 Js.log(Js.typeof(foo)); // prints "number"
