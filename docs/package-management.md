@@ -267,6 +267,39 @@ The advantage of this approach —as opposed to vendoring the JavaScript package
 inside the bindings— is that it gives users of the bindings complete flexibility
 over the way these JavaScript packages are downloaded and bundled.
 
+Melange provides a way to define dependencies from opam packages to npm packages
+inside the `opam` files through the
+[check-npm-deps](https://github.com/jchavarri/opam-check-npm-deps) opam plugin.
+
+With this plugin, library authors can include constraints in the npm format
+inside the opam `depexts` field, for example, the `reason-react` opam file can
+include a section like this:
+
+```
+depexts: [
+  ["react" "react-dom"] {npm-version = "^17.0.0 || ^18.0.0"}
+]
+```
+
+This indicates that the version of `reason-react` is compatible with ReactJS
+versions 17 and 18.
+
+Users of Melange bindings can check that the constraints defined in the opam
+packages installed in their switch are fulfilled by the packages installed in
+`node_modules` by using the `check-npm-deps` plugin. For this, one just needs to
+install the plugin:
+
+```bash
+opam install opam-check-npm-deps
+```
+
+And then call it from the root folder of the project, where the opam switch and
+the `node_modules` folder exist:
+
+```bash
+opam-check-npm-deps
+```
+
 ## Finding and using Melange compatible packages
 
 ### opam packages
