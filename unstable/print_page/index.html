@@ -305,12 +305,11 @@ Melange</a>
 and the new public releases that support it: version 3.8 of Dune and 1.0 of
 Melange.</p>
 <h2 id="rationale-looking-forward">Looking forward</h2>
-<p>While reaching v1.0 marks a major milestone for Melange, it is only
-the beginning of the journey. The Melange team remains committed to
-continuously improving Melange, ensuring it remains a robust and
-efficient tool for OCaml developers targeting the JavaScript platform.
-The <a href="#roadmap">roadmap</a> page details past work and
-current goals of Melange.</p></section><section class="print-page" id="getting-started"><h1 id="getting-started-getting-started">Getting started</h1>
+<p>While reaching v1.0 marks a major milestone for Melange, it is only the
+beginning of the journey. The Melange team remains committed to continuously
+improving Melange, ensuring it remains a robust and efficient tool for OCaml
+developers targeting the JavaScript platform. The <a href="#roadmap">roadmap</a> page
+details past work and current goals of Melange.</p></section><section class="print-page" id="getting-started"><h1 id="getting-started-getting-started">Getting started</h1>
 <p class="centered">Get up and running with Melange in no time!</p>
 
 <hr />
@@ -455,8 +454,8 @@ website:</p>
 registry</a> and the <a href="https://opam.ocaml.org/packages/">opam
 repository</a>.</p>
 <ul>
-<li>For Melange libraries and bindings (compile-time dependencies), use one of
-  the package management alternatives described in <a href="#getting-started">Getting
+<li>For Melange libraries and bindings (compile-time dependencies), use one of the
+  package management alternatives described in <a href="#getting-started">Getting
   started</a>. The rest of this guide assumes you're using
   opam.</li>
 <li>For JavaScript packages required by Melange bindings (runtime dependencies),
@@ -648,14 +647,21 @@ inside the bindings— is that it gives users of the bindings complete flexibili
 over the way these JavaScript packages are downloaded and bundled.</p>
 <h2 id="package-management-finding-and-using-melange-compatible-packages">Finding and using Melange compatible packages</h2>
 <h3 id="package-management-opam-packages">opam packages</h3>
-<p>Melange packages are usually available on <a href="https://opam.ocaml.org">opam</a>. Package search is available in the opam CLI via <code>opam search &lt;package-name&gt;</code>, e.g. <code>opam search reason-react</code>. You can run <code>opam install &lt;package-name&gt;</code> to download, build and install opam packages in your switch. Remember that opam won't automatically add the dependency to <code>&lt;your-project&gt;.opam</code> file, so it must be added manually:</p>
+<p>Melange packages are usually available on <a href="https://opam.ocaml.org">opam</a>.
+Package search is available in the opam CLI via <code>opam search &lt;package-name&gt;</code>,
+e.g. <code>opam search reason-react</code>. You can run <code>opam install &lt;package-name&gt;</code> to
+download, build and install opam packages in your switch. Remember that opam
+won't automatically add the dependency to <code>&lt;your-project&gt;.opam</code> file, so it must
+be added manually:</p>
 <pre><code class="language-text">...
 depends: [
   ...
   &quot;reason-react&quot; {&gt;= &quot;0.11.0&quot;}
 ]
 </code></pre>
-<p>To use a library from the installed package, add the library name to the <code>dune</code> file under the <code>libraries</code> field. For example, if our project structure looks like:</p>
+<p>To use a library from the installed package, add the library name to the <code>dune</code>
+file under the <code>libraries</code> field. For example, if our project structure looks
+like:</p>
 <pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── _opam
 ├── src
@@ -692,9 +698,17 @@ depends: [
   (pps reactjs-jsx-ppx))
  (module_systems es6))
 </code></pre>
-<p>Some libraries will only work after being processed by an accompanying PPX, e.g., <code>reason-react</code> requires preprocessing with <code>reactjs-jsx-ppx</code>. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.</p>
+<p>Some libraries will only work after being processed by an accompanying PPX,
+e.g., <code>reason-react</code> requires preprocessing with <code>reactjs-jsx-ppx</code>. These
+preprocessors may be installed together with the library as part of the same
+package, or they might be part of a different package, in which case they need
+to be installed separately.</p>
 <h3 id="package-management-unpublished-opam-packages">Unpublished opam packages</h3>
-<p>opam packages that have not yet been published may be installed with the <code>opam pin</code> command. For example, <code>opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch</code> will obtain <code>melange-fetch</code> from its Git repository and install it on your switch. Your <code>&lt;your-project&gt;.opam</code> file should then be updated in two places:</p>
+<p>opam packages that have not yet been published may be installed with the <code>opam
+pin</code> command. For example, <code>opam pin add melange-fetch.dev
+git+https://github.com/melange-community/melange-fetch</code> will obtain
+<code>melange-fetch</code> from its Git repository and install it on your switch. Your
+<code>&lt;your-project&gt;.opam</code> file should then be updated in two places:</p>
 <pre><code class="language-text">...
 depends: [
   ...
@@ -704,7 +718,8 @@ pin-depends: [
   [ &quot;melange-fetch.dev&quot; &quot;git+https://github.com/melange-community/melange-fetch&quot; ]
 ]
 </code></pre>
-<p>Once installed, the libraries included in the package can be added to the <code>dune</code> file:</p>
+<p>Once installed, the libraries included in the package can be added to the <code>dune</code>
+file:</p>
 <pre><code class="language-text">(melange.emit
  (target output)
  (alias react)
@@ -714,8 +729,13 @@ pin-depends: [
  (module_systems es6))
 </code></pre>
 <h3 id="package-management-npm-packages">npm packages</h3>
-<p>A number of Melange compatible packages can be found on npm. Many older, but still useful, compatible BuckleScript libraries can be found on npm, e.g., <code>bs-json</code>. Run <code>npm install @glennsl/bs-json</code> to add the dependency locally and record it in the <code>package.json</code> file at the root of our project.</p>
-<p>Dune needs to be made aware of the newly installed package. The <a href="https://dune.readthedocs.io/en/stable/dune-files.html#subdir"><code>subdir</code></a> stanza can be handy in these cases:</p>
+<p>A number of Melange compatible packages can be found on npm. Many older, but
+still useful, compatible BuckleScript libraries can be found on npm, e.g.,
+<code>bs-json</code>. Run <code>npm install @glennsl/bs-json</code> to add the dependency locally and
+record it in the <code>package.json</code> file at the root of our project.</p>
+<p>Dune needs to be made aware of the newly installed package. The
+<a href="https://dune.readthedocs.io/en/stable/dune-files.html#subdir"><code>subdir</code></a> stanza
+can be handy in these cases:</p>
 <pre><code class="language-text">(subdir
  node_modules
  (dirs @glennsl)
@@ -726,15 +746,30 @@ pin-depends: [
    (wrapped false)
    (modes melange))))
 </code></pre>
-<p>If the <code>dune</code> file contains the line <code>(dirs :standard \ node_modules)</code>, it should be removed, so that Dune can process the new Melange sources under the <code>node_modules</code> folder.</p>
-<p>In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder <code>src/lib</code>. If we want use the <code>bs-json</code> library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the <code>dune</code> file in the same folder, i.e., <code>src/lib/dune</code>:</p>
+<p>If the <code>dune</code> file contains the line <code>(dirs :standard \ node_modules)</code>, it
+should be removed, so that Dune can process the new Melange sources under the
+<code>node_modules</code> folder.</p>
+<p>In our project structure above we have the file <code
+class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code>
+under the folder <code>src/lib</code>. If we want use the <code>bs-json</code> library from within the
+<code class="text-ocaml">data.ml</code><code
+class="text-reasonml">data.re</code> file then we need to add the library name
+to the <code>dune</code> file in the same folder, i.e., <code>src/lib/dune</code>:</p>
 <pre><code class="language-text">(library
  (name data)
  (libraries bs_json)
  (modes melange))
 </code></pre>
-<p>Note that the library <code>bs-json</code> was defined as <code>bs_json</code> in the <code>subdir</code> stanza and is referenced as <code>bs_json</code> in the <code>dune</code> file. This is necessary as Dune wrapped libraries <a href="https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated">will only expose a single top-level module</a> named after the library, so the library name has to be a valid module name. This is why library names with characters like <code>-</code> are not valid.</p>
-<p>We can add new <code>subdir</code> stanzas for every package we'd like to consume this way. See <a href="https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune">this dune file</a> for a larger example that uses multiple npm packages.</p></section><section class="print-page" id="build-system"><h1 id="build-system-build-system">Build system</h1>
+<p>Note that the library <code>bs-json</code> was defined as <code>bs_json</code> in the <code>subdir</code> stanza
+and is referenced as <code>bs_json</code> in the <code>dune</code> file. This is necessary as Dune
+wrapped libraries <a href="https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated">will only expose a single top-level
+module</a>
+named after the library, so the library name has to be a valid module name. This
+is why library names with characters like <code>-</code> are not valid.</p>
+<p>We can add new <code>subdir</code> stanzas for every package we'd like to consume this way.
+See <a href="https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune">this dune
+file</a>
+for a larger example that uses multiple npm packages.</p></section><section class="print-page" id="build-system"><h1 id="build-system-build-system">Build system</h1>
 <p>Melange is deeply integrated with <a href="https://dune.build/">Dune</a>, the most widely
 used build system for OCaml. This integration enables developers to create a
 single project with both OCaml native executables and frontend applications that
@@ -3959,8 +3994,8 @@ Melange, and will need to be added to the <code>libraries</code> field explicitl
 <p>Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
 for compiling effect handlers to JavaScript. Until it does, they are disabled at
 the compiler level, and their APIs are not accessible.</p></section><section class="print-page" id="melange-for-x-developers"><h1 id="melange-for-x-developers-melange-for-x-developers">Melange for X developers</h1>
-<p>If you are familiar with other languages/platforms, here you will find sections that
-compare Melange to a few of them, so it might help you get up and running
+<p>If you are familiar with other languages/platforms, here you will find sections
+that compare Melange to a few of them, so it might help you get up and running
 quickly. In particular:</p>
 <ul>
 <li>JavaScript</li>
@@ -4678,7 +4713,8 @@ in comparison.</p>
   <a href="https://github.com/reasonml/reason-react/">ReactJS</a> or GraphQL clients.</li>
 <li>The generated JavaScript bundles are generally smaller.</li>
 <li>The generated JavaScript code is generally more readable.</li>
-<li>Melange can generate ES6 or commonjs while Js_of_ocaml generates an IIFE (Immediately Invoked Function Expression) (as of Sep 2023)</li>
+<li>Melange can generate ES6 or commonjs while Js_of_ocaml generates an IIFE
+  (Immediately Invoked Function Expression) (as of Sep 2023)</li>
 <li>Straight-forward integration with modern JavaScript tooling like Webpack,
   NextJS, etc. This is possible thanks to the 1 module \&lt;-> 1 JavaScript file
   compilation model.</li>
@@ -4834,9 +4870,12 @@ the same project without issues.</p></section><h1 class='nav-section-title-end'>
 <p>This page contains:</p>
 <ul>
 <li>a historical overview of Melange development</li>
-<li>details of the Melange roadmap, offering a clear view into the current priorities and features being worked on.</li>
+<li>details of the Melange roadmap, offering a clear view into the current
+  priorities and features being worked on.</li>
 </ul>
-<p>Please note that the roadmap is a rough outline and is subject to change. We encourage you to provide feedback, suggestions, and feature requests through any of the <a href="#community">available communication channels</a>.</p>
+<p>Please note that the roadmap is a rough outline and is subject to change. We
+encourage you to provide feedback, suggestions, and feature requests through any
+of the <a href="#community">available communication channels</a>.</p>
 <h2 id="roadmap-q3-2023">Q3 2023</h2>
 <ul>
 <li><a href="https://anmonteiro.substack.com/p/whats-next-for-melange">Blog post</a></li>
