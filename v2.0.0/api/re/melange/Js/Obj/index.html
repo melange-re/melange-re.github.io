@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Obj (melange.Js.Obj)</title><link rel="stylesheet" href="../../../odoc.support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../odoc.support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../index.html">melange</a> &#x00BB; <a href="../index.html">Js</a> &#x00BB; Obj</nav><header class="odoc-preamble"><h1>Module <code><span>Js.Obj</span></code></h1><p>Provide utilities for <a href="../index.html#type-t"><code>Js.t</code></a></p><p>Provides functions for inspecting and maniplating native JavaScript objects</p></header><div class="odoc-content"><div class="odoc-spec"><div class="spec value external anchored" id="val-empty"><a href="#val-empty" class="anchor"></a><code><span><span class="keyword">let</span> empty: <span>unit <span class="arrow">=&gt;</span></span> <span>{.. }</span>;</span></code></div><div class="spec-doc"><p><code>empty ()</code> returns the empty object <code>\{\}</code></p></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-assign"><a href="#val-assign" class="anchor"></a><code><span><span class="keyword">let</span> assign: <span><span>{.. }</span> <span class="arrow">=&gt;</span></span> <span><span>{.. }</span> <span class="arrow">=&gt;</span></span> <span>{.. }</span>;</span></code></div></div><p><code>assign target source</code> copies properties from <code>source</code> to <code>target</code></p><p>Properties in <code>target</code> will be overwritten by properties in <code>source</code> if they have the same key.</p><p><b>Returns</b> <code>target</code></p><pre class="language-ocaml"><code>(* Copy an object *)
+
+let obj = [%obj { a = 1 }]
+
+let copy = Js.Obj.assign (Js.Obj.empty ()) obj
+
+(* prints &quot;{ a: 1 }&quot; *)
+let _ = Js.log copy</code></pre><pre class="language-ocaml"><code>(* Merge objects with same properties *)
+
+let target = [%obj { a = 1; b = 1; }]
+let source = [%obj { b = 2; }]
+
+let obj = Js.Obj.assign target source
+
+(* prints &quot;{ a: 1, b: 2 }&quot; *)
+let _ = Js.log obj
+
+(* prints &quot;{ a: 1, b: 2 }&quot;, target is modified *)
+let _ = Js.log target</code></pre><ul class="at-tags"><li class="see"><span class="at-tag">see</span> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign" class="value">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign</a> <p>MDN</p></li></ul><div class="odoc-spec"><div class="spec value external anchored" id="val-keys"><a href="#val-keys" class="anchor"></a><code><span><span class="keyword">let</span> keys: <span><span class="type-var">_</span> <span class="arrow">=&gt;</span></span> array(string);</span></code></div></div><p><code>keys obj</code> returns an array of the keys of <code>obj</code>'s own enumerable properties</p><ul class="at-tags"><li class="see"><span class="at-tag">see</span> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys" class="value">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys</a> <p>MDN</p></li></ul></div></body></html>

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OCaml for JavaScript developers">
+
+    <title>Melange for X developers - Melange</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Melange for X developers";
+        var mkdocs_page_input_path = "melange-for-x-developers.md";
+        var mkdocs_page_url = "/v2.0.0/melange-for-x-developers/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/ocaml.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Melange
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rationale/">Why</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Learn</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../new-to-ocaml/">New to OCaml?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../package-management/">Package management</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../build-system/">Build system</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../how-to-guides/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Melange for X developers</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#for-javascript-developers">For JavaScript developers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#variable">Variable</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#string-character">String &amp; Character</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#boolean">Boolean</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#number">Number</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#objectrecord">Object/Record</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#array">Array</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#null">Null</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#function">Function</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#blocks">Blocks</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#currying">Currying</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#if-else">If-else</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#destructuring">Destructuring</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#loop">Loop</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#jsx">JSX</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exception">Exception</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#blocks_1">Blocks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#comments">Comments</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#for-typescript-developers">For TypeScript developers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#type-inference">Type inference</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#algebraic-data-types">Algebraic data types</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nominal-typing">Nominal typing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#immutability">Immutability</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#strictness-and-soundness">Strictness and soundness</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cheatsheet">Cheatsheet</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#type-aliases">Type aliases</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#abstract-types">Abstract types</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#union-types-variants">Union types / Variants</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#immutability_1">Immutability</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#currying_1">Currying</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#parametric-polymorphism">Parametric polymorphism</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#for-js_of_ocaml-developers">For Js_of_ocaml developers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#for-rescript-developers">For ReScript developers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#package-manager">Package manager</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#build-system">Build system</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#source-based-vs-pre-built-distribution">Source-based vs pre-built distribution</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ocaml-compiler-version">OCaml compiler version</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#editor-integration">Editor integration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#feature-choice-and-alignment-with-ocaml">Feature choice and alignment with OCaml</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#syntax">Syntax</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Try</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../playground/">Playground</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../community/">Community</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Melange</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Learn &raquo;</li>
+      <li>Melange for X developers</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/melange-re/melange-re.github.io/blob/master/docs/melange-for-x-developers.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="melange-for-x-developers">Melange for X developers</h1>
+<p>If you are familiar with other languages/platforms, here you will find sections
+that compare Melange to a few of them, so it might help you get up and running
+quickly. In particular:</p>
+<ul>
+<li>JavaScript</li>
+<li>TypeScript</li>
+<li>Js_of_ocaml</li>
+<li>ReScript</li>
+</ul>
+<h2 id="for-javascript-developers">For JavaScript developers</h2>
+<p>Melange is a thin layer over <a href="https://ocaml.org/">OCaml</a>, a strongly typed
+functional programming language with an emphasis on expressiveness and safety.
+Melange’s goal is to help web developers build and maintain JavaScript
+applications safely, thanks to OCaml expressive and powerful type system.</p>
+<p>Melange allows to build applications using either OCaml syntax or Reason syntax.
+If you don’t know which one to choose, we recommend
+<a href="https://reasonml.github.io/en/">Reason</a>, as it has been designed with
+JavaScript developers in mind.</p>
+<p>Reason syntax has first-class support for
+<a href="https://reasonml.github.io/docs/en/jsx">JSX</a>, and there are bindings like
+<a href="https://github.com/reasonml/reason-react/">ReasonReact</a> that build on top of
+that functionality to provide a great developer experience.</p>
+<p>Another advantage is that programs written using Reason syntax are fully
+compatible with those written in OCaml syntax.</p>
+<p>Here is the cheat sheet with some equivalents between JavaScript and Reason
+syntaxes:</p>
+<h3 id="variable">Variable</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>const x = 5;</code></td>
+<td><code>let x = 5;</code></td>
+</tr>
+<tr>
+<td><code>var x = y;</code></td>
+<td>No equivalent</td>
+</tr>
+<tr>
+<td><code>let x = 5; x = x + 1;</code></td>
+<td><code>let x = ref(5); x := x^ + 1;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="string-character">String &amp; Character</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"Hello world!"</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>'Hello world!'</code></td>
+<td>Strings must use <code>"</code></td>
+</tr>
+<tr>
+<td>Characters are strings</td>
+<td><code>'a'</code></td>
+</tr>
+<tr>
+<td><code>"hello " + "world"</code></td>
+<td><code>"hello " ++ "world"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="boolean">Boolean</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>true</code>, <code>false</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>!true</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>||</code>, <code>&amp;&amp;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&gt;</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>a === b</code>, <code>a !== b</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td>No deep equality (recursive compare)</td>
+<td><code>a == b</code>, <code>a != b</code></td>
+</tr>
+<tr>
+<td><code>a == b</code></td>
+<td>No equality with implicit casting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="number">Number</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3</code></td>
+<td>Same *</td>
+</tr>
+<tr>
+<td><code>3.1415</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>3 + 4</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>3.0 + 4.5</code></td>
+<td><code>3.0 +. 4.5</code></td>
+</tr>
+<tr>
+<td><code>5 % 3</code></td>
+<td><code>5 mod 3</code></td>
+</tr>
+</tbody>
+</table>
+<p>* JavaScript has no distinction between integer and float.</p>
+<h3 id="objectrecord">Object/Record</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>no static types</td>
+<td><code>type point = {x: int, mutable y: int}</code></td>
+</tr>
+<tr>
+<td><code>{x: 30, y: 20}</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>point.x</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>point.y = 30;</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>{...point, x: 30}</code></td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<h3 id="array">Array</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[1, 2, 3]</code></td>
+<td><code>[|1, 2, 3|]</code></td>
+</tr>
+<tr>
+<td><code>myArray[1] = 10</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>[1, "Bob", true]</code> *</td>
+<td><code>(1, "Bob", true)</code></td>
+</tr>
+<tr>
+<td>No immutable list</td>
+<td><code>[1, 2, 3]</code></td>
+</tr>
+</tbody>
+</table>
+<p>* Tuples can be simulated in JavaScript with arrays, as JavaScript arrays can
+contain multiple types of elements.</p>
+<h3 id="null">Null</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>null</code>, <code>undefined</code></td>
+<td><code>None</code> *</td>
+</tr>
+</tbody>
+</table>
+<p>* There are no nulls, nor null bugs in OCaml. But it does have <a href="https://reasonml.github.io/docs/en/option">an option
+type</a> for when you actually need
+nullability.</p>
+<h3 id="function">Function</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arg =&gt; retVal</code></td>
+<td><code>(arg) =&gt; retVal</code></td>
+</tr>
+<tr>
+<td><code>function named(arg) {...}</code></td>
+<td><code>let named = (arg) =&gt; ...</code></td>
+</tr>
+<tr>
+<td><code>const f = function(arg) {...}</code></td>
+<td><code>let f = (arg) =&gt; ...</code></td>
+</tr>
+<tr>
+<td><code>add(4, add(5, 6))</code></td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<h4 id="blocks">Blocks</h4>
+<table>
+  <thead>
+    <tr>
+      <th>JavaScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+  <pre><code>const myFun = (x, y) => {
+  const doubleX = x + x;
+  const doubleY = y + y;
+  return doubleX + doubleY
+};</code></pre>
+      </td>
+      <td>
+  <pre><code>let myFun = (x, y) => {
+  let doubleX = x + x;
+  let doubleY = y + y;
+  doubleX + doubleY
+};</code></pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="currying">Currying</h4>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>let add = a =&gt; b =&gt; a + b</code></td>
+<td><code>let add = (a, b) =&gt; a + b</code></td>
+</tr>
+</tbody>
+</table>
+<p>Both JavaScript and OCaml support currying, but OCaml currying is <strong>built-in and
+optimized to avoid intermediate function allocation and calls</strong>, whenever
+possible.</p>
+<h3 id="if-else">If-else</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>if (a) {b} else {c}</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>a ? b : c</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>switch</code></td>
+<td><code>switch</code> but <a href="https://reasonml.github.io/docs/en/pattern-matching">with pattern matching</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="destructuring">Destructuring</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>const {a, b} = data</code></td>
+<td><code>let {a, b} = data</code></td>
+</tr>
+<tr>
+<td><code>const [a, b] = data</code></td>
+<td><code>let [|a, b|] = data</code> *</td>
+</tr>
+<tr>
+<td><code>const {a: aa, b: bb} = data</code></td>
+<td><code>let {a: aa, b: bb} = data</code></td>
+</tr>
+</tbody>
+</table>
+<p>* This will cause the compiler to warn that not all cases are handled, because
+<code>data</code> could be of length other than 2. Better switch to pattern-matching
+instead.</p>
+<h3 id="loop">Loop</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>for (let i = 0; i &lt;= 10; i++) {...}</code></td>
+<td><code>for (i in 0 to 10) {...}</code></td>
+</tr>
+<tr>
+<td><code>for (let i = 10; i &gt;= 0; i--) {...}</code></td>
+<td><code>for (i in 10 downto 0) {...}</code></td>
+</tr>
+<tr>
+<td><code>while (true) {...}</code></td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<h3 id="jsx">JSX</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;Foo bar=1 baz="hi" onClick={bla} /&gt;</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>&lt;Foo bar=bar /&gt;</code></td>
+<td><code>&lt;Foo bar /&gt;</code> *</td>
+</tr>
+<tr>
+<td><code>&lt;input checked /&gt;</code></td>
+<td><code>&lt;input checked=true /&gt;</code></td>
+</tr>
+<tr>
+<td>No children spread</td>
+<td><code>&lt;Foo&gt;...children&lt;/Foo&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>* Note the argument punning when creating elements.</p>
+<h3 id="exception">Exception</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>throw new SomeError(...)</code></td>
+<td><code>raise(SomeError(...))</code></td>
+</tr>
+<tr>
+<td><code>try {a} catch (Err) {...} finally {...}</code></td>
+<td><code>try (a) { | Err => ...}</code> *</td>
+</tr>
+</tbody>
+</table>
+<p>* No finally.</p>
+<h3 id="blocks_1">Blocks</h3>
+<p>In OCaml, "sequence expressions" are created with <code>{}</code> and evaluate to their
+last statement. In JavaScript, this can be simulated via an immediately-invoked
+function expression (since function bodies have their own local scope).</p>
+<table>
+  <thead>
+    <tr>
+      <th>JavaScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+  <pre><code>let res = (function() {
+  const x = 23;
+  const y = 34;
+  return x + y;
+})();</code></pre>
+      </td>
+      <td>
+  <pre><code>let res = {
+  let x = 23;
+  let y = 34;
+  x + y
+};</code></pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="comments">Comments</h3>
+<table>
+<thead>
+<tr>
+<th>JavaScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/* Comment */</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>// Line comment</code></td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<h2 id="for-typescript-developers">For TypeScript developers</h2>
+<p>The approach to typing applications using Melange differs somewhat from
+TypeScript. TypeScript has been designed with a focus on compatibility with
+JavaScript, as outlined in its <a href="https://github.com/Microsoft/TypeScript/wiki/TypeScript-Design-Goals">design
+goals</a>. On
+the other hand, Melange is built upon OCaml, a compiler known for its emphasis
+on expressiveness and safety.</p>
+<p>These are some of the differences between both.</p>
+<h3 id="type-inference">Type inference</h3>
+<p>In TypeScript, the types for the input parameters have to be defined:</p>
+<pre><code class="language-javascript">let sum = (a: number, b: number) =&gt; a + b;
+</code></pre>
+<p>OCaml can infer types without barely any type annotations. For example, we can
+define a function that adds two numbers as:</p>
+<pre><code class="language-ocaml">let add x y = x + y
+</code></pre>
+<pre><code class="language-reasonml">let add = (x, y) =&gt; x + y;
+</code></pre>
+<h3 id="algebraic-data-types">Algebraic data types</h3>
+<p>It is not possible to build an ADT in TypeScript the same way as in OCaml.
+<a href="https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#discriminated-unions">Discriminated
+unions</a>
+would be the closest analog to them, with libraries like
+<a href="https://github.com/gvergnaud/ts-pattern">ts-pattern</a> as an alternative to the
+lack of support for pattern matching in the language.</p>
+<p>In OCaml, <a href="https://cs3110.github.io/textbook/chapters/data/algebraic_data_types.html">algebraic data types
+(ADTs)</a>
+are a commonly used functionality of the language. They allow you to build your
+own types from small blocks. And with <a href="https://ocaml.org/docs/data-types">pattern
+matching</a>, it is easy to access this data.</p>
+<h3 id="nominal-typing">Nominal typing</h3>
+<p>In TypeScript, all typing is structural. This means that it is hard sometimes to
+establish a boundary or separation between two types that have the same
+implementation. For these cases, nominal typing can be emulated using tags:</p>
+<pre><code class="language-js">type Email = string &amp; { readonly __tag: unique symbol };
+type City = string &amp; { readonly __tag: unique symbol };
+</code></pre>
+<p>In OCaml, nominal typing is fully supported. Some of the core language types
+like <a href="https://v2.ocaml.org/manual/coreexamples.html#s%3Atut-recvariants">records and
+variants</a> are
+nominal. This means that even if you declare exactly the same type twice,
+functions that operate on values from one type will not be compatible with the
+other type.</p>
+<p>There is also structural typing, used for OCaml
+<a href="https://v2.ocaml.org/manual/objectexamples.html">objects</a> and <a href="https://v2.ocaml.org/manual/polyvariant.html">polymorphic
+variants</a>.</p>
+<h3 id="immutability">Immutability</h3>
+<p>TypeScript has two base primitives to work with immutability: <code>const</code> and
+<code>readonly</code>.</p>
+<p>The first one is used to prevent variable reference change.</p>
+<pre><code class="language-js">const a = 1;
+a = 2; // Error: Cannot assign to 'a' because it is a constant.
+</code></pre>
+<p>And the second one is used to make properties immutable.</p>
+<pre><code class="language-js">type A = {
+  readonly x: number;
+}
+const a: A = { x: 1 };
+a.x = 12; // Error: Cannot assign to 'x' because it is a read-only property.
+</code></pre>
+<p>Nevertheless, there are some problems here. <code>const</code> and <code>readonly</code> only block
+reference changes but do nothing about values. With <code>const a = [1, 2, 3]</code> or
+<code>readonly x: number[]</code>, you can still change the contents of an array.</p>
+<p>OCaml provides data types with immutability in mind, like lists, records, or
+maps.</p>
+<h3 id="strictness-and-soundness">Strictness and soundness</h3>
+<p>In TypeScript, you have the flexibility to use types like <code>any</code> or other
+expansive types such as <code>Function</code>. However, TypeScript provides the <code>strict</code>
+option in the <code>tsconfig.json</code> file to mitigate the usage of these less type-safe
+constructs. On the other hand, OCaml does not offer a similar option to enable
+or disable strictness. In OCaml, the language itself promotes type safety
+without the need for explicit configuration options to enforce stricter
+behavior.</p>
+<p>TypeScript, as mentioned in <a href="https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness">its
+handbook</a>,
+may sacrifice soundness for practicality when needed. In contrast, OCaml
+implementations provide unsound methods like <a href="../communicate-with-javascript/#special-identity-external">the <code>identity</code>
+primitive</a> but they
+are generally discouraged and rarely used. The OCaml community places a strong
+emphasis on maintaining soundness and prefers safer alternatives to ensure code
+correctness.</p>
+<h3 id="cheatsheet">Cheatsheet</h3>
+<p>The following are some conversions between TypeScript and OCaml idioms, in the
+OCaml side we use Reason syntax for familiarity, as mentioned in <a href="#for-javascript-developers">section for
+JavaScript developers</a>.</p>
+<h4 id="type-aliases">Type aliases</h4>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type Email = string;</code></td>
+<td><code>type email = string;</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="abstract-types">Abstract types</h4>
+<table>
+  <thead>
+    <tr>
+      <th>TypeScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <pre><code>type Email = string &
+{ readonly __tag: unique symbol };</code></pre>
+      </td>
+      <td>
+        <pre><code>/* in interface `rei` file */
+type email;
+</code></pre>
+        <pre><code>/* in implementation `re` file */
+type email = string;</code></pre> </td> </tr>
+  </tbody>
+</table>
+
+<h4 id="union-types-variants">Union types / Variants</h4>
+<table>
+  <thead>
+    <tr>
+      <th>TypeScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <pre><code>type Result = "Error" | "Success";
+</code></pre>
+      </td>
+      <td>
+        <pre><code>type result = Error | Success</code></pre>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <pre><code>type Result =
+| { type: "Error"; message: string }
+| { type: "Success"; n: number };
+</code></pre>
+      </td>
+      <td>
+        <pre><code>type result =
+| Error(string)
+| Success(int)</code></pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="immutability_1">Immutability</h4>
+<table>
+  <thead>
+    <tr>
+      <th>TypeScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <pre><code>const a = 1;
+type A = { readonly x: number };
+type ImmutableA = Readonly<A>;
+const arr: ReadonlyArray<number> = [1, 2, 3];
+type A = { readonly [x: string]: number };
+</code></pre>
+      </td>
+      <td>Enabled by default</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="currying_1">Currying</h4>
+<table>
+  <thead>
+    <tr>
+      <th>TypeScript</th>
+      <th>OCaml (Reason syntax)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <pre><code>type addT = (_: number) => (_: number) => number;
+const add: addT = (l) => (r) => l + r;
+add(5)(3);
+</code></pre>
+      </td>
+      <td>Enabled by default</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="parametric-polymorphism">Parametric polymorphism</h4>
+<table>
+<thead>
+<tr>
+<th>TypeScript</th>
+<th>OCaml (Reason syntax)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type length = &lt;T&gt;(_: T[]) =&gt; number;</code></td>
+<td><code>let length: list('a) =&gt; int;</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="for-js_of_ocaml-developers">For Js_of_ocaml developers</h2>
+<p>There are many similarities between Js_of_ocaml and Melange:</p>
+<ul>
+<li>Both compile OCaml to JavaScript.</li>
+<li>Both are available as libraries in the official opam repository.</li>
+<li>Both have access to the OCaml platform developer toolchain: the OCaml LSP
+  server, Merlin, and the different editor extensions.</li>
+<li>Both have implemented extensive integration with Dune.</li>
+</ul>
+<p>However, while Js_of_ocaml transforms OCaml bytecode into JavaScript, Melange
+starts the conversion process earlier in the compiler pipeline, as it transforms
+the compiler lambda representation into JavaScript.</p>
+<p>Js_of_ocaml is a project with years of development and evolution behind it,
+while Melange <a href="../rationale/#a-bit-of-history">appearance</a> is relatively recent
+in comparison.</p>
+<p>These aspects translate into different trade-offs. Compared to Js_of_ocaml:</p>
+<ul>
+<li>Melange can be installed in an OCaml 5 opam switch, but the editor integration
+  is not working at the time (May 2023).</li>
+<li>Similarly, any OCaml 5 features like effects are currently unsupported in
+  Melange.</li>
+<li>Js_of_ocaml allows to compile the compiler itself and create "toplevels",
+  which is not possible with Melange.</li>
+<li><code>Marshal</code> is well supported in Js_of_ocaml, while Melange does not support
+  it.</li>
+<li>Libraries like <code>Unix</code> or <code>Str</code> are available in Js_of_ocaml but not in
+  Melange.</li>
+<li>Js_of_ocaml supports sourcemaps, which Melange do not support yet (as of May
+  2023).</li>
+</ul>
+<p>On the upside, in Melange:</p>
+<ul>
+<li>Consuming existing JavaScript packages might be a bit easier in Melange,
+  thanks to its compilation model and the extensive availability of mechanisms
+  to bind to JavaScript code.</li>
+<li>There is great support for some of the most used JavaScript libraries like
+  <a href="https://github.com/reasonml/reason-react/">ReactJS</a> or GraphQL clients.</li>
+<li>The generated JavaScript bundles are generally smaller.</li>
+<li>The generated JavaScript code is generally more readable.</li>
+<li>Melange can generate ES6 or commonjs while Js_of_ocaml generates an IIFE
+  (Immediately Invoked Function Expression) (as of Sep 2023)</li>
+<li>Straight-forward integration with modern JavaScript tooling like Webpack,
+  NextJS, etc. This is possible thanks to the 1 module \&lt;-> 1 JavaScript file
+  compilation model.</li>
+</ul>
+<h2 id="for-rescript-developers">For ReScript developers</h2>
+<p>As a project that shares a common ancestry with ReScript, Melange inherits a lot
+of its characteristics:</p>
+<ul>
+<li>The compilation model involves compiling a single module into a single
+  JavaScript file.</li>
+<li>The libraries provided by ReScript (Belt and Js) are available in Melange too.</li>
+<li>The mechanisms provided for <a href="../communicate-with-javascript/">communicating with JavaScript
+  code</a> are mostly the same.</li>
+</ul>
+<p>However, one of Melange’s goals is to maximize compatibility with the OCaml
+ecosystem. This goal translates into fundamental differences in how Melange and
+ReScript function from the perspective of both library authors and users.</p>
+<h3 id="package-manager">Package manager</h3>
+<p>ReScript projects rely exclusively on npm for all packages they depend on.
+Melange projects, on the other hand, will use opam for native packages, and npm
+for JavaScript ones. Melange package management is explained in detail in <a href="../package-management/">the
+dedicated section</a>.</p>
+<h3 id="build-system">Build system</h3>
+<p>ReScript has its own build system, originally based on Ninja.</p>
+<p>Melange defers to <a href="https://dune.build/">Dune</a> for build orchestration, as it is
+explained in detail in <a href="../build-system/">the corresponding section</a>. By
+integrating with Dune, Melange can benefit from the multiple features provided.
+One of the most useful features is first-class supports for monorepos. But there
+are multiple others, like virtual libraries, watch mode, or integrations with
+tools like <a href="https://github.com/ocaml/odoc">odoc</a>.</p>
+<p>The divergences caused by the different build systems have a lot of implications
+and nuances that might be too complex to explain in this section, but some of
+the specific details have been discussed in <a href="https://discuss.ocaml.org/t/ahrefs-is-now-built-with-melange/12107/3">the OCaml
+forum</a>.</p>
+<h3 id="source-based-vs-pre-built-distribution">Source-based vs pre-built distribution</h3>
+<p>While with ReScript every dependency can be downloaded with just npm, Melange
+projects will have to use opam and npm. This is a trade-off: on one hand, some
+Melange projects might need to include two package configuration files. But on
+the other hand they can benefit from opam’s source-based package distribution
+model for things like PPXs, linters, or any other OCaml tooling.</p>
+<p>In comparison, consuming any OCaml tool in ReScript is more challenging. Since
+ReScript lacks a native toolchain, authors of the tools need to provide
+pre-built binaries for all the supported systems and architectures. This poses
+difficulties for the authors in terms of maintenance, and it can also result in
+certain users being unable to access these tools if their systems or
+architectures are not included in the pre-built binaries.</p>
+<h3 id="ocaml-compiler-version">OCaml compiler version</h3>
+<p>ReScript is compatible with the 4.06 version of the OCaml compiler, while
+Melange is compatible with the version 4.14 (as of May 2023).</p>
+<p>The <a href="https://docs.google.com/document/d/1279euT9LeJIkwAUYqazqeh2lc8c7TLQap2_2vBNcK4w">Melange
+roadmap</a>
+for Q2 includes a milestone to upgrade to the latest version of the compiler to
+the 5.x release line.</p>
+<h3 id="editor-integration">Editor integration</h3>
+<p>Melange is fully compatible with the <a href="https://ocaml.org/docs/up-and-running#configuring-your-editor">OCaml platform editor
+tools</a>, which
+makes possible to work in projects that include OCaml and Melange code using the
+same editor configuration.</p>
+<p>ReScript has its <a href="https://rescript-lang.org/docs/manual/latest/editor-plugins">own set of editor
+plugins</a>.</p>
+<h3 id="feature-choice-and-alignment-with-ocaml">Feature choice and alignment with OCaml</h3>
+<p>ReScript’s goal is to model the language to bring it as close to JavaScript as
+possible. From the website <a href="https://rescript-lang.org/docs/manual/latest/introduction">introduction
+section</a>:</p>
+<blockquote>
+<p>ReScript looks like JS, acts like JS, and compiles to the highest quality of
+clean, readable and performant JS (...)</p>
+</blockquote>
+<p>New features added to ReScript might close its alignment with JavaScript, but
+some of these features can lead to greater divergence from OCaml. As Melange
+prioritizes compatibility with OCaml, it avoids incorporating those features
+that widen the gap between the two.</p>
+<p>Here is a non-exhaustive list of the features that ReScript has added and will
+not be supported in Melange:</p>
+<ul>
+<li>The <code>async</code> / <code>await</code> syntax: similar functionality can be achieved in Melange
+  through the usage of <a href="https://v2.ocaml.org/manual/bindingops.html">binding
+  operators</a> (introduced in OCaml
+  4.13).</li>
+<li>Optional fields in records, like <code>type t = { x : int, @optional y : int }</code>.</li>
+<li>Uncurried by default.</li>
+</ul>
+<p>The restriction above only applies to features that compromise compatibility
+with OCaml, but otherwise Melange can incorporate bugfixes or new functionality
+from ReScript.</p>
+<p>On the other hand, as Melange goal is to keep up with the version of the OCaml
+compiler, there are features inherited from OCaml that are not supported by
+ReScript at the moment (May 2023), for example:</p>
+<ul>
+<li><a href="https://v2.ocaml.org/manual/bindingops.html">Binding operators</a> / <code>let</code>
+  bindings</li>
+<li>Better type errors for some specific cases</li>
+<li>Additions to the stdlib</li>
+</ul>
+<p>The whole list of changes added to the OCaml compiler can be checked
+<a href="https://ocaml.org/releases">here</a>.</p>
+<h3 id="syntax">Syntax</h3>
+<p>ReScript encourages using <a href="https://rescript-lang.org/docs/manual/latest/migrate-from-bucklescript-reason">the new
+syntax</a>
+for any new code. While OCaml syntax might be supported today, its usage is not
+documented. Reason syntax is no longer supported.</p>
+<p>Melange supports and documents both Reason and OCaml syntaxes. It also includes
+a best-effort support for ReScript syntax for backwards compatibility, provided
+through the <code>rescript-syntax</code> package, available <a href="https://opam.ocaml.org/packages/rescript-syntax/">in
+opam</a>. To build any code
+written using ReScript syntax, the only requirement is to download this package,
+as Melange and Dune will already coordinate to make use of it when <code>res</code> or
+<code>resi</code> files are found.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../how-to-guides/" class="btn btn-neutral float-left" title="How-to guides"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span>
+            <a href="https://github.com/melange-re/melange" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+      
+        <span><a href="../how-to-guides/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      
+      
+        <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/print-site.js" defer></script>
+      <script src="../js/toggleSyntaxButton.js" defer></script>
+      <script src="../js/reasonml.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
