@@ -25,11 +25,11 @@ jobs:
       - name: Generate melange docs in ml syntax
         run: opam reinstall -y melange --with-doc
       - name: Copy melange docs in ml syntax
-        run: cp -r _opam/.opam-switch/build/melange.2.0.0/_build/default/_doc/_html docs/api/ml
+        run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/api/ml
       - name: Generate melange docs in re syntax
         run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc
       - name: Copy melange docs in re syntax
-        run: cp -r _opam/.opam-switch/build/melange.2.0.0/_build/default/_doc/_html docs/api/re
+        run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/api/re
       - name: Run canonical script
         run: opam exec -- dune exec add_canonical docs/api
       - name: Check Reason syntax
