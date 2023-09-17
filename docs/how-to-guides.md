@@ -59,7 +59,7 @@ switch](https://opam.ocaml.org/blog/opam-local-switches/) to start working on
 our library:
 
 ```bash
-opam switch create . 5.1.0~rc2 -y --deps-only
+opam switch create . 5.1.0 -y --deps-only
 ```
 
 Once this step is done, we can call `dune` from the library folder, but first we
