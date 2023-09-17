@@ -16,7 +16,7 @@ jobs:
       - run: python3 -m pip install -r ./pip-requirements.txt
       - uses: ocaml/setup-ocaml@v2
         with:
-          ocaml-compiler: ocaml-variants.5.1.0+trunk
+          ocaml-compiler: 5.1.x
           dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
       - name: Install all deps
         run: make install
