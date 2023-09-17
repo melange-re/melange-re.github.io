@@ -28,6 +28,8 @@ jobs:
         run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc
       - name: Copy melange docs in re syntax
         run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/api/re
+      - name: Run canonical script
+        run: opam exec -- dune exec add_canonical docs/api
       - name: Build playground
         run: make build-playground
       - name: Configure Git user
@@ -36,4 +38,3 @@ jobs:
           git config --local user.name "github-actions[bot]"
       - run: git fetch origin gh-pages --depth=1
       - run: mike deploy ${{  github.ref_name }}
-      - run: mike set-default --push ${{  github.ref_name }}

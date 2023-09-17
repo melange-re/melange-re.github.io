@@ -9,3 +9,7 @@
  (public_name add_canonical)
  (modules add_canonical)
  (libraries str unix))
+
+(cram
+ (applies_to add_canonical)
+ (deps %{bin:add_canonical}))
