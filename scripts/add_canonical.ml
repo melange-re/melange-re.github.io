@@ -59,6 +59,7 @@ let to_v2_paths input =
   |> global_replace (regexp_string "Js/Weakset") "Js/WeakSet"
   |> global_replace (regexp_string "Js/Weakmap") "Js/WeakMap"
   |> global_replace (regexp_string "Js/Typed_array2") "Js/TypedArray2"
+  |> global_replace (regexp_string "Js/Parser") "Js_parser"
 
 let relative_path base_path target_path =
   let base_parts = split (regexp_string Filename.dir_sep) base_path in
@@ -80,10 +81,16 @@ let relative_path base_path target_path =
   String.concat Filename.dir_sep (parent_dirs @ remaining)
 
 let can_ignore file_path =
-  contains_substring ~sub:"Melange_ppx/Ast_literal" file_path
-  || contains_substring ~sub:"Melange_ppx/Private/Typemod_hide" file_path
-  || contains_substring ~sub:"Melange_ppx/Derivers" file_path
-  || contains_substring ~sub:"Melange_ppx/Mapper" file_path
+  contains_substring ~sub:"melange/Caml/" file_path
+  || contains_substring ~sub:"melange/Caml_" file_path
+  || contains_substring ~sub:"melange/Js_OO" file_path
+  || contains_substring ~sub:"melange/Js_cast" file_path
+  || contains_substring ~sub:"melange/Parsing0" file_path
+  || contains_substring ~sub:"melange/Belt_internal" file_path
+  || contains_substring ~sub:"melange/Ast_signature" file_path
+  || contains_substring ~sub:"melange/Melange_ppx_lib" file_path
+  || contains_substring ~sub:"melange/Melange_ppxlib_ast" file_path
+  || contains_substring ~sub:"melange/Node_fs/Node" file_path
 
 let replace_in_file ~orig_path file_path search_str =
   let ic = open_in file_path in

@@ -80,6 +80,36 @@ Test add_canonical exe
   > <head></head>
   > EOF
 
+  $ mkdir -p melange/Caml
+  $ cat > ./melange/Caml/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Caml_format
+  $ cat > ./melange/Caml_format/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js_parser/Declaration_parser
+  $ cat > ./melange/Js_parser/Declaration_parser/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Belt_internalSetBuckets
+  $ cat > ./melange/Belt_internalSetBuckets/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js_OO
+  $ cat > ./melange/Js_OO/index.html <<EOF
+  > <head></head>
+  > EOF
+
+  $ mkdir -p melange/Js_cast
+  $ cat > ./melange/Js_cast/index.html <<EOF
+  > <head></head>
+  > EOF
+
   $ add_canonical .
 
   $ cat ./melange/Js_global/index.html
@@ -123,3 +153,21 @@ Test add_canonical exe
 
   $ cat ./melange/Melange_ppx/External/index.html
   <head><link rel="canonical" href="https://melange.re/v2.0.0/api/melange/Melange_ppx/External/index.html" /></head>
+
+  $ cat ./melange/Caml/index.html
+  <head></head>
+
+  $ cat ./melange/Caml_format/index.html
+  <head></head>
+
+  $ cat ./melange/Js_parser/Declaration_parser/index.html
+  <head><link rel="canonical" href="https://melange.re/v2.0.0/api/melange/Js_parser/Declaration_parser/index.html" /></head>
+
+  $ cat ./melange/Belt_internalSetBuckets/index.html
+  <head></head>
+
+  $ cat ./melange/Js_OO/index.html
+  <head></head>
+
+  $ cat ./melange/Js_cast/index.html
+  <head></head>
