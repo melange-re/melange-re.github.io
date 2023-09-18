@@ -2,62 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://melange.re/v2.0.0/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/api/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/build-system/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/communicate-with-javascript/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/community/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/getting-started/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/how-to-guides/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/melange-for-x-developers/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/new-to-ocaml/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/package-management/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/rationale/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://melange.re/v2.0.0/roadmap/</loc>
-         <lastmod>2023-09-17</lastmod>
+         <lastmod>2023-09-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
