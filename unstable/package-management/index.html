@@ -400,11 +400,11 @@ like:</p>
  (alias react)
  (libraries lib reason-react)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 </code></pre>
 <p>Some libraries will only work after being processed by an accompanying PPX,
-e.g., <code>reason-react</code> requires preprocessing with <code>reactjs-jsx-ppx</code>. These
+e.g., <code>reason-react</code> requires preprocessing with <code>reason-react-ppx</code>. These
 preprocessors may be installed together with the library as part of the same
 package, or they might be part of a different package, in which case they need
 to be installed separately.</p>
@@ -430,7 +430,7 @@ file:</p>
  (alias react)
  (libraries lib reason-react melange-fetch)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 </code></pre>
 <h3 id="npm-packages">npm packages</h3>
