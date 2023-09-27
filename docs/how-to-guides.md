@@ -25,7 +25,7 @@ Let's go through them in detail:
 ### Add an `opam` file
 
 To migrate your ReScript library to Melange, you will need some packages.
-Melange is designed to be used with [opam](opam.ocaml.org/), the package manager
+Melange is designed to be used with [opam](https://opam.ocaml.org/), the package manager
 of OCaml, which is explained in [its own section](./package-management.md).
 
 To get started with the library migration, let's create an `opam` file in your
@@ -59,7 +59,7 @@ switch](https://opam.ocaml.org/blog/opam-local-switches/) to start working on
 our library:
 
 ```bash
-opam switch create . 5.1.0~rc2 -y --deps-only
+opam switch create . 5.1.0 -y --deps-only
 ```
 
 Once this step is done, we can call `dune` from the library folder, but first we

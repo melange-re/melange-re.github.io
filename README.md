@@ -33,7 +33,7 @@ make init
 
 All code snippets should be written in OCaml syntax. A development-time script
 is available to automatically generate Reason syntax snippets from the OCaml
-ones. Before runnning this script, you will need to set up an opam switch.
+ones. Before running this script, you will need to set up an opam switch.
 Instructions can be found in the ["Tooling for docs
 generation"](#optional-tooling-for-docs-generation) section.
 
