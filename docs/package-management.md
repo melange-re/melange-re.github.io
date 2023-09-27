@@ -325,12 +325,12 @@ then `reason-react` should be added to the `dune` file under the `src` folder:
  (alias react)
  (libraries lib reason-react)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 ```
 
 Some libraries will only work after being processed by an accompanying PPX,
-e.g., `reason-react` requires preprocessing with `reactjs-jsx-ppx`. These
+e.g., `reason-react` requires preprocessing with `reason-react-ppx`. These
 preprocessors may be installed together with the library as part of the same
 package, or they might be part of a different package, in which case they need
 to be installed separately.
@@ -363,7 +363,7 @@ file:
  (alias react)
  (libraries lib reason-react melange-fetch)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 ```
 
