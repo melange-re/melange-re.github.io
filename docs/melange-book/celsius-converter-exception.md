@@ -1,4 +1,4 @@
-# Celsius Converter, pt 1
+# Celsius Converter
 
 This time, we'll create a widget that takes a temperature value in Celsius and
 converts it to Fahrenheit. Create a new file called `CelsiusConverter.re`:
@@ -247,3 +247,10 @@ look something like this:
 <b>3.</b> [Define an addFive function using partial application](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
 
 <b>4.</b> [Define a function that subtracts from 10 and converts to binary](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)
+
+-----
+
+[Source code for this
+chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/celsius-converter-exception/)
+can be found in the [Melange for React Developers
+repo](https://github.com/melange-re/melange-for-react-devs).

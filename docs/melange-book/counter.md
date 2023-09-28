@@ -160,7 +160,7 @@ to ship your app. This is part of what makes OCaml such a type-safe language.
 Error (warning 27 [unused-var-strict]): unused variable evt.
 ```
 
-OCaml wants you to use all the variables you declare, unless they being with
+OCaml wants you to use all the variables you declare, unless they begin with
 `_` (underscore).
 
 <b>3.</b> Commenting out `[@react.component]` in `Index.re`, at the place where
@@ -177,3 +177,10 @@ For now, just remember that you need to put the `[@react.component]`
 attribute above your `make` function if you want your component to be usable
 in JSX (it's a very common newbie mistake). See the PPX chapter (todo) for
 more details.
+
+-----
+
+[Source code for this
+chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/counter/)
+can be found in the [Melange for React Developers
+repo](https://github.com/melange-re/melange-for-react-devs).

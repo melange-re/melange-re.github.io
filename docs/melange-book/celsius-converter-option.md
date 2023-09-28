@@ -1,4 +1,4 @@
-# Celsius Converter, pt 2
+# Celsius Converter using Option
 
 After all the changes we made in the last chapter, your `CelsiusConverter.re`
 might look something like this:
@@ -239,3 +239,10 @@ let floatFromString = text =>
 
 But this produces a syntax error because you can't do equality checks of
 variables in OCaml pattern matching. So the `when` guard is necessary here.
+
+-----
+
+[Source code for this
+chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/celsius-converter-option/)
+can be found in the [Melange for React Developers
+repo](https://github.com/melange-re/melange-for-react-devs).

@@ -33,8 +33,8 @@ nav:
     - Installation: melange-book/installation.md
     - Counter: melange-book/counter.md
     - Melange Playground: melange-book/melange-playground.md
-    - Celsius Converter, pt 1: melange-book/celsius-converter-1.md
-    - Celsius Converter, pt 2: melange-book/celsius-converter-2.md
+    - Celsius Converter: melange-book/celsius-converter-exception.md
+    - Celsius Converter using Option: melange-book/celsius-converter-option.md
   - Reference:
     - API: api.md
   - Try:
