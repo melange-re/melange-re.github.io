@@ -3683,8 +3683,8 @@ It is not strictly necessary to use named arguments in this binding, but it
 helps readability with multiple arguments, especially if some have the same
 type.
 
-Also note that it is not strictly need to use `[@mel.send.pipe]`; one can use
-`[@mel.send]` everywhere.
+Also note that it is not strictly need to use `mel.send.pipe`, one can use
+`mel.send` everywhere.
 
 See the [Calling an object method](#calling-an-object-method) section for more
 information.
@@ -3776,7 +3776,7 @@ let _result =
 ```
 
 If you know the value is 'nullable' (i.e. could be `null` or `undefined`), or if
-the value could be polymorphic, then `[@mel.return nullable]` is appropriate to
+the value could be polymorphic, then `mel.return nullable` is appropriate to
 use.
 
 Note that this attribute requires the return type of the binding to be an
