@@ -13,7 +13,13 @@ let make = () => {
   let (celsius, setCelsius) = React.useState(() => "");
 
   <div>
-    <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
+    <input
+      value=celsius
+      onChange={evt => {
+        let newCelsius = getValueFromEvent(evt);
+        setCelsius(_ => newCelsius);
+      }}
+    />
     {React.string({js|°C = |js})}
     {(
        celsius == ""
@@ -68,7 +74,7 @@ You would get a similar error if you left off the `| Some(_)` branch. Having an
 `option` value be the input for a switch expression means that you can't forget
 to handle the failure case, much less the success case. There's another
 advantage: The `| Some(fahrenheit)` branch gives you access to the `float`
-that was successfully converted from the `string``, and *only this branch* has
+that was successfully converted from the `string`, and *only this branch* has
 access to that value. So you can be reasonably sure that the success case is
 handled here and not somewhere else. You are starting to experience the power of
 [pattern matching](https://reasonml.github.io/docs/en/pattern-matching) in OCaml.
@@ -99,7 +105,7 @@ type signature is:
 
 Here `'a` and `'b` mean "any type", because `option` can wrap around any type,
 e.g. `option(string)`, `option(int)`, etc. The implementation of `Option.map` is
-quite simple, consisting of a single switch expression:
+quite minimal, consisting of a single switch expression:
 
 ```reasonml
 let map = (f, o) =>
@@ -110,7 +116,7 @@ let map = (f, o) =>
 ```
 
 As you might expect, there are many more helper functions related to `option` in
-the [Option module](https://melange.re/v1.0.0/api/re/melange/Stdlib/Option/).
+the [Option module](https://melange.re/v2.0.0/api/re/melange/Stdlib/Option/).
 
 At this point, your switch expression might look like this:
 
@@ -152,14 +158,13 @@ switch (celsius |> float_of_string_opt |> Option.map(convert)) {
 }
 ```
 
-Then [when guard](https://reasonml.github.io/docs/en/pattern-matching#when)
+The [when guard](https://reasonml.github.io/docs/en/pattern-matching#when)
 allows you to add extra conditions to a switch expression branch, keeping
-nesting of conditions to a minimum and making your code more readable.
+nesting of conditionals to a minimum and making your code more readable.
 
 Hooray! Our Celsius converter is finally complete. Later, we'll see how to
 create a component that can convert back and forth between Celsius and
-Fahrenheit. But first, we'll show you how to conveniently style your ReasonReact
-components.
+Fahrenheit. But first, we'll explore Melange's [build system dune](https://melange.re/v2.0.0/build-system/).
 
 ## Exercises
 
