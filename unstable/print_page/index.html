@@ -645,6 +645,28 @@ or
 <p>The advantage of this approach —as opposed to vendoring the JavaScript packages
 inside the bindings— is that it gives users of the bindings complete flexibility
 over the way these JavaScript packages are downloaded and bundled.</p>
+<p>Melange provides a way to define dependencies from opam packages to npm packages
+inside the <code>opam</code> files through the
+<a href="https://github.com/jchavarri/opam-check-npm-deps">check-npm-deps</a> opam plugin.</p>
+<p>With this plugin, library authors can include constraints in the npm format
+inside the opam <code>depexts</code> field, for example, the <code>reason-react</code> opam file can
+include a section like this:</p>
+<pre><code>depexts: [
+  [&quot;react&quot; &quot;react-dom&quot;] {npm-version = &quot;^17.0.0 || ^18.0.0&quot;}
+]
+</code></pre>
+<p>This indicates that the version of <code>reason-react</code> is compatible with ReactJS
+versions 17 and 18.</p>
+<p>Users of Melange bindings can check that the constraints defined in the opam
+packages installed in their switch are fulfilled by the packages installed in
+<code>node_modules</code> by using the <code>check-npm-deps</code> plugin. For this, one just needs to
+install the plugin:</p>
+<pre><code class="language-bash">opam install opam-check-npm-deps
+</code></pre>
+<p>And then call it from the root folder of the project, where the opam switch and
+the <code>node_modules</code> folder exist:</p>
+<pre><code class="language-bash">opam-check-npm-deps
+</code></pre>
 <h2 id="package-management-finding-and-using-melange-compatible-packages">Finding and using Melange compatible packages</h2>
 <h3 id="package-management-opam-packages">opam packages</h3>
 <p>Melange packages are usually available on <a href="https://opam.ocaml.org">opam</a>.
