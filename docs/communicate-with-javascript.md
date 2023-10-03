@@ -3185,15 +3185,16 @@ section for more information.
 #### `window?`: does global variable exist
 
 ```ocaml
-match [%mel.external window] with
+let _ = match [%mel.external window] with
 | Some _ -> "window exists"
 | None -> "window does not exist"
 ```
 ```reasonml
-switch ([%mel.external window]) {
-| Some(_) => "window exists"
-| None => "window does not exist"
-};
+let _ =
+  switch ([%mel.external window]) {
+  | Some(_) => "window exists"
+  | None => "window does not exist"
+  };
 ```
 
 See the [Detect global variables](#detect-global-variables) section for more
@@ -3453,6 +3454,9 @@ information.
 
 #### `person.name`: get a prop
 
+<!--#prelude#
+let person = [%mel.obj { name = "john"; age = 99 }]
+-->
 ```ocaml
 let name = person##name
 ```
@@ -3463,6 +3467,10 @@ let name = person##name;
 Alternatively, if `person` value is of record type as mentioned in the section
 above:
 
+<!--#prelude#
+type person = { id : int; name : string }
+let person = { id = 1; name = "Alice" }
+-->
 ```ocaml
 let name = person.name
 ```
@@ -3472,6 +3480,10 @@ let name = person.name;
 
 #### `person.id = 0`: set a prop
 
+<!--#prelude#
+type person = { id : int; name : string }
+let person = { id = 1; name = "Alice" }
+-->
 ```ocaml
 external set_id : person -> int -> unit = "id" [@@mel.set]
 
@@ -3513,6 +3525,13 @@ foo.bar();
 
 You will write:
 
+<!--#prelude#
+module Foo = struct
+  type t
+  external make : unit -> t = "Foo" [@@mel.new]
+  external bar : t -> unit = "bar" [@@mel.get]
+end
+-->
 ```ocaml
 let foo = Foo.make ()
 let () = Foo.bar foo
@@ -3637,12 +3656,18 @@ information.
 external replace : substr:string -> newSubstr:string -> string = "replace"
 [@@mel.send.pipe: string]
 
+let str = "goodbye world"
+let substr = "goodbye"
+let newSubstr = "hello"
 let newStr = replace ~substr ~newSubstr str
 ```
 ```reasonml
 [@mel.send.pipe: string]
 external replace: (~substr: string, ~newSubstr: string) => string = "replace";
 
+let str = "goodbye world";
+let substr = "goodbye";
+let newSubstr = "hello";
 let newStr = replace(~substr, ~newSubstr, str);
 ```
 
@@ -3666,6 +3691,7 @@ information.
 
 #### `arr.sort(compareFunction)`: mutating instance method
 
+<!--#prelude#let arr = [|2|]-->
 ```ocaml
 external sort : 'a array -> (('a -> 'a -> int)[@mel.uncurry]) -> 'a array
   = "sort"
@@ -3691,16 +3717,26 @@ defined interface of JavaScript's comparator function.
 #### `foo.bar === undefined`: check for undefined
 
 ```ocaml
-external bar : t -> int option = "bar" [@@mel.get]
+module Foo = struct
+  type t
+  external bar : t -> int option = "bar" [@@mel.get]
+end
 
-let _result = match Foo.bar foo with Some value -> 1 | None -> 0
+external foo : Foo.t = "foo"
+
+let _result = match Foo.bar foo with Some _ -> 1 | None -> 0
 ```
 ```reasonml
-[@mel.get] external bar: t => option(int) = "bar";
+module Foo = {
+  type t;
+  [@mel.get] external bar: t => option(int) = "bar";
+};
+
+external foo: Foo.t = "foo";
 
 let _result =
   switch (Foo.bar(foo)) {
-  | Some(value) => 1
+  | Some(_) => 1
   | None => 0
   };
 ```
@@ -3715,16 +3751,26 @@ information.
 #### `foo.bar == null`: check for null or undefined
 
 ```ocaml
-external bar : t -> t option = "" [@@mel.get] [@@mel.return nullable]
+module Foo = struct
+  type t
+  external bar : t -> t option = "bar" [@@mel.get] [@@mel.return nullable]
+end
 
-let _result = match Foo.bar foo with Some value -> 1 | None -> 0
+external foo : Foo.t = "foo"
+
+let _result = match Foo.bar foo with Some _ -> 1 | None -> 0
 ```
 ```reasonml
-[@mel.get] [@mel.return nullable] external bar: t => option(t);
+module Foo = {
+  type t;
+  [@mel.get] [@mel.return nullable] external bar: t => option(t) = "bar";
+};
+
+external foo: Foo.t = "foo";
 
 let _result =
   switch (Foo.bar(foo)) {
-  | Some(value) => 1
+  | Some(_) => 1
   | None => 0
   };
 ```
