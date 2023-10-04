@@ -511,9 +511,8 @@ function App() {
 
   React.useEffect(() => {
     let hoverProvider = undefined;
-    // or make sure that it exists by other ways
     if (monaco) {
-      hoverProvider = monaco.languages.registerHoverProvider(languageMap.Reason, {
+      hoverProvider = monaco.languages.registerHoverProvider(language, {
         provideHover: function (model, position) {
           const { lineNumber, column } = position;
           if (!compilation?.typeHints) {
@@ -537,9 +536,25 @@ function App() {
                 result.end.line,
                 result.end.col + 1
               );
+              let hint = result.hint;
+              if (language == languageMap.Reason) {
+                const prefix = "type t = ";
+                try {
+                  hint =
+                    ocaml
+                    /* add prefix so it is valid code */
+                    .printRE(ocaml.parseML(prefix + hint))
+                    /* remove prefix */
+                    .slice(prefix.length)
+                    /* remove last `;` */
+                    .slice(0, -2);
+                } catch (e) {
+                  console.error("Error formatting type hint: ", hint);
+                }
+              }
               return {
                 range,
-                contents: [{ value: `\`\`\`ocaml\n${result.hint}\n\`\`\`` }],
+                contents: [{ value: `\`\`\`${language}\n${hint}\n\`\`\`` }],
               };  
             } else {
               return null;
