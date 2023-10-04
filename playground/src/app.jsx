@@ -420,15 +420,36 @@ const compile = (language, code) => {
     }
     if (problems) {
       return {
+        typeHints: [],
         problems: problems,
       }
     } else {
       return {
+        typeHints: compilation.type_hints.sort((a, b) => {
+          let aLineGap = a.end.line - a.start.line;
+          let bLineGap = b.end.line - b.start.line;
+          if (aLineGap < bLineGap) {
+            return -1;
+          } else if (aLineGap > bLineGap) {
+            return 1;
+          } else {
+            let aColGap = a.end.col - a.start.col;
+            let bColGap = b.end.col - b.start.col;
+            if (aColGap < bColGap) {
+              return -1;
+            } else if (aColGap > bColGap) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+        }),
         javascriptCode: compilation.js_code,
       }
     }
   } else {
     return {
+      typeHints: [],
       problems: [
         {
           js_error_msg: "No result was returned from compilation",
@@ -487,6 +508,52 @@ function App() {
       monaco.languages.setMonarchTokensProvider(languageMap.Reason, ReasonSyntax);
     }
   }, [monaco]);
+
+  React.useEffect(() => {
+    let hoverProvider = undefined;
+    // or make sure that it exists by other ways
+    if (monaco) {
+      hoverProvider = monaco.languages.registerHoverProvider(languageMap.Reason, {
+        provideHover: function (model, position) {
+          const { lineNumber, column } = position;
+          if (!compilation?.typeHints) {
+            return null;
+          } else {
+            function hintInLoc(item) {
+              var end = item.end;
+              var start = item.start;
+              const result =
+                lineNumber >= start.line &&
+                lineNumber <= end.line &&
+                column >= start.col + 1 &&
+                column <= end.col + 1;
+              return result;
+            };
+            const result = compilation?.typeHints.find(hintInLoc);
+            if (result) {
+              const range = new monaco.Range(
+                result.start.line,
+                result.start.col + 1,
+                result.end.line,
+                result.end.col + 1
+              );
+              return {
+                range,
+                contents: [{ value: `\`\`\`ocaml\n${result.hint}\n\`\`\`` }],
+              };  
+            } else {
+              return null;
+            }
+          }
+        },
+      });
+    }
+    return () => {
+      if (hoverProvider) {
+        hoverProvider.dispose();
+      }
+    }
+  }, [monaco, compilation?.typeHints]);
 
   React.useEffect(() => {
     // or make sure that it exists by other ways
