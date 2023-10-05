@@ -538,16 +538,23 @@ function App() {
               );
               let hint = result.hint;
               if (language == languageMap.Reason) {
-                const prefix = "type t = ";
                 try {
-                  hint =
-                    ocaml
-                    /* add prefix so it is valid code */
-                    .printRE(ocaml.parseML(prefix + hint))
-                    /* remove prefix */
-                    .slice(prefix.length)
-                    /* remove last `;` */
-                    .slice(0, -2);
+                  if (hint.substring(0,5) === "type ") {
+                    // No need to mess with the hint as it should be valid AST
+                    hint = ocaml.printRE(ocaml.parseML(hint));
+                  } else {
+                    const prefix = "type t = ";
+                    // Must be something else than a type
+                    hint =
+                      ocaml
+                      /* add prefix so it is valid code */
+                      .printRE(ocaml.parseML(prefix + hint))
+                      /* remove prefix */
+                      .slice(prefix.length)
+                      /* remove last `;` */
+                      .slice(0, -2);
+                  }
+                  
                 } catch (e) {
                   console.error("Error formatting type hint: ", hint);
                 }
