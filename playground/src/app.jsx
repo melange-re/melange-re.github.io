@@ -464,6 +464,21 @@ const compile = (language, code) => {
   }
 };
 
+function updateMarkers(monaco, editorRef, compilation) {
+  if (monaco && editorRef.current) {
+    const owner = "playground";
+    if (compilation?.problems) {
+      monaco.editor.setModelMarkers(
+        editorRef.current.getModel(),
+        owner,
+        compilation.problems.map(toMonaco)
+      );
+    } else {
+      monaco.editor.removeAllMarkers(owner);
+    }
+  }
+}
+
 function App() {
   const defaultState = {
     language: languageMap.OCaml,
@@ -488,8 +503,9 @@ function App() {
 
   const editorRef = React.useRef(null);
 
-  function handleEditorDidMount(editor, _monaco) {
+  function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
+    updateMarkers(monaco, editorRef, compilation);
   }
 
   function clearLogs() {
@@ -578,19 +594,7 @@ function App() {
   }, [monaco, compilation?.typeHints]);
 
   React.useEffect(() => {
-    // or make sure that it exists by other ways
-    if (monaco && editorRef.current) {
-      const owner = "playground";
-      if (compilation?.problems) {
-        monaco.editor.setModelMarkers(
-          editorRef.current.getModel(),
-          owner,
-          compilation.problems.map(toMonaco)
-        );
-      } else {
-        monaco.editor.removeAllMarkers(owner);
-      }
-    }
+    updateMarkers(monaco, editorRef, compilation)
   }, [monaco, compilation?.problems]);
 
   React.useEffect(() => {
