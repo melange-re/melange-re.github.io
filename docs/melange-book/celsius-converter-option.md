@@ -1,4 +1,4 @@
-# Celsius Converter, pt 2
+# Celsius Converter using Option
 
 After all the changes we made in the last chapter, your `CelsiusConverter.re`
 might look something like this:
@@ -13,7 +13,13 @@ let make = () => {
   let (celsius, setCelsius) = React.useState(() => "");
 
   <div>
-    <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
+    <input
+      value=celsius
+      onChange={evt => {
+        let newCelsius = getValueFromEvent(evt);
+        setCelsius(_ => newCelsius);
+      }}
+    />
     {React.string({js|°C = |js})}
     {(
        celsius == ""
@@ -68,7 +74,7 @@ You would get a similar error if you left off the `| Some(_)` branch. Having an
 `option` value be the input for a switch expression means that you can't forget
 to handle the failure case, much less the success case. There's another
 advantage: The `| Some(fahrenheit)` branch gives you access to the `float`
-that was successfully converted from the `string``, and *only this branch* has
+that was successfully converted from the `string`, and *only this branch* has
 access to that value. So you can be reasonably sure that the success case is
 handled here and not somewhere else. You are starting to experience the power of
 [pattern matching](https://reasonml.github.io/docs/en/pattern-matching) in OCaml.
@@ -99,7 +105,7 @@ type signature is:
 
 Here `'a` and `'b` mean "any type", because `option` can wrap around any type,
 e.g. `option(string)`, `option(int)`, etc. The implementation of `Option.map` is
-quite simple, consisting of a single switch expression:
+quite minimal, consisting of a single switch expression:
 
 ```reasonml
 let map = (f, o) =>
@@ -110,7 +116,7 @@ let map = (f, o) =>
 ```
 
 As you might expect, there are many more helper functions related to `option` in
-the [Option module](https://melange.re/v1.0.0/api/re/melange/Stdlib/Option/).
+the [Option module](https://melange.re/v2.0.0/api/re/melange/Stdlib/Option/).
 
 At this point, your switch expression might look like this:
 
@@ -152,25 +158,26 @@ switch (celsius |> float_of_string_opt |> Option.map(convert)) {
 }
 ```
 
-Then [when guard](https://reasonml.github.io/docs/en/pattern-matching#when)
+The [when guard](https://reasonml.github.io/docs/en/pattern-matching#when)
 allows you to add extra conditions to a switch expression branch, keeping
-nesting of conditions to a minimum and making your code more readable.
+nesting of conditionals to a minimum and making your code more readable.
 
 Hooray! Our Celsius converter is finally complete. Later, we'll see how to
 create a component that can convert back and forth between Celsius and
-Fahrenheit. But first, we'll show you how to conveniently style your ReasonReact
-components.
+Fahrenheit. But first, we'll explore Melange's [build system dune](https://melange.re/v2.0.0/build-system/).
 
 ## Exercises
 
-1. If you enter a space in the input, it'll unintuitively produce a Fahrenheit
-   value of 32.00 degrees (because `float_of_string_opt(" ") == Some(0.)`).
-   Handle this case correctly by showing "? °F" instead. Hint: Use the
-   `String.trim` function.
-1. Add another branch with a `when` guard that renders "Unreasonably cold" if
-   the temperature is less than -128.6°F.
-1. Use `Js.Float.fromString` instead of `float_of_string_opt` to parse a string
-   to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
+<b>1.</b> If you enter a space in the input, it'll unintuitively produce a
+Fahrenheit value of 32.00 degrees (because `float_of_string_opt(" ") ==
+Some(0.)`). Handle this case correctly by showing "? °F" instead. Hint: Use the
+`String.trim` function.
+
+<b>2.</b> Add another branch with a `when` guard that renders "Unreasonably
+cold" if the temperature is less than -128.6°F.
+
+<b>3.</b> Use `Js.Float.fromString` instead of `float_of_string_opt` to parse a
+string to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
 
 ## Overview
 
@@ -183,49 +190,64 @@ components.
 
 ## Solutions
 
-1. To prevent a space from producing 32.00 degrees Fahrenheit, just add a call
-   to `String.trim` in your render logic:
-   ```reasonml
-   {(
-      String.trim(celsius) == ""
-        ? {js|? °F|js}
-        : (
-          switch (celsius |> float_of_string_opt |> Option.map(convert)) {
-          | None => "error"
-          | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-          | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
-          }
-        )
+<b>1.</b> To prevent a space from producing 32.00 degrees Fahrenheit, just add a
+call to `String.trim` in your render logic:
+
+```reasonml
+{(
+  String.trim(celsius) == ""
+    ? {js|? °F|js}
+    : (
+      switch (celsius |> float_of_string_opt |> Option.map(convert)) {
+      | None => "error"
+      | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
+      | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+      }
     )
-    |> React.string}
-   ```
-1. To render "Unreasonably cold" when the temperature is less than -128.6°F, you
-   can add another `Some(fahrenheit)` branch:
-    ```reasonml
-    switch (celsius |> float_of_string_opt |> Option.map(convert)) {
-    | None => "error"
-    | Some(fahrenheit) when fahrenheit < (-128.6) => "Unreasonably cold"
-    | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-    | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
-    }
-    ```
-1. To use `Js.Float.fromString` instead of `float_of_string_opt`, you can define
-   a new helper function that takes a `string` and returns `option`:
-   ```reasonml
-    let floatFromString = text =>
-      switch (Js.Float.fromString(text)) {
-      | value when Js.Float.isNaN(value) => None
-      | value => Some(value)
-      };
-   ```
-   Then substitute `float_of_string_opt` for `floatFromString` in your switch
-   expression. You might be tempted to match directly on `Js.Float._NaN`:
-   ```reasonml
-    let floatFromString = text =>
-      switch (Js.Float.fromString(text)) {
-      | Js.Float._NaN => None
-      | value => Some(value)
-      };
-   ```
-   But this produces a syntax error because you can't do equality checks of
-   variables in OCaml pattern matching. So the `when` guard is necessary here.
+)
+|> React.string}
+```
+
+<b>2.</b> To render "Unreasonably cold" when the temperature is less than
+-128.6°F, you can add another `Some(fahrenheit)` branch:
+
+```reasonml
+switch (celsius |> float_of_string_opt |> Option.map(convert)) {
+| None => "error"
+| Some(fahrenheit) when fahrenheit < (-128.6) => "Unreasonably cold"
+| Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
+| Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+}
+```
+
+<b>3.</b> To use `Js.Float.fromString` instead of `float_of_string_opt`, you can
+define a new helper function that takes a `string` and returns `option`:
+
+```reasonml
+let floatFromString = text =>
+  switch (Js.Float.fromString(text)) {
+  | value when Js.Float.isNaN(value) => None
+  | value => Some(value)
+  };
+```
+
+Then substitute `float_of_string_opt` for `floatFromString` in your switch
+expression. You might be tempted to match directly on `Js.Float._NaN`:
+
+```reasonml
+let floatFromString = text =>
+  switch (Js.Float.fromString(text)) {
+  | Js.Float._NaN => None
+  | value => Some(value)
+  };
+```
+
+But this produces a syntax error because you can't do equality checks of
+variables in OCaml pattern matching. So the `when` guard is necessary here.
+
+-----
+
+[Source code for this
+chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/celsius-converter-option/)
+can be found in the [Melange for React Developers
+repo](https://github.com/melange-re/melange-for-react-devs).

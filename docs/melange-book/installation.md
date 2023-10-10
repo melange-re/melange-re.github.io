@@ -28,9 +28,9 @@ completes, run `opam --version` to verify that it succeeded.
 
 Let's make sure that everything works by downloading and running our project
 template
-[melange-tutorial](https://github.com/melange-re/melange-tutorial).
+[melange-for-react-devs](https://github.com/melange-re/melange-for-react-devs).
 
-    git clone https://github.com/melange-re/melange-tutorial
+    git clone https://github.com/melange-re/melange-for-react-devs
     cd melange-tutorial
     make init
     make build

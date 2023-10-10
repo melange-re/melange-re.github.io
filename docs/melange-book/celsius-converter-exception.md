@@ -1,4 +1,4 @@
-# Celsius Converter, pt 1
+# Celsius Converter
 
 This time, we'll create a widget that takes a temperature value in Celsius and
 converts it to Fahrenheit. Create a new file called `CelsiusConverter.re`:
@@ -48,7 +48,7 @@ must return a `string`. Using `getValueFromEvent` ensures that the `value` field
 can't be used as anything other than a string.
 
 Another thing to note about `onChange` is that after the `evt` argument, the
-body of the callback function is surrounded by braces ({}). OCaml functions are
+body of the callback function is surrounded by braces (`{}`). OCaml functions are
 like JavaScript's arrow functions--if they contain more than one line, they need
 to be enclosed by braces.
 
@@ -113,8 +113,8 @@ expression in a ternary expression:
   |> React.string}
 ```
 
-The ternary expression (`condition ? a : b`) works the same as in JavaScript,
-but in OCaml, it's just a shorthand for an if-else expression (`if (condition) {
+The ternary expression (`condition ? a : b`) works the same as in JavaScript.
+But in OCaml, it's also shorthand for an if-else expression (`if (condition) {
 a; } else { b; }`). So we could rewrite it as this:
 
 ```reasonml
@@ -141,7 +141,7 @@ haven't quite gotten used to OCaml syntax yet.
 If we enter a value with a lot of decimals in it, e.g. `21.1223456`, we'll
 get a Fahrenheit value with a lot of decimals in it as well. We can limit the
 number of decimals in the converted value using
-[Js.Float.toFixedWithPrecision](https://melange.re/v1.0.0/api/re/melange/Js_float/index.html#val-toFixedWithPrecision):
+[Js.Float.toFixedWithPrecision](https://melange.re/v2.0.0/api/re/melange/Js/Float/index.html#val-toFixedWithPrecision):
 
 ```reasonml
 switch (celsius |> float_of_string |> convert) {
@@ -192,25 +192,37 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 
 ## Exercises
 
-1. Try changing `{js|°C = |js}` to `"°C = "`. What happens?
-1. Rewrite the `onChange` callback so that it doesn't need any braces enclosing
-   its body.
-1. Rewrite the ternary expression using `switch`.
-1. It's possible to use partial application with most functions in OCaml, even
-   operators. Take a look at the following program:
-   ```reasonml
-   let addFive = (+)(5);
-   Js.log(addFive(2));
-   Js.log(addFive(7));
-   Js.log(addFive(10));
-   ```
-   What do you think it outputs? Run it in [Melange
-   Playground](https://melange.re/v1.0.0/playground) to confirm your hypothesis.
-1. Use the pipe last operator (`|>`) and partial application to write a function that takes an integer
-   argument `x`, subtracts `x` from 10, and converts that result to binary.
-   Hint: Use the
-   [Js.Int.toStringWithRadix](https://melange.re/v1.0.0/api/re/melange/Js_int/index.html#val-toStringWithRadix)
-   function.
+<b>1.</b> Try changing `{js|°C = |js}` to `"°C = "`. What happens?
+
+<b>2.</b> It's possible to rewrite the `onChange` callback so that it contains a
+single expression:
+
+```reasonml
+<input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
+```
+
+This compiles, but it now contains a hidden bug. Do you know what silent error
+might occur?
+
+<b>3.</b> It's possible to use partial application with most functions in OCaml,
+even operators. Take a look at the following program:
+
+```reasonml
+let addFive = (+)(5);
+Js.log(addFive(2));
+Js.log(addFive(7));
+Js.log(addFive(10));
+```
+
+What do you think it outputs? Run it in [Melange
+Playground](https://melange.re/v2.0.0/playground) to confirm your hypothesis.
+
+<b>4.</b> Use the pipe last operator (`|>`) and partial application to write a
+function that takes an integer
+argument `x`, subtracts `x` from 10, and converts that result to binary. Hint:
+Use the
+[Js.Int.toStringWithRadix](https://melange.re/v2.0.0/api/re/melange/Js/Int/#val-toStringWithRadix)
+function.
 
 ## Overview
 
@@ -227,12 +239,35 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 
 ## Solutions
 
-1. Changing it to `"°C = "` will result in a bit of gibberish being rendered:
-   "Â°C". We can't rely on OCaml strings to [deal with Unicode correctly](../communicate-with-javascript.md#strings), so any
-   string that doesn't contain only ASCII text must be delimited using `{js||js}`.
-1. Rewriting `onChange` handler without braces around its body should look something like this:
-   ```reasonml
-   <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
-   ```
-1. [Define an addFive function using partial application](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
-1. [Define a function that subtracts from 10 and converts to binary](https://melange.re/v1.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)
+<b>1.</b> Changing it to `"°C = "` will result in a bit of gibberish being rendered:
+"Â°C". We can't rely on OCaml strings to [deal with Unicode
+correctly](../communicate-with-javascript.md#strings), so any string that
+doesn't contain only ASCII text must be delimited using `{js||js}`.
+
+<b>2.</b> Rewriting `onChange` the handler to use a single expression creates a
+potential problem with stale values coming from the event object:
+
+```reasonml
+<input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
+```
+
+Inside of `onChange`, we can expect the function `getValueFromEvent(evt)` to
+return the latest value of the `input`. However, we are now calling
+`getValueFromEvent(evt)` from a different function--the callback we pass to
+`setCelsius`! By the time that `setCelsius`'s callback is invoked, the `evt`
+object might have been recycled and no longer have the same value as when
+`onChange` was initially invoked. For more details about this, see [Using Event
+Values with
+useState](https://reasonml.github.io/reason-react/docs/en/usestate-event-value)
+in the [ReasonReact](https://reasonml.github.io/reason-react/) docs.
+
+<b>3.</b> [Define an addFive function using partial application](https://melange.re/v2.0.0/playground/?language=Reason&code=bGV0IGFkZEZpdmUgPSAoKykoNSk7CkpzLmxvZyhhZGRGaXZlKDIpKTsKSnMubG9nKGFkZEZpdmUoNykpOwpKcy5sb2coYWRkRml2ZSgxMCkpOw%3D%3D&live=off)
+
+<b>4.</b> [Define a function that subtracts from 10 and converts to binary](https://melange.re/v2.0.0/playground/?language=Reason&code=bGV0IGNvb2xGdW5jdGlvbiA9IHggPT4geCB8PiAoKC0pKDEwKSkgfD4gSnMuSW50LnRvU3RyaW5nV2l0aFJhZGl4KH5yYWRpeD0yKTsKSnMubG9nKGNvb2xGdW5jdGlvbigxKSk7CkpzLmxvZyhjb29sRnVuY3Rpb24oNSkpOw%3D%3D&live=off)
+
+-----
+
+[Source code for this
+chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/celsius-converter-exception/)
+can be found in the [Melange for React Developers
+repo](https://github.com/melange-re/melange-for-react-devs).

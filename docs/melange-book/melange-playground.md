@@ -50,8 +50,8 @@ separate arithmetic operators for floats. What will compile is this:
 Js.log(42.0 +. 16.0);
 ```
 
-Underneath the covers, `foo` and `bar` are both instances of JavaScript's `Number
-type`:
+Underneath the covers, `foo` and `bar` are both instances of JavaScript's
+`Number` type:
 
 ```reasonml
 Js.log(Js.typeof(foo)); // prints "number"
@@ -64,18 +64,22 @@ for a complete rundown of how OCaml types get translated to JavaScript types.
 
 ## Exercises
 
-1. Convert the Counter component we created in the previous chapter to use float
-   instead of integer. Make the `-` button decrement by `0.5` and the `+` button
-   increment by `1.5`.
-1. Add an int64 value to your program:
-   ```reasonml
-   let baz = 42_000_000_000L; // int64
-   Js.log(baz);
-   ```
-   Note the use of underscores to make the large number more readable. What is
-   the JavaScript representation of int64?
-1. How do you add two int64 values? Hint: Take a look at the standard library's
-   [Int64 module](https://v2.ocaml.org/api/Int64.html).
+<b>1.</b> Convert the Counter component we created in the previous chapter to
+use float instead of integer. Make the `-` button decrement by `0.5` and the `+`
+button increment by `1.5`.
+
+<b>2.</b> Add an int64 value to your program:
+
+```reasonml
+let baz = 42_000_000_000L; // int64
+Js.log(baz);
+```
+
+Note the use of underscores to make the large number more readable. What is the
+JavaScript representation of int64?
+
+<b>3.</b> How do you add two int64 values? Hint: Take a look at the standard
+library's [Int64 module](https://v2.ocaml.org/api/Int64.html).
 
 ## Overview
 
@@ -86,21 +90,24 @@ for a complete rundown of how OCaml types get translated to JavaScript types.
 
 ## Solutions
 
-1. A Counter component that uses float instead of integer would look something
-   like this:
-   ```reasonml
-   [@react.component]
-   let make = () => {
-     let (counter, setCounter) = React.useState(() => 0.0);
+<b>1.</b> A Counter component that uses float instead of integer would look
+something like this:
 
-     <div>
-       <button onClick={_evt => setCounter(v => v -. 0.5)}> {React.string("-")} </button>
-       <span> {counter |> Float.to_string |> React.string} </span>
-       <button onClick={_evt => setCounter(v => v +. 1.5)}> {React.string("+")} </button>
-      </div>;
-   };
-   ```
-1. Int64 values cannot be represented by JavaScript's `Number`` type, which
-   doesn't have enough precision. They're instead represented by an array of two
-   numbers `[high, low]`, where `high` is signed, `low` is unsigned.
-1. You can add two int64 values using `Int64.add`, e.g. `Int64.add(42L, 16L)`.
+```reasonml
+[@react.component]
+let make = () => {
+   let (counter, setCounter) = React.useState(() => 0.0);
+
+   <div>
+      <button onClick={_evt => setCounter(v => v -. 0.5)}> {React.string("-")} </button>
+      <span> {counter |> Float.to_string |> React.string} </span>
+      <button onClick={_evt => setCounter(v => v +. 1.5)}> {React.string("+")} </button>
+   </div>;
+};
+```
+
+<b>2.</b> Int64 values cannot be represented by JavaScript's `Number` type,
+which doesn't have enough precision. They're instead represented by an array of
+two numbers `[high, low]`, where `high` is signed, `low` is unsigned.
+
+<b>3.</b> You can add two int64 values using `Int64.add`, e.g. `Int64.add(42L, 16L)`.
