@@ -4,8 +4,8 @@ Melange can consume packages from both the [npm
 registry](https://www.npmjs.com/) and the [opam
 repository](https://opam.ocaml.org/packages/).
 
-- For Melange libraries and bindings (compile-time dependencies), use one of
-  the package management alternatives described in [Getting
+- For Melange libraries and bindings (compile-time dependencies), use one of the
+  package management alternatives described in [Getting
   started](getting-started.md). The rest of this guide assumes you're using
   opam.
 - For JavaScript packages required by Melange bindings (runtime dependencies),
@@ -267,11 +267,49 @@ The advantage of this approach —as opposed to vendoring the JavaScript package
 inside the bindings— is that it gives users of the bindings complete flexibility
 over the way these JavaScript packages are downloaded and bundled.
 
+Melange provides a way to define dependencies from opam packages to npm packages
+inside the `opam` files through the
+[check-npm-deps](https://github.com/jchavarri/opam-check-npm-deps) opam plugin.
+
+With this plugin, library authors can include constraints in the npm format
+inside the opam `depexts` field, for example, the `reason-react` opam file can
+include a section like this:
+
+```
+depexts: [
+  ["react" "react-dom"] {npm-version = "^17.0.0 || ^18.0.0"}
+]
+```
+
+This indicates that the version of `reason-react` is compatible with ReactJS
+versions 17 and 18.
+
+Users of Melange bindings can check that the constraints defined in the opam
+packages installed in their switch are fulfilled by the packages installed in
+`node_modules` by using the `check-npm-deps` plugin. For this, one just needs to
+install the plugin:
+
+```bash
+opam install opam-check-npm-deps
+```
+
+And then call it from the root folder of the project, where the opam switch and
+the `node_modules` folder exist:
+
+```bash
+opam-check-npm-deps
+```
+
 ## Finding and using Melange compatible packages
 
 ### opam packages
 
-Melange packages are usually available on [opam](https://opam.ocaml.org). Package search is available in the opam CLI via `opam search <package-name>`, e.g. `opam search reason-react`. You can run `opam install <package-name>` to download, build and install opam packages in your switch. Remember that opam won't automatically add the dependency to `<your-project>.opam` file, so it must be added manually:
+Melange packages are usually available on [opam](https://opam.ocaml.org).
+Package search is available in the opam CLI via `opam search <package-name>`,
+e.g. `opam search reason-react`. You can run `opam install <package-name>` to
+download, build and install opam packages in your switch. Remember that opam
+won't automatically add the dependency to `<your-project>.opam` file, so it must
+be added manually:
 
 ```text
 ...
@@ -281,7 +319,9 @@ depends: [
 ]
 ```
 
-To use a library from the installed package, add the library name to the `dune` file under the `libraries` field. For example, if our project structure looks like:
+To use a library from the installed package, add the library name to the `dune`
+file under the `libraries` field. For example, if our project structure looks
+like:
 
 <pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
 ├── _opam
@@ -318,15 +358,23 @@ then `reason-react` should be added to the `dune` file under the `src` folder:
  (alias react)
  (libraries lib reason-react)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 ```
 
-Some libraries will only work after being processed by an accompanying PPX, e.g., `reason-react` requires preprocessing with `reactjs-jsx-ppx`. These preprocessors may be installed together with the library as part of the same package, or they might be part of a different package, in which case they need to be installed separately.
+Some libraries will only work after being processed by an accompanying PPX,
+e.g., `reason-react` requires preprocessing with `reason-react-ppx`. These
+preprocessors may be installed together with the library as part of the same
+package, or they might be part of a different package, in which case they need
+to be installed separately.
 
 ### Unpublished opam packages
 
-opam packages that have not yet been published may be installed with the `opam pin` command. For example, `opam pin add melange-fetch.dev git+https://github.com/melange-community/melange-fetch` will obtain `melange-fetch` from its Git repository and install it on your switch. Your `<your-project>.opam` file should then be updated in two places:
+opam packages that have not yet been published may be installed with the `opam
+pin` command. For example, `opam pin add melange-fetch.dev
+git+https://github.com/melange-community/melange-fetch` will obtain
+`melange-fetch` from its Git repository and install it on your switch. Your
+`<your-project>.opam` file should then be updated in two places:
 
 ```text
 ...
@@ -339,7 +387,8 @@ pin-depends: [
 ]
 ```
 
-Once installed, the libraries included in the package can be added to the `dune` file:
+Once installed, the libraries included in the package can be added to the `dune`
+file:
 
 ```text
 (melange.emit
@@ -347,15 +396,20 @@ Once installed, the libraries included in the package can be added to the `dune`
  (alias react)
  (libraries lib reason-react melange-fetch)
  (preprocess
-  (pps reactjs-jsx-ppx))
+  (pps reason-react-ppx))
  (module_systems es6))
 ```
 
 ### npm packages
 
-A number of Melange compatible packages can be found on npm. Many older, but still useful, compatible BuckleScript libraries can be found on npm, e.g., `bs-json`. Run `npm install @glennsl/bs-json` to add the dependency locally and record it in the `package.json` file at the root of our project.
+A number of Melange compatible packages can be found on npm. Many older, but
+still useful, compatible BuckleScript libraries can be found on npm, e.g.,
+`bs-json`. Run `npm install @glennsl/bs-json` to add the dependency locally and
+record it in the `package.json` file at the root of our project.
 
-Dune needs to be made aware of the newly installed package. The [`subdir`](https://dune.readthedocs.io/en/stable/dune-files.html#subdir) stanza can be handy in these cases:
+Dune needs to be made aware of the newly installed package. The
+[`subdir`](https://dune.readthedocs.io/en/stable/dune-files.html#subdir) stanza
+can be handy in these cases:
 
 ```text
 (subdir
@@ -369,9 +423,16 @@ Dune needs to be made aware of the newly installed package. The [`subdir`](https
    (modes melange))))
 ```
 
-If the `dune` file contains the line `(dirs :standard \ node_modules)`, it should be removed, so that Dune can process the new Melange sources under the `node_modules` folder.
+If the `dune` file contains the line `(dirs :standard \ node_modules)`, it
+should be removed, so that Dune can process the new Melange sources under the
+`node_modules` folder.
 
-In our project structure above we have the file <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> under the folder `src/lib`. If we want use the `bs-json` library from within the <code class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code> file then we need to add the library name to the `dune` file in the same folder, i.e., `src/lib/dune`:
+In our project structure above we have the file <code
+class="text-ocaml">data.ml</code><code class="text-reasonml">data.re</code>
+under the folder `src/lib`. If we want use the `bs-json` library from within the
+<code class="text-ocaml">data.ml</code><code
+class="text-reasonml">data.re</code> file then we need to add the library name
+to the `dune` file in the same folder, i.e., `src/lib/dune`:
 
 ```text
 (library
@@ -380,6 +441,14 @@ In our project structure above we have the file <code class="text-ocaml">data.ml
  (modes melange))
 ```
 
-Note that the library `bs-json` was defined as `bs_json` in the `subdir` stanza and is referenced as `bs_json` in the `dune` file. This is necessary as Dune wrapped libraries [will only expose a single top-level module](https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated) named after the library, so the library name has to be a valid module name. This is why library names with characters like `-` are not valid.
+Note that the library `bs-json` was defined as `bs_json` in the `subdir` stanza
+and is referenced as `bs_json` in the `dune` file. This is necessary as Dune
+wrapped libraries [will only expose a single top-level
+module](https://dune.readthedocs.io/en/stable/explanation/ocaml-ecosystem.html#dune-is-opinionated)
+named after the library, so the library name has to be a valid module name. This
+is why library names with characters like `-` are not valid.
 
-We can add new `subdir` stanzas for every package we'd like to consume this way. See [this dune file](https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune) for a larger example that uses multiple npm packages.
+We can add new `subdir` stanzas for every package we'd like to consume this way.
+See [this dune
+file](https://github.com/psb/reason-react-hn-melange/blob/9983b26aebd78b445d5f44d66bb6781eccedc787/dune)
+for a larger example that uses multiple npm packages.

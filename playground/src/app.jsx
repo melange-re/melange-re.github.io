@@ -137,15 +137,15 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"unreleased"}</span>
+                <span className="Text-xs Number">{"2.0.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
-                <span className="Text-xs Number">{"v5.1.0~rc2"}</span>
+                <span className="Text-xs Number">{"5.1.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"Reason"}</span>
-                <span className="Text-xs Number">{"unreleased"}</span>
+                <span className="Text-xs Number">{"3.10.0"}</span>
               </span>
             </div>
           </div>) : null}
@@ -420,15 +420,36 @@ const compile = (language, code) => {
     }
     if (problems) {
       return {
+        typeHints: [],
         problems: problems,
       }
     } else {
       return {
+        typeHints: compilation.type_hints.sort((a, b) => {
+          let aLineGap = a.end.line - a.start.line;
+          let bLineGap = b.end.line - b.start.line;
+          if (aLineGap < bLineGap) {
+            return -1;
+          } else if (aLineGap > bLineGap) {
+            return 1;
+          } else {
+            let aColGap = a.end.col - a.start.col;
+            let bColGap = b.end.col - b.start.col;
+            if (aColGap < bColGap) {
+              return -1;
+            } else if (aColGap > bColGap) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+        }),
         javascriptCode: compilation.js_code,
       }
     }
   } else {
     return {
+      typeHints: [],
       problems: [
         {
           js_error_msg: "No result was returned from compilation",
@@ -442,6 +463,21 @@ const compile = (language, code) => {
     }
   }
 };
+
+function updateMarkers(monaco, editorRef, compilation) {
+  if (monaco && editorRef.current) {
+    const owner = "playground";
+    if (compilation?.problems) {
+      monaco.editor.setModelMarkers(
+        editorRef.current.getModel(),
+        owner,
+        compilation.problems.map(toMonaco)
+      );
+    } else {
+      monaco.editor.removeAllMarkers(owner);
+    }
+  }
+}
 
 function App() {
   const defaultState = {
@@ -467,8 +503,9 @@ function App() {
 
   const editorRef = React.useRef(null);
 
-  function handleEditorDidMount(editor, _monaco) {
+  function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
+    updateMarkers(monaco, editorRef, compilation);
   }
 
   function clearLogs() {
@@ -489,19 +526,75 @@ function App() {
   }, [monaco]);
 
   React.useEffect(() => {
-    // or make sure that it exists by other ways
-    if (monaco && editorRef.current) {
-      const owner = "playground";
-      if (compilation?.problems) {
-        monaco.editor.setModelMarkers(
-          editorRef.current.getModel(),
-          owner,
-          compilation.problems.map(toMonaco)
-        );
-      } else {
-        monaco.editor.removeAllMarkers(owner);
+    let hoverProvider = undefined;
+    if (monaco) {
+      hoverProvider = monaco.languages.registerHoverProvider(language, {
+        provideHover: function (model, position) {
+          const { lineNumber, column } = position;
+          if (!compilation?.typeHints) {
+            return null;
+          } else {
+            function hintInLoc(item) {
+              var end = item.end;
+              var start = item.start;
+              const result =
+                lineNumber >= start.line &&
+                lineNumber <= end.line &&
+                column >= start.col + 1 &&
+                column <= end.col + 1;
+              return result;
+            };
+            const result = compilation?.typeHints.find(hintInLoc);
+            if (result) {
+              const range = new monaco.Range(
+                result.start.line,
+                result.start.col + 1,
+                result.end.line,
+                result.end.col + 1
+              );
+              let hint = result.hint;
+              if (language == languageMap.Reason) {
+                try {
+                  if (hint.substring(0,5) === "type ") {
+                    // No need to mess with the hint as it should be valid AST
+                    hint = ocaml.printRE(ocaml.parseML(hint));
+                  } else {
+                    const prefix = "type t = ";
+                    // Must be something else than a type
+                    hint =
+                      ocaml
+                      /* add prefix so it is valid code */
+                      .printRE(ocaml.parseML(prefix + hint))
+                      /* remove prefix */
+                      .slice(prefix.length)
+                      /* remove last `;` */
+                      .slice(0, -2);
+                  }
+                  
+                } catch (e) {
+                  console.error("Error formatting type hint: ", hint);
+                }
+              }
+              return {
+                range,
+                contents: [{ value: `\`\`\`${language}\n${hint}\n\`\`\`` }],
+              };  
+            } else {
+              return null;
+            }
+          }
+        },
+      });
+    }
+    return () => {
+      if (hoverProvider) {
+        hoverProvider.dispose();
       }
     }
+  }, [monaco, compilation?.typeHints]);
+
+  React.useEffect(() => {
+    updateMarkers(monaco, editorRef, compilation)
   }, [monaco, compilation?.problems]);
 
   React.useEffect(() => {
