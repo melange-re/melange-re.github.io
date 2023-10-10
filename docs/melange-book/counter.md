@@ -32,6 +32,12 @@ to know that all components in ReasonReact are modules.
 
 A little bit further down, we make use of the `App` component:
 
+<!--#prelude#
+module App = {
+  [@react.component]
+  let make = () => <div> {React.string("welcome to my app")} </div>;
+};
+-->
 ```reasonml
 let node = ReactDOM.querySelector("#root");
 switch (node) {
@@ -75,6 +81,20 @@ same as the name of the file.
 
 Now let's modify `App` so that it uses our new `Counter` component:
 
+<!--#prelude#
+module Counter = {
+  [@react.component]
+  let make = () => {
+    let (counter, setCounter) = React.useState(() => 0);
+
+    <div>
+      <button onClick={_evt => setCounter(v => v - 1)}> {React.string("-")} </button>
+      {React.string(Int.to_string(counter))}
+      <button onClick={_evt => setCounter(v => v + 1)}> {React.string("+")} </button>
+    </div>;
+  };
+}
+-->
 ```reasonml
 module App = {
   [@react.component]
@@ -88,6 +108,10 @@ and then converts that string to `React.element`. In OCaml, there's a way
 to apply a sequence of operations over some data so that it can be
 read from left to right:
 
+<!--#prelude#
+let (counter, setCounter) = React.useState(() => 0);
+let _ = 
+-->
 ```reasonml
 {counter |> Int.to_string |> React.string}
 ```
@@ -97,6 +121,10 @@ which is useful for chaining function calls.
 
 Let's add a bit of styling to the root element of `Counter`:
 
+<!--#prelude#
+let (counter, setCounter) = React.useState(() => 0);
+let _ = 
+-->
 ```reasonml
 <div
   style={ReactDOMStyle.make(

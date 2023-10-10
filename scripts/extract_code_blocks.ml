@@ -91,11 +91,16 @@ let input = String.concat "\n" (loop [])
 
 let () =
   let open Printf in
-  if Array.length Sys.argv <> 2 then
-    eprintf "Usage: %s code_block_info_string (\"ocaml\" or \"reason\")\n"
+  let num_args = Array.length Sys.argv in
+  if num_args <> 2 && num_args <> 3 && num_args <> 4 then
+    eprintf
+      "Usage: %s code_block_info_string (\"ocaml\" or \"reason\") \
+       <optional_lib> <optional_ppx>\n"
       Sys.argv.(0)
   else
     let code_block_info_string = Sys.argv.(1) in
+    let optional_lib = if num_args >= 3 then Some Sys.argv.(2) else None in
+    let optional_ppx = if num_args >= 4 then Some Sys.argv.(3) else None in
     let code_block_info =
       match code_block_info_string with
       | "ocaml" -> OCaml
@@ -106,7 +111,8 @@ let () =
           failwith "Invalid code_block_info_string"
     in
     print_endline
-      {|This test file is automatically generated from its corresponding markdown
+      (Printf.sprintf
+         {|This test file is automatically generated from its corresponding markdown
 file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > dune-project <<EOF
@@ -118,8 +124,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
-  >  (libraries melange.dom melange.node)
-  >  (preprocess (pps melange.ppx)))
+  >  (libraries melange.dom melange.node%s)
+  >  (preprocess (pps melange.ppx%s)))
   > EOF
-|};
+|}
+         (match optional_lib with None -> "" | Some lib -> " " ^ lib)
+         (match optional_ppx with None -> "" | Some ppx -> " " ^ ppx));
     process_cmark ~code_block_info ~strict:false input
