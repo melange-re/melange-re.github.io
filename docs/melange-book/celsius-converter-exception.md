@@ -36,6 +36,9 @@ and we wouldn't get a compilation error.
 It's a good idea to put functions that return objects into type-annotated helper
 functions. For example:
 
+<!--#prelude#
+let evt: ReactEvent.Form.t = [%mel.raw "null"];
+-->
 ```reasonml
 let getValueFromEvent = (evt): string => ReactEvent.Form.target(evt)##value;
 
@@ -54,6 +57,11 @@ to be enclosed by braces.
 
 Let's change the render logic to update the Fahrenheit display:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {celsius |> float_of_string |> convert |> string_of_float |> React.string}
 ```
@@ -67,6 +75,11 @@ We should probably put °F after the Fahrenheit value so that it's clear to the
 user what unit of measure they're seeing. We can do so using the string
 concatenation operator (`++`):
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {(celsius |> float_of_string |> convert |> string_of_float) ++ {js| °F|js} |> React.string}
 ```
@@ -75,6 +88,11 @@ However, there's a bug in this code: it will crash if you enter anything into
 the input that can't be converted to a float. We can remedy this by catching the
 exception using a `switch` expression:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {(
   switch (celsius |> float_of_string |> convert |> string_of_float) {
@@ -90,7 +108,7 @@ underscore (`_`) is a wildcard, meaning it will match any exception. If we
 wanted to be specific about which exception we want to catch, we could instead
 write
 
-```reasonml
+```
 | exception (Failure(_)) => "error"
 ```
 
@@ -99,6 +117,11 @@ also renders "error" if the input is blank. It might be bit more user-friendly
 to instead show "? °F" like before. We can do that by wrapping the switch
 expression in a ternary expression:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {(
     celsius == ""
@@ -117,6 +140,11 @@ The ternary expression (`condition ? a : b`) works the same as in JavaScript.
 But in OCaml, it's also shorthand for an if-else expression (`if (condition) {
 a; } else { b; }`). So we could rewrite it as this:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {(
   if (celsius == "") {
@@ -143,6 +171,11 @@ get a Fahrenheit value with a lot of decimals in it as well. We can limit the
 number of decimals in the converted value using
 [Js.Float.toFixedWithPrecision](https://melange.re/v2.0.0/api/re/melange/Js/Float/index.html#val-toFixedWithPrecision):
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string |> convert) {
 | exception _ => "error"
@@ -160,12 +193,22 @@ following chapters when we introduce props (todo).
 You might have noticed that the function chain feeding the switch expression got
 a bit shorter, from
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 celsius |> float_of_string |> convert |> string_of_float
 ```
 
 to
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 celsius |> float_of_string |> convert
 ```
@@ -180,6 +223,11 @@ application](https://reasonml.github.io/docs/en/function#partial-application)
 feature to create a one-argument function by writing
 `Js.Float.toFixedWithPrecision(~digits=2)`. Then our switch expression becomes
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) {
 | exception _ => "error"
@@ -197,6 +245,11 @@ the next chapter, you'll see how to rewrite the logic using `option`.
 <b>2.</b> It's possible to rewrite the `onChange` callback so that it contains a
 single expression:
 
+<!--#prelude#
+let getValueFromEvent = (evt): string => ReactEvent.Form.target(evt)##value;
+let (celsius, setCelsius) = React.useState(() => "");
+let _ =
+-->
 ```reasonml
 <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
 ```
@@ -247,6 +300,11 @@ doesn't contain only ASCII text must be delimited using `{js||js}`.
 <b>2.</b> Rewriting `onChange` the handler to use a single expression creates a
 potential problem with stale values coming from the event object:
 
+<!--#prelude#
+let getValueFromEvent = (evt): string => ReactEvent.Form.target(evt)##value;
+let (celsius, setCelsius) = React.useState(() => "");
+let _ =
+-->
 ```reasonml
 <input value=celsius onChange={evt => setCelsius(_ => getValueFromEvent(evt))} />
 ```

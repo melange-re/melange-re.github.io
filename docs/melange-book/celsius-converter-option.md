@@ -46,6 +46,11 @@ instead. This function has the type signature `string => option(float)`. It
 takes a `string` argument and returns `Some(result)` if it succeeded and `None`
 if it failed. Let's see what that looks like:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string_opt) {
 | None => "error"
@@ -82,12 +87,22 @@ handled here and not somewhere else. You are starting to experience the power of
 You might be thinking that it's a shame we had to give up the long chain of
 function calls once we switched to using `float_of_string_opt`:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 celsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)
 ```
 
 Actually, we can still use a chain of functions if we make a couple of edits:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 celsius
 |> float_of_string_opt
@@ -120,6 +135,11 @@ the [Option module](https://melange.re/v2.0.0/api/re/melange/Stdlib/Option/).
 
 At this point, your switch expression might look like this:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (
   celsius
@@ -136,6 +156,11 @@ What if we wanted to render a message of complaint when the temperature goes
 above 212° F and not even bother to render the converted number? It could look
 like this:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string_opt |> Option.map(convert)) {
 | None => "error"
@@ -150,6 +175,11 @@ so that we can do a float comparison inside the `Some(_)` branch. This works,
 but OCaml gives you a construct that allows you to do the float comparison
 through the switch expression itself:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string_opt |> Option.map(convert)) {
 | None => "error"
@@ -193,6 +223,11 @@ string to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
 <b>1.</b> To prevent a space from producing 32.00 degrees Fahrenheit, just add a
 call to `String.trim` in your render logic:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 {(
   String.trim(celsius) == ""
@@ -211,6 +246,11 @@ call to `String.trim` in your render logic:
 <b>2.</b> To render "Unreasonably cold" when the temperature is less than
 -128.6°F, you can add another `Some(fahrenheit)` branch:
 
+<!--#prelude#
+let celsius = "1";
+let convert = x => x;
+let _ =
+-->
 ```reasonml
 switch (celsius |> float_of_string_opt |> Option.map(convert)) {
 | None => "error"

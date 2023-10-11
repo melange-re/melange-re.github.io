@@ -66,3 +66,35 @@
  (alias extract-code-blocks)
  (action
   (diff counter.t counter.md.processed)))
+
+(rule
+ (deps ../docs/melange-book/celsius-converter-exception.md)
+ (target celsius-converter-exception.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks} reason reason-react reason-react-ppx)))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff
+   celsius-converter-exception.t
+   celsius-converter-exception.md.processed)))
+
+(rule
+ (deps ../docs/melange-book/celsius-converter-option.md)
+ (target celsius-converter-option.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks} reason reason-react reason-react-ppx)))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff celsius-converter-option.t celsius-converter-option.md.processed)))
