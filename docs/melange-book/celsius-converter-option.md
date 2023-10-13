@@ -43,8 +43,8 @@ throw exceptions. So a better way is to simply not use functions that can fail!
 
 We're going to refactor our switch expression to use `float_of_string_opt`
 instead. This function has the type signature `string => option(float)`. It
-takes a `string` argument and returns `Some(result)` if it succeeded and `None`
-if it failed. Let's see what that looks like:
+takes a `string` argument and returns `Some(result)` if it succeeds and `None`
+if it fails. Let's see what that looks like:
 
 <!--#prelude#
 let celsius = "1";
@@ -54,7 +54,10 @@ let _ =
 ```reasonml
 switch (celsius |> float_of_string_opt) {
 | None => "error"
-| Some(fahrenheit) => (fahrenheit |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) ++ {js| °F|js}
+| Some(fahrenheit) =>
+  (fahrenheit
+   |> convert
+   |> Js.Float.toFixedWithPrecision(~digits=2)) ++ {js| °F|js}
 }
 ```
 
@@ -194,7 +197,9 @@ nesting of conditionals to a minimum and making your code more readable.
 
 Hooray! Our Celsius converter is finally complete. Later, we'll see how to
 create a component that can convert back and forth between Celsius and
-Fahrenheit. But first, we'll explore Melange's [build system dune](https://melange.re/v2.0.0/build-system/).
+Fahrenheit. But first, we'll explore
+[Dune](https://melange.re/v2.0.0/build-system/), the build system used by
+Melange.
 
 ## Exercises
 
@@ -212,7 +217,7 @@ string to float. Hint: Use `Js.Float.isNaN` in a `when` guard.
 ## Overview
 
 - Prefer functions that return `option` over those that throw exceptions.
-  - When you the input of a switch expression is `option`, the compiler can
+  - When the input of a switch expression is `option`, the compiler can
     helpfully remind you to handle the error case.
 - `Option.map(function)` is very useful When chaining functions that return `option`.
 - You can use a `when` guard to make your switch expression more expressive

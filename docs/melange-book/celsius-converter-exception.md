@@ -1,7 +1,8 @@
 # Celsius Converter
 
-This time, we'll create a widget that takes a temperature value in Celsius and
-converts it to Fahrenheit. Create a new file called `CelsiusConverter.re`:
+Our second widget will be one that takes a temperature value in Celsius and
+converts it to Fahrenheit. Create a new file in `src` called
+`CelsiusConverter.re`:
 
 ```reasonml
 let convert = celsius => 9.0 /. 5.0 *. celsius +. 32.0;
@@ -25,13 +26,13 @@ let make = () => {
 ```
 
 Inside the `input`'s `onChange` handler, we get the event target using
-`ReactEvent.Form.target`, which has the type `ReactEvent.Form.t => {.. }`. What
-is `{.. }`? It's an object whose fields aren't well-defined (is there a specific
-term for this?), pretty much the same as a JavaScript object. In OCaml, we use
-`##` operator to access fields on an object. Be careful when using objects, as
-it subverts OCaml's type system. We could write
-`ReactEvent.Form.target(evt)##value + 1`, treating it as if it were an integer,
-and we wouldn't get a compilation error.
+`ReactEvent.Form.target`, which has the type `ReactEvent.Form.t => {_.. }`. What
+is `{_.. }`? It's shorthand for a [Js.t
+object](../communicate-with-javascript.md#using-jst-objects), a polymorphic
+object whose fields aren't well-defined. In OCaml, we use the `##` operator to
+access fields on an object. Be careful when using objects, as it subverts
+OCaml's type system. We could write `ReactEvent.Form.target(evt)##value + 1`,
+treating it as if it were an integer, and the compiler wouldn't complain.
 
 It's a good idea to put functions that return objects into type-annotated helper
 functions. For example:
@@ -47,13 +48,13 @@ let newValue = getValueFromEvent(evt);
 ```
 
 The `: string` after the argument list tells the compiler that this function
-must return a `string`. Using `getValueFromEvent` ensures that the `value` field
-can't be used as anything other than a string.
+must return a `string`. Using the `getValueFromEvent` function ensures that the
+`value` field can't be used as anything other than a string.
 
 Another thing to note about `onChange` is that after the `evt` argument, the
-body of the callback function is surrounded by braces (`{}`). OCaml functions are
-like JavaScript's arrow functions--if they contain more than one line, they need
-to be enclosed by braces.
+body of the callback function is surrounded by braces (`{}`). OCaml functions
+are like JavaScript's arrow functions---if they contain more than one line, they
+need to be enclosed by braces.
 
 Let's change the render logic to update the Fahrenheit display:
 
@@ -279,12 +280,13 @@ function.
 
 ## Overview
 
-- Objects (`{.. }`) can have fields of any name and type.
-  - You access fields of an object using the `##` operator.
-  - You can use type annotations to make the use of objects safer.
+- Polymorphic objects (`{_.. }`) can have fields of any name and type.
+    - You access fields of an object using the `##` operator.
+    - You can use type annotations to make the use of objects safer.
 - Concatenate strings using the `++` operator.
 - Switch expressions can be used to catch exceptions.
-- Ternary expressions are shorthand for if-else expressions.
+- Ternary expressions have the same syntax as in JS. Unlike in JS, they are also
+  shorthand for if-else expressions.
 - The two branches of if-else expressions must return values of the same type.
 - Besides positional arguments, OCaml functions can also have labeled arguments.
 - If a function takes two arguments, we can supply one of them and get a
@@ -292,10 +294,10 @@ function.
 
 ## Solutions
 
-<b>1.</b> Changing it to `"°C = "` will result in a bit of gibberish being rendered:
-"Â°C". We can't rely on OCaml strings to [deal with Unicode
+<b>1.</b> Changing it to `"°C = "` will result in a bit of gibberish being
+rendered: "Â°C". We can't rely on OCaml strings to [deal with Unicode
 correctly](../communicate-with-javascript.md#strings), so any string that
-doesn't contain only ASCII text must be delimited using `{js||js}`.
+contains non-ASCII text must be delimited using `{js||js}`.
 
 <b>2.</b> Rewriting `onChange` the handler to use a single expression creates a
 potential problem with stale values coming from the event object:
@@ -311,7 +313,7 @@ let _ =
 
 Inside of `onChange`, we can expect the function `getValueFromEvent(evt)` to
 return the latest value of the `input`. However, we are now calling
-`getValueFromEvent(evt)` from a different function--the callback we pass to
+`getValueFromEvent(evt)` from a different function---the callback we pass to
 `setCelsius`! By the time that `setCelsius`'s callback is invoked, the `evt`
 object might have been recycled and no longer have the same value as when
 `onChange` was initially invoked. For more details about this, see [Using Event
