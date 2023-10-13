@@ -17,20 +17,23 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.re <<\EOF
   > 
   > let (counter, setCounter) = React.useState(() => 0);
-  > let _ = 
+  > let _ =
   > 
   > <div
   >   style={ReactDOMStyle.make(
   >     ~padding="1em",
-  >     ~display="grid",
+  >     ~display="flex",
   >     ~gridGap="1em",
-  >     ~gridTemplateColumns="25px fit-content(20px) 25px",
   >     (),
   >   )}>
-  >   <button onClick={_evt => setCounter(v => v - 1)}> {React.string("-")} </button>
+  >   <button onClick={_evt => setCounter(v => v - 1)}>
+  >     {React.string("-")}
+  >   </button>
   >   <span> {counter |> Int.to_string |> React.string} </span>
-  >   <button onClick={_evt => setCounter(v => v + 1)}> {React.string("+")} </button>
-  > </div>
+  >   <button onClick={_evt => setCounter(v => v + 1)}>
+  >     {React.string("+")}
+  >   </button>
+  > </div>;
   > EOF
 
   $ dune build @melange
@@ -38,7 +41,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.re <<\EOF
   > 
   > let (counter, setCounter) = React.useState(() => 0);
-  > let _ = 
+  > let _ =
   > 
   > {counter |> Int.to_string |> React.string}
   > EOF

@@ -1,13 +1,18 @@
 # Counter
 
 We're going build the classic frontend starter app, the counter, using
-[ReasonReact](https://reasonml.github.io/reason-react/). Go to the root
-directory of your melange-tutorial project, and run `make watch` to start the
-Melange compiler in watch mode. In another terminal window, start the webpack
-dev server by running `make watch`. As a side effect, it will open a browser tab
-pointed to http://localhost:8080/.
+[ReasonReact](https://reasonml.github.io/reason-react/). If you've already
+[installed the starter project](installation.md), you can run the project now:
 
-Open `Index.re` and you'll see this:
+1. Go to the root directory of your
+[melange-for-react-devs](https://github.com/melange-re/melange-for-react-devs)
+project
+1. Run `make watch` to start the Melange compiler in watch mode.
+1. In another terminal window, start the webpack dev server by running `make
+watch`. As a side effect, it will open a browser tab pointed to
+http://localhost:8080/.
+
+Open `src/Index.re` and you'll see this:
 
 ```reasonml
 module App = {
@@ -16,19 +21,36 @@ module App = {
 };
 ```
 
-This is just about the simplest component you can make. Unlike in normal React,
-we must wrap strings inside function calls to convert them to the
-`React.element` type. This is exactly what the `React.string` function does--if
-you hover over it, you'll see that it displays the type `string =>
-React.element`. The `make` function itself has the type `unit => React.element`,
-meaning it takes `()` as the only argument and returns an object of type
-`React.element`.
+This is just about the simplest component you can make, but through it, we can
+start to see some of the key differences of developing with ReasonReact:
 
-What's with the `module` business? OCaml's
+- In JSX, we must wrap strings with calls to `React.string`
+- All components must be inside a module
+- The `make` function renders the component
+- We must decorate the `make` function with `[@react.component]`
+
+Let's go over these differences in more detail.
+
+Unlike in normal React, we must wrap strings inside function calls to convert
+them to the `React.element` type. This is exactly what the `React.string`
+function does---if you hover over it, you'll see that it displays the type
+`string => React.element`.
+
+In the example above, a new module named `App` is defined. OCaml's
 [modules](https://cs3110.github.io/textbook/chapters/modules/modules.html) are
-somewhat like JavaScript modules, with one (of many) notable differences being
-that there can be multiples modules inside a single file. For now, you just need
-to know that all components in ReasonReact are modules.
+somewhat like JavaScript modules, with one notable difference being that there
+can be multiples modules inside a single file. For now, you just need to know
+that all components in ReasonReact are modules, and the name of the component
+comes from the name of the module.
+
+The `make` function has the type `unit => React.element`, meaning it takes `()`
+as the only argument and returns an object of type `React.element`. You'll need
+to decorate `make` with the
+[attribute](../communicate-with-javascript.md#attributes) `@react.component`.
+We'll go into the details later (todo), but for now let's just say that
+`@react.component` is there to reduce boilerplate and make our code more
+readable and easier to maintain.
+
 
 A little bit further down, we make use of the `App` component:
 
@@ -55,10 +77,10 @@ JavaScript construct of the same name) allows you to succinctly express:
 - If `node` is `Some(Dom.element)`, render the `App` component to the DOM
 - Otherwise if `node` is `None`, log an error message
 
-We'll talk more about `option` in the Celsius converter chapter (todo).
+We'll talk more about `option` in the [Celsius converter chapter](celsius-converter-option.md).
 
-Let's create a counter component by creating a new file called `Counter.re` in
-the same directory, with the following contents:
+Let's create a counter component by creating a new file `Counter.re` inside
+`src`, with the following contents:
 
 ```reasonml
 [@react.component]
@@ -110,7 +132,7 @@ read from left to right:
 
 <!--#prelude#
 let (counter, setCounter) = React.useState(() => 0);
-let _ = 
+let _ =
 -->
 ```reasonml
 {counter |> Int.to_string |> React.string}
@@ -123,30 +145,33 @@ Let's add a bit of styling to the root element of `Counter`:
 
 <!--#prelude#
 let (counter, setCounter) = React.useState(() => 0);
-let _ = 
+let _ =
 -->
 ```reasonml
 <div
   style={ReactDOMStyle.make(
     ~padding="1em",
-    ~display="grid",
+    ~display="flex",
     ~gridGap="1em",
-    ~gridTemplateColumns="25px fit-content(20px) 25px",
     (),
   )}>
-  <button onClick={_evt => setCounter(v => v - 1)}> {React.string("-")} </button>
+  <button onClick={_evt => setCounter(v => v - 1)}>
+    {React.string("-")}
+  </button>
   <span> {counter |> Int.to_string |> React.string} </span>
-  <button onClick={_evt => setCounter(v => v + 1)}> {React.string("+")} </button>
-</div>
+  <button onClick={_evt => setCounter(v => v + 1)}>
+    {React.string("+")}
+  </button>
+</div>;
 ```
 
 Unlike in React, the `style` prop in ReasonReact doesn't take a generic object,
 instead it takes an object of type `ReactDOMStyle.t` that is created by calling
-`ReactDOMStyle.make`. This isn't a sustainable way to style our app--in future
+`ReactDOMStyle.make`. This isn't a sustainable way to style our app---in future
 sections we will see how to style using CSS classes.
 
-Congratulations! You've created your first ReasonReact app and component. We'll
-create more complex and interesting components in future chapters.
+Congratulations! You've created your first ReasonReact app and component. In
+future chapters we'll create more complex and interesting components.
 
 ## Exercises
 
@@ -191,8 +216,8 @@ Error (warning 27 [unused-var-strict]): unused variable evt.
 OCaml wants you to use all the variables you declare, unless they begin with
 `_` (underscore).
 
-<b>3.</b> Commenting out `[@react.component]` in `Index.re`, at the place where
-`Counter` is used:
+<b>3.</b> Commenting out `[@react.component]` in `Counter.re` will trigger a
+compilation error in `Index.re`, at the place where `Counter` component is used:
 
 ```
 File "src/Index.re", line 3, characters 19-27:
@@ -203,7 +228,7 @@ Error: Unbound value Counter.makeProps
 
 For now, just remember that you need to put the `[@react.component]`
 attribute above your `make` function if you want your component to be usable
-in JSX (it's a very common newbie mistake). See the PPX chapter (todo) for
+in JSX. This is a very common newbie mistake. See the PPX chapter (todo) for
 more details.
 
 -----
