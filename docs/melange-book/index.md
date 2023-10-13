@@ -13,7 +13,7 @@ You should already know how to make frontend applications in JavaScript, in
 particular with [React](https://react.dev/). You should be interested in
 learning how to leverage your existing knowledge to build apps using
 [ReasonReact](https://reasonml.github.io/reason-react/). You do not need to know
-OCaml[^1]--we'll slowly introduce the basics of the language throughout the
+OCaml[^1]---we'll slowly introduce the basics of the language throughout the
 tutorial. That said, a good complement to this guide is [OCaml Programming:
 Correct + Efficient + Beautiful](https://cs3110.github.io/textbook/), which
 teaches the language from the ground up and goes much deeper into its features.
@@ -22,9 +22,10 @@ teaches the language from the ground up and goes much deeper into its features.
 
 | Title  | Summary | Topics covered |
 | ------ | ------- | -------------- |
-| Counter | Number that can be incremented or decremented | modules, option, pipe last operator, switch |
-| Melange Playground | Use Melange Playground to explore OCaml’s numeric types | playground, Int, Float |
-| Celsius Converter | Single input that converts from  Celsius to Fahrenheit | exception handling, option, pattern matching, props |
+| Counter | Number that can be incremented or decremented | module, Option, pipe last operator, function chaining, switch |
+| Melange Playground | Use Melange Playground to explore OCaml’s numeric types | Playground, Int, Float |
+| Celsius Converter | Single input that converts from  Celsius to Fahrenheit | polymorphic object, exception handling, ternary expression, if-else expression, labeled argument, partial application |
+| Celsius Converter using Option | The same component from the last chapter but replacing exception handling with Option | Option, Option.map, when guard |
 
 ...and much more to come!
 
