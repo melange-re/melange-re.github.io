@@ -3368,9 +3368,9 @@ let nums = range(~start=1, ~stop=10, ());
 
 When an OCaml function takes an optional parameter, it needs a positional
 parameter at the end of the parameter list to help the compiler understand when
-function application is finished and the function can actually execute. This
-might seem cumbersome, but it is necessary to have out-of-the-box curried
-parameters, named parameters and optional parameters available in the language.
+function application is finished and when the function can actually execute. This
+might seem cumbersome, but it is necessary in order to have out-of-the-box curried
+parameters, named parameters, and optional parameters available in the language.
 
 #### `mkdir('src/main', {recursive: true})`: options object argument
 
