@@ -3294,7 +3294,7 @@ module Foo = {
 let () = Foo.Bar.baz();
 ```
 
-It is not necessary to nest the binding inside Reason modules, but mirroring the
+It is not necessary to nest the binding inside OCaml modules, but mirroring the
 structure of the JavaScript module layout makes the binding more discoverable.
 
 See the [Binding to properties inside a module or
