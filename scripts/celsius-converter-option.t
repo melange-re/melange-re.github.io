@@ -15,27 +15,29 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ cat > input.re <<\EOF
-  > let floatFromString = text =>
-  >   switch (Js.Float.fromString(text)) {
-  >   | Js.Float._NaN => None
-  >   | value => Some(value)
-  >   };
+  > 
+  > let celsius = "1";
+  > let convert = x => x;
+  > let floatFromString = float_of_string_opt;
+  > let _ =
+  > 
+  > switch (celsius |> floatFromString |> Option.map(convert)) {
+  > | None => "error"
+  > | Some(fahrenheit) when fahrenheit < (-128.6) => {js|Unreasonably cold🥶|js}
+  > | Some(fahrenheit) when fahrenheit > 212.0 => {js|Unreasonably hot🥵|js}
+  > | Some(fahrenheit) =>
+  >   Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2)
+  >   ++ {js| °F|js}
+  > }
   > EOF
 
   $ dune build @melange
-  File "input.re", line 3, characters 13-17:
-  3 |   | Js.Float._NaN => None
-                   ^^^^
-  Error: Syntax error
-  
-  [1]
 
   $ cat > input.re <<\EOF
-  > let floatFromString = text =>
-  >   switch (Js.Float.fromString(text)) {
-  >   | value when Js.Float.isNaN(value) => None
-  >   | value => Some(value)
-  >   };
+  > let floatFromString = text => {
+  >   let value = Js.Float.fromString(text);
+  >   Js.Float.isNaN(value) ? None : Some(value);
+  > };
   > EOF
 
   $ dune build @melange
@@ -48,9 +50,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > switch (celsius |> float_of_string_opt |> Option.map(convert)) {
   > | None => "error"
-  > | Some(fahrenheit) when fahrenheit < (-128.6) => "Unreasonably cold"
-  > | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-  > | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+  > | Some(fahrenheit) when fahrenheit < (-128.6) => {js|Unreasonably cold🥶|js}
+  > | Some(fahrenheit) when fahrenheit > 212.0 => {js|Unreasonably hot🥵|js}
+  > | Some(fahrenheit) =>
+  >   Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2)
+  >   ++ {js| °F|js}
   > }
   > EOF
 
@@ -68,8 +72,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >     : (
   >       switch (celsius |> float_of_string_opt |> Option.map(convert)) {
   >       | None => "error"
-  >       | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-  >       | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+  >       | Some(fahrenheit) when fahrenheit > 212.0 => {js|Unreasonably hot🥵|js}
+  >       | Some(fahrenheit) =>
+  >         Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2)
+  >         ++ {js| °F|js}
   >       }
   >     )
   > )
@@ -87,7 +93,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > switch (celsius |> float_of_string_opt |> Option.map(convert)) {
   > | None => "error"
   > | Some(fahrenheit) when fahrenheit > 212.0 => "Unreasonably hot"
-  > | Some(fahrenheit) => Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+  > | Some(fahrenheit) =>
+  >   Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2)
+  >   ++ {js| °F|js}
   > }
   > EOF
 
@@ -103,7 +111,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > | None => "error"
   > | Some(fahrenheit) =>
   >   fahrenheit > 212.0
-  >     ? "Unreasonably hot" : Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2) ++ {js| °F|js}
+  >     ? "Unreasonably hot"
+  >     : Js.Float.toFixedWithPrecision(fahrenheit, ~digits=2)
+  >       ++ {js| °F|js}
   > }
   > EOF
 
@@ -129,10 +139,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.re <<\EOF
-  > let map = (f, o) =>
-  >   switch (o) {
+  > let map = (func, option) =>
+  >   switch (option) {
   >   | None => None
-  >   | Some(v) => Some(f(v))
+  >   | Some(v) => Some(func(v))
   >   };
   > EOF
 
@@ -158,7 +168,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > let convert = x => x;
   > let _ =
   > 
-  > celsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)
+  > celsius
+  > |> float_of_string
+  > |> convert
+  > |> Js.Float.toFixedWithPrecision(~digits=2)
   > EOF
 
   $ dune build @melange
@@ -171,7 +184,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > switch (celsius |> float_of_string_opt) {
   > | None => "error"
-  > | Some(fahrenheit) => (fahrenheit |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) ++ {js| °F|js}
+  > | Some(fahrenheit) =>
+  >   (
+  >     fahrenheit
+  >     |> convert
+  >     |> Js.Float.toFixedWithPrecision(~digits=2)
+  >   )
+  >   ++ {js| °F|js}
   > }
   > EOF
 
@@ -199,7 +218,12 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >        celsius == ""
   >          ? {js|? °F|js}
   >          : (
-  >            switch (celsius |> float_of_string |> convert |> Js.Float.toFixedWithPrecision(~digits=2)) {
+  >            switch (
+  >              celsius
+  >              |> float_of_string
+  >              |> convert
+  >              |> Js.Float.toFixedWithPrecision(~digits=2)
+  >            ) {
   >            | exception _ => "error"
   >            | fahrenheit => fahrenheit ++ {js| °F|js}
   >            }
