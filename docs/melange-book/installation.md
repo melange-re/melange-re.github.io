@@ -8,7 +8,10 @@ Linux](https://learn.microsoft.com/en-us/windows/wsl/)
 - You have a recent version of, and know how to use:
     - [Node.js](https://nodejs.org/)
     - [git](https://git-scm.com/)
-    - [Visual Studio Code](https://code.visualstudio.com/)
+    - A code editor such as [Visual Studio Code](https://code.visualstudio.com/)
+        - There are also [many other
+         editors](https://melange.re/v2.0.0/getting-started/#editor-integration)
+         which can support OCaml
 
 ## Opam
 
