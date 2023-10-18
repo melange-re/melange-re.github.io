@@ -51,9 +51,6 @@ are several options available. You can read about them in the [editor setup
 page](http://ocamlverse.net/content/editor_setup.html) of the OCamlverse
 documentation site.
 
-> **_NOTE:_** Melange editor integration currently only works with 4.14.x, even
-> though it can compile melange projects on other OCaml switches.
-
 ## Alternative package managers (experimental)
 
 Melange can also be used with other package managers. The following instructions
