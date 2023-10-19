@@ -12,4 +12,4 @@ starting point. but we recommend the following tutorials from the official OCaml
 website:
 
 - [A First Hour With OCaml](https://ocaml.org/docs/first-hour)
-- [OCaml Exercises](https://ocaml.org/problems)
+- [OCaml Exercises](https://ocaml.org/exercises)
