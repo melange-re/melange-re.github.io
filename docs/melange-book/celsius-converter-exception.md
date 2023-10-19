@@ -27,15 +27,20 @@ let make = () => {
 
 Inside the `input`'s `onChange` handler, we get the event target using
 `ReactEvent.Form.target`, which has the type `ReactEvent.Form.t => {_.. }`. What
-is `{_.. }`? It's shorthand for a [Js.t
-object](../communicate-with-javascript.md#using-jst-objects), a polymorphic
-object whose fields aren't well-defined. In OCaml, we use the `##` operator to
-access fields on an object. Be careful when using objects, as it subverts
-OCaml's type system. We could write `ReactEvent.Form.target(evt)##value + 1`,
-treating it as if it were an integer, and the compiler wouldn't complain.
+is `{_.. }`? It's shorthand for the `Js.t({..})` type[^1], which consists of two
+parts:
 
-It's a good idea to put functions that return objects into type-annotated helper
-functions. For example:
+- `Js.t` refers to JavaScript objects in Melange
+- `{..}` refers to polymorphic objects which can contain any fields or methods
+
+Once we have a `Js.t` object, we can use the `##` operator to access its fields.
+But beware, because the compiler knows nothing about the types of those fields.
+For example, we could write `ReactEvent.Form.target(evt)##value + 1`, treating
+it as if it were an integer, and the compiler wouldn't complain.
+
+Instead of trusting ourselves to always use `ReactEvent.Form.target(evt)##value`
+correctly, it's a good idea to wrap functions that return polymorphic objects
+into type-annotated helper functions. For example:
 
 <!--#prelude#
 let evt: ReactEvent.Form.t = [%mel.raw "null"];
@@ -280,9 +285,9 @@ function.
 
 ## Overview
 
-- Polymorphic objects (`{_.. }`) can have fields of any name and type.
-    - You access fields of an object using the `##` operator.
-    - You can use type annotations to make the use of objects safer.
+- `Js.t` objects (`Js.t({..})`) can have fields of any name and type.
+    - You access fields of a `Js.t` object using the `##` operator.
+    - You can use type annotations to make the use of such objects safer.
 - Concatenate strings using the `++` operator.
 - Switch expressions can be used to catch exceptions.
 - Ternary expressions have the same syntax as in JS. Unlike in JS, they are also
@@ -331,3 +336,8 @@ in the [ReasonReact](https://reasonml.github.io/reason-react/) docs.
 chapter](https://github.com/melange-re/melange-for-react-devs/blob/develop/src/celsius-converter-exception/)
 can be found in the [Melange for React Developers
 repo](https://github.com/melange-re/melange-for-react-devs).
+
+[^1]:
+    See [Using Js.t
+    objects](../communicate-with-javascript.md#using-jst-objects) for more
+    details.
