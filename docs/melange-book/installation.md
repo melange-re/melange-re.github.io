@@ -54,7 +54,7 @@ template
 While `make init` is running, consider grabbing some coffee or other beverage,
 as it might take a while to fetch all the dependencies and build them. The last
 command, `make serve`, should open a tab in your default browser which points to
-http://localhost:8080/ and shows you a typical "Hello World" page. If you see
+[http://localhost:8080/](http://localhost:8080/) and shows you a typical "Hello World" page. If you see
 this page, then the project was successfully installed!
 
 ## OCaml Platform Visual Studio Code Extension
@@ -63,9 +63,9 @@ this page, then the project was successfully installed!
 1. Install the [OCaml
 Platform](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
 extension from OCaml Labs.
-1. To verify that the extension worked, open the melange-tutorial project in
-Visual Studio Code. OCaml code should be syntax highlighted, and you should see
-type annotations when you hover over variables.
+1. To verify that the extension worked, open the melange-for-react-devs project
+in Visual Studio Code. OCaml code should be syntax highlighted, and you should
+see type annotations when you hover over variables.
 1. To enable auto-formatting, open your [User Settings
 JSON file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson)
 and add this snippet:

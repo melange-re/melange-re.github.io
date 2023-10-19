@@ -10,7 +10,7 @@ project
 1. Run `make watch` to start the Melange compiler in watch mode.
 1. In another terminal window, start the webpack dev server by running `make
 watch`. As a side effect, it will open a browser tab pointed to
-http://localhost:8080/.
+[http://localhost:8080/](http://localhost:8080/).
 
 Open `src/Index.re` and you'll see this:
 
@@ -222,14 +222,14 @@ compilation error in `Index.re`, at the place where `Counter` component is used:
 ```
 File "src/Index.re", line 3, characters 19-27:
 3 |   let make = () => <Counter />;
-                      ^^^^^^^^
+                       ^^^^^^^^^^^
 Error: Unbound value Counter.makeProps
 ```
 
-For now, just remember that you need to put the `[@react.component]`
-attribute above your `make` function if you want your component to be usable
-in JSX. This is a very common newbie mistake. See the PPX chapter (todo) for
-more details.
+For now, don't worry about what `Counter.makeProps` is or where it came
+from---just remember that you need to put the `[@react.component]` attribute
+above your `make` function if you want your component to be usable in JSX. This
+is a very common newbie mistake. See the PPX chapter (todo) for more details.
 
 -----
 
