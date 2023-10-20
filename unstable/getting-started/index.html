@@ -169,7 +169,7 @@ Visual Studio Code, Emacs, and Vim.</p>
 extension</a>
 from the Visual Studio Marketplace. When you load an OCaml source file for the
 first time, you may be prompted to select the toolchain to use. Select the
-version of OCaml you are using from the list, such as 4.14.1. Further
+version of OCaml you are using from the list, such as 5.1.0. Further
 instructions for configuration can be found in the <a href="https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project">extension
 repository</a>.</p>
 <p>For Emacs and Vim, the configuration may vary depending on the case, and there
@@ -202,8 +202,8 @@ apply to <a href="#nix">Nix</a> and <a href="#esy">esy</a>.</p>
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
-          # Set the OCaml set of packages to the 4.14 release line
-          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_4_14; })
+          # Set the OCaml set of packages to the 5.1 release line
+          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_5_1; })
           # Apply the Melange overlay
           melange.overlays.default
         ];
@@ -236,7 +236,7 @@ template</a>.</p>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;melange-project&quot;,
   &quot;dependencies&quot;: {
-    &quot;ocaml&quot;: &quot;4.14.x&quot;,
+    &quot;ocaml&quot;: &quot;5.1.x&quot;,
     &quot;@opam/dune&quot;: &quot;&gt;= 3.8.0&quot;,
     &quot;@opam/melange&quot;: &quot;*&quot;
   },
