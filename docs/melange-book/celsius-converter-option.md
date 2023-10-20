@@ -226,10 +226,9 @@ allows you to add extra conditions to a switch expression branch, keeping
 nesting of conditionals to a minimum and making your code more readable.
 
 Hooray! Our Celsius converter is finally complete. Later, we'll see how to
-create a component that can convert back and forth between Celsius and
-Fahrenheit (todo). But first, we'll explore
-[Dune, the build system](../build-system.md) used by
-Melange.
+[create a component that can convert back and forth between Celsius and
+Fahrenheit](todo.md). But first, we'll explore [Dune, the build
+system](../build-system.md) used by Melange.
 
 ## Exercises
 

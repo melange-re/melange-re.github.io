@@ -194,7 +194,7 @@ and one [labeled argument](../communicate-with-javascript.md#labeled-arguments).
 In this case, the labeled argument is named `digits` and it's receiving a value
 of `2`. It's not possible to pass in the value of a labeled argument without
 using the `~label=value` syntax. We'll see more of labeled arguments in the
-following chapters when we introduce props (todo).
+following chapters when we introduce [props](todo.md).
 
 You might have noticed that the function chain feeding the switch expression got
 a bit shorter, from

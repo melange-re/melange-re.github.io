@@ -47,7 +47,7 @@ The `make` function has the type `unit => React.element`, meaning it takes `()`
 as the only argument and returns an object of type `React.element`. You'll need
 to decorate `make` with the
 [attribute](../communicate-with-javascript.md#attributes) `@react.component`.
-We'll go into the details later (todo), but for now let's just say that
+We'll go into the details [later](todo.md), but for now let's just say that
 `@react.component` is there to reduce boilerplate and make our code more
 readable and easier to maintain.
 
@@ -229,7 +229,7 @@ Error: Unbound value Counter.makeProps
 For now, don't worry about what `Counter.makeProps` is or where it came
 from---just remember that you need to put the `[@react.component]` attribute
 above your `make` function if you want your component to be usable in JSX. This
-is a very common newbie mistake. See the PPX chapter (todo) for more details.
+is a very common newbie mistake. See the [PPX chapter](todo.md) for more details.
 
 -----
 
