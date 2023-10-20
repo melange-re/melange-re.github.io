@@ -42,7 +42,7 @@ For Visual Studio Code, install the [OCaml Platform Visual Studio Code
 extension](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
 from the Visual Studio Marketplace. When you load an OCaml source file for the
 first time, you may be prompted to select the toolchain to use. Select the
-version of OCaml you are using from the list, such as 4.14.1. Further
+version of OCaml you are using from the list, such as 5.1.0. Further
 instructions for configuration can be found in the [extension
 repository](https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project).
 
@@ -82,8 +82,8 @@ Make sure [Nix](https://nixos.org/download.html) is installed. The following
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
-          # Set the OCaml set of packages to the 4.14 release line
-          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_4_14; })
+          # Set the OCaml set of packages to the 5.1 release line
+          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_5_1; })
           # Apply the Melange overlay
           melange.overlays.default
         ];
@@ -122,7 +122,7 @@ template](https://github.com/melange-re/melange-esy-template/generate).
 {
   "name": "melange-project",
   "dependencies": {
-    "ocaml": "4.14.x",
+    "ocaml": "5.1.x",
     "@opam/dune": ">= 3.8.0",
     "@opam/melange": "*"
   },
