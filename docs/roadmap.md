@@ -10,6 +10,11 @@ Please note that the roadmap is a rough outline and is subject to change. We
 encourage you to provide feedback, suggestions, and feature requests through any
 of the [available communication channels](community.md).
 
+## Q4 2023
+
+- [Blog post](https://anmonteiro.substack.com/p/the-rest-of-2023-in-melange)
+- [Roadmap](https://docs.google.com/document/d/1q9NWiXun_Lqgv5iNNYm2SKzUGGJ02FpRawKUiTxnJPI)
+
 ## Q3 2023
 
 - [Blog post](https://anmonteiro.substack.com/p/whats-next-for-melange)
