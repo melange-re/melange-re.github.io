@@ -82,7 +82,7 @@ information.
 
 ## What is Melange
 
-Melange is a comprehensive toolset comprising several key components:
+Melange is a set of tools that come together to generate and interoperate with modern JavaScript:
 
 - The [compiler libraries](https://github.com/melange-re/melange-compiler-libs):
   These libraries are a fork of the [OCaml compiler
