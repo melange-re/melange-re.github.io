@@ -7,8 +7,8 @@
 Melange is a backend for the OCaml compiler that emits JavaScript. Melange
 strives to provide the best integration with both the OCaml and JavaScript
 ecosystems. To know more about it start by reading the [introductory
-tutorial](getting-started.md), then check the [Learn](learn.md) section for more
-information.
+tutorial](getting-started.md), then check the [Learn](./new-to-ocaml.md) section
+for more information.
 
 <!-- Temporarily disabled in readthedocs mode
 <div class="text-center">
