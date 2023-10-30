@@ -54,6 +54,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-melange">What is Melange</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -199,6 +201,74 @@ for more information.</p>
   </div>
 </div>
 </div>
+
+<h2 id="what-is-melange">What is Melange</h2>
+<p>Melange is a set of tools that come together to generate and interoperate with modern JavaScript:</p>
+<ul>
+<li>
+<p>The <a href="https://github.com/melange-re/melange-compiler-libs">compiler libraries</a>:
+  These libraries are a fork of the <a href="https://v2.ocaml.org/api/compilerlibref/Compiler_libs.html">OCaml compiler
+  libraries</a> with
+  adaptations for generating lean JavaScript code, as opposed to bytecode or
+  assembly.</p>
+</li>
+<li>
+<p>The compiler (<code>melc</code>): This executable takes OCaml code as input and is
+  responsible for generating JavaScript. It relies on the Melange compiler
+  libraries.</p>
+</li>
+<li>
+<p>The
+  <a href="https://github.com/melange-re/melange/tree/c5bf086511ed4830018e67ca63df86045dbe356d/jscomp/runtime">runtime</a>:
+  This is a small code component essential for running JavaScript programs
+  produced by the compiler.</p>
+</li>
+<li>
+<p>The <a href="api/">standard libraries</a>: Melange includes a set of foundational
+  elements such as data structures, functions, and bindings to JavaScript APIs,
+  all aimed at helping developers accelerate app development.</p>
+</li>
+<li>
+<p>The preprocessor (<code>melange.ppx</code>): This is a
+  <a href="https://ocaml.org/docs/metaprogramming">meta-programming</a> tool designed to
+  preprocess Melange programs, simplifying code generation for common use cases
+  like generating bindings or code from types.</p>
+</li>
+<li>
+<p>The <a href="./playground">playground</a>: This is a browser-based version of the
+  compiler, enabling users to experiment with and share Melange code snippets
+  and small programs.</p>
+</li>
+</ul>
+<p>In addition to these core components, there is an ongoing effort to integrate
+Melange into the broader OCaml Platform and other tools and libraries within the
+OCaml ecosystem:</p>
+<ul>
+<li>
+<p>A <a href="build-system/">build system</a>: <a href="https://dune.readthedocs.io">Dune</a>, a
+  prominent OCaml build system, provides seamless support for Melange.</p>
+</li>
+<li>
+<p>A <a href="package-management/">package manager</a>: Melange seamlessly integrates
+  with <a href="https://opam.ocaml.org/">opam</a>, OCaml's default package manager.</p>
+</li>
+<li>
+<p>A package repository: Melange libraries and tools are published in the <a href="https://opam.ocaml.org/packages/">main
+  public package repository</a> for opam.</p>
+</li>
+<li>
+<p>Syntaxes: Melange empowers users to optionally write their applications using
+  the <a href="reasonml.github.io/">Reason syntax</a>, with full support for React
+  applications through the Melange bindings library
+  <a href="https://reasonml.github.io/reason-react/">ReasonReact</a>.</p>
+</li>
+<li>
+<p>Editor integration: Melange is fully compatible with the <a href="https://ocaml.org/docs/set-up-editor">OCaml editor
+  tools</a>, and also with code formatters
+  like <a href="https://github.com/ocaml-ppx/ocamlformat">ocamlformat</a> and
+  <a href="https://github.com/reasonml/reason/tree/d47e613b736cc25629aabc1c8ef91795e265eacb/src/refmt">refmt</a>.</p>
+</li>
+</ul>
               
             </div>
           </div><footer>
@@ -252,5 +322,5 @@ for more information.</p>
 
 <!--
 MkDocs version : 1.4.3
-Build Date UTC : 2023-10-27 11:06:20.649485+00:00
+Build Date UTC : 2023-10-30 10:03:16.551044+00:00
 -->
