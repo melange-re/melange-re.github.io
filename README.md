@@ -81,8 +81,10 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
   website: `make move-vx.x.x-tag`
 - Once the new version is published, we need to make sure other versions remain
   SEO friendly:
-  - Update `add_canonical` in `master` to point to the new `vx.x.x`, so that the
-    `unstable` version of the docs starts referring to that version as the
-    canonical one
-  - Update `add_canonical` in version that was last before, to point to `vx.x.x`
-    as well
+  - In `master`: update `add_canonical` to point to the new `vx.x.x`, so that
+    the `unstable` version of the docs starts referring to that version as the
+    canonical one. To do so, just update the version in `add_canonical.ml`
+  - In `y.y.y-patches`: update `add_canonical` in version `y.y.y` that was last
+    before, to point to `vx.x.x` as well. To do so: update the version in
+    `add_canonical.ml` and uncomment the relevant code in `deploy.yml`, then run
+    `make move-vy.y.y-tag`
