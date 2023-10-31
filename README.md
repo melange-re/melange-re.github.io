@@ -53,5 +53,36 @@ dune build @re --auto-promote
 
 Publishing is done automatically from GitHub actions:
 - Every commit to `master` will publish in the `unstable` folder
-- Every tag pushed with the `v*` format will publish on its correponding folder,
-  and set it as default
+- Every tag pushed with the `v*` format will publish on its corresponding
+  folder, and set it as default
+
+### Tracking new versions of `melange` in opam
+
+When a new version of `melange` is published in opam, a new release of the docs
+and playground should be done. The process is as follows:
+
+- Update `documentation-site.opam` to point `melange` and `melange-playground`
+  packages to the commit of the new release
+- Update versions of the compiler listed in the playground (`app.jsx`)
+- Open a PR with the changes above
+- After merging the PR, create a new branch `x.x.x-patches`. This branch will be
+  used to publish any patches or improvements to that version of the docs /
+  playground
+- In that branch, add a new command on the main `Makefile` to publish a new tag,
+  e.g.
+```Makefile
+.PHONY: move-vx.x.x-tag
+move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish the vx docs
+	git push origin :refs/tags/vx.x.x
+	git tag -fa vx.x.x
+	git push origin --tags
+```
+- Call the newly created command to create a new version selectable from the
+  website: `make move-vx.x.x-tag`
+- Once the new version is published, we need to make sure other versions remain
+  SEO friendly:
+  - Update `add_canonical` in `master` to point to the new `vx.x.x`, so that the
+    `unstable` version of the docs starts referring to that version as the
+    canonical one
+  - Update `add_canonical` in version that was last before, to point to `vx.x.x`
+    as well
