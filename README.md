@@ -59,7 +59,7 @@ Publishing is done automatically from GitHub actions:
 ### Tracking new versions of `melange` in opam
 
 When a new version of `melange` is published in opam, a new release of the docs
-and playground should be done. The process is as follows:
+and playground should be published. The process is as follows:
 
 - Update `documentation-site.opam` to point `melange` and `melange-playground`
   packages to the commit of the new release
@@ -83,8 +83,12 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
   SEO friendly:
   - In `master`: update `add_canonical` to point to the new `vx.x.x`, so that
     the `unstable` version of the docs starts referring to that version as the
-    canonical one. To do so, just update the version in `add_canonical.ml`
+    canonical one. To do so:
+      - update the version in `add_canonical.ml`
+      - run `dune test --auto-promote`
   - In `y.y.y-patches`: update `add_canonical` in version `y.y.y` that was last
-    before, to point to `vx.x.x` as well. To do so: update the version in
-    `add_canonical.ml` and uncomment the relevant code in `deploy.yml`, then run
-    `make move-vy.y.y-tag`
+    before, to point to `vx.x.x` as well. To do so:
+      - update the version in `add_canonical.ml`
+      - run `dune test --auto-promote`
+      - uncomment the relevant code in `deploy.yml`
+      - commit and run `make move-vy.y.y-tag` to deploy
