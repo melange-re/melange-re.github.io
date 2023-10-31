@@ -137,7 +137,7 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"2.1.0"}</span>
+                <span className="Text-xs Number">{"dev"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
@@ -149,7 +149,7 @@ function Sidebar({ onExampleClick }) {
               </span>
               <span className="Version">
                 <span className="Text-xs">{"ReasonReact"}</span>
-                <span className="Text-xs Number">{"0.13.0"}</span>
+                <span className="Text-xs Number">{"dev"}</span>
               </span>
             </div>
           </div>) : null}
@@ -379,14 +379,14 @@ function OutputEditor({ language, value }) {
 }
 
 const problemFromCompile = ({
-  js_error_msg,
+  js_warning_error_msg,
   row,
   column,
   endRow,
   endColumn,
   text,
 }) => ({
-  msg: js_error_msg,
+  msg: js_warning_error_msg,
   loc: {
     row: row + 1,
     column: column + 1,
@@ -396,13 +396,13 @@ const problemFromCompile = ({
   },
 });
 
-const toMonaco = (problem) => ({
+const toMonaco = (severity) => (problem) => ({
   startLineNumber: problem.loc.row,
   startColumn: problem.loc.column,
   endLineNumber: problem.loc.endRow,
   endColumn: problem.loc.endColumn,
   message: problem.msg,
-  severity: monaco.MarkerSeverity.Error,
+  severity: severity,
 });
 
 const compile = (language, code) => {
@@ -412,12 +412,12 @@ const compile = (language, code) => {
       ? ocaml.compileRE(code)
       : ocaml.compileML(code);
   } catch (error) {
-    compilation = { js_error_msg: error.message };
+    compilation = { js_warning_error_msg: error.message };
   }
 
   if (compilation) {
     let problems = undefined;
-    if (compilation.js_error_msg) {
+    if (compilation.js_warning_error_msg) {
       problems = [problemFromCompile(compilation)];
     } else if (compilation.warning_errors) {
       problems = compilation.warning_errors.map(problemFromCompile);
@@ -449,6 +449,7 @@ const compile = (language, code) => {
           }
         }),
         javascriptCode: compilation.js_code,
+        warnings: compilation.warnings.map(problemFromCompile),
       }
     }
   } else {
@@ -456,7 +457,7 @@ const compile = (language, code) => {
       typeHints: [],
       problems: [
         {
-          js_error_msg: "No result was returned from compilation",
+          js_warning_error_msg: "No result was returned from compilation",
           row,
           column,
           endRow,
@@ -475,7 +476,14 @@ function updateMarkers(monaco, editorRef, compilation) {
       monaco.editor.setModelMarkers(
         editorRef.current.getModel(),
         owner,
-        compilation.problems.map(toMonaco)
+        compilation.problems.map(toMonaco(monaco.MarkerSeverity.Error))
+      );
+    } else if (compilation?.warnings) {
+      console.log(compilation.warnings.map(toMonaco(monaco.MarkerSeverity.Warning)));
+      monaco.editor.setModelMarkers(
+        editorRef.current.getModel(),
+        owner,
+        compilation.warnings.map(toMonaco(monaco.MarkerSeverity.Warning))
       );
     } else {
       monaco.editor.removeAllMarkers(owner);
