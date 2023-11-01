@@ -97,7 +97,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > (melange.emit
   >  (emit_stdlib false)
   >  (target output)
-  >  (libraries melange.dom melange.node)
+  >  (libraries melange.belt melange.dom melange.node)
   >  (preprocess (pps melange.ppx)))
   > EOF
 |};
