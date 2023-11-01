@@ -241,7 +241,7 @@ function ConsolePanel({ logs, clearLogs }) {
   )
 }
 
-function ProblemsPanel({ problems }) {
+function ProblemsPanel({ problems, warnings }) {
   const defaultState = false;
   const [isCollapsed, setIsCollapsed] = React.useState(defaultState);
   const ref = React.useRef(null);
@@ -263,6 +263,11 @@ function ProblemsPanel({ problems }) {
     ? problems.map((v) => v.msg).join("\n")
     : "";
 
+  const warningsString =
+  warnings && warnings.length > 0
+    ? warnings.map((v) => v.msg).join("\n")
+    : "";
+
   return (
     <>
       <div className="ProblemsHeader">
@@ -270,7 +275,12 @@ function ProblemsPanel({ problems }) {
         <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
-        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problemsString}</div>) : <div className="Problems Empty">No problems!</div>}
+      {(problems && problems.length > 0)
+        ? <div className="Problems Scrollbar">{problemsString}</div>
+        : (warnings && warnings.length > 0)
+          ? <div className="Problems Scrollbar">{warningsString}</div>
+          : <div className="Problems Empty">No problems!</div>
+       }
       </Panel>
     </>
   )
@@ -425,6 +435,7 @@ const compile = (language, code) => {
     if (problems) {
       return {
         typeHints: [],
+        warnings: [],
         problems: problems,
       }
     } else {
@@ -455,6 +466,7 @@ const compile = (language, code) => {
   } else {
     return {
       typeHints: [],
+      warnings: [],
       problems: [
         {
           js_warning_error_msg: "No result was returned from compilation",
@@ -607,7 +619,7 @@ function App() {
 
   React.useEffect(() => {
     updateMarkers(monaco, editorRef, compilation)
-  }, [monaco, compilation?.problems]);
+  }, [monaco, compilation?.problems, compilation?.warnings]);
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
@@ -706,7 +718,7 @@ function App() {
                 </div>
               </Panel>
               <PanelResizeHandle className="ResizeHandle" />
-              <ProblemsPanel problems={compilation?.problems} />
+              <ProblemsPanel warnings={compilation?.warnings} problems={compilation?.problems} />
             </PanelGroup>
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />
