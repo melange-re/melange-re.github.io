@@ -491,7 +491,6 @@ function updateMarkers(monaco, editorRef, compilation) {
         compilation.problems.map(toMonaco(monaco.MarkerSeverity.Error))
       );
     } else if (compilation?.warnings) {
-      console.log(compilation.warnings.map(toMonaco(monaco.MarkerSeverity.Warning)));
       monaco.editor.setModelMarkers(
         editorRef.current.getModel(),
         owner,
