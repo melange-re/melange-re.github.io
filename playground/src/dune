@@ -1,0 +1,26 @@
+(melange.emit
+ (target playground)
+ (alias playground)
+ (libraries reason-react)
+ (promote (until-clean))
+ (runtime_deps
+  ../index.html
+  ../vite.config.ts
+  ./assets/react.svg
+  ./syntax/ml.js
+  ./syntax/re.js
+  ./App.css
+  ./examples-dropdown.jsx
+  ./console.js
+  ./app.jsx
+  ./hover.js
+  ./index.css
+  ./local-storage.js
+  ./main.jsx
+  ./router.js
+  ./share-toast.jsx
+  ./toaster.jsx
+  ./worker.js)
+ (preprocess
+  (pps melange.ppx))
+ (module_systems es6))

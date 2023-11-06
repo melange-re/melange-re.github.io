@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { MenuSquare } from 'lucide-react';
-import examples from "./examples";
+import { examples } from "./examples";
 
 function IconReact(props) {
   return (

@@ -62,3 +62,8 @@ format-check: ## Checks if format is correct
 build-playground: ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
+
+.PHONY: run-playground
+run-playground: ## Runs the playground
+	$(DUNE) build @playground-assets
+	cd playground/src/playground/playground && npx vite

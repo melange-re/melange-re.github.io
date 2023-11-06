@@ -1,8 +1,8 @@
 import "./App.css";
-import "../../_build/default/playground/reason-react-cmijs";
-import "../../_opam/bin/jsoo_main.bc";
-import "../../_opam/bin/melange-cmijs";
-import "../../_opam/bin/format.bc.js";
+import "../../../../../_build/default/playground/reason-react-cmijs";
+import "../../../../../_opam/bin/jsoo_main.bc";
+import "../../../../../_opam/bin/melange-cmijs";
+import "../../../../../_opam/bin/format.bc.js";
 
 import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
@@ -16,7 +16,7 @@ import * as Router from './router';
 import { Toaster } from './toaster';
 import { useLocalStorage } from './local-storage';
 import { useHover } from './hover';
-import examples from "./examples";
+import { examples } from "./examples";
 import { language as OCamlSyntax } from "./syntax/ml";
 import { language as ReasonSyntax } from "./syntax/re";
 import ExamplesDropdown from './examples-dropdown.jsx';
