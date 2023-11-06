@@ -82,7 +82,8 @@ for more information.
 
 ## What is Melange
 
-Melange is a set of tools that come together to generate and interoperate with modern JavaScript:
+Melange is a set of tools that come together to generate and interoperate with
+modern JavaScript:
 
 - The [compiler libraries](https://github.com/melange-re/melange-compiler-libs):
   These libraries are a fork of the [OCaml compiler
@@ -126,7 +127,7 @@ OCaml ecosystem:
   public package repository](https://opam.ocaml.org/packages/) for opam.
 
 - Syntaxes: Melange empowers users to optionally write their applications using
-  the [Reason syntax](reasonml.github.io/), with full support for React
+  the [Reason syntax](https://reasonml.github.io/), with full support for React
   applications through the Melange bindings library
   [ReasonReact](https://reasonml.github.io/reason-react/).
 
