@@ -158,7 +158,7 @@ in the project folder.
 If it does not exist, we can create it with:
 
 ```text
-opam switch create . 5.1.0 --deps-only
+opam switch create . 5.1.1 --deps-only
 ```
 
 If it exists, we can install the dependencies of the project with:
