@@ -42,7 +42,7 @@ let replace_in_file ~orig_path file_path search_str =
     in
     let canonical_link =
       Printf.sprintf
-        "<link rel=\"canonical\" href=\"https://melange.re/v2.1.0/api/%s\" \
+        "<link rel=\"canonical\" href=\"https://melange.re/v2.2.0/api/%s\" \
          /></head>"
         (String.escaped relative_file_path)
     in
