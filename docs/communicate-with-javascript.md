@@ -1658,7 +1658,7 @@ clear:
 
 ```ocaml
 external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
-  [@@module "MyGame"]
+  [@@mel.module "MyGame"]
 
 let () = draw ~x:10 ~y:20 ~border:true ()
 let () = draw ~x:10 ~y:20 ()
@@ -1695,7 +1695,7 @@ order that was used when declaring the function:
 
 ```ocaml
 external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
-  [@@module "MyGame"]
+  [@@mel.module "MyGame"]
 let () = draw ~x:10 ~y:20 ()
 let () = draw ~y:20 ~x:10 ()
 ```
@@ -2763,7 +2763,7 @@ type pet = { name : string } [@@deriving accessors]
 
 let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
 
-let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
+let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:"&" |. Js.log
 ```
 ```reasonml
 [@deriving accessors]
@@ -2850,7 +2850,7 @@ Let’s see an example. Considering this Melange code:
 ```ocaml
 type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 ```
@@ -2858,7 +2858,7 @@ type person = {
 [@deriving abstract]
 type person = {
   name: string,
-  [@optional]
+  [@mel.optional]
   age: option(int),
 };
 ```
@@ -2896,7 +2896,7 @@ Here is an example of how we can use it:
 <!--#prelude#
 type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 -->
@@ -2935,7 +2935,7 @@ The functions `nameGet` and `ageGet` are accessors for each record field:
 <!--#prelude#
 type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 let alice = person ~name:"Alice" ~age:20 ()

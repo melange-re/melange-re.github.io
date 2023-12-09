@@ -67,7 +67,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > type person = {
   >   name : string;
-  >   age : int option; [@optional]
+  >   age : int option; [@mel.optional]
   > }
   > [@@deriving abstract]
   > let alice = person ~name:"Alice" ~age:20 ()
@@ -84,7 +84,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > type person = {
   >   name : string;
-  >   age : int option; [@optional]
+  >   age : int option; [@mel.optional]
   > }
   > [@@deriving abstract]
   > 
@@ -114,7 +114,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type person = {
   >   name : string;
-  >   age : int option; [@optional]
+  >   age : int option; [@mel.optional]
   > }
   > [@@deriving abstract]
   > EOF
@@ -142,7 +142,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
   > 
-  > let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
+  > let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:"&" |. Js.log
   > EOF
 
   $ dune build @melange
@@ -518,7 +518,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
-  >   [@@module "MyGame"]
+  >   [@@mel.module "MyGame"]
   > let () = draw ~x:10 ~y:20 ()
   > let () = draw ~y:20 ~x:10 ()
   > EOF
@@ -527,7 +527,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external draw : x:int -> y:int -> ?border:bool -> unit -> unit = "draw"
-  >   [@@module "MyGame"]
+  >   [@@mel.module "MyGame"]
   > 
   > let () = draw ~x:10 ~y:20 ~border:true ()
   > let () = draw ~x:10 ~y:20 ()
