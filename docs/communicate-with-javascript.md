@@ -1664,7 +1664,7 @@ let () = draw ~x:10 ~y:20 ~border:true ()
 let () = draw ~x:10 ~y:20 ()
 ```
 ```reasonml
-[@module "MyGame"]
+[@mel.module "MyGame"]
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw";
 
 let () = draw(~x=10, ~y=20, ~border=true, ());
@@ -1700,7 +1700,7 @@ let () = draw ~x:10 ~y:20 ()
 let () = draw ~y:20 ~x:10 ()
 ```
 ```reasonml
-[@module "MyGame"]
+[@mel.module "MyGame"]
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) => unit = "draw";
 let () = draw(~x=10, ~y=20, ());
 let () = draw(~y=20, ~x=10, ());
@@ -2771,7 +2771,7 @@ type pet = {name: string};
 
 let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
 
-let () = pets->(Belt.Array.map(name))->(Js.Array2.joinWith("&"))->Js.log;
+let () = pets->(Belt.Array.map(name))->(Js.Array.join(~sep="&"))->Js.log;
 ```
 
 Melange will generate a function for each field defined in the record. In this
