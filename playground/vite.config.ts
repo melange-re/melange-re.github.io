@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: "../docs/playground",
+    rollupOptions: {
+      treeshake: false
+    }
   },
   base: "./",
 });
