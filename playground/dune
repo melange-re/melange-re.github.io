@@ -1,7 +1,12 @@
 (melange.emit
  (target output)
  (alias playground-runtime-js)
- (libraries melange)
+ (libraries
+  melange
+  ; melange doesn't include belt and dom anymore, including them below leads to
+  ; `_build/default/playground/output/node_modules` to include the runtimes
+  melange.belt
+  melange.dom)
  (modules) ; Empty, we just want to the js artifacts from the libraries
  (module_systems es6))
 
