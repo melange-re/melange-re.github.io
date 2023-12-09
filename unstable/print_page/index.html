@@ -2512,12 +2512,12 @@ draw(20, 20, true)
 <p>When writing Melange bindings, we can add labeled arguments to make things more
 clear:</p>
 <pre><code class="language-ocaml">external draw : x:int -&gt; y:int -&gt; ?border:bool -&gt; unit -&gt; unit = &quot;draw&quot;
-  [@@module &quot;MyGame&quot;]
+  [@@mel.module &quot;MyGame&quot;]
 
 let () = draw ~x:10 ~y:20 ~border:true ()
 let () = draw ~x:10 ~y:20 ()
 </code></pre>
-<pre><code class="language-reasonml">[@module &quot;MyGame&quot;]
+<pre><code class="language-reasonml">[@mel.module &quot;MyGame&quot;]
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) =&gt; unit = &quot;draw&quot;;
 
 let () = draw(~x=10, ~y=20, ~border=true, ());
@@ -2540,11 +2540,11 @@ documentation</a>.</p>
 function on the Melange side. The generated code will maintain the original
 order that was used when declaring the function:</p>
 <pre><code class="language-ocaml">external draw : x:int -&gt; y:int -&gt; ?border:bool -&gt; unit -&gt; unit = &quot;draw&quot;
-  [@@module &quot;MyGame&quot;]
+  [@@mel.module &quot;MyGame&quot;]
 let () = draw ~x:10 ~y:20 ()
 let () = draw ~y:20 ~x:10 ()
 </code></pre>
-<pre><code class="language-reasonml">[@module &quot;MyGame&quot;]
+<pre><code class="language-reasonml">[@mel.module &quot;MyGame&quot;]
 external draw: (~x: int, ~y: int, ~border: bool=?, unit) =&gt; unit = &quot;draw&quot;;
 let () = draw(~x=10, ~y=20, ());
 let () = draw(~y=20, ~x=10, ());
@@ -3361,14 +3361,14 @@ record field names.</p>
 
 let pets = [| { name = &quot;Brutus&quot; }; { name = &quot;Mochi&quot; } |]
 
-let () = pets |. Belt.Array.map name |. Js.Array2.joinWith &quot;&amp;&quot; |. Js.log
+let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:&quot;&amp;&quot; |. Js.log
 </code></pre>
 <pre><code class="language-reasonml">[@deriving accessors]
 type pet = {name: string};
 
 let pets = [|{name: &quot;Brutus&quot;}, {name: &quot;Mochi&quot;}|];
 
-let () = pets-&gt;(Belt.Array.map(name))-&gt;(Js.Array2.joinWith(&quot;&amp;&quot;))-&gt;Js.log;
+let () = pets-&gt;(Belt.Array.map(name))-&gt;(Js.Array.join(~sep=&quot;&amp;&quot;))-&gt;Js.log;
 </code></pre>
 <p>Melange will generate a function for each field defined in the record. In this
 case, a function <code>name</code> that allows to get that field from any record of type
@@ -3429,14 +3429,14 @@ annotations on the OCaml type definition.</p>
 <p>Let’s see an example. Considering this Melange code:</p>
 <pre><code class="language-ocaml">type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 </code></pre>
 <pre><code class="language-reasonml">[@deriving abstract]
 type person = {
   name: string,
-  [@optional]
+  [@mel.optional]
   age: option(int),
 };
 </code></pre>
@@ -3467,7 +3467,7 @@ check.</p>
 <!--#prelude#
 type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 -->
@@ -3499,7 +3499,7 @@ manual</a>.</p>
 <!--#prelude#
 type person = {
   name : string;
-  age : int option; [@optional]
+  age : int option; [@mel.optional]
 }
 [@@deriving abstract]
 let alice = person ~name:"Alice" ~age:20 ()

@@ -35,9 +35,7 @@ let getIds s =
 
   (* prints `1, 2, 3` *)
   let _ =
-    Js.log (getIds {| { &quot;ids&quot; : [1, 2, 3] } |})
-
-@see &lt;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse&gt; MDN</code></pre></li></ul></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-stringify"><a href="#val-stringify" class="anchor"></a><code><span><span class="keyword">val</span> stringify : <span><a href="#type-t">t</a> <span class="arrow">&#45;&gt;</span></span> string</span></code></div><div class="spec-doc"><p><code>stringify json</code> formats the JSON data structure as a string</p><p><b>Returns</b> the string representation of a given JSON data structure</p><pre class="language-ocaml"><code>(* Creates and stringifies a simple JS object *)
+    Js.log (getIds {| { &quot;ids&quot; : [1, 2, 3] } |})</code></pre></li></ul><ul class="at-tags"><li class="see"><span class="at-tag">see</span> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse" class="value">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse</a> <p>MDN</p></li></ul></div></div><div class="odoc-spec"><div class="spec value external anchored" id="val-stringify"><a href="#val-stringify" class="anchor"></a><code><span><span class="keyword">val</span> stringify : <span><a href="#type-t">t</a> <span class="arrow">&#45;&gt;</span></span> string</span></code></div><div class="spec-doc"><p><code>stringify json</code> formats the JSON data structure as a string</p><p><b>Returns</b> the string representation of a given JSON data structure</p><pre class="language-ocaml"><code>(* Creates and stringifies a simple JS object *)
 
 let dict = Js.Dict.empty () in
 Js.Dict.set dict &quot;name&quot; (Js.Json.string &quot;John Doe&quot;);
