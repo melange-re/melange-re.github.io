@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OCaml for JavaScript developers">
+
+    <title>Getting Started - Melange</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Getting Started";
+        var mkdocs_page_input_path = "getting-started.md";
+        var mkdocs_page_url = "/v2.2.0/getting-started/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/ocaml.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Melange
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rationale/">Why</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting Started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install-a-package-manager">Install a package manager</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#template">Template</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#editor-integration">Editor integration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#alternative-package-managers-experimental">Alternative package managers (experimental)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#nix">Nix</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#esy">esy</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Learn</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../new-to-ocaml/">New to OCaml?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../package-management/">Package management</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../build-system/">Build system</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../how-to-guides/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Try</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../playground/">Playground</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../community/">Community</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Melange</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li>Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/melange-re/melange-re.github.io/blob/master/docs/getting-started.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="getting-started">Getting started</h1>
+<p class="centered">Get up and running with Melange in no time!</p>
+
+<hr />
+<h2 id="install-a-package-manager">Install a package manager</h2>
+<p>To work with Melange, you need to install a package manager compatible with
+OCaml. If you are not sure which one to use, we recommend
+<a href="https://opam.ocaml.org/">opam</a>, a source-based package manager for OCaml, but
+there are <a href="#alternative-package-managers-experimental">other alternatives</a>
+available.</p>
+<p>Instructions for installing opam on different operating systems can be found at
+the opam <a href="https://opam.ocaml.org/doc/Install.html">install page</a>, and you can
+find <a href="../package-management/">a whole section about it</a> on this website.</p>
+<h2 id="template">Template</h2>
+<p>The easiest way to get started with Melange is by using the
+<a href="https://github.com/melange-re/melange-opam-template">melange-opam-template</a>.
+You can clone it from <a href="https://github.com/melange-re/melange-opam-template/generate">this
+link</a>, and follow
+the instructions in the <a href="https://github.com/melange-re/melange-opam-template/blob/main/README.md">readme
+file</a>
+to configure the <a href="https://opam.ocaml.org/blog/opam-local-switches/">local opam
+switch</a> and download the
+necessary dependencies to build the project.</p>
+<h2 id="editor-integration">Editor integration</h2>
+<p>One of the goals of Melange is to remain compatible with OCaml. One of the major
+benefits of this compatibility is that developers working on Melange projects
+can use the same editor tooling as they would for OCaml.</p>
+<p>OCaml developer tooling has been built, tested, and refined over the years, with
+plugins available for many editors. The most actively maintained plugins are for
+Visual Studio Code, Emacs, and Vim.</p>
+<p>For Visual Studio Code, install the <a href="https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform">OCaml Platform Visual Studio Code
+extension</a>
+from the Visual Studio Marketplace. When you load an OCaml source file for the
+first time, you may be prompted to select the toolchain to use. Select the
+version of OCaml you are using from the list, such as 5.1.1. Further
+instructions for configuration can be found in the <a href="https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project">extension
+repository</a>.</p>
+<p>For Emacs and Vim, the configuration may vary depending on the case, and there
+are several options available. You can read about them in the <a href="http://ocamlverse.net/content/editor_setup.html">editor setup
+page</a> of the OCamlverse
+documentation site.</p>
+<h2 id="alternative-package-managers-experimental">Alternative package managers (experimental)</h2>
+<p>Melange can also be used with other package managers. The following instructions
+apply to <a href="#nix">Nix</a> and <a href="#esy">esy</a>.</p>
+<h3 id="nix"><a href="https://nixos.org/">Nix</a></h3>
+<p>Melange provides an overlay that can be:</p>
+<ul>
+<li>referenced from a <a href="https://nixos.wiki/wiki/Flakes">Nix flake</a></li>
+<li>overlayed onto a <code>nixpkgs</code> package set</li>
+</ul>
+<p>Make sure <a href="https://nixos.org/download.html">Nix</a> is installed. The following
+<code>flake.nix</code> illustrates how to set up a Melange development environment.</p>
+<pre><code class="language-nix">{
+  description = &quot;Melange starter&quot;;
+
+  inputs = {
+    flake-utils.url = &quot;github:numtide/flake-utils&quot;;
+    nixpkgs.url = &quot;github:nixos/nixpkgs&quot;;
+
+    # Depend on the Melange flake, which provides the overlay
+    melange.url = &quot;github:melange-re/melange&quot;;
+  };
+
+  outputs = { self, nixpkgs, flake-utils, melange }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system}.appendOverlays [
+          # Set the OCaml set of packages to the 5.1 release line
+          (self: super: { ocamlPackages = super.ocaml-ng.ocamlPackages_5_1; })
+          # Apply the Melange overlay
+          melange.overlays.default
+        ];
+        inherit (pkgs) ocamlPackages;
+      in
+
+      {
+        devShells.default = pkgs.mkShell {
+          nativeBuildInputs = with ocamlPackages; [
+            ocaml
+            dune_3
+            findlib
+            ocaml-lsp
+            ocamlPackages.melange
+          ];
+          buildInputs = [ ocamlPackages.melange ];
+        };
+      });
+}
+</code></pre>
+<p>To enter a Melange development shell, run <code>nix develop -c $SHELL</code>.</p>
+<h3 id="esy"><a href="https://esy.sh/">esy</a></h3>
+<p>First, make sure <code>esy</code> is
+<a href="https://esy.sh/docs/en/getting-started.html#install-esy">installed</a>. <code>npm i -g
+esy</code> does the trick in most setups.</p>
+<p>The following is an example <code>esy.json</code> that can help start a Melange project. A
+<a href="https://github.com/melange-re/melange-esy-template">project template for esy</a>
+is also available if you prefer to <a href="https://github.com/melange-re/melange-esy-template/generate">start from a
+template</a>.</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;melange-project&quot;,
+  &quot;dependencies&quot;: {
+    &quot;ocaml&quot;: &quot;5.1.x&quot;,
+    &quot;@opam/dune&quot;: &quot;&gt;= 3.8.0&quot;,
+    &quot;@opam/melange&quot;: &quot;*&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@opam/ocaml-lsp-server&quot;: &quot;*&quot;
+  },
+  &quot;esy&quot;: {
+    &quot;build&quot;: [
+      &quot;dune build @melange&quot;
+    ]
+  }
+}
+</code></pre>
+<p>Run:</p>
+<ol>
+<li><code>esy install</code> to build and make all dependencies available</li>
+<li><code>esy shell</code> to enter a Melange development environment</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../rationale/" class="btn btn-neutral float-left" title="Why"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../new-to-ocaml/" class="btn btn-neutral float-right" title="New to OCaml?">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span>
+            <a href="https://github.com/melange-re/melange" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+      
+        <span><a href="../rationale/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      
+      
+        <span><a href="../new-to-ocaml/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/print-site.js" defer></script>
+      <script src="../js/toggleSyntaxButton.js" defer></script>
+      <script src="../js/reasonml.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

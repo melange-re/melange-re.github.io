@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OCaml for JavaScript developers">
+
+    <title>Build system - Melange</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Build system";
+        var mkdocs_page_input_path = "build-system.md";
+        var mkdocs_page_url = "/v2.2.0/build-system/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/ocaml.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Melange
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rationale/">Why</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Learn</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../new-to-ocaml/">New to OCaml?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../package-management/">Package management</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Build system</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#compilation-model">Compilation model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-is-melange-integrated-into-dune">How is Melange integrated into Dune?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#features">Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-a-new-project">Creating a new project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-a-library">Adding a library</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#entry-points-with-melangeemit">Entry points with melange.emit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#building-the-project">Building the project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#javascript-artifacts-layout">JavaScript artifacts layout</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#guidelines-for-melangeemit">Guidelines for melange.emit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#using-aliases">Using aliases</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#handling-assets">Handling assets</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#commonjs-or-es6-modules">CommonJS or ES6 modules</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../how-to-guides/">How-to guides</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Try</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../playground/">Playground</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../community/">Community</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Melange</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Learn &raquo;</li>
+      <li>Build system</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/melange-re/melange-re.github.io/blob/master/docs/build-system.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="build-system">Build system</h1>
+<p>Melange is deeply integrated with <a href="https://dune.build/">Dune</a>, the most widely
+used build system for OCaml. This integration enables developers to create a
+single project with both OCaml native executables and frontend applications that
+are built with Melange, and even share code between both platforms in an easy
+manner.</p>
+<p>Dune orchestrates and plans the work needed to compile a project, copies files
+when needed, and prepares everything so that Melange takes OCaml source files
+and convert them into JavaScript code.</p>
+<p>Let’s now dive into the Melange compilation model and go through a brief guide
+on how to work with Dune in Melange projects.</p>
+<h3 id="compilation-model">Compilation model</h3>
+<p>Melange compiles a single source file to a single JavaScript module. This
+compilation model simplifies debugging the produced JavaScript code and allows
+to import assets like CSS files and fonts in the same way as one would do in a
+JavaScript project. It also facilitates the integration of Melange with
+JavaScript module bundlers such as <a href="https://webpack.js.org/">Webpack</a>, or <a href="https://npmtrends.com/@vercel/ncc-vs-esbuild-vs-parcel-vs-rollup">other
+alternatives</a>.</p>
+<p>As an example of integration with Webpack, you can refer to the <a href="https://github.com/melange-re/melange-opam-template">Melange opam
+template</a>. To create a
+repository based on this template, follow <a href="https://github.com/melange-re/melange-opam-template/generate">this
+link</a>.</p>
+<h3 id="how-is-melange-integrated-into-dune">How is Melange integrated into Dune?</h3>
+<p>Dune is an OCaml build system that Melange projects can use to specify libraries
+and applications. It’s optimized for monorepos and makes project maintenance
+easier. This section provides an overview of Dune’s features and explains how to
+use it to build Melange applications.</p>
+<h4 id="features">Features</h4>
+<p>Dune is designed with OCaml in mind, which makes it an ideal tool for Melange
+developers. It provides several benefits, including:</p>
+<ul>
+<li>Easy specification of libraries and executables.</li>
+<li>Optimized for monorepos: no need for <code>npm link</code> or similar solutions.</li>
+<li>Easy project maintenance, as one can rearrange folders without updating the
+  paths to libraries.</li>
+<li>Hygiene is maintained in Dune by building out of source: all compilation
+  artifacts are placed in a separate <code>_build</code> folder. Users can optionally <a href="https://dune.readthedocs.io/en/stable/dune-files.html#promote">copy
+  them back to the source
+  tree</a>.</li>
+<li>Dune provides a variety of additional features including <a href="https://dune.readthedocs.io/en/stable/tests.html">cram
+  tests</a>, integration with
+  <a href="https://dune.readthedocs.io/en/stable/documentation.html">Odoc</a>, Melange,
+  <a href="https://dune.readthedocs.io/en/stable/jsoo.html">Js_of_ocaml</a>, <a href="https://dune.readthedocs.io/en/stable/usage.html#watch-mode">watch
+  mode</a>, Merlin/LSP
+  integration for editor support, <a href="https://dune.readthedocs.io/en/stable/cross-compilation.html">cross
+  compilation</a>,
+  and <a href="https://dune.readthedocs.io/en/stable/howto/opam-file-generation.html">generation of <code>opam</code>
+  files</a>.</li>
+</ul>
+<h4 id="creating-a-new-project">Creating a new project</h4>
+<p>To understand how to use Dune, let’s create a small Melange application.</p>
+<p>First of all, create an opam switch, as shown in the <a href="../package-management/">package management
+section</a>:</p>
+<pre><code class="language-bash">opam switch create . 5.1.1 --deps-only
+</code></pre>
+<p>Install the latest versions of Dune and Melange in the switch:</p>
+<pre><code class="language-bash">opam update
+opam install dune melange
+</code></pre>
+<div class="text-reasonml">
+As we will be using Reason syntax, let’s install the `reason` package too:
+
+
+<pre><code class="language-bash">opam install reason
+</code></pre>
+
+</div>
+
+<p>Create a file named <code>dune-project</code>. This file will tell Dune a few things about
+our project configuration:</p>
+<pre><code class="language-text">(lang dune 3.8)
+
+(using melange 0.1)
+</code></pre>
+<p>The first line <code>(lang dune 3.8)</code> tells Dune which version of the "Dune language"
+(the language used in <code>dune</code> files) we want to use. Melange support in Dune is
+only available from version 3.8.</p>
+<p>The second line <code>(using melange 0.1)</code> tells Dune we want to use the <a href="https://dune.readthedocs.io/en/stable/dune-files.html#using">Melange
+extension of the Dune
+language</a>.</p>
+<h4 id="adding-a-library">Adding a library</h4>
+<p>Next, create a folder <code>lib</code>, and a <code>dune</code> file inside. Put the following content
+inside the <code>dune</code> file:</p>
+<pre><code class="language-text">(library
+ (name lib)
+ (modes melange))
+</code></pre>
+<div class="text-ocaml">
+Create a file <code>lib.ml</code> in the same folder:
+</div>
+<div class="text-reasonml">
+Create a file <code>lib.re</code> in the same folder:
+</div>
+
+<pre><code class="language-ocaml">let name = &quot;Jane&quot;
+</code></pre>
+<pre><code class="language-reasonml">let name = &quot;Jane&quot;;
+</code></pre>
+<p>The top level configuration entries —like the <code>library</code> one that appears in the
+<code>dune</code> file— are referred to as <em>stanzas</em>, and the inner ones —like <code>name</code> and
+<code>modes</code>— are referred to as <em>fields</em> of the stanza.</p>
+<p>All stanzas are well covered in the Dune documentation site, where we can find
+the reference for the <a href="https://dune.readthedocs.io/en/stable/dune-files.html#library"><code>library</code>
+stanza</a>.</p>
+<p>Dune is designed to minimize the need for configuration changes when modifying
+the project folder structure. For example, you can move the <code>lib</code> folder to a
+different location within the project, and all build commands will continue to
+work without requiring any updates to any <code>dune</code> file. This feature proves to be
+quite convenient.</p>
+<h4 id="entry-points-with-melangeemit">Entry points with <code>melange.emit</code></h4>
+<p><strong>Libraries are useful to encapsulate behavior and logical components of our
+application</strong>, but they won’t produce any JavaScript artifacts on their own.</p>
+<p>To generate JavaScript code, we need to define an entry point of our
+application. In the root folder, create another <code>dune</code> file:</p>
+<pre><code class="language-text">(melange.emit
+ (target app)
+ (libraries lib))
+</code></pre>
+<div class="text-ocaml">
+  And an <code>app.ml</code> file:
+</div>
+<div class="text-reasonml">
+  And an <code>app.re</code> file:
+</div>
+
+<pre><code class="language-ocaml">let () = Js.log Lib.name
+</code></pre>
+<pre><code class="language-reasonml">let () = Js.log(Lib.name);
+</code></pre>
+<p>The <code>melange.emit</code> stanza tells Dune to generate JavaScript files from a set of
+libraries and modules. In-depth documentation about this stanza can be found in
+the <a href="https://dune.readthedocs.io/en/stable/melange.html#melange-emit">Dune
+docs</a>.</p>
+<p>The file structure of the app should look something like this:</p>
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── lib
+│   ├── dune
+│   └── lib.ml
+├── dune-project
+├── dune
+└── app.ml</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── _opam
+├── lib
+│   ├── dune
+│   └── lib.re
+├── dune-project
+├── dune
+└── app.re</code></pre>
+
+<h4 id="building-the-project">Building the project</h4>
+<p>We can build the project now, which will produce the JavaScript code from our
+sources using the Melange compiler:</p>
+<pre><code class="language-bash">$ dune build @melange
+</code></pre>
+<p>This command tells dune to build all the targets that have an alias <code>melange</code>
+attached to them.
+<a href="https://dune.readthedocs.io/en/stable/overview.html#term-alias">Aliases</a> are
+build targets that don’t produce any file and have configurable dependencies.</p>
+<p>By default, all the targets in a <code>melange.emit</code> stanza and the libraries it
+depends on are attached to the <code>melange</code> alias. We can define explicit aliases
+though, as we will see below.</p>
+<p>If everything went well, we should be able to run the resulting JavaScript with
+Node.js. As we mentioned above while going through its features, Dune places all
+artifacts inside the <code>_build</code> folder to not pollute any source folders. So we
+will point Node to the script placed in that folder, to see the expected output:</p>
+<pre><code class="language-bash">$ node _build/default/app/app.js
+Jane
+</code></pre>
+<h4 id="javascript-artifacts-layout">JavaScript artifacts layout</h4>
+<p>In the command above we had to look for the <code>app.js</code> file inside an <code>app</code>
+folder, but we don’t have any such folder in our sources. This folder is the one
+declared in the <code>target</code> field of the <code>melange.emit</code> stanza, which Dune will use
+to know where to place the generated JavaScript artifacts.</p>
+<p>As a more complex example, consider the following setup:</p>
+<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.ml
+└── emit
+    └── dune</code></pre>
+<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+├── dune-project
+├── lib
+│   ├── dune
+│   └── foo.re
+└── emit
+    └── dune</code></pre>
+
+<p>With <code>emit/dune</code> being:</p>
+<pre><code class="language-text">(melange.emit
+ (target app)
+ (libraries lib))
+</code></pre>
+<p>And <code>lib/dune</code>:</p>
+<pre><code class="language-text">(library
+ (name lib)
+ (modes melange))
+</code></pre>
+<div class="text-ocaml">
+Then, the JavaScript artifacts for `foo.ml` will be placed under:
+</div>
+<div class="text-reasonml">
+Then, the JavaScript artifacts for `foo.re` will be placed under:
+</div>
+
+<pre><code class="language-text">_build/default/emit/app/lib/foo.js
+</code></pre>
+<p>More generically:</p>
+<ul>
+<li>For a <code>melange.emit</code> stanza defined in a <code>dune</code> file located in the relative
+  workspace path <code>$melange-emit-folder</code></li>
+<li>Which includes a <code>target</code> field named <code>$target</code>, like <code>(target $target)</code></li>
+<li>For a source file called <code class="text-ocaml">$name.ml</code><code
+  class="text-reasonml">$name.re</code>, placed in the relative workspace path
+  <code>$path-to-source-file</code></li>
+</ul>
+<p>The path to the generated JavaScript file from <code
+  class="text-ocaml">$name.ml</code><code class="text-reasonml">$name.re</code>
+  will be:</p>
+<pre><code class="language-text">_build/default/$melange-emit-folder/$target/$path-to-source-file/$name.js
+</code></pre>
+<h4 id="guidelines-for-melangeemit">Guidelines for <code>melange.emit</code></h4>
+<p>The following recommendations around <code>melange.emit</code> have been tested within
+large industrial projects, and have proven to be helpful guidelines to deal with
+complexity, maintenance and build performance.</p>
+<ul>
+<li>To simplify access to the generated JavaScript files from tools like Webpack,
+  it is recommended to place the <code>dune</code> files containing the <code>melange.emit</code>
+  stanzas in the project’s root folder. This ensures that the generated
+  JavaScript files are directly placed under the <code>_build/default/$target</code> path.</li>
+<li>To minimize the risk of inadvertent increases in bundle size, it is advisable
+  to reduce the number of <code>melange.emit</code> stanzas to a minimum, ideally just one.
+  Having multiple <code>melange.emit</code> stanzas may result in multiple copies of
+  JavaScript code generated from the same library. By consolidating the
+  <code>melange.emit</code> stanzas, you can mitigate this issue and ensure more efficient
+  bundle sizes.</li>
+</ul>
+<h4 id="using-aliases">Using aliases</h4>
+<p>The default <code>melange</code> alias is useful for prototyping or when working on small
+projects, but larger projects might define multiple entry points or
+<code>melange.emit</code> stanzas. In these cases, it is useful to have a way to build
+individual stanzas. To do so, one can define explicit aliases for each one of
+them by using the <code>alias</code> field.</p>
+<p>Let’s define a custom alias <code>my-app</code> for our <code>melange.emit</code> stanza:</p>
+<pre><code class="language-text">(melange.emit
+ (target app)
+ (alias my-app)
+ (libraries lib))
+</code></pre>
+<p>Now we can refer to this new alias:</p>
+<pre><code class="language-bash">$ dune build @my-app
+</code></pre>
+<p>Note that if we try to build again using the default <code>melange</code> alias, Dune will
+return an error, as there are no more targets attached to it.</p>
+<pre><code class="language-text">$ dune build @melange
+Error: Alias &quot;melange&quot; specified on the command line is empty.
+It is not defined in . or any of its descendants.
+</code></pre>
+<h4 id="handling-assets">Handling assets</h4>
+<p>Sometimes we want to use CSS files, fonts, or other assets in our Melange
+projects. Due to the way Dune works, our assets will have to be copied to the
+<code>_build</code> folder and installed. To make this process as easy as possible, Dune
+provides a way to specify these dependencies, depending on the stanza:</p>
+<ul>
+<li>For <code>library</code> stanzas, a field <code>melange.runtime_deps</code></li>
+<li>For <code>melange.emit</code> stanzas, a field <code>runtime_deps</code></li>
+</ul>
+<p>Both fields are documented in the <a href="https://dune.readthedocs.io/en/stable/melange.html#melange-emit">Melange
+page</a> of the
+Dune documentation site.</p>
+<p>For the sake of learning how to work with assets in a Melange project, let’s say
+that we want to read the string in <code>Lib.name</code> from a text file. We will combine
+the field <code>melange.runtime_deps</code> with some bindings to Node that Melange
+provides. Check the next section, <a href="../communicate-with-javascript/">"Communicate with
+JavaScript"</a>, it you want to learn more about
+how bindings work.</p>
+<p>So, let’s add a new file <code>name.txt</code> inside <code>lib</code> folder, that just contains the
+name <code>Jane</code>.</p>
+<p>Then, adapt the <code>lib/dune</code> file. We will need to add the <code>melange.runtime_deps</code>
+field, as well as a <a href="https://dune.readthedocs.io/en/stable/reference/preprocessing-spec.html"><code>preprocessing</code>
+field</a>
+that will allow to use the <code>bs.raw</code> extension (more about these extensions in
+the <a href="../communicate-with-javascript/">"Communicate with JavaScript"</a> section), in
+order to get the value of the <code>__dirname</code> environment variable:</p>
+<pre><code class="language-text">(library
+ (name lib)
+ (modes melange)
+ (melange.runtime_deps name.txt)
+ (preprocess (pps melange.ppx)))
+</code></pre>
+<div class="text-ocaml">
+Finally, update <code>lib/lib.ml</code> to read from the recently added file:
+</div>
+<div class="text-reasonml">
+Finally, update <code>lib/lib.re</code> to read from the recently added file:
+</div>
+
+<pre><code class="language-ocaml">let dir = [%mel.raw &quot;__dirname&quot;]
+let file = &quot;name.txt&quot;
+let name = Node.Fs.readFileSync (dir ^ &quot;/&quot; ^ file) `ascii
+</code></pre>
+<pre><code class="language-reasonml">let dir = [%mel.raw &quot;__dirname&quot;];
+let file = &quot;name.txt&quot;;
+let name = Node.Fs.readFileSync(dir ++ &quot;/&quot; ++ file, `ascii);
+</code></pre>
+<p>After these changes, once we build the project, we should still be able to run
+the application file with Node:</p>
+<pre><code class="language-bash">$ dune build @my-app
+$ node _build/default/app/app.js
+Jane
+</code></pre>
+<p>The same approach could be used to copy fonts, CSS or SVG files, or any other
+asset in your project.</p>
+<p>Dune offers great flexibility to specify dependencies. Another interesting
+feature are globs, that allow to simplify the configuration when depending on
+multiple files. For example:</p>
+<pre><code class="language-text">(melange.runtime_deps
+ (glob_files styles/*.css)
+ (glob_files images/*.png)
+ (glob_files static/*.{pdf,txt}))
+</code></pre>
+<p>See the <a href="https://dune.readthedocs.io/en/stable/concepts/dependency-spec.html">dependency specification
+docs</a> to
+learn more about it.</p>
+<p>With runtime dependencies, we have reached the end of this Dune guide for
+Melange developers. For further details about how Dune works and its integration
+with Melange, check the <a href="https://dune.readthedocs.io/">Dune documentation</a>, and
+the <a href="https://github.com/melange-re/melange-opam-template">Melange opam
+template</a>.</p>
+<h4 id="commonjs-or-es6-modules">CommonJS or ES6 modules</h4>
+<p>Melange produces JavaScript modules that export the functions they declare, and
+declare imports for the values and modules they depend on.</p>
+<p>By default, Melange will produce
+<a href="https://en.wikipedia.org/wiki/CommonJS">CommonJS</a> modules, but it is possible
+to configure it to generate
+<a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015">ES6</a>
+modules.</p>
+<p>Use the <code>module_systems</code> field in the <a href="https://dune.readthedocs.io/en/stable/melange.html#melange-emit"><code>melange.emit</code>
+stanza</a> to emit
+ES6 modules:</p>
+<pre><code class="language-text">(melange.emit
+ (target app)
+ (alias my-app)
+ (libraries lib)
+ (module_systems es6))
+</code></pre>
+<p>If no extension is specified, the resulting JavaScript files will use <code>.js</code>. You
+can specify a different extension with a pair <code>(&lt;module_system&gt; &lt;extension&gt;)</code>,
+e.g. <code>(module_systems (es6 mjs))</code>. Multiple module systems can be used in the
+same field as long as their extensions are different. For example,
+<code>(module_systems commonjs (es6 mjs))</code> will produce one set of JavaScript files
+using CommonJS and the <code>.js</code> extension, and another using ES6 and the <code>.mjs</code>
+extension.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../package-management/" class="btn btn-neutral float-left" title="Package management"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../communicate-with-javascript/" class="btn btn-neutral float-right" title="Communicate with JavaScript">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span>
+            <a href="https://github.com/melange-re/melange" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+      
+        <span><a href="../package-management/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      
+      
+        <span><a href="../communicate-with-javascript/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/print-site.js" defer></script>
+      <script src="../js/toggleSyntaxButton.js" defer></script>
+      <script src="../js/reasonml.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

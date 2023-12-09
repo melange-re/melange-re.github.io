@@ -1,0 +1,155 @@
+div.col-md-9 h1:first-of-type {
+  text-align: center;
+  font-size: 60px;
+  font-weight: 300;
+}
+
+#home-subtitle {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 300;
+}
+
+div.col-md-9 > p.centered {
+  text-align: center;
+}
+
+div.col-md-9 p.admonition-title:first-of-type {
+  text-align: left;
+}
+
+div.col-md-9 h1:first-of-type .headerlink {
+  display: none;
+}
+
+div.admonition.block > .admonition-title {
+  display: none;
+}
+
+.admonition.new,
+details.new {
+  color: #15654a;
+  background-color: #edfff9;
+  border-color: #bcf1e8;
+}
+.admonition.example,
+details.example {
+  color: #353579;
+  background-color: #f0f1ff;
+  border-color: #d8dcf0;
+}
+
+/* Definition List styles */
+
+dd {
+  padding-left: 20px;
+}
+
+.card-body svg {
+  width: 100%;
+  padding: 0 50px;
+  height: auto;
+}
+
+/* Homepage */
+
+body.homepage div.jumbotron {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0;
+}
+
+body.homepage div.jumbotron div.card {
+  margin-bottom: 2rem;
+}
+
+body.homepage > div.container > div.row > div.col-md-3 {
+  display: none;
+}
+
+body.homepage > div.container > div.row > div.col-md-9 {
+  margin-left: 0;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* mkdocstrings */
+
+.doc-object {
+  padding-left: 10px;
+  border-left: 4px solid rgba(230, 230, 230);
+}
+
+.doc-contents .field-body p:first-of-type {
+  display: inline;
+}
+
+.doc-label-class-attribute {
+  display: none;
+}
+
+h2.doc-heading {
+  font-size: 1.5rem;
+}
+h3.doc-heading {
+  font-size: 1.4rem;
+}
+h4.doc-heading {
+  font-size: 1.3rem;
+}
+h5.doc-heading {
+  font-size: 1.2rem;
+}
+
+.doc-contents {
+  padding-left: 0;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 1em 10px 0.1em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+/* Needed for code spans like `{ abstract = light }` to render ok when they get broken into 2 lines in md */
+.rst-content code {
+  white-space: nowrap;
+}
+
+/* Toggle syntax */
+
+.button.toggleSyntaxButton {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 80%;
+  color: #fff;
+}
+
+.toggleSyntaxButton span {
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.syntax__ocaml .toggleSyntaxButton-ocaml,
+.syntax__reasonml .toggleSyntaxButton-reasonml {
+  text-decoration: underline;
+}
+
+.syntax__ocaml .hljs.language-reasonml,
+.syntax__ocaml .text-reasonml,
+.syntax__reasonml .hljs.language-ocaml,
+.syntax__reasonml .text-ocaml {
+  display: none;
+}
+
+#version-selector {
+  border-radius: 6px;
+  color: #404040;
+  font-family: Lato,proxima-nova,Helvetica Neue,Arial,sans-serif;;
+}
