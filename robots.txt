@@ -4,3 +4,9 @@ Allow: /
 Sitemap: https://melange.re/unstable/sitemap.xml
 
 Sitemap: https://melange.re/v1.0.0/sitemap.xml
+
+Sitemap: https://melange.re/v2.0.0/sitemap.xml
+
+Sitemap: https://melange.re/v2.1.0/sitemap.xml
+
+Sitemap: https://melange.re/v2.2.0/sitemap.xml
