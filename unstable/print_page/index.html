@@ -412,7 +412,7 @@ Visual Studio Code, Emacs, and Vim.</p>
 extension</a>
 from the Visual Studio Marketplace. When you load an OCaml source file for the
 first time, you may be prompted to select the toolchain to use. Select the
-version of OCaml you are using from the list, such as 5.1.0. Further
+version of OCaml you are using from the list, such as 5.1.1. Further
 instructions for configuration can be found in the <a href="https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project">extension
 repository</a>.</p>
 <p>For Emacs and Vim, the configuration may vary depending on the case, and there
@@ -641,7 +641,7 @@ switch exists already, we can look for a <code>_opam</code> directory at the roo
 project or use the <code>opam switch</code> command to identify if a switch already exists
 in the project folder.</p>
 <p>If it does not exist, we can create it with:</p>
-<pre><code class="language-text">opam switch create . 5.1.0 --deps-only
+<pre><code class="language-text">opam switch create . 5.1.1 --deps-only
 </code></pre>
 <p>If it exists, we can install the dependencies of the project with:</p>
 <pre><code class="language-text">opam install . --deps-only
@@ -909,7 +909,7 @@ developers. It provides several benefits, including:</p>
 <p>To understand how to use Dune, let’s create a small Melange application.</p>
 <p>First of all, create an opam switch, as shown in the <a href="#package-management">package management
 section</a>:</p>
-<pre><code class="language-bash">opam switch create . 5.1.0 --deps-only
+<pre><code class="language-bash">opam switch create . 5.1.1 --deps-only
 </code></pre>
 <p>Install the latest versions of Dune and Melange in the switch:</p>
 <pre><code class="language-bash">opam update
@@ -3713,7 +3713,7 @@ migrate from ReScript syntax in the section below.</p>
 <p>At this point, we can create a <a href="https://opam.ocaml.org/blog/opam-local-switches/">local opam
 switch</a> to start working on
 our library:</p>
-<pre><code class="language-bash">opam switch create . 5.1.0 -y --deps-only
+<pre><code class="language-bash">opam switch create . 5.1.1 -y --deps-only
 </code></pre>
 <p>Once this step is done, we can call <code>dune</code> from the library folder, but first we
 need some configuration files.</p>
@@ -3979,7 +3979,7 @@ v2 of Melange and 5.1 of OCaml:</p>
 <pre><code class="language-bash">opam update
 </code></pre>
 <p>Now, update the version of the OCaml compiler in the local switch to 5.1:</p>
-<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.0
+<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.1
 </code></pre>
 <p>Finally, we can upgrade all packages to get Melange v2 and the latest version of
 all libraries:</p>
@@ -3990,7 +3990,7 @@ subcommand:</p>
 <pre><code class="language-bash">opam list --installed melange
 # Packages matching: name-match(melange) &amp; installed
 # Name  # Installed    # Synopsis
-melange 2.0.0          Toolchain to produce JS from Reason/OCaml
+melange 2.2.0          Toolchain to produce JS from Reason/OCaml
 </code></pre>
 <p>Before building, we have to update some parts of the configuration to make it
 work with v2.</p>
@@ -4850,7 +4850,7 @@ certain users being unable to access these tools if their systems or
 architectures are not included in the pre-built binaries.</p>
 <h3 id="melange-for-x-developers-ocaml-compiler-version">OCaml compiler version</h3>
 <p>ReScript is compatible with the 4.06 version of the OCaml compiler, while
-Melange is compatible with the version 5.1.0 (as of Oct 2023).</p>
+Melange is compatible with the version 5.1.1 (as of Dec 2023).</p>
 <h3 id="melange-for-x-developers-editor-integration">Editor integration</h3>
 <p>Melange is fully compatible with the <a href="https://ocaml.org/docs/up-and-running#configuring-your-editor">OCaml platform editor
 tools</a>, which

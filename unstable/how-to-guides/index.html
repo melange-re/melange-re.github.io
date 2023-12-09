@@ -246,7 +246,7 @@ migrate from ReScript syntax in the section below.</p>
 <p>At this point, we can create a <a href="https://opam.ocaml.org/blog/opam-local-switches/">local opam
 switch</a> to start working on
 our library:</p>
-<pre><code class="language-bash">opam switch create . 5.1.0 -y --deps-only
+<pre><code class="language-bash">opam switch create . 5.1.1 -y --deps-only
 </code></pre>
 <p>Once this step is done, we can call <code>dune</code> from the library folder, but first we
 need some configuration files.</p>
@@ -512,7 +512,7 @@ v2 of Melange and 5.1 of OCaml:</p>
 <pre><code class="language-bash">opam update
 </code></pre>
 <p>Now, update the version of the OCaml compiler in the local switch to 5.1:</p>
-<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.0
+<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.1
 </code></pre>
 <p>Finally, we can upgrade all packages to get Melange v2 and the latest version of
 all libraries:</p>
@@ -523,7 +523,7 @@ subcommand:</p>
 <pre><code class="language-bash">opam list --installed melange
 # Packages matching: name-match(melange) &amp; installed
 # Name  # Installed    # Synopsis
-melange 2.0.0          Toolchain to produce JS from Reason/OCaml
+melange 2.2.0          Toolchain to produce JS from Reason/OCaml
 </code></pre>
 <p>Before building, we have to update some parts of the configuration to make it
 work with v2.</p>
