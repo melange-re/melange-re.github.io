@@ -137,7 +137,7 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"dev"}</span>
+                <span className="Text-xs Number">{"2.2.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
@@ -149,7 +149,7 @@ function Sidebar({ onExampleClick }) {
               </span>
               <span className="Version">
                 <span className="Text-xs">{"ReasonReact"}</span>
-                <span className="Text-xs Number">{"dev"}</span>
+                <span className="Text-xs Number">{"0.13.0"}</span>
               </span>
             </div>
           </div>) : null}
@@ -241,7 +241,7 @@ function ConsolePanel({ logs, clearLogs }) {
   )
 }
 
-function ProblemsPanel({ problems, warnings }) {
+function ProblemsPanel({ problems }) {
   const defaultState = false;
   const [isCollapsed, setIsCollapsed] = React.useState(defaultState);
   const ref = React.useRef(null);
@@ -263,11 +263,6 @@ function ProblemsPanel({ problems, warnings }) {
     ? problems.map((v) => v.msg).join("\n")
     : "";
 
-  const warningsString =
-  warnings && warnings.length > 0
-    ? warnings.map((v) => v.msg).join("\n")
-    : "";
-
   return (
     <>
       <div className="ProblemsHeader">
@@ -275,12 +270,7 @@ function ProblemsPanel({ problems, warnings }) {
         <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
-      {(problems && problems.length > 0)
-        ? <div className="Problems Scrollbar">{problemsString}</div>
-        : (warnings && warnings.length > 0)
-          ? <div className="Problems Scrollbar">{warningsString}</div>
-          : <div className="Problems Empty">No problems!</div>
-       }
+        {problems && problems.length > 0 ? (<div className="Problems Scrollbar">{problemsString}</div>) : <div className="Problems Empty">No problems!</div>}
       </Panel>
     </>
   )
@@ -389,14 +379,14 @@ function OutputEditor({ language, value }) {
 }
 
 const problemFromCompile = ({
-  js_warning_error_msg,
+  js_error_msg,
   row,
   column,
   endRow,
   endColumn,
   text,
 }) => ({
-  msg: js_warning_error_msg,
+  msg: js_error_msg,
   loc: {
     row: row + 1,
     column: column + 1,
@@ -406,13 +396,13 @@ const problemFromCompile = ({
   },
 });
 
-const toMonaco = (severity) => (problem) => ({
+const toMonaco = (problem) => ({
   startLineNumber: problem.loc.row,
   startColumn: problem.loc.column,
   endLineNumber: problem.loc.endRow,
   endColumn: problem.loc.endColumn,
   message: problem.msg,
-  severity: severity,
+  severity: monaco.MarkerSeverity.Error,
 });
 
 const compile = (language, code) => {
@@ -422,12 +412,12 @@ const compile = (language, code) => {
       ? ocaml.compileRE(code)
       : ocaml.compileML(code);
   } catch (error) {
-    compilation = { js_warning_error_msg: error.message };
+    compilation = { js_error_msg: error.message };
   }
 
   if (compilation) {
     let problems = undefined;
-    if (compilation.js_warning_error_msg) {
+    if (compilation.js_error_msg) {
       problems = [problemFromCompile(compilation)];
     } else if (compilation.warning_errors) {
       problems = compilation.warning_errors.map(problemFromCompile);
@@ -435,7 +425,6 @@ const compile = (language, code) => {
     if (problems) {
       return {
         typeHints: [],
-        warnings: [],
         problems: problems,
       }
     } else {
@@ -460,16 +449,14 @@ const compile = (language, code) => {
           }
         }),
         javascriptCode: compilation.js_code,
-        warnings: compilation.warnings.map(problemFromCompile),
       }
     }
   } else {
     return {
       typeHints: [],
-      warnings: [],
       problems: [
         {
-          js_warning_error_msg: "No result was returned from compilation",
+          js_error_msg: "No result was returned from compilation",
           row,
           column,
           endRow,
@@ -488,13 +475,7 @@ function updateMarkers(monaco, editorRef, compilation) {
       monaco.editor.setModelMarkers(
         editorRef.current.getModel(),
         owner,
-        compilation.problems.map(toMonaco(monaco.MarkerSeverity.Error))
-      );
-    } else if (compilation?.warnings) {
-      monaco.editor.setModelMarkers(
-        editorRef.current.getModel(),
-        owner,
-        compilation.warnings.map(toMonaco(monaco.MarkerSeverity.Warning))
+        compilation.problems.map(toMonaco)
       );
     } else {
       monaco.editor.removeAllMarkers(owner);
@@ -618,7 +599,7 @@ function App() {
 
   React.useEffect(() => {
     updateMarkers(monaco, editorRef, compilation)
-  }, [monaco, compilation?.problems, compilation?.warnings]);
+  }, [monaco, compilation?.problems]);
 
   React.useEffect(() => {
     if (workerState.bundledCode) {
@@ -717,7 +698,7 @@ function App() {
                 </div>
               </Panel>
               <PanelResizeHandle className="ResizeHandle" />
-              <ProblemsPanel warnings={compilation?.warnings} problems={compilation?.problems} />
+              <ProblemsPanel problems={compilation?.problems} />
             </PanelGroup>
           </Panel>
           <PanelResizeHandle className="ResizeHandle" />

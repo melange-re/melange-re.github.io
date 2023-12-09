@@ -2763,7 +2763,7 @@ type pet = { name : string } [@@deriving accessors]
 
 let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
 
-let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:"&" |. Js.log
+let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
 ```
 ```reasonml
 [@deriving accessors]
@@ -2771,7 +2771,7 @@ type pet = {name: string};
 
 let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
 
-let () = pets->(Belt.Array.map(name))->(Js.Array.join(~sep="&"))->Js.log;
+let () = pets->(Belt.Array.map(name))->(Js.Array2.joinWith("&"))->Js.log;
 ```
 
 Melange will generate a function for each field defined in the record. In this

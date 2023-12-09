@@ -142,7 +142,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > let pets = [| { name = "Brutus" }; { name = "Mochi" } |]
   > 
-  > let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:"&" |. Js.log
+  > let () = pets |. Belt.Array.map name |. Js.Array2.joinWith "&" |. Js.log
   > EOF
 
   $ dune build @melange
