@@ -31,7 +31,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int;
   > }
-  > [@@deriving abstract]
+  > [@@deriving getSet]
   > EOF
 
   $ dune build @melange
@@ -41,7 +41,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   mutable age : int;
   > }
-  > [@@deriving abstract]
+  > [@@deriving getSet]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > 
@@ -49,13 +49,18 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 7, characters 12-18:
+  7 | let alice = person ~name:"Alice" ~age:20
+                  ^^^^^^
+  Error: Unbound value person
+  [1]
 
   $ cat > input.ml <<\EOF
   > type person = {
   >   name : string;
   >   age : int;
   > }
-  > [@@deriving abstract { light }]
+  > [@@deriving jsProperties, getSet { light }]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > let aliceName = name alice
@@ -69,7 +74,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int option; [@mel.optional]
   > }
-  > [@@deriving abstract]
+  > [@@deriving jsProperties, getSet]
   > let alice = person ~name:"Alice" ~age:20 ()
   > let bob = person ~name:"Bob" ()
   > 
@@ -81,27 +86,56 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > type person = {
+  >   name : string;
+  >   age : int option; [@mel.optional]
+  > }
+  > [@@deriving jsProperties, getSet]
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
+  > type person = {
+  >   name : string;
+  >   age : int option; [@mel.optional]
+  > }
+  > [@@deriving getSet]
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
   > 
   > type person = {
   >   name : string;
   >   age : int option; [@mel.optional]
   > }
-  > [@@deriving abstract]
+  > [@@deriving jsDeriving]
   > 
   > let alice = person ~name:"Alice" ~age:20 ()
   > let bob = person ~name:"Bob" ()
   > EOF
 
   $ dune build @melange
+  File "input.ml", line 4, characters 22-34:
+  4 |   age : int option; [@mel.optional]
+                            ^^^^^^^^^^^^
+  Alert unused: Unused attribute [@mel.optional]
+  This means such annotation is not annotated properly.
+  For example, some annotations are only meaningful in externals
+  
+  File "input.ml", line 6, characters 12-22:
+  6 | [@@deriving jsDeriving]
+                  ^^^^^^^^^^
+  Error: Ppxlib.Deriving: 'jsDeriving' is not a supported type deriving
+         generator
+  [1]
 
   $ cat > input.ml <<\EOF
   > type person
   > 
   > val person : name:string -> ?age:int -> unit -> person
-  > 
-  > val nameGet : person -> string
-  > 
-  > val ageGet : person -> int option
   > EOF
 
   $ dune build @melange
@@ -116,7 +150,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int option; [@mel.optional]
   > }
-  > [@@deriving abstract]
+  > [@@deriving jsProperties]
   > EOF
 
   $ dune build @melange
