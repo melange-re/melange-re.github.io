@@ -125,8 +125,7 @@ initWorkerizedReducer(
           // bundling always happens in worker as it's expensive. Evaluation too,
           // but if there is DOM manipulation, then defer evaluation to the
           // main thread, as worker doesn't have access to DOM
-          const requireReactString = "import * as React";
-          if (code.indexOf(requireReactString) >= 0) {
+          if (code.indexOf("react/jsx-runtime") >= 0 || code.indexOf("react-dom/client") >= 0) {
             state.bundledCode = output[0].code;
           } else {
             state.bundledCode = undefined;
