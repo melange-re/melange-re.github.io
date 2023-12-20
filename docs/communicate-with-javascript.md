@@ -796,8 +796,9 @@ and more:
 - [`deriving`](#generate-getters-setters-and-constructors): generate getters and
   setters for some types
 - [`mel.inline`](#inlining-constant-values): forcefully inline constant values
-- [`optional`](#convert-records-into-abstract-types): omit fields in a record
-  (combines with `deriving`)
+- [`optional`](#generate-javascript-objects-with-optional-properties):
+  translates optional fields in a record to omitted properties in the generated
+  JavaScript object (combines with `deriving`)
 
 **Extension nodes:**
 
@@ -2805,15 +2806,10 @@ var pets = [
 console.log(Belt_Array.map(pets, name).join("&"));
 ```
 
-#### Convert records into abstract types
+#### Generate JavaScript objects with optional properties
 
-When binding to JavaScript objects, it is generally recommended to use records
-since Melange precisely uses objects as their runtime representation. This
-approach was discussed in the section about [binding to JavaScript
-objects](#bind-to-javascript-objects).
-
-But there’s a specific case where records may not be enough: when we want to
-emit a JavaScript object where some of the keys might be present or absent.
+In some occasions, we might want to emit a JavaScript object where some of the
+keys can be conditionally present or absent.
 
 For instance, consider the following record:
 
@@ -2831,19 +2827,14 @@ type person = {
 ```
 
 An example of this use-case would be expecting `{ name = "John"; age = None }`
-to generate a JavaScript such as `{name: "Carl"}`, where the `age` key doesn’t
-appear.
+to generate a JavaScript object such as `{name: "Carl"}`, where the `age` key
+doesn’t appear.
 
-The `@deriving abstract` attribute exists to solve this problem. When present in
-a record type, `@deriving abstract` makes the record definition abstract and
-generates the following functions instead:
-
-- A constructor function for creating values of the type
-- Getters and setters for accessing the record fields
-
-`@deriving abstract` effectively models a record-shaped JavaScript object
-exclusively through a set of (generated) functions derived from attribute
-annotations on the OCaml type definition.
+The `@deriving jsProperties` attribute exists to solve this problem. When
+present in a record type, `@deriving jsProperties` generates a constructor
+function for creating values of the type, where the fields marked with
+`[@mel.optional]` will be fully removed from the generated JavaScript object
+when their value is `None`.
 
 Let’s see an example. Considering this Melange code:
 
@@ -2852,10 +2843,10 @@ type person = {
   name : string;
   age : int option; [@mel.optional]
 }
-[@@deriving abstract]
+[@@deriving jsProperties]
 ```
 ```reasonml
-[@deriving abstract]
+[@deriving jsProperties]
 type person = {
   name: string,
   [@mel.optional]
@@ -2863,27 +2854,18 @@ type person = {
 };
 ```
 
-Melange will make the `person` type abstract and generate constructor, getter
-and setter functions. In our example, the OCaml signature would look like this
-after preprocessing:
+Melange will generate a constructor to create values of this type. In our
+example, the OCaml signature would look like this after preprocessing:
 
 ```ocaml
 type person
 
 val person : name:string -> ?age:int -> unit -> person
-
-val nameGet : person -> string
-
-val ageGet : person -> int option
 ```
 ```reasonml
 type person;
 
 external person: (~name: string, ~age: int=?, unit) => person = ;
-
-external nameGet: person => string = ;
-
-external ageGet: person => option(int) = ;
 ```
 
 The `person` function can be used to create values of `person`. It is the only
@@ -2898,7 +2880,7 @@ type person = {
   name : string;
   age : int option; [@mel.optional]
 }
-[@@deriving abstract]
+[@@deriving jsDeriving]
 -->
 ```ocaml
 let alice = person ~name:"Alice" ~age:20 ()
@@ -2930,14 +2912,36 @@ application. Further details about optional labeled arguments can be found in
 [the corresponding section of the OCaml
 manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
-The functions `nameGet` and `ageGet` are accessors for each record field:
+#### Generating getters and setters
+
+In case we need both getters and setters for a record, we can use `deriving getSet` to have them generated for free.
+
+If we take a record like this:
+
+```ocaml
+type person = {
+  name : string;
+  age : int option; [@mel.optional]
+}
+[@@deriving getSet]
+```
+```reasonml
+[@deriving getSet]
+type person = {
+  name: string,
+  [@mel.optional]
+  age: option(int),
+};
+```
+
+Melange will create functions `nameGet` and `ageGet`, as accessors for each record field:
 
 <!--#prelude#
 type person = {
   name : string;
   age : int option; [@mel.optional]
 }
-[@@deriving abstract]
+[@@deriving getSet]
 let alice = person ~name:"Alice" ~age:20 ()
 let bob = person ~name:"Bob" ()
 -->
@@ -2962,7 +2966,7 @@ var bob = bob.name;
 
 The functions are named by appending `Get` to the field names of the record to
 prevent potential clashes with other values within the module. If shorter names
-are preferred for the getter functions, there is an alternate `{ abstract =
+are preferred for the getter functions, there is an alternate `{ getSet =
 light }` payload that can be passed to `deriving`:
 
 ```ocaml
@@ -2970,13 +2974,13 @@ type person = {
   name : string;
   age : int;
 }
-[@@deriving abstract { light }]
+[@@deriving getSet { light }]
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@deriving abstract({light: light})]
+[@deriving getSet({light: light})]
 type person = {
   name: string,
   age: int,
@@ -3012,7 +3016,7 @@ optional field in this case.
 
 ##### Compatibility with OCaml features
 
-The `@deriving abstract` attribute and its lightweight variant can be used with
+The `@deriving getSet` attribute and its lightweight variant can be used with
 [mutable
 fields](https://v2.ocaml.org/manual/coreexamples.html#s:imperative-features) and
 [private types](https://v2.ocaml.org/manual/privatetypes.html), which are
@@ -3026,14 +3030,14 @@ type person = {
   name : string;
   mutable age : int;
 }
-[@@deriving abstract]
+[@@deriving getSet]
 
 let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
 ```reasonml
-[@deriving abstract]
+[@deriving getSet]
 type person = {
   name: string,
   mutable age: int,
@@ -3067,10 +3071,10 @@ type person = private {
   name : string;
   age : int;
 }
-[@@deriving abstract]
+[@@deriving getSet]
 ```
 ```reasonml
-[@deriving abstract]
+[@deriving getSet]
 type person =
   pri {
     name: string,
