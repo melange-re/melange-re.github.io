@@ -60,18 +60,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int;
   > }
-  > [@@deriving getSet { light }]
+  > [@@deriving jsProperties, getSet { light }]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > let aliceName = name alice
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 7, characters 12-18:
-  7 | let alice = person ~name:"Alice" ~age:20
-                  ^^^^^^
-  Error: Unbound value person
-  [1]
 
   $ cat > input.ml <<\EOF
   > 
@@ -79,7 +74,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int option; [@mel.optional]
   > }
-  > [@@deriving getSet]
+  > [@@deriving jsProperties, getSet]
   > let alice = person ~name:"Alice" ~age:20 ()
   > let bob = person ~name:"Bob" ()
   > 
@@ -89,11 +84,16 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 7, characters 12-18:
-  7 | let alice = person ~name:"Alice" ~age:20 ()
-                  ^^^^^^
-  Error: Unbound value person
-  [1]
+
+  $ cat > input.ml <<\EOF
+  > type person = {
+  >   name : string;
+  >   age : int option; [@mel.optional]
+  > }
+  > [@@deriving jsProperties, getSet]
+  > EOF
+
+  $ dune build @melange
 
   $ cat > input.ml <<\EOF
   > type person = {

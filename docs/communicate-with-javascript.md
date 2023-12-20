@@ -2914,7 +2914,8 @@ manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 #### Generating getters and setters
 
-In case we need both getters and setters for a record, we can use `deriving getSet` to have them generated for free.
+In case we need both getters and setters for a record, we can use `deriving
+getSet` to have them generated for free.
 
 If we take a record like this:
 
@@ -2934,14 +2935,34 @@ type person = {
 };
 ```
 
-Melange will create functions `nameGet` and `ageGet`, as accessors for each record field:
+The `deriving` attribute can combine multiple derivers, for example we can
+combine `jsProperties` with `getSet`:
+
+```ocaml
+type person = {
+  name : string;
+  age : int option; [@mel.optional]
+}
+[@@deriving jsProperties, getSet]
+```
+```reasonml
+[@deriving (jsProperties, getSet)]
+type person = {
+  name: string,
+  [@mel.optional]
+  age: option(int),
+};
+```
+
+When using `getSet`, Melange will create functions `nameGet` and `ageGet`, as
+accessors for each record field.
 
 <!--#prelude#
 type person = {
   name : string;
   age : int option; [@mel.optional]
 }
-[@@deriving getSet]
+[@@deriving jsProperties, getSet]
 let alice = person ~name:"Alice" ~age:20 ()
 let bob = person ~name:"Bob" ()
 -->
@@ -2966,21 +2987,23 @@ var bob = bob.name;
 
 The functions are named by appending `Get` to the field names of the record to
 prevent potential clashes with other values within the module. If shorter names
-are preferred for the getter functions, there is an alternate `{ getSet =
-light }` payload that can be passed to `deriving`:
+are preferred for the getter functions, there is an alternate <code
+class="text-ocaml">getSet { light }</code><code
+class="text-reasonml">getSet({light: light})</code> payload that can be passed
+to `deriving`:
 
 ```ocaml
 type person = {
   name : string;
   age : int;
 }
-[@@deriving getSet { light }]
+[@@deriving jsProperties, getSet { light }]
 
 let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@deriving getSet({light: light})]
+[@deriving (jsProperties, getSet({light: light}))]
 type person = {
   name: string,
   age: int,
