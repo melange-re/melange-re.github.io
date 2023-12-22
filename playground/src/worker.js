@@ -62,7 +62,7 @@ initWorkerizedReducer(
     switch (action.type) {
       case "clear.logs":
         Console.flush();
-        state.logs = [];
+        state.logCaptures = [];
         break;
       case "bundle":
         const code = action.code;
@@ -132,10 +132,10 @@ initWorkerizedReducer(
             eval2(output[0].code);
           }
         } catch (e) {
-          console.log(e);
+          console.error("Error while evaluating JavaScript code: " + e.message);
         }
-        // We always set logs, if `code` is undefined we will erase them
-        state.logs = Console.printCaptures(Console.getCaptures());
+        // We always set logCaptures, if `code` is undefined we will erase them
+        state.logCaptures = Console.getCaptures();
         Console.stop();
         break;
       default:

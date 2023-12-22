@@ -187,7 +187,7 @@ function Live({ codeHasReact }) {
   );
 }
 
-function ConsolePanel({ logs, clearLogs }) {
+function ConsolePanel({ logCaptures, clearLogs }) {
   const defaultState = false;
   const [isCollapsed, setIsCollapsed] = React.useState(defaultState);
   const panelRef = React.useRef(null);
@@ -213,7 +213,7 @@ function ConsolePanel({ logs, clearLogs }) {
     if (automaticScroll) {
       bottomOfTheConsole.current.scrollIntoView();
     }
-  }, [logs, automaticScroll]);
+  }, [logCaptures, automaticScroll]);
 
   const onClick = (_) => clearLogs();
 
@@ -222,7 +222,7 @@ function ConsolePanel({ logs, clearLogs }) {
       <div className="ConsoleHeader">
         <div className="Title">
           <span className="Text-xs">Console</span>
-          <Counter count={logs.length} />
+          <Counter count={logCaptures.length} />
         </div>
         <div className="Actions">
           <button className="IconButton Clear" onClick={onClick}><Eraser /></button>
@@ -231,9 +231,10 @@ function ConsolePanel({ logs, clearLogs }) {
       </div>
       <Panel ref={panelRef} collapsible={true} defaultSize={20}>
         <div ref={rootElement} className="Console Scrollbar">
-          {logs.map((log, i) => (
-            <div className="Item" key={i}>{log}</div>
-          ))}
+          {logCaptures.map((capture, i) => {
+            let log = capture.args.join(" ");
+            return <div className="Item" key={i} style={capture.kind === "error" ? { color: "red" } : {}}>{log}</div>
+          })}
           <div className="EmptyItem" ref={bottomOfTheConsole} />
         </div>
       </Panel>
@@ -259,14 +260,14 @@ function ProblemsPanel({ problems, warnings }) {
   };
 
   const problemsString =
-  problems && problems.length > 0
-    ? problems.map((v) => v.msg).join("\n")
-    : "";
+    problems && problems.length > 0
+      ? problems.map((v) => v.msg).join("\n")
+      : "";
 
   const warningsString =
-  warnings && warnings.length > 0
-    ? warnings.map((v) => v.msg).join("\n")
-    : "";
+    warnings && warnings.length > 0
+      ? warnings.map((v) => v.msg).join("\n")
+      : "";
 
   return (
     <>
@@ -275,12 +276,12 @@ function ProblemsPanel({ problems, warnings }) {
         <button className="IconButton" onClick={toggle}>{isCollapsed ? <ArrowUpFromLine /> : <ArrowDownToLine />}</button>
       </div>
       <Panel collapsible={true} defaultSize={20} collapsedSize={10} minSize={10} ref={ref}>
-      {(problems && problems.length > 0)
-        ? <div className="Problems Scrollbar">{problemsString}</div>
-        : (warnings && warnings.length > 0)
-          ? <div className="Problems Scrollbar">{warningsString}</div>
-          : <div className="Problems Empty">No problems!</div>
-       }
+        {(problems && problems.length > 0)
+          ? <div className="Problems Scrollbar">{problemsString}</div>
+          : (warnings && warnings.length > 0)
+            ? <div className="Problems Scrollbar">{warningsString}</div>
+            : <div className="Problems Empty">No problems!</div>
+        }
       </Panel>
     </>
   )
@@ -517,7 +518,7 @@ function App() {
   const [workerState, dispatch, _busy] = useWorkerizedReducer(
     worker,
     "bundle", // Reducer name
-    { logs: [] } // Initial state
+    { logCaptures: [] } // Initial state
   );
 
   const setLive = (live) => setState({ ...state, live });
@@ -532,7 +533,7 @@ function App() {
   }
 
   function clearLogs() {
-    dispatch({ type: "clear.logs" });
+    dispatch({ type: "clear.logCaptures" });
     Console.flush();
   }
 
@@ -578,7 +579,7 @@ function App() {
               let hint = result.hint;
               if (language == languageMap.Reason) {
                 try {
-                  if (hint.substring(0,5) === "type ") {
+                  if (hint.substring(0, 5) === "type ") {
                     // No need to mess with the hint as it should be valid AST
                     hint = ocaml.printRE(ocaml.parseML(hint));
                   } else {
@@ -586,14 +587,14 @@ function App() {
                     // Must be something else than a type
                     hint =
                       ocaml
-                      /* add prefix so it is valid code */
-                      .printRE(ocaml.parseML(prefix + hint))
-                      /* remove prefix */
-                      .slice(prefix.length)
-                      /* remove last `;` */
-                      .slice(0, -2);
+                        /* add prefix so it is valid code */
+                        .printRE(ocaml.parseML(prefix + hint))
+                        /* remove prefix */
+                        .slice(prefix.length)
+                        /* remove last `;` */
+                        .slice(0, -2);
                   }
-                  
+
                 } catch (e) {
                   console.error("Error formatting type hint: ", hint);
                 }
@@ -601,7 +602,7 @@ function App() {
               return {
                 range,
                 contents: [{ value: `\`\`\`${language}\n${hint}\n\`\`\`` }],
-              };  
+              };
             } else {
               return null;
             }
@@ -751,7 +752,7 @@ function App() {
                   </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
-                <ConsolePanel logs={workerState.logs} clearLogs={clearLogs} />
+                <ConsolePanel logCaptures={workerState.logCaptures} clearLogs={clearLogs} />
               </PanelGroup>
             </div>
           </Panel>
