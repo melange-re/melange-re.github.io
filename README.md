@@ -61,8 +61,11 @@ When a new version of `melange` is published in opam, a new release of the docs
 and playground should be published. The process is as follows:
 
 - Update `documentation-site.opam` to point `melange` and `melange-playground`
-  packages to the commit of the new release
+  packages to the commit of the new release (they need to be pinned so that the
+  Melange docs can be accessed on a stable path)
 - Update versions of the compiler listed in the playground (`app.jsx`)
+- In the docs markdown pages, grep for the last version of Melange that was used
+  and replace it with the newer one.
 - Open a PR with the changes above
 - After merging the PR, create a new branch `x.x.x-patches`. This branch will be
   used to publish any patches or improvements to that version of the docs /
@@ -95,3 +98,8 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
       - uncomment the relevant code in `publish-version.yml`
 - In the `gh-pages` branch, replace the default version with the new one [in
   index.html](https://github.com/melange-re/melange-re.github.io/blob/gh-pages/index.html#L10)
+- Finally, we need to disable the publication of previous version `y.y.y` as the
+  default version:
+  - In `y.y.y-patches`: update `publish-version.yml` so that `mike deploy -push`
+    is used and `set-default` is removed.
+  - Commit and run `make move-vy.y.y-tag` to deploy
