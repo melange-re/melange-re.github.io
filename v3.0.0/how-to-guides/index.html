@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OCaml for JavaScript developers">
+
+    <title>How-to guides - Melange</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet" />
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet" />
+        <link href="../css/print-site.css" rel="stylesheet" />
+        <link href="../css/extra.css" rel="stylesheet" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How-to guides";
+        var mkdocs_page_input_path = "how-to-guides.md";
+        var mkdocs_page_url = "/v3.0.0/how-to-guides/";
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/languages/ocaml.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Melange
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../rationale/">Why</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Learn</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../new-to-ocaml/">New to OCaml?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../package-management/">Package management</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../build-system/">Build system</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../communicate-with-javascript/">Communicate with JavaScript</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">How-to guides</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#migrate-a-rescript-library-to-melange">Migrate a ReScript library to Melange</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#add-an-opam-file">Add an opam file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#add-a-dune-project-file">Add a dune-project file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#replace-the-bsconfigjson-file-with-one-or-multiple-dune-files">Replace the bsconfig.json file with one or multiple dune files</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#name-namespace">name, namespace</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#sources">sources</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-dependencies">bs-dependencies</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-dev-dependencies">bs-dev-dependencies</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#pinned-dependencies">pinned-dependencies</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#external-stdlib">external-stdlib</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#js-post-build">js-post-build</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#package-specs">package-specs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#suffix">suffix</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#warnings-and-bsc-flags">warnings and bsc-flags</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#optional-migrate-from-rescript-syntax-to-reason-or-ocaml-syntax">(Optional) Migrate from ReScript syntax to Reason or OCaml syntax</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#make-sure-everything-works-dune-build">Make sure everything works: dune build</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#warning-16-unerasable-opt-argument-is-triggered-more-often-than-before">Warning 16 [unerasable-opt-argument] is triggered more often than before</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#warning-69-unused-field-triggered-from-bindings-types">Warning 69 [unused-field] triggered from bindings types</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#destructuring-order-is-changed">Destructuring order is changed</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#pervasives-is-deprecated">Pervasives is deprecated</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#runtime-assets-are-missing">Runtime assets are missing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#final-step-remove-bsconfigjson-and-adapt-packagejson">Final step: remove bsconfig.json and adapt package.json</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#migrate">Migrate</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#to-v2-from-v1">To v2 from v1</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#melangeppx-now-includes-most-syntax-transformations">melange.ppx now includes most syntax transformations</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#warnings-have-been-turned-into-alerts">Warnings have been turned into alerts</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#wrapped-libraries">Wrapped libraries</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#changes-in-deriving">Changes in deriving</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-attributes-and-extensions-become-mel">bs.* attributes and extensions become mel.*</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bs-attribute-becomes-u">@bs attribute becomes @u</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bsval-is-gone">@bs.val is gone</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#dom-and-node-are-in-their-own-libraries">Dom and Node are in their own libraries</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#effect-handlers">Effect handlers</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../melange-for-x-developers/">Melange for X developers</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">API</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Try</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../playground/">Playground</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../community/">Community</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Melange</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+          <li>Learn &raquo;</li>
+      <li>How-to guides</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/melange-re/melange-re.github.io/blob/master/docs/how-to-guides.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="how-to-guides">How-to guides</h1>
+<h2 id="migrate-a-rescript-library-to-melange">Migrate a ReScript library to Melange</h2>
+<p>It is possible to use existing <a href="https://rescript-lang.org/">ReScript</a> (formerly
+BuckleScript) code with Melange, mostly as is. However, as both projects evolve
+in different directions over time, it will become more challenging to do so as
+time goes by, as some of the most recent features of ReScript might not be
+directly convertible to make them work with Melange.</p>
+<p>For this reason, the recommendation is to migrate libraries at a time where they
+were compatible with past versions of ReScript, for example v9 (or v10 at most).</p>
+<p>These are the steps to follow:</p>
+<ul>
+<li>Add an <code>opam</code> file</li>
+<li>Add a <code>dune-project</code> file</li>
+<li>Replace the <code>bsconfig.json</code> file with one or multiple <code>dune</code> files</li>
+<li>(Optional) Migrate from ReScript syntax to Reason or OCaml syntaxes</li>
+<li>Make sure everything works: <code>dune build</code></li>
+<li>Final step: remove <code>bsconfig.json</code> and adapt <code>package.json</code></li>
+</ul>
+<p>Let's go through them in detail:</p>
+<h3 id="add-an-opam-file">Add an <code>opam</code> file</h3>
+<p>To migrate your ReScript library to Melange, you will need some packages.
+Melange is designed to be used with <a href="https://opam.ocaml.org/">opam</a>, the package manager
+of OCaml, which is explained in <a href="../package-management/">its own section</a>.</p>
+<p>To get started with the library migration, let's create an <code>opam</code> file in your
+library's root folder with the minimum set of packages to start working:</p>
+<pre><code class="language-text">opam-version: &quot;2.0&quot;
+synopsis: &quot;My Melange library&quot;
+description: &quot;A library for Melange&quot;
+maintainer: [&quot;&lt;your_name&gt;&quot;]
+authors: [&quot;&lt;your_name&gt;&quot;]
+license: &quot;XXX&quot;
+homepage: &quot;https://github.com/your/project&quot;
+bug-reports: &quot;https://github.com/your/project/issues&quot;
+depends: [
+  &quot;ocaml&quot;
+  &quot;dune&quot;
+  &quot;melange&quot;
+]
+dev-repo: &quot;git+https://github.com/your/project.git&quot;
+</code></pre>
+<p>If your library was using <a href="https://reasonml.github.io/en/">Reason syntax</a> (<code>re</code>
+files), you will need to add <code>"reason"</code> to the list of dependencies. If the
+library was using ReScript syntax (<code>res</code> files), you will need to add
+<code>rescript-syntax</code> to the list of dependencies. You can read more about how to
+migrate from ReScript syntax in the section below.</p>
+<p>At this point, we can create a <a href="https://opam.ocaml.org/blog/opam-local-switches/">local opam
+switch</a> to start working on
+our library:</p>
+<pre><code class="language-bash">opam switch create . 5.1.1 -y --deps-only
+</code></pre>
+<p>Once this step is done, we can call <code>dune</code> from the library folder, but first we
+need some configuration files.</p>
+<h3 id="add-a-dune-project-file">Add a <code>dune-project</code> file</h3>
+<p>Create a file named <code>dune-project</code> in the library root folder. This file will
+tell Dune a few things about our project configuration:</p>
+<pre><code class="language-text">(lang dune 3.8)
+
+(using melange 0.1)
+</code></pre>
+<h3 id="replace-the-bsconfigjson-file-with-one-or-multiple-dune-files">Replace the <code>bsconfig.json</code> file with one or multiple <code>dune</code> files</h3>
+<p>Now, we need to add a <code>dune</code> file where we will tell Dune about our library. You
+can put this new file next to the library sources, it will look something like
+this:</p>
+<pre><code class="language-text">(library
+ (name things)
+ (modes melange)
+ (preprocess (pps melange.ppx)))
+</code></pre>
+<p>Let's see how the most common configurations in <code>bsconfig.json</code> (or
+<code>rescript.json</code>) map to <code>dune</code> files. You can find more information about these
+configurations in the <a href="https://rescript-lang.org/docs/manual/latest/build-configuration">Rescript
+docs</a> and in
+the <a href="https://dune.readthedocs.io/en/stable/dune-files.html#library">Dune docs</a>.</p>
+<h4 id="name-namespace"><code>name</code>, <code>namespace</code></h4>
+<p>These two configurations map to Dune <code>(wrapped &lt;boolean&gt;)</code> field in the
+<code>library</code> stanza. By default, all Dune libraries are wrapped, which means that a
+single module with the name of the library is exposed at the top level. So e.g.
+of your <code>bsconfig.json</code> had <code>"namespace": false</code>, you can add <code>(wrapped false)</code>
+to your library, although wrapped libraries are heavily encouraged to avoid
+global namespace pollution.</p>
+<p>It's important to note that the permissible character range for naming
+conventions differs between ReScript namespaces and Dune libraries. Dune library
+names must adhere to the naming criteria set for OCaml modules. For instance, if
+your <code>bsconfig.json</code> configuration includes a naming scheme like this:</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;foo-bar&quot;
+}
+</code></pre>
+<p>It should be converted into something like:</p>
+<pre><code class="language-text">(library
+ (name fooBar) # or (name foo_bar)
+ (modes melange)
+ (preprocess (pps melange.ppx)))
+</code></pre>
+<h4 id="sources"><code>sources</code></h4>
+<p>Dune works slightly differently than ReScript when it comes down to including
+source folders as part of a library.</p>
+<p>By default, when Dune finds a <code>dune</code> file with a <code>library</code> stanza, it will
+include just the files inside that folder to the library itself (unless the
+<code>modules</code> field is used). If you want to create a library with multiple
+subfolders in it, you can use the following combination of stanzas:</p>
+<ul>
+<li><code>(include_subdirs unqualified)</code>
+  (<a href="https://dune.readthedocs.io/en/stable/dune-files.html#include-subdirs">docs</a>):
+  This stanza tells Dune to look for sources in all the subfolders of the folder
+  where the <code>dune</code> file lives.</li>
+<li><code>(dirs foo bar)</code>
+  (<a href="https://dune.readthedocs.io/en/stable/dune-files.html#dirs">docs</a>): This
+  stanza tells Dune to only look into <code>foo</code> and <code>bar</code> subdirectories of the
+  current folder.</li>
+</ul>
+<p>So for example, if your library had this configuration in its <code>bsconfig.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;sources&quot;: [&quot;src&quot;, &quot;helper&quot;]
+}
+</code></pre>
+<p>You might translate this to a <code>dune</code> file with the following configuration:</p>
+<pre><code class="language-text">(include_subdirs unqualified)
+(dirs src helper)
+(library
+ (name things)
+ (modes melange)
+ (preprocess (pps melange.ppx)))
+</code></pre>
+<p>Alternatively, depending on the case, you could place two separate <code>dune</code> files,
+one in <code>src</code> and one in <code>helper</code>, and define one <code>library</code> on each. In that
+case, <code>include_subdirs</code> and <code>dirs</code> would not be necessary.</p>
+<p>Regarding the <code>"type" : "dev"</code> configuration in ReScript, the way Dune solves
+that is with public and private libraries. If a <code>library</code> stanza includes a
+<code>public_name</code> field, it becomes a public library, and will be installed.
+Otherwise it is private and won't be visible by consumers of the package.</p>
+<h4 id="bs-dependencies"><code>bs-dependencies</code></h4>
+<p>Your library might depend on other libraries. To specify dependencies of the
+library in the <code>dune</code> file, you can use the <code>libraries</code> field of the <code>library</code>
+stanza.</p>
+<p>For example, if <code>bsconfig.json</code> had something like this:</p>
+<pre><code class="language-json">&quot;bs-dependencies&quot;: [
+  &quot;reason-react&quot;
+]
+</code></pre>
+<p>Your <code>dune</code> file will look something like:</p>
+<pre><code class="language-text">(library
+ (name things)
+ (libraries reason-react)
+ (modes melange)
+ (preprocess (pps melange.ppx)))
+</code></pre>
+<p>Remember that you will have to add all dependencies to your library <code>opam</code>
+package as well.</p>
+<h4 id="bs-dev-dependencies"><code>bs-dev-dependencies</code></h4>
+<p>Most of the times, <code>bs-dev-dependencies</code> is used to define dependencies required
+for testing. For this scenario, opam provides the <code>with-test</code> variable.</p>
+<p>Supposing we want to add <code>melange-jest</code> as a dependency to use for tests, you
+could add this in your library <code>opam</code> file:</p>
+<pre><code class="language-text">depends: [
+  &quot;melange-jest&quot; {with-test}
+]
+</code></pre>
+<p>The packages marked with this variable <a href="https://opam.ocaml.org/doc/Manual.html#opamfield-depends">become
+dependencies</a> when
+<code>opam install</code> is called with the <code>--with-test</code> flag.</p>
+<p>Once the library <code>melange-jest</code> has been installed by opam, it is available in
+Dune, so adding <code>(libraries melange-jest)</code> to your <code>library</code> or <code>melange.emit</code>
+stanzas would be enough to start using it.</p>
+<h4 id="pinned-dependencies"><code>pinned-dependencies</code></h4>
+<p>Dune allows to work inside monorepos naturally, so there is no need for pinned
+dependencies.
+<a href="https://dune.readthedocs.io/en/stable/reference/packages.html">Packages</a> can be
+defined in the <code>dune-project</code> file using the <code>packages</code> stanza, and multiple
+<code>dune-project</code> files can be added across a single codebase to work in a monorepo
+setup.</p>
+<h4 id="external-stdlib"><code>external-stdlib</code></h4>
+<p>There is no direct mapping of this functionality in Melange. If you are
+interested in it, or have a use case for it, please share with us on <a href="https://github.com/melange-re/melange/issues/620">issue
+melange-re/melange#620</a>.</p>
+<h4 id="js-post-build"><code>js-post-build</code></h4>
+<p>You can use Dune rules to perform actions, that produce some targets, given some
+dependencies.</p>
+<p>For example, if you had something like this in <code>bsconfig.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;js-post-build&quot;: {
+    &quot;cmd&quot;: &quot;node ../../postProcessTheFile.js&quot;
+  }
+}
+</code></pre>
+<p>This could be expressed in a <code>dune</code> file with something like:</p>
+<pre><code class="language-text">(rule 
+  (deps (alias melange))
+  (action (run node ../../postProcessTheFile.js))
+)
+</code></pre>
+<p>To read more about Dune rules, check <a href="https://dune.readthedocs.io/en/stable/dune-files.html#rule">the
+documentation</a>.</p>
+<h4 id="package-specs"><code>package-specs</code></h4>
+<p>This setting is not configured at the library level, but rather at the
+application level, using the <code>module_systems</code> field in the <code>melange.emit</code>
+stanza. To read more about it, check the corresponding <a href="../build-system/#commonjs-or-es6-modules">build
+system</a> section.</p>
+<p>Regarding the <code>"in-source"</code> configuration, the corresponding field in Dune would
+be the <code>(promote (until-clean))</code> configuration, which can be added to a
+<code>melange.emit</code> stanza. You can read more about it in <a href="https://dune.readthedocs.io/en/stable/dune-files.html#promote">the Dune
+documentation</a>.</p>
+<h4 id="suffix"><code>suffix</code></h4>
+<p>Same as with <code>package-specs</code> this configuration is set at the application level,
+using the <code>module_systems</code> field in the <code>melange.emit</code> stanza. Check the
+<a href="../build-system/#commonjs-or-es6-modules">CommonJS or ES6 modules</a> section to
+learn more about it.</p>
+<h4 id="warnings-and-bsc-flags"><code>warnings</code> and <code>bsc-flags</code></h4>
+<p>You can use the <a href="https://dune.readthedocs.io/en/stable/concepts/ocaml-flags.html"><code>flags</code>
+field</a> of the
+<code>library</code> stanza to define flags to pass to Melange compiler.</p>
+<p>If you want to define flags only for Melange, you can use
+<code>melange.compile_flags</code>.</p>
+<p>For example, if you had a <code>bsconfig.json</code> configuration like this:</p>
+<pre><code class="language-json">{
+  &quot;warnings&quot;: {
+    &quot;number&quot;: &quot;-44-102&quot;,
+    &quot;error&quot;: &quot;+5&quot;
+  }
+}
+</code></pre>
+<p>You can define a similar configuration in your library <code>dune</code> file like this:</p>
+<pre><code class="language-text">(library
+ (name things)
+ (modes melange)
+ (preprocess (pps melange.ppx))
+ (melange.compile_flags :standard -w +5-44-102))
+</code></pre>
+<p>The same applies to <code>bsc-flags</code>.</p>
+<h3 id="optional-migrate-from-rescript-syntax-to-reason-or-ocaml-syntax">(Optional) Migrate from ReScript syntax to Reason or OCaml syntax</h3>
+<p>The package <code>rescript-syntax</code> allows to translate <code>res</code> source files to <code>ml</code>.</p>
+<p>To use this package, we need to install it first:</p>
+<pre><code class="language-bash">opam install rescript-syntax
+</code></pre>
+<blockquote>
+<p>Note that the <code>rescript-syntax</code> package is only compatible with the version 1
+of <code>melange</code>, so if you are using a more recent version of <code>melange</code>, you
+might need to downgrade it before installing <code>rescript-syntax</code>.</p>
+</blockquote>
+<p>To convert a <code>res</code> file to <code>ml</code> syntax:</p>
+<pre><code class="language-bash">rescript_syntax myFile.res -print ml &gt; myFile.ml
+</code></pre>
+<p>You can use this command in combination with <code>find</code> to convert multiple files at
+once:</p>
+<pre><code class="language-bash">find src1 src2 -type f -name &quot;*.res&quot; -exec echo &quot;rescript_syntax {} -print ml&quot; \;
+</code></pre>
+<p>If you want to convert the files to Reason syntax (<code>re</code>), you can pipe the
+output of each file to <code>refmt</code>.</p>
+<pre><code class="language-bash">rescript_syntax ./myFile.res -print ml | refmt --parse=ml --print re &gt; myFile.re
+</code></pre>
+<p>Note that <code>refmt</code> is available in the <code>reason</code> package, so if your library
+modules are written using Reason syntax, remember to install it first using
+<code>opam install reason</code> before performing the conversion, and also adding it to
+your library <code>opam</code> file as well.</p>
+<h3 id="make-sure-everything-works-dune-build">Make sure everything works: <code>dune build</code></h3>
+<p>Once you have performed the above steps, you can test that everything works by
+running</p>
+<pre><code class="language-bash">dune build
+</code></pre>
+<p>Throughout the process, you might run into some errors, these are the most
+common ones:</p>
+<h4 id="warning-16-unerasable-opt-argument-is-triggered-more-often-than-before">Warning 16 [unerasable-opt-argument] is triggered more often than before</h4>
+<p>Melange triggers <code>Warning 16: this optional argument cannot be erased</code> more
+often than before, as the type system in OCaml 4.12 was improved. You can read
+more about this in this <a href="https://github.com/ocaml/ocaml/pull/9783">OCaml PR</a>.</p>
+<p><strong>Fix</strong>: either add <code>()</code> as final param of the function, or replace one labelled
+arg with a positional one.</p>
+<h4 id="warning-69-unused-field-triggered-from-bindings-types">Warning 69 [unused-field] triggered from bindings types</h4>
+<p>Sometimes, types for bindings will trigger <code>Warning 69 [unused-field]: record
+field foo is never read.</code> errors.</p>
+<p><strong>Fix</strong>: silence the warning in the type definition, e.g.</p>
+<pre><code class="language-ocaml">type renderOptions = { 
+  foo : string
+} [@@warning &quot;-69&quot;]
+</code></pre>
+<h4 id="destructuring-order-is-changed">Destructuring order is changed</h4>
+<p>Destructuring in <code>let</code> patterns in Melange is done on the left side first, while
+on ReScript is done on the right side first. You can read more in the <a href="https://github.com/melange-re/melange/pull/161">Melange
+PR</a> with the explanation.</p>
+<p><strong>Fix</strong>: move module namespacing to the left side of the <code>let</code> expressions.</p>
+<h4 id="pervasives-is-deprecated"><code>Pervasives</code> is deprecated</h4>
+<p>This is also another change due to OCaml compiler moving forward.</p>
+<p><strong>Fix</strong>: Use <code>Stdlib</code> instead.</p>
+<h4 id="runtime-assets-are-missing">Runtime assets are missing</h4>
+<p>In ReScript, building in source is very common. In Melange and Dune, the most
+common setup is having all artifacts inside the <code>_build</code> folder. If your library
+is using some asset such as:</p>
+<pre><code class="language-ocaml">external myImage : string = &quot;default&quot; [@@bs.module &quot;./icons/overview.svg&quot;]
+</code></pre>
+<p><strong>Fix</strong>: You can include it by using the <code>melange.runtime_deps</code> field of the
+library:</p>
+<pre><code class="language-text">(library
+ (name things)
+ (modes melange)
+ (preprocess (pps melange.ppx))
+ (melange.runtime_deps icons/overview.svg))
+</code></pre>
+<p>You can read more about this in the <a href="../build-system/#handling-assets">Handling
+assets</a> section.</p>
+<h3 id="final-step-remove-bsconfigjson-and-adapt-packagejson">Final step: remove <code>bsconfig.json</code> and adapt <code>package.json</code></h3>
+<p>If everything went well, you can remove the <code>bsconfig.json</code> file, and remove any
+dependencies needed by Melange from the <code>package.json</code>, as they will be
+appearing in the <code>opam</code> file instead, as it was mentioned in the
+<a href="#bs-dependencies"><code>bs-dependencies</code> section</a>.</p>
+<h2 id="migrate">Migrate</h2>
+<p>This section contains information about migrating from older versions of Melange
+to newer ones.</p>
+<h3 id="to-v2-from-v1">To v2 from v1</h3>
+<p>Melange v2 is only compatible with OCaml 5.1. In order to upgrade, let's update
+the local opam switch first, to make sure the local repository gets the versions
+v2 of Melange and 5.1 of OCaml:</p>
+<pre><code class="language-bash">opam update
+</code></pre>
+<p>Now, update the version of the OCaml compiler in the local switch to 5.1:</p>
+<pre><code class="language-bash">opam install --update-invariant ocaml-base-compiler.5.1.1
+</code></pre>
+<p>Finally, we can upgrade all packages to get Melange v2 and the latest version of
+all libraries:</p>
+<pre><code class="language-bash">opam upgrade
+</code></pre>
+<p>To make sure you have the latest version of Melange, you can use the <code>opam list</code>
+subcommand:</p>
+<pre><code class="language-bash">opam list --installed melange
+# Packages matching: name-match(melange) &amp; installed
+# Name  # Installed    # Synopsis
+melange 2.2.0          Toolchain to produce JS from Reason/OCaml
+</code></pre>
+<p>Before building, we have to update some parts of the configuration to make it
+work with v2.</p>
+<h4 id="melangeppx-now-includes-most-syntax-transformations"><code>melange.ppx</code> now includes most syntax transformations</h4>
+<p>Most of the attributes used to write bindings are now handled by <code>melange.ppx</code>.
+If you get errors of the kind <code>Unused attribute</code>, or type errors in externals
+that don't make much sense, then you probably need to add <code>melange.ppx</code> to your
+<code>library</code> or <code>melange.emit</code> stanzas.</p>
+<pre><code>(library
+ ...
+ (preprocess
+  (pps melange.ppx)))
+</code></pre>
+<h4 id="warnings-have-been-turned-into-alerts">Warnings have been turned into alerts</h4>
+<p>Some warnings were turned into alerts, so they might be visible even if using
+<code>vendored_dirs</code>. To silence these alerts, either fix the root cause or silence
+them using <code>(preprocess (pps melange.ppx -alert -deprecated))</code>.</p>
+<h4 id="wrapped-libraries">Wrapped libraries</h4>
+<p>Melange libraries like Belt and Js are now wrapped, so the access to modules
+inside them need to be adapted. Some examples:</p>
+<ul>
+<li><code>Js_string</code> needs to be replaced with <code>Js.String</code></li>
+<li><code>Belt_MapInt</code> is now <code>Belt.Map.Int</code></li>
+</ul>
+<h4 id="changes-in-deriving">Changes in <code>deriving</code></h4>
+<p>The <code>bs.deriving</code> attribute is replaced with <code>deriving</code>. Also, the payload taken
+by this attribute has been adapted to conform to ppxlib requirements. Note that
+<code>mel.deriving</code> is not accepted.</p>
+<p>Let's see how the payload has changed in both OCaml and Reason syntaxes.</p>
+<p>In Ocaml syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[@@bs.deriving { jsConverter =  newType  }]</code></td>
+<td><code>[@@deriving  jsConverter {  newType }  ]</code></td>
+</tr>
+<tr>
+<td><code>[@@bs.deriving { abstract = light }]</code></td>
+<td><code>[@@deriving abstract { light }]</code></td>
+</tr>
+</tbody>
+</table>
+<p>In Reason syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[@bs.deriving {jsConverter: newType}]</code></td>
+<td><code>[@deriving jsConverter({newType: newType})]</code></td>
+</tr>
+<tr>
+<td><code>[@bs.deriving {abstract: light}]</code></td>
+<td><code>[@deriving abstract({light: light})]</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="bs-attributes-and-extensions-become-mel"><code>bs.*</code> attributes and extensions become <code>mel.*</code></h4>
+<p>All attributes or extension nodes prefixed with <code>bs</code> are now prefixed with <code>mel</code>
+instead.</p>
+<p>For example <code>@bs.as</code> becomes <code>@mel.as</code>, and <code>%bs.raw</code> becomes <code>%mel.raw</code>.</p>
+<p>Note that attributes in the deprecated form (<code>@bs.*</code>) are still accepted until
+v3, but node extensions (<code>%bs.*</code>) are not.</p>
+<h4 id="bs-attribute-becomes-u"><code>@bs</code> attribute becomes <code>@u</code></h4>
+<p>The <code>@bs</code> attribute, used for uncurried application (see the <a href="../communicate-with-javascript/#binding-to-callbacks">"Binding to
+callbacks" section</a>),
+becomes <code>@u</code>.</p>
+<h4 id="bsval-is-gone"><code>@bs.val</code> is gone</h4>
+<p>The <code>@bs.val</code> attribute is no longer necessary, and can be removed from
+<code>external</code> definitions. See more information in the <a href="../communicate-with-javascript/#using-global-functions-or-values">"Using global functions or
+values"</a>
+section.</p>
+<h4 id="dom-and-node-are-in-their-own-libraries"><code>Dom</code> and <code>Node</code> are in their own libraries</h4>
+<p>The namespaces <code>Dom</code> and <code>Node</code> are now in the libraries <code>melange.dom</code> and
+<code>melange.node</code> respectively. These libraries are not included by default by
+Melange, and will need to be added to the <code>libraries</code> field explicitly.</p>
+<h4 id="effect-handlers">Effect handlers</h4>
+<p>Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
+for compiling effect handlers to JavaScript. Until it does, they are disabled at
+the compiler level, and their APIs are not accessible.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../communicate-with-javascript/" class="btn btn-neutral float-left" title="Communicate with JavaScript"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../melange-for-x-developers/" class="btn btn-neutral float-right" title="Melange for X developers">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span>
+            <a href="https://github.com/melange-re/melange" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+      
+        <span><a href="../communicate-with-javascript/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      
+      
+        <span><a href="../melange-for-x-developers/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/print-site.js" defer></script>
+      <script src="../js/toggleSyntaxButton.js" defer></script>
+      <script src="../js/reasonml.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

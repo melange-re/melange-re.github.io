@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Style (melange.Melstd.Log.Style)</title><link rel="stylesheet" href="../../../../odoc.support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.3.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../../odoc.support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../../index.html">melange</a> &#x00BB; <a href="../../index.html">Melstd</a> &#x00BB; <a href="../index.html">Log</a> &#x00BB; Style</nav><header class="odoc-preamble"><h1>Module <code><span>Log.Style</span></code></h1></header><div class="odoc-content"><div class="odoc-spec"><div class="spec type anchored" id="type-t"><a href="#type-t" class="anchor"></a><code><span><span class="keyword">type</span> t</span><span> = </span></code><ol><li id="type-t.Loc" class="def variant constructor anchored"><a href="#type-t.Loc" class="anchor"></a><code><span>| </span><span><span class="constructor">Loc</span></span></code></li><li id="type-t.Error" class="def variant constructor anchored"><a href="#type-t.Error" class="anchor"></a><code><span>| </span><span><span class="constructor">Error</span></span></code></li><li id="type-t.Warning" class="def variant constructor anchored"><a href="#type-t.Warning" class="anchor"></a><code><span>| </span><span><span class="constructor">Warning</span></span></code></li><li id="type-t.Kwd" class="def variant constructor anchored"><a href="#type-t.Kwd" class="anchor"></a><code><span>| </span><span><span class="constructor">Kwd</span></span></code></li><li id="type-t.Prompt" class="def variant constructor anchored"><a href="#type-t.Prompt" class="anchor"></a><code><span>| </span><span><span class="constructor">Prompt</span></span></code></li><li id="type-t.Hint" class="def variant constructor anchored"><a href="#type-t.Hint" class="anchor"></a><code><span>| </span><span><span class="constructor">Hint</span></span></code></li><li id="type-t.Details" class="def variant constructor anchored"><a href="#type-t.Details" class="anchor"></a><code><span>| </span><span><span class="constructor">Details</span></span></code></li><li id="type-t.Ok" class="def variant constructor anchored"><a href="#type-t.Ok" class="anchor"></a><code><span>| </span><span><span class="constructor">Ok</span></span></code></li><li id="type-t.Debug" class="def variant constructor anchored"><a href="#type-t.Debug" class="anchor"></a><code><span>| </span><span><span class="constructor">Debug</span></span></code></li><li id="type-t.Success" class="def variant constructor anchored"><a href="#type-t.Success" class="anchor"></a><code><span>| </span><span><span class="constructor">Success</span></span></code></li><li id="type-t.Ansi_styles" class="def variant constructor anchored"><a href="#type-t.Ansi_styles" class="anchor"></a><code><span>| </span><span><span class="constructor">Ansi_styles</span>(list(<span>[ `Fg_default
+                 <span>| `Fg_black</span>
+                 <span>| `Fg_red</span>
+                 <span>| `Fg_green</span>
+                 <span>| `Fg_yellow</span>
+                 <span>| `Fg_blue</span>
+                 <span>| `Fg_magenta</span>
+                 <span>| `Fg_cyan</span>
+                 <span>| `Fg_white</span>
+                 <span>| `Fg_bright_black</span>
+                 <span>| `Fg_bright_red</span>
+                 <span>| `Fg_bright_green</span>
+                 <span>| `Fg_bright_yellow</span>
+                 <span>| `Fg_bright_blue</span>
+                 <span>| `Fg_bright_magenta</span>
+                 <span>| `Fg_bright_cyan</span>
+                 <span>| `Fg_bright_white</span>
+                 <span><span>| `Fg_8_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB8.t</span>)</span></span>
+                 <span><span>| `Fg_24_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB24.t</span>)</span></span>
+                 <span>| `Bg_default</span>
+                 <span>| `Bg_black</span>
+                 <span>| `Bg_red</span>
+                 <span>| `Bg_green</span>
+                 <span>| `Bg_yellow</span>
+                 <span>| `Bg_blue</span>
+                 <span>| `Bg_magenta</span>
+                 <span>| `Bg_cyan</span>
+                 <span>| `Bg_white</span>
+                 <span>| `Bg_bright_black</span>
+                 <span>| `Bg_bright_red</span>
+                 <span>| `Bg_bright_green</span>
+                 <span>| `Bg_bright_yellow</span>
+                 <span>| `Bg_bright_blue</span>
+                 <span>| `Bg_bright_magenta</span>
+                 <span>| `Bg_bright_cyan</span>
+                 <span>| `Bg_bright_white</span>
+                 <span><span>| `Bg_8_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB8.t</span>)</span></span>
+                 <span><span>| `Bg_24_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB24.t</span>)</span></span>
+                 <span>| `Bold</span>
+                 <span>| `Dim</span>
+                 <span>| `Italic</span>
+                 <span>| `Underline</span> ]</span>))</span></code></li></ol><code><span>;</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-to_styles"><a href="#val-to_styles" class="anchor"></a><code><span><span class="keyword">let</span> to_styles: 
+  <span><a href="#type-t">t</a> <span class="arrow">=&gt;</span></span>
+  list(<span>[ `Fg_default
+       <span>| `Fg_black</span>
+       <span>| `Fg_red</span>
+       <span>| `Fg_green</span>
+       <span>| `Fg_yellow</span>
+       <span>| `Fg_blue</span>
+       <span>| `Fg_magenta</span>
+       <span>| `Fg_cyan</span>
+       <span>| `Fg_white</span>
+       <span>| `Fg_bright_black</span>
+       <span>| `Fg_bright_red</span>
+       <span>| `Fg_bright_green</span>
+       <span>| `Fg_bright_yellow</span>
+       <span>| `Fg_bright_blue</span>
+       <span>| `Fg_bright_magenta</span>
+       <span>| `Fg_bright_cyan</span>
+       <span>| `Fg_bright_white</span>
+       <span><span>| `Fg_8_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB8.t</span>)</span></span>
+       <span><span>| `Fg_24_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB24.t</span>)</span></span>
+       <span>| `Bg_default</span>
+       <span>| `Bg_black</span>
+       <span>| `Bg_red</span>
+       <span>| `Bg_green</span>
+       <span>| `Bg_yellow</span>
+       <span>| `Bg_blue</span>
+       <span>| `Bg_magenta</span>
+       <span>| `Bg_cyan</span>
+       <span>| `Bg_white</span>
+       <span>| `Bg_bright_black</span>
+       <span>| `Bg_bright_red</span>
+       <span>| `Bg_bright_green</span>
+       <span>| `Bg_bright_yellow</span>
+       <span>| `Bg_bright_blue</span>
+       <span>| `Bg_bright_magenta</span>
+       <span>| `Bg_bright_cyan</span>
+       <span>| `Bg_bright_white</span>
+       <span><span>| `Bg_8_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB8.t</span>)</span></span>
+       <span><span>| `Bg_24_bit_color</span><span>(<span class="xref-unresolved">Melstd__.Ansi_color.RGB24.t</span>)</span></span>
+       <span>| `Bold</span>
+       <span>| `Dim</span>
+       <span>| `Italic</span>
+       <span>| `Underline</span> ]</span>);</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-of_string"><a href="#val-of_string" class="anchor"></a><code><span><span class="keyword">let</span> of_string: <span>string <span class="arrow">=&gt;</span></span> option(<a href="#type-t">t</a>);</span></code></div></div></div></body></html>
