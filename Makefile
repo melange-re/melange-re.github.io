@@ -62,3 +62,9 @@ format-check: ## Checks if format is correct
 build-playground: ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
+
+.PHONY: move-v3.0.0-tag
+move-v3.0.0-tag: ## Moves the v3.0.0 tag to the latest commit, useful to publish the vx docs
+	git push origin :refs/tags/v3.0.0
+	git tag -fa v3.0.0
+	git push origin --tags
