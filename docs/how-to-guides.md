@@ -466,7 +466,7 @@ subcommand:
 opam list --installed melange
 # Packages matching: name-match(melange) & installed
 # Name  # Installed    # Synopsis
-melange 2.2.0          Toolchain to produce JS from Reason/OCaml
+melange 3.0.0          Toolchain to produce JS from Reason/OCaml
 ```
 
 Before building, we have to update some parts of the configuration to make it
