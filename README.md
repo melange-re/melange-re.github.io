@@ -90,7 +90,7 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
     before, to point to `vx.x.x` as well. To do so:
       - update the version in `add_canonical.ml`
       - run `dune test --auto-promote`
-      - uncomment the relevant code in `deploy.yml`
+      - uncomment the relevant code in `publish-version.yml`
 - Finally, we need to disable the publication of previous version `y.y.y` as
   the default version:
   - In `y.y.y-patches`: update `publish-version.yml` so that `mike deploy -push`

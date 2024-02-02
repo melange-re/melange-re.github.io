@@ -7,7 +7,7 @@ Test add_canonical exe
   $ add_canonical .
 
   $ cat foo.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/foo.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/foo.html" /></head>
 
 
   $ mkdir -p melange/Js/Global
@@ -98,46 +98,46 @@ Test add_canonical exe
   $ add_canonical .
 
   $ cat ./melange/Js/Global/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Js/Global/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Js/Global/index.html" /></head>
 
   $ cat ./melange/Node/Foo/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Node/Foo/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Node/Foo/index.html" /></head>
 
   $ cat ./melange/Dom/Storage2/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Dom/Storage2/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Dom/Storage2/index.html" /></head>
 
   $ cat ./melange/Belt/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Belt/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Belt/index.html" /></head>
 
   $ cat ./melange/Belt/List/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Belt/List/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Belt/List/index.html" /></head>
 
   $ cat ./melange/Stdlib/Int/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Stdlib/Int/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Stdlib/Int/index.html" /></head>
 
   $ cat ./melange/Js/Typed_array/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Js/Typed_array/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Js/Typed_array/index.html" /></head>
 
   $ cat ./melange/Js/TypedArray2/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Js/TypedArray2/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Js/TypedArray2/index.html" /></head>
 
   $ cat ./melange/Js/WeakSet/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Js/WeakSet/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Js/WeakSet/index.html" /></head>
 
   $ cat ./melange/Js/Fn/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Js/Fn/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Js/Fn/index.html" /></head>
 
   $ cat ./melange/Belt/Set/String/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Belt/Set/String/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Belt/Set/String/index.html" /></head>
 
   $ cat ./melange/Belt/Map/Dict/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Belt/Map/Dict/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Belt/Map/Dict/index.html" /></head>
 
   $ cat ./melange/Belt/SortArray/Int/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Belt/SortArray/Int/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Belt/SortArray/Int/index.html" /></head>
 
   $ cat ./melange/Melange_ppx/Ast_literal/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Melange_ppx/Ast_literal/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Melange_ppx/Ast_literal/index.html" /></head>
 
   $ cat ./melange/Melange_ppx/External/index.html
-  <head><link rel="canonical" href="https://melange.re/v2.2.0/api/melange/Melange_ppx/External/index.html" /></head>
+  <head><link rel="canonical" href="https://melange.re/v3.0.0/api/melange/Melange_ppx/External/index.html" /></head>
