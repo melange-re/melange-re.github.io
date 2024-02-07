@@ -2,7 +2,9 @@ _build
 _opam
 .vscode
 .DS_Store
+node_modules
 
+docs/.vitepress/cache
 docs/playground
 docs/api/ml
 docs/api/re

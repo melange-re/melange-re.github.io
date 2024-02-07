@@ -875,8 +875,8 @@ let f: unit => int = ([%mel.raw "function() {return 1}"]: unit => int);
 ```
 
 Using <span class="text-ocaml">two percentage signs (`[%%mel.raw
-<string>]`)</span><span class="text-reasonml">the extension name without square
-brackets (`%mel.raw <string>`)</span> is reserved for definitions in a
+"xxx"]`)</span><span class="text-reasonml">the extension name without
+square brackets (`%mel.raw "xxx"`)</span> is reserved for definitions in a
 [structure](https://v2.ocaml.org/manual/moduleexamples.html#s:module:structures)
 or [signature](https://v2.ocaml.org/manual/moduleexamples.html#s%3Asignature).
 
