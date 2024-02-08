@@ -1,0 +1,8 @@
+:root {
+  .syntax__ocaml .language-reasonml,
+  .syntax__ocaml .text-reasonml,
+  .syntax__reasonml .language-ocaml,
+  .syntax__reasonml .text-ocaml {
+    display: none;
+  }
+}
