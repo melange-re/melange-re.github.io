@@ -5,14 +5,14 @@ layout: home
 hero:
   name: "Melange"
   text: "OCaml for JavaScript developers."
-  tagline: Start building highly maintainable applications that can run in millions of devices.
+  tagline: Start building highly maintainable applications that can run on millions of devices.
   actions:
     - theme: brand
       text: Get started
       link: /getting-started
     - theme: alt
       text: Playground
-      link: /playground
+      link: /playground/index.html
 
 features:
   - title: A Solid Type System

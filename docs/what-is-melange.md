@@ -27,7 +27,7 @@ modern JavaScript:
   preprocess Melange programs, simplifying code generation for common use cases
   like generating bindings or code from types.
 
-- The [playground](./playground): This is a browser-based version of the
+- The [playground](./playground/index.html): This is a browser-based version of the
   compiler, enabling users to experiment with and share Melange code snippets
   and small programs.
 

@@ -5,6 +5,7 @@ _opam
 node_modules
 
 docs/.vitepress/cache
-docs/playground
+docs/.vitepress/dist
+docs/public/playground
 docs/api/ml
 docs/api/re
