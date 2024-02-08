@@ -323,7 +323,8 @@ To use a library from the installed package, add the library name to the `dune`
 file under the `libraries` field. For example, if our project structure looks
 like:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── src
 │   ├── dune
@@ -336,7 +337,7 @@ like:
 ├── dune
 ├── package.json
 └── ...</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── src
 │   ├── dune
@@ -349,6 +350,7 @@ like:
 ├── dune
 ├── package.json
 └── ...</code></pre>
+</div>
 
 then `reason-react` should be added to the `dune` file under the `src` folder:
 

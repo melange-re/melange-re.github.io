@@ -366,14 +366,16 @@ let sum_sq = [1, 2, 3] |> List.map(String.cat) |> sum;
 
 The compiler would rightfully raise an error:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">4 |   [ 1; 2; 3 ]
-        ^
-Error: This expression has type int but an expression was expected of type
-         string</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">1 |   [ 1, 2, 3 ]
-        ^
-Error: This expression has type int but an expression was expected of type
-         string</code></pre>
+<div class="language-text vp-adaptive-theme">
+  <pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>4 |   [ 1; 2; 3 ]
+          ^
+  Error: This expression has type int but an expression was expected of type
+          string</code></pre>
+  <pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>1 |   [ 1, 2, 3 ]
+          ^
+  Error: This expression has type int but an expression was expected of type
+          string</code></pre>
+</div>
 
 Note that instead of telling us that we are passing the wrong function in
 `List.map` (`String.cat`), the error points to the list itself. This behavior
@@ -429,16 +431,18 @@ let sum_sq = [1, 2, 3]->(Belt.List.map(String.cat))->sum;
 
 The compiler will show this error message:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">4 |   |. Belt.List.map String.cat
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>4 |   |. Belt.List.map String.cat
                        ^^^^^^^^^^
 Error: This expression has type string -> string -> string
        but an expression was expected of type int -> 'a
        Type string is not compatible with type int</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">2 | let sum_sq = [1, 2, 3]->(Belt.List.map(String.cat))->sum;
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>2 | let sum_sq = [1, 2, 3]->(Belt.List.map(String.cat))->sum;
                                            ^^^^^^^^^^
 Error: This expression has type string -> string -> string
        but an expression was expected of type int -> 'a
        Type string is not compatible with type int</code></pre>
+</div>
 
 The error points now to the function passed to `Belt.List.map`, which is more
 natural with the way the code is being written.
