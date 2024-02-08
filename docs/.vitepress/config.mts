@@ -12,30 +12,30 @@ export default defineConfig({
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground" },
       {
-        text: 'v3.0.0',
+        text: "v3.0.0",
         items: [
           {
-            text: 'v2.2.0',
-            link: 'https://melange.re/v2.2.0/'
+            text: "v2.2.0",
+            link: "https://melange.re/v2.2.0/",
           },
           {
-            text: 'v2.1.0',
-            link: 'https://melange.re/v2.1.0/'
+            text: "v2.1.0",
+            link: "https://melange.re/v2.1.0/",
           },
           {
-            text: 'v2.0.0',
-            link: 'https://melange.re/v2.0.0/'
+            text: "v2.0.0",
+            link: "https://melange.re/v2.0.0/",
           },
           {
-            text: 'v1.0.0',
-            link: 'https://melange.re/v1.0.0/'
+            text: "v1.0.0",
+            link: "https://melange.re/v1.0.0/",
           },
           {
-            text: 'unstable',
-            link: 'https://melange.re/unstable/'
-          }
-        ]
-      }
+            text: "unstable",
+            link: "https://melange.re/unstable/",
+          },
+        ],
+      },
     ],
 
     sidebar: [
@@ -62,6 +62,25 @@ export default defineConfig({
             text: "Melange for X Developers",
             link: "/melange-for-x-developers",
           },
+        ],
+      },
+      {
+        text: "Reference",
+        items: [
+          { text: "API", link: "/api" },
+        ],
+      },
+      {
+        text: "Try",
+        items: [
+          { text: "Playground", link: "/playground/index.html" },
+        ],
+      },
+      {
+        text: "About",
+        items: [
+          { text: "Community", link: "/community" },
+          { text: "Roadmap", link: "/roadmap" },
         ],
       },
     ],
