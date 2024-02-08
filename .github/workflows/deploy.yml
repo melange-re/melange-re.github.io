@@ -53,6 +53,6 @@ jobs:
       - name: Copy published site into folder
         run: cp -TRv docs/.vitepress/dist/ unstable/
       - name: Committing
-        run: git commit -m '${{ github.sha }}' -- unstable/
+        run: git commit -m 'Deployed ${{ github.sha }} to unstable' -- unstable
       - name: Push
         run: git push
