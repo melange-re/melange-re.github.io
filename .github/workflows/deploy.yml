@@ -52,7 +52,11 @@ jobs:
           git checkout gh-pages
       - name: Copy published site into folder
         run: cp -TRv docs/.vitepress/dist/ unstable/
+      - name: List files in unstable directory
+        run: ls -al unstable
+      - name: List files in unstable directory
+        run: git add unstable
       - name: Committing
-        run: git commit -m 'Deployed ${{ github.sha }} to unstable' -- unstable
+        run: git commit -m 'Deployed ${{ github.sha }} to unstable'
       - name: Push
         run: git push
