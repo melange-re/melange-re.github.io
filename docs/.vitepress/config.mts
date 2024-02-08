@@ -12,10 +12,16 @@ export default defineConfig({
   title: "Melange Documentation Site",
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
+  sitemap: {
+    hostname: "https://melange.re/v3.0.0/",
+  },
   markdown: {
     languages: [reasonGrammar],
   },
   themeConfig: {
+    search: {
+      provider: "local",
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Learn", link: "/what-is-melange" },
