@@ -12,8 +12,9 @@ export default defineConfig({
   title: "Melange Documentation Site",
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
+  base: "/unstable/",
   sitemap: {
-    hostname: "https://melange.re/v3.0.0/",
+    hostname: "https://melange.re/unstable/",
   },
   markdown: {
     languages: [reasonGrammar],
@@ -28,8 +29,12 @@ export default defineConfig({
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground" },
       {
-        text: "v3.0.0",
+        text: "unstable",
         items: [
+          {
+            text: "v3.0.0",
+            link: "https://melange.re/v3.0.0/",
+          },
           {
             text: "v2.2.0",
             link: "https://melange.re/v2.2.0/",
@@ -45,10 +50,6 @@ export default defineConfig({
           {
             text: "v1.0.0",
             link: "https://melange.re/v1.0.0/",
-          },
-          {
-            text: "unstable",
-            link: "https://melange.re/unstable/",
           },
         ],
       },
