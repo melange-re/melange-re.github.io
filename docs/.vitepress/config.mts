@@ -1,10 +1,20 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { defineConfig } from "vitepress";
+
+// From https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/reason.json
+const reasonGrammar = JSON.parse(
+  readFileSync(join(__dirname, "./reasonml.tmLanguage.json"), "utf8")
+);
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Melange Documentation Site",
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
+  markdown: {
+    languages: [reasonGrammar],
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -66,15 +76,11 @@ export default defineConfig({
       },
       {
         text: "Reference",
-        items: [
-          { text: "API", link: "/api" },
-        ],
+        items: [{ text: "API", link: "/api" }],
       },
       {
         text: "Try",
-        items: [
-          { text: "Playground", link: "/playground/index.html" },
-        ],
+        items: [{ text: "Playground", link: "/playground/index.html" }],
       },
       {
         text: "About",

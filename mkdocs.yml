@@ -38,7 +38,3 @@ nav:
 
 extra_css:
   - css/extra.css
-
-extra_javascript:
-  - js/toggleSyntaxButton.js
-  - js/reasonml.js
