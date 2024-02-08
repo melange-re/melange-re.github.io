@@ -12,7 +12,8 @@ hero:
       link: /getting-started
     - theme: alt
       text: Playground
-      link: /playground/index.html
+      link: /playground/
+      target: '_self'
 
 features:
   - title: A Solid Type System

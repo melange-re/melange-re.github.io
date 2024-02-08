@@ -27,7 +27,7 @@ export default defineConfig({
     nav: [
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
-      { text: "Playground", link: "/playground/index.html" },
+      { text: "Playground", link: "/playground/", target: '_self' },
       {
         text: "unstable",
         items: [
@@ -87,7 +87,7 @@ export default defineConfig({
       },
       {
         text: "Try",
-        items: [{ text: "Playground", link: "/playground/index.html" }],
+        items: [{ text: "Playground", link: "/playground/", target: '_self' }],
       },
       {
         text: "About",
