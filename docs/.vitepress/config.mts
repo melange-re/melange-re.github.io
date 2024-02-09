@@ -22,18 +22,19 @@ export default defineConfig({
     languages: [reasonGrammar],
   },
   themeConfig: {
-    outline: {level: [2, 3]},
+    outline: { level: [2, 3] },
     search: {
       provider: "local",
     },
     editLink: {
-      pattern: 'https://github.com/melange-re/melange-re.github.io/edit/master/docs/:path'
+      pattern:
+        "https://github.com/melange-re/melange-re.github.io/edit/master/docs/:path",
     },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
-      { text: "Playground", link: "/playground/", target: '_self' },
+      { text: "Playground", link: "/playground/", target: "_self" },
       {
         text: "unstable",
         items: [
@@ -93,7 +94,7 @@ export default defineConfig({
       },
       {
         text: "Try",
-        items: [{ text: "Playground", link: "/playground/", target: '_self' }],
+        items: [{ text: "Playground", link: "/playground/", target: "_self" }],
       },
       {
         text: "About",

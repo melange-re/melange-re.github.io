@@ -27,9 +27,9 @@ modern JavaScript:
   preprocess Melange programs, simplifying code generation for common use cases
   like generating bindings or code from types.
 
-- The [playground](./playground/){target="_self"}: This is a browser-based version of the
-  compiler, enabling users to experiment with and share Melange code snippets
-  and small programs.
+- The [playground](./playground/){target="_self"}: This is a browser-based
+  version of the compiler, enabling users to experiment with and share Melange
+  code snippets and small programs.
 
 In addition to these core components, there is an ongoing effort to integrate
 Melange into the broader OCaml Platform and other tools and libraries within the
