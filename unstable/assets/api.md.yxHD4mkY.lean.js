@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as t,V as r}from"./chunks/framework.BCxdY_ip.js";const f=JSON.parse('{"title":"API","description":"","frontmatter":{},"headers":[],"relativePath":"api.md","filePath":"api.md"}'),i={name:"api.md"},l=r("",4),s=[l];function o(c,n,d,p,h,_){return t(),a("div",null,s)}const u=e(i,[["render",o]]);export{f as __pageData,u as default};
