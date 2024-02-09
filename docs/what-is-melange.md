@@ -18,7 +18,7 @@ modern JavaScript:
   This is a small code component essential for running JavaScript programs
   produced by the compiler.
 
-- The [standard libraries](./api.md): Melange includes a set of foundational
+- The [standard libraries](./api): Melange includes a set of foundational
   elements such as data structures, functions, and bindings to JavaScript APIs,
   all aimed at helping developers accelerate app development.
 
