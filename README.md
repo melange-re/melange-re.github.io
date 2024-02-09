@@ -81,6 +81,9 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
 ```
 - Call the newly created command to create a new version selectable from the
   website: `make move-vx.x.x-tag`
+- Update the navigation bar in `docs/.vitepress/config.mts`, under
+  `themeConfig.nav` setting, so that the first item is the one of the new
+  version, and `unstable` is shown last
 - Once the new version is published, we need to make sure other versions remain
   SEO friendly:
   - In `master`: update `add_canonical` to point to the new `vx.x.x`, so that
