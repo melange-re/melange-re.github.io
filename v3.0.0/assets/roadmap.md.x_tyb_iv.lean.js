@@ -1,0 +1,1 @@
+import{_ as a,c as e,o,V as t}from"./chunks/framework.peF0E11l.js";const f=JSON.parse('{"title":"Roadmap","description":"","frontmatter":{},"headers":[],"relativePath":"roadmap.md","filePath":"roadmap.md"}'),r={name:"roadmap.md"},n=t("",10),l=[n];function i(s,d,c,h,m,p){return o(),e("div",null,l)}const _=a(r,[["render",i]]);export{f as __pageData,_ as default};
