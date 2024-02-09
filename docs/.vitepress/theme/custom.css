@@ -5,4 +5,8 @@
   .syntax__reasonml .text-ocaml {
     display: none;
   }
+
+  .language-reasonml.vp-adaptive-theme {
+    margin-top: 16px !important;
+  }
 }
