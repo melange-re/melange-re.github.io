@@ -174,7 +174,8 @@ docs](https://dune.readthedocs.io/en/stable/melange.html#melange-emit).
 
 The file structure of the app should look something like this:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── lib
 │   ├── dune
@@ -182,7 +183,7 @@ The file structure of the app should look something like this:
 ├── dune-project
 ├── dune
 └── app.ml</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── lib
 │   ├── dune
@@ -190,6 +191,7 @@ The file structure of the app should look something like this:
 ├── dune-project
 ├── dune
 └── app.re</code></pre>
+</div>
 
 #### Building the project
 
@@ -228,20 +230,22 @@ to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.ml
 └── emit
     └── dune</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.re
 └── emit
     └── dune</code></pre>
+</div>
 
 With `emit/dune` being:
 

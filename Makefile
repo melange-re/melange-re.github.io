@@ -62,3 +62,7 @@ format-check: ## Checks if format is correct
 build-playground: ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
+
+.PHONY: build-site
+build-site: build-playground ## Builds the whole site (including playground)
+	yarn && yarn docs:build

@@ -439,8 +439,8 @@ type email = string;</code></pre> </td> </tr>
       <td>
         <pre><code>const a = 1;
 type A = { readonly x: number };
-type ImmutableA = Readonly<A>;
-const arr: ReadonlyArray<number> = [1, 2, 3];
+type ImmutableA = Readonly&lt;A&gt;;
+const arr: ReadonlyArray&lt;number&gt; = [1, 2, 3];
 type A = { readonly [x: string]: number };
 </code></pre>
       </td>
