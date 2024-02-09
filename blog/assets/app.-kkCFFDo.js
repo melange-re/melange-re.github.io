@@ -1,0 +1,7 @@
+import{l as o,m as i,R as u,n as l,p as c,C as f,q as d,s as m,v as h,w as A,x as g,y as v,d as P,u as w,z as y,A as C,B as R,D as E,E as _,G as D}from"./chunks/framework.X_0iuvxk.js";import{R as b}from"./chunks/theme.kPsNKwC7.js";function p(e){if(e.extends){const t=p(e.extends);return{...t,...e,async enhanceApp(a){t.enhanceApp&&await t.enhanceApp(a),e.enhanceApp&&await e.enhanceApp(a)}}}return e}const s=p(b),T=P({name:"VitePressApp",setup(){const{site:e,lang:t,dir:a}=w();return y(()=>{C(()=>{document.documentElement.lang=t.value,document.documentElement.dir=a.value})}),e.value.router.prefetchLinks&&R(),E(),_(),s.setup&&s.setup(),()=>D(s.Layout)}});async function x(){const e=O(),t=L();t.provide(u,e);const a=l(e.route);return t.provide(c,a),t.component("Content",f),t.component("ClientOnly",d),Object.defineProperties(t.config.globalProperties,{$frontmatter:{get(){return a.frontmatter.value}},$params:{get(){return a.page.value.params}}}),s.enhanceApp&&await s.enhanceApp({app:t,router:e,siteData:m}),{app:t,router:e,data:a}}function L(){return h(T)}function O(){let e=o,t;return A(a=>{let n=g(a),r=null;return n&&(e&&(t=n),(e||t===n)&&(n=n.replace(/\.js$/,".lean.js")),r=v(()=>import(n),__vite__mapDeps([]))),o&&(e=!1),r},s.NotFound)}o&&x().then(({app:e,router:t,data:a})=>{t.go().then(()=>{i(t.route,a.site),e.mount("#app")})});export{x as createApp};
+function __vite__mapDeps(indexes) {
+  if (!__vite__mapDeps.viteFileDeps) {
+    __vite__mapDeps.viteFileDeps = []
+  }
+  return indexes.map((i) => __vite__mapDeps.viteFileDeps[i])
+}
