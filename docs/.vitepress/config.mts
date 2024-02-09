@@ -20,6 +20,7 @@ export default defineConfig({
     languages: [reasonGrammar],
   },
   themeConfig: {
+    outline: {level: [2, 3]},
     search: {
       provider: "local",
     },
@@ -60,7 +61,7 @@ export default defineConfig({
         text: "Intro",
         items: [
           { text: "What is Melange", link: "/what-is-melange" },
-          { text: "Why", link: "/rationale" },
+          { text: "Rationale", link: "/rationale" },
           { text: "Getting Started", link: "/getting-started" },
         ],
       },
