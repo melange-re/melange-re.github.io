@@ -66,3 +66,7 @@ build-playground: ## Builds the playground
 .PHONY: build-site
 build-site: build-playground ## Builds the whole site (including playground)
 	yarn && yarn docs:build
+
+.PHONY: build-blog
+build-blog: ## Builds the blog
+	cd blog && yarn && yarn build

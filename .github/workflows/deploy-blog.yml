@@ -1,0 +1,37 @@
+name: deploy blog
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - 'v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Build blog
+        run: make build-blog
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Fetch and checkout gh-pages
+        run:  |
+          git fetch origin gh-pages --depth=1
+          git checkout gh-pages
+      - name: Copy published site into folder
+        run: mv blog blog2 && cp -TRv blog2/.vitepress/dist/ blog/
+      - name: Add blog files to git index
+        run: git add blog
+      - name: Committing
+        run: git commit -m 'Deployed blog from ${{ github.sha }}'
+      - name: Push
+        run: git push
