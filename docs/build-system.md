@@ -76,7 +76,7 @@ opam install dune melange
 ```
 
 <div class="text-reasonml">
-As we will be using Reason syntax, let’s install the `reason` package too:
+As we will be using Reason syntax, let’s install the <code>reason</code> package too:
 
 ```bash
 opam install reason
