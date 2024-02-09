@@ -35,12 +35,8 @@ export default defineConfig({
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground/", target: '_self' },
       {
-        text: "unstable",
+        text: "v3.0.0",
         items: [
-          {
-            text: "v3.0.0",
-            link: "https://melange.re/v3.0.0/",
-          },
           {
             text: "v2.2.0",
             link: "https://melange.re/v2.2.0/",
@@ -56,6 +52,10 @@ export default defineConfig({
           {
             text: "v1.0.0",
             link: "https://melange.re/v1.0.0/",
+          },
+          {
+            text: "unstable",
+            link: "https://melange.re/unstable/",
           },
         ],
       },
