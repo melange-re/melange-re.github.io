@@ -1,8 +1,6 @@
 # Getting started
 
-<p class="centered">Get up and running with Melange in no time!</p>
-
----
+Get up and running with Melange in no time!
 
 ## Install a package manager
 

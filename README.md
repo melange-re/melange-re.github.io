@@ -11,13 +11,13 @@ https://github.com/melange-re/melange.
 
 ## Working locally
 
-After cloning the repository, install the necessary Python packages:
+After cloning the repository, install the necessary JavaScript packages:
 
 ```
-python3 -m pip install -r ./pip-requirements.txt
+yarn
 ```
 
-Then run `mkdocs serve .` from the folder where the repository lives.
+Then run `yarn docs:dev` from the folder where the repository lives.
 
 ### (Optional) Tooling for docs generation
 
@@ -53,8 +53,7 @@ dune build @re --auto-promote
 
 Publishing is done automatically from GitHub actions:
 - Every commit to `master` will publish in the `unstable` folder
-- Every tag pushed with the `v*` format will publish on its corresponding
-  folder, and set it as default
+- Every tag pushed with the `v*` format will publish on its corresponding folder
 
 ### Tracking new versions of `melange` in opam
 
@@ -90,9 +89,6 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
     before, to point to `vx.x.x` as well. To do so:
       - update the version in `add_canonical.ml`
       - run `dune test --auto-promote`
-      - uncomment the relevant code in `deploy.yml`
-- Finally, we need to disable the publication of previous version `y.y.y` as
-  the default version:
-  - In `y.y.y-patches`: update `publish-version.yml` so that `mike deploy -push`
-    is used and `set-default` is removed.
-  - Commit and run `make move-vy.y.y-tag` to deploy
+      - uncomment the relevant code in `publish-version.yml`
+- In the `gh-pages` branch, replace the default version with the new one [in
+  index.html](https://github.com/melange-re/melange-re.github.io/blob/gh-pages/index.html#L10)
