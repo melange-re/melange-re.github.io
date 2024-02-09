@@ -24,6 +24,9 @@ export default defineConfig({
     search: {
       provider: "local",
     },
+    editLink: {
+      pattern: 'https://github.com/melange-re/melange-re.github.io/edit/master/docs/:path'
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Learn", link: "/what-is-melange" },
