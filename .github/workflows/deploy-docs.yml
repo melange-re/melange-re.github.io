@@ -1,4 +1,4 @@
-name: check and deploy
+name: check and deploy docs and playground
 
 on:
   push:

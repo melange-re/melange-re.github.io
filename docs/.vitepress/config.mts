@@ -35,6 +35,7 @@ export default defineConfig({
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground/", target: "_self" },
+      { text: "Blog", link: "https://melange.re/blog" },
       {
         text: "unstable",
         items: [
