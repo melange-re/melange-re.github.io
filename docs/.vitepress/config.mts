@@ -7,12 +7,14 @@ const reasonGrammar = JSON.parse(
   readFileSync(join(__dirname, "./reasonml.tmLanguage.json"), "utf8")
 );
 
+const base = process.env.BASE || "unstable";
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Melange Documentation Site",
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
-  base: "/unstable/",
+  base: `/${base}/`,
   sitemap: {
     hostname: "https://melange.re/unstable/",
   },

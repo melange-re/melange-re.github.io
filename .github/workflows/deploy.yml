@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - vitepress #todo: remove before merging https://github.com/melange-re/melange-re.github.io/pull/161
     tags-ignore:
       - 'v*'
 
@@ -52,9 +51,7 @@ jobs:
           git checkout gh-pages
       - name: Copy published site into folder
         run: cp -TRv docs/.vitepress/dist/ unstable/
-      - name: List files in unstable directory
-        run: ls -al unstable
-      - name: List files in unstable directory
+      - name: Add unstable files to git index
         run: git add unstable
       - name: Committing
         run: git commit -m 'Deployed ${{ github.sha }} to unstable'
