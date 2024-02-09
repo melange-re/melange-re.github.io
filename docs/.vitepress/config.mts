@@ -16,7 +16,7 @@ export default defineConfig({
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
   base: `/${base}/`,
   sitemap: {
-    hostname: "https://melange.re/unstable/",
+    hostname: `https://melange.re/${base}/`,
   },
   markdown: {
     languages: [reasonGrammar],
