@@ -1,8 +1,29 @@
 # Getting started
 
-Get up and running with Melange in no time!
+Get up and running with Melange in no time! Below you will find the two main
+ways to get started with Melange:
+- (Recommended) With
+  [create-melange-app](https://github.com/dmmulroy/create-melange-app)
+- Manually, using
+  [melange-opam-template](https://github.com/melange-re/melange-opam-template)
 
-## Install a package manager
+## Getting started (recommended): `create-melange-app`
+
+If you are completely new to Melange, we recommend using
+[create-melange-app](https://github.com/dmmulroy/create-melange-app) to start a
+new project. Just run these commands:
+
+```bash
+npm create melange-app@latest
+npm run dev
+```
+
+## Getting started (manual): `melange-opam-template`
+
+If you are familiar with OCaml, or just prefer manually installing the
+toolchain, follow the instructions below.
+
+### Install a package manager
 
 To work with Melange, you need to install a package manager compatible with
 OCaml. If you are not sure which one to use, we recommend
@@ -14,11 +35,9 @@ Instructions for installing opam on different operating systems can be found at
 the opam [install page](https://opam.ocaml.org/doc/Install.html), and you can
 find [a whole section about it](package-management.md) on this website.
 
-## Template
+### Get the template
 
-The easiest way to get started with Melange is by using the
-[melange-opam-template](https://github.com/melange-re/melange-opam-template).
-You can clone it from [this
+You can clone `melange-opam-template` from [this
 link](https://github.com/melange-re/melange-opam-template/generate), and follow
 the instructions in the [readme
 file](https://github.com/melange-re/melange-opam-template/blob/main/README.md)
@@ -26,7 +45,7 @@ to configure the [local opam
 switch](https://opam.ocaml.org/blog/opam-local-switches/) and download the
 necessary dependencies to build the project.
 
-## Editor integration
+### Editor integration
 
 One of the goals of Melange is to remain compatible with OCaml. One of the major
 benefits of this compatibility is that developers working on Melange projects
@@ -49,12 +68,12 @@ are several options available. You can read about them in the [editor setup
 page](http://ocamlverse.net/content/editor_setup.html) of the OCamlverse
 documentation site.
 
-## Alternative package managers (experimental)
+### Alternative package managers (experimental)
 
 Melange can also be used with other package managers. The following instructions
 apply to [Nix](#nix) and [esy](#esy).
 
-### [Nix](https://nixos.org/)
+#### [Nix](https://nixos.org/)
 
 Melange provides an overlay that can be:
 
@@ -105,7 +124,7 @@ Make sure [Nix](https://nixos.org/download.html) is installed. The following
 
 To enter a Melange development shell, run `nix develop -c $SHELL`.
 
-### [esy](https://esy.sh/)
+#### [esy](https://esy.sh/)
 
 First, make sure `esy` is
 [installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g
