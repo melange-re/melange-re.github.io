@@ -96,5 +96,7 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
       - update the version in `add_canonical.ml`
       - run `dune test --auto-promote`
       - uncomment the relevant code in `publish-version.yml`
-- In the `gh-pages` branch, replace the default version with the new one [in
-  index.html](https://github.com/melange-re/melange-re.github.io/blob/gh-pages/index.html#L10)
+- In the `gh-pages` branch:
+  - replace the default version with the new one [in
+    index.html](https://github.com/melange-re/melange-re.github.io/blob/gh-pages/index.html#L10)
+  - update `robots.txt` to point to the new version sitemap
