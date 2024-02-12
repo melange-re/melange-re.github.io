@@ -2,16 +2,16 @@
 
 Get up and running with Melange in no time! Below you will find the two main
 ways to get started with Melange:
-- (Recommended) With
+1. Automated, using
   [create-melange-app](https://github.com/dmmulroy/create-melange-app)
-- Manually, using
+2. Manually, using
   [melange-opam-template](https://github.com/melange-re/melange-opam-template)
 
-## Getting started (recommended): `create-melange-app`
+## Getting started (automated): `create-melange-app`
 
-If you are completely new to Melange, we recommend using
+If you prefer an automated way to install the Melange toolchain, you can use
 [create-melange-app](https://github.com/dmmulroy/create-melange-app) to start a
-new project. Just run these commands:
+new project. To do so, run these commands:
 
 ```bash
 npm create melange-app@latest
@@ -20,8 +20,7 @@ npm run dev
 
 ## Getting started (manual): `melange-opam-template`
 
-If you are familiar with OCaml, or just prefer manually installing the
-toolchain, follow the instructions below.
+If you prefer manually installing the toolchain, follow the instructions below.
 
 ### Install a package manager
 
