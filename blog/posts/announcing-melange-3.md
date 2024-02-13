@@ -49,6 +49,21 @@ Melange 3 includes a few interesting new features and enhancements. From syntax
 and preprocessing to interop with JavaScript, runtime and error messages, here are some
 we chose to highlight:
 
+### Multiple OCaml-version releases
+
+A few users have expressed concerns related to Melange having a 1:1 relationship to its
+OCaml version. This limitation exists because we vendor and modify OCaml's typechecker, 
+which is usually version-dependent.
+
+In Melange 1, we made some strides to solve this at the syntax level – one Melange version 
+could work across many compiler switches. But that has a pretty big limitation: editor tooling,
+documentation generation and everything else that reads from `.cmt` artifact files needed to be
+in the same compiler switch as the version of the typechecker in use.
+ 
+Starting in Melange 3, we will be adopting the recent Merlin release strategy: Melange has a
+release for every compiler version that it supports, suffixed with the OCaml version that it 
+corresponds to, e.g. Melange 3 on OCaml 4.14 is `v3.0.0-414`.
+
 ### Interop
 
 - Modules can be renamed with `@mel.as`
