@@ -46,7 +46,7 @@ Alternatives within `Stdlib` or `Belt` are instead​​ recommended.
 ## New Features and Enhancements
 
 Melange 3 includes a few interesting new features and enhancements. From syntax
-and preprocessing to interop with JS, runtime and error messages, here are some
+and preprocessing to interop with JavaScript, runtime and error messages, here are some
 we chose to highlight:
 
 ### Interop
@@ -68,7 +68,7 @@ Melange 3 provides more informative error messages originating from both the
 
 In this release, we also introduce a new `unprocessed` alert to detect code that
 has made it to the Melange compiler without having been processed by the Melange
-PPX. Besides hinting users to add `(preprocess (pps melange.ppx))` to their dune
+PPX. Besides hinting users to add `(preprocess (pps melange.ppx))` to their `dune`
 file, this alert more explicitly exposes a common failure mode that puzzles
 beginners quite often.
 
