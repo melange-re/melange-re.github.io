@@ -30,6 +30,7 @@ const { page, frontmatter } = useData()
           <a
             class="hover:text-gray-700 dark:hover:text-gray-200"
             href="/blog/feed.rss"
+            target="_self"
             >RSS<span class="hidden sm:inline"> Feed</span></a
           >
           <span class="mr-2 ml-2">·</span>
