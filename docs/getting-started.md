@@ -1,7 +1,14 @@
 # Getting started
 
-Get up and running with Melange in no time! Below you will find the two main
-ways to get started with Melange:
+If you would like to learn OCaml and Melange from scratch, we recommend you to
+read ["Melange for React Devs"](https://react-book.melange.re/). This book will
+give you an overview of the OCaml language, as well as showcase some of the
+mechanisms that Melange offers to interact with JavaScript code. You’ll build a
+few projects along the way, and by the end, you’ll have a solid grasp of the
+language.
+
+Alternatively, if you want to start your project, below you will find the two
+main ways to get started with Melange:
 1. Automated, using
   [create-melange-app](https://github.com/dmmulroy/create-melange-app)
 2. Manually, using
