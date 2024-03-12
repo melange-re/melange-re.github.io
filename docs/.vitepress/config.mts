@@ -2,6 +2,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { defineConfig } from "vitepress";
 
+const toggleSyntaxScript = readFileSync(join(__dirname, './toggleSyntax.js'), 'utf8');
+
 // From https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/reason.json
 const reasonGrammar = JSON.parse(
   readFileSync(join(__dirname, "./reasonml.tmLanguage.json"), "utf8")
@@ -12,6 +14,13 @@ const base = process.env.BASE || "unstable";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Melange Documentation Site",
+  head:[
+    [
+      'script',
+      {},
+      toggleSyntaxScript
+    ]
+  ],
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
   base: `/${base}/`,
