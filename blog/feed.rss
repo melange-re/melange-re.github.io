@@ -4,7 +4,7 @@
         <title>Sandtracks</title>
         <link>https://melange.re/blog</link>
         <description>The official blog for the Melange project</description>
-        <lastBuildDate>Tue, 09 Apr 2024 18:52:27 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 09 Apr 2024 18:59:04 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -217,9 +217,10 @@ for those apps.</p>
 libraries that share the same name, as long as they're defined in different
 build contexts (<a href="https://github.com/ocaml/dune/issues/10222" target="_blank" rel="noreferrer">dune#10222</a>).
 Support for libraries with the same name in multiple contexts landed in
-<a href="https://github.com/ocaml/dune/pull/10307" target="_blank" rel="noreferrer">dune#10307</a> and we'll be diving
-deeper into what led us to this solution and what it enables in a separate blog
-post.</p>
+<a href="https://github.com/ocaml/dune/pull/10307" target="_blank" rel="noreferrer">dune#10307</a>. We'll be diving deeper
+into what led us to this solution and what it enables in a separate blog post.
+For now, the remaining work relates to selecting which build context to use for
+editor integration when using multi-context builds.</p>
 <h2 id="community-at-large" tabindex="-1">Community at large <a class="header-anchor" href="#community-at-large" aria-label="Permalink to &quot;Community at large&quot;"></a></h2>
 <h3 id="bootstrapping-melange-projects-with-create-melange-app" tabindex="-1">Bootstrapping Melange projects with <code>create-melange-app</code> <a class="header-anchor" href="#bootstrapping-melange-projects-with-create-melange-app" aria-label="Permalink to &quot;Bootstrapping Melange projects with `create-melange-app`&quot;"></a></h3>
 <p>In January, <a href="https://twitter.com/dillon_mulroy" target="_blank" rel="noreferrer">Dillon</a> released v1.0 of
