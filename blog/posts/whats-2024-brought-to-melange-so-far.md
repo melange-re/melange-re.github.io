@@ -33,19 +33,23 @@ libraries in [`melange-community`](https://github.com/melange-community) were
 also updated and released with support for this new Melange major version.
 
 Melange 3 has been running in production at Ahrefs since its release. This is
-the largest Melange codebase that we are aware of (on the scale of hundreds of
-libraries with support for `(modes melange)`, across dozens of apps).
+the largest Melange codebase that we are aware of (on the scale of tens of
+libraries with support for `(modes melange)` and `melange.emit` stanzas, across
+dozens of apps).
 
 
 ## Emitting [ES6](https://github.com/melange-re/melange/issues/134)
 
-As the great majority of browsers supports ECMAScript 2015 (ES6), we decided to bump
-the version of this specification that Melange targets. In
+As the great majority of browsers [supports ECMAScript 2015
+(ES6)](https://caniuse.com/?search=es6.), we decided to bump the version that
+Melange targets. In
 [melange#1019](https://github.com/melange-re/melange/pull/1019) and
 [melange#1059](https://github.com/melange-re/melange/pull/1059) we changed the
 emission of `var` to `let` (and `const`, where possible). `let`'s lexical scope
 makes some closure allocations in `for` loops unnecessary, which we promptly
 removed in [melange#1020](https://github.com/melange-re/melange/pull/1020).
+This change also results in a slight reduction of bundle size as Melange emits
+a bit less code.
 
 Starting to emit ES6 also unblocks working on
 [melange#342](https://github.com/melange-re/melange/issues/342), which requests
@@ -97,9 +101,13 @@ benefits to users of Melange:
 - Detecting an exception originating from Melange-compiled code is now as easy
   as using the JS `instanceof` operator to check if the exception is an
   instance of `Caml_js_exceptions.MelangeError`.
-- `MelangeError` adds support for – and polyfills, if necessary – the `cause`
+- `MelangeError` adds support for – and polyfills, if necessary – the
+  [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
   property in instances of `Error`, which lets us squeeze out some extra
   [browser support](https://caniuse.com/mdn-javascript_builtins_error_cause).
+  - Additionally, this enables even better integrations with 3rd party
+    monitoring tools, which will look for JavaScript error details in
+    `Error.prototype.cause`.
 
 
 ## `melange.js` keeps getting better
