@@ -254,9 +254,10 @@ This past quarter, we took it a step further. We added support in Dune for
 libraries that share the same name, as long as they're defined in different
 build contexts ([dune#10222](https://github.com/ocaml/dune/issues/10222)).
 Support for libraries with the same name in multiple contexts landed in
-[dune#10307](https://github.com/ocaml/dune/pull/10307) and we'll be diving
-deeper into what led us to this solution and what it enables in a separate blog
-post.
+[dune#10307](https://github.com/ocaml/dune/pull/10307). We'll be diving deeper
+into what led us to this solution and what it enables in a separate blog post.
+For now, the remaining work relates to selecting which build context to use for
+editor integration when using multi-context builds.
 
 ## Community at large
 
