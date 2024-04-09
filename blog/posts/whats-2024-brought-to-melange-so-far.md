@@ -39,8 +39,8 @@ libraries with support for `(modes melange)`, across dozens of apps).
 
 ## Emitting [ES6](https://github.com/melange-re/melange/issues/134)
 
-As the great majority of browsers supports ES6, we decided to bump the version
-of ECMAScript that Melange targets. In
+As the great majority of browsers supports ECMAScript 2015 (ES6), we decided to bump
+the version of this specification that Melange targets. In
 [melange#1019](https://github.com/melange-re/melange/pull/1019) and
 [melange#1059](https://github.com/melange-re/melange/pull/1059) we changed the
 emission of `var` to `let` (and `const`, where possible). `let`'s lexical scope
@@ -58,7 +58,7 @@ issue](https://github.com/melange-re/melange/issues/new) if you feel that
 Melange should emit ES6 features that your project requires.
 
 
-## Identifying Melange exceptions in JS
+## Identifying Melange exceptions in JavaScript
 
 Until Melange 3, exceptions originating from OCaml code compiled with Melange
 are roughly thrown as such:
@@ -185,7 +185,7 @@ libraries and delay the selection of concrete implementations until linking an
 executable.
 
 In the Melange case there's no executable linking going on, but we can still
-delay the selection of concrete implementations until JS emission – in
+delay the selection of concrete implementations until JavaScript emission – in
 practice, this means programming against the interface of "virtual modules" in
 libraries and deferring the dependency on the concrete implementation until the
 `melange.emit` stanza.
@@ -242,7 +242,7 @@ Javi wrote about how Ahrefs is [sharing component
 code](https://tech.ahrefs.com/building-react-server-components-in-ocaml-81c276713f19)
 for those apps.
 
-This past quarter, we took it a step further. We added support in dune for
+This past quarter, we took it a step further. We added support in Dune for
 libraries that share the same name, as long as they're defined in different
 build contexts ([dune#10222](https://github.com/ocaml/dune/issues/10222)).
 Support for libraries with the same name in multiple contexts landed in
