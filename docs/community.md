@@ -16,7 +16,7 @@ The community tends to congregate in the following forums:
 The following are resources about Melange collected around the web:
 
 - [David Sancho chats to Antonio Monteiro about OCaml and Melange (May
-  2023)](https://www.youtube.com/watch?v=MdHDewVSDtM)
+  2023)](https://www.youtube.com/watch?v=zKO-Y2_a-yk)
 - "[Ahrefs.com is now built with
   Melange](https://tech.ahrefs.com/ahrefs-is-now-built-with-melange-b14f5ec56df4)"
   announcement
