@@ -1,5 +1,5 @@
 ---
-title: Unlocking Universal Libraries in Dune
+title: A Preview of Universal Libraries in Dune
 date: 2024-04-10
 author: Antonio Monteiro
 gravatar: 45c2052f50f561b9dc2cae59c777aecd794f57269fa317f9c9c3365c2e00d16f
