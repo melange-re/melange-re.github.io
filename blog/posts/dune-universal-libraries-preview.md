@@ -42,14 +42,14 @@ What gets in our way is that:
 - not everything is supported on both sides: some Melange modules use APIs that
   don't exist in OCaml (and extensive shimming is undesirable).
   - vice-versa on the Melange side; especially code that calls into C bindings.
-- we can't vary what implementation to use inside a module or conditionally
+- we can't choose what implementation to use inside a module or conditionally
   apply different preprocessing steps and/or flags.
 
-In summary, we would like to to vary specific module implementations across the
+In summary, we would like to vary specific module implementations across the
 same library, based on their compilation target. If we try to use it in a
-real-world codebase, we'll also find the need to vary preprocessing
-definitions, compilation flags, the set of modules belonging to the library –
-effectively most fields in the `(library ..)` stanza.
+real-world codebase, we'll also find the need to specify different
+preprocessing definitions, compilation flags, the set of modules belonging to
+the library – effectively most fields in the `(library ..)` stanza.
 
 ## A First ~~Hack~~ Approach
 
@@ -70,8 +70,8 @@ So we first tried to work around that, and set up:
 - defined in different directories;
 - `(copy_files ..)` from one of the directories into the other, duplicating
   shared modules.
-    - Modules with the same name and different implementations, specifc to each
-      directory.
+    - Modules with the same name and different implementations, specific to
+      each directory.
 
 ```clj
 ;; native/dune
@@ -143,6 +143,9 @@ some other glaring limitations:
 - Publishing a library with `(modes :standard melange)` adds a non-optional
   dependency on Melange, which should really be optional for native-only
   consumers.
+- Extensive usage of `(copy_files ..)` as shared in the example above breaks
+  editor integration and "jump to definition"; Merlin and OCaml-LSP don't track
+  the original source in this scenario.
 
 ## Testing a New Solution
 
@@ -176,6 +179,7 @@ Putting it all together, our example can be adapted to look like:
  (enabled_if
   (= %{context_name} default)))
 
+;; can also be defined in src/dune(!)
 (library
  (name a)
  (modes melange)
