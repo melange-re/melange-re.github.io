@@ -219,7 +219,10 @@ If we need to vary `C`'s implementation, we can express that in Dune rules:
 ```
 
 In short, both libraries get a module `C`. `c.ml`'s contents vary according to
-the build context.
+the build context. The example above is currently illustrative, even if
+functional. We're still working on the developer experience of multi-context
+libraries. This might not be the best setup for editor support, which we'll
+find out as we take it for a spin.
 
 ## Missing Pieces
 
