@@ -790,7 +790,7 @@ These attributes are used to annotate arguments in `external` definitions:
 - [`mel.this`](#modeling-this-based-callbacks): bind to `this` based callbacks
 - [`mel.uncurry`](#binding-to-callbacks): define function arguments as uncurried
   (automated)
-- [`mel.unwrap`](#approach-2-polymorphic-variant-bsunwrap): unwrap variant
+- [`mel.unwrap`](#approach-2-polymorphic-variant-mel-unwrap): unwrap variant
   values
 
 These attributes are used in places like records, fields, arguments, functions,
