@@ -46,7 +46,7 @@ export default defineConfig({
       { text: "Playground", link: "/playground/", target: "_self" },
       { text: "Blog", link: "https://melange.re/blog" },
       {
-        text: "unstable",
+        text: "v4.0.0",
         items: [
           {
             text: "v3.0.0",
@@ -67,6 +67,10 @@ export default defineConfig({
           {
             text: "v1.0.0",
             link: "https://melange.re/v1.0.0/",
+          },
+          {
+            text: "unstable",
+            link: "https://melange.re/unstable/",
           },
         ],
       },

@@ -70,3 +70,9 @@ build-site: build-playground ## Builds the whole site (including playground)
 .PHONY: build-blog
 build-blog: ## Builds the blog
 	cd blog && yarn && yarn build
+
+.PHONY: move-v4.0.0-tag
+move-v4.0.0-tag: ## Moves the v4.0.0 tag to the latest commit, useful to publish the v4 docs
+	git push origin :refs/tags/v4.0.0
+	git tag -fa v4.0.0
+	git push origin --tags
