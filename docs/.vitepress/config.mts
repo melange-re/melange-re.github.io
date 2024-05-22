@@ -49,6 +49,10 @@ export default defineConfig({
         text: "unstable",
         items: [
           {
+            text: "v4.0.0",
+            link: "https://melange.re/v4.0.0/",
+          },
+          {
             text: "v3.0.0",
             link: "https://melange.re/v3.0.0/",
           },
