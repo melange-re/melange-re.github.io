@@ -29,9 +29,8 @@ jobs:
         run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc
       - name: Copy melange docs in re syntax
         run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/public/api/re
-      # only uncomment after a new version is released, from inside a `x.x.x-patches` branch
-      # - name: Run canonical script
-      #   run: opam exec -- dune exec add_canonical docs/public/api
+      - name: Run canonical script
+        run: opam exec -- dune exec add_canonical docs/public/api
       - name: Check Reason syntax
         run: make check-reason
       - name: Check extracted code blocks
