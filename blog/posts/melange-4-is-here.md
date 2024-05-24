@@ -9,9 +9,10 @@ twitter: '@_anmonteiro'
 Today, we're introducing Melange 4.0, the latest version of our backend for the
 OCaml compiler that emits JavaScript.
 
-Melange is now compatible with OCaml 5.2! This release introduces ES6 support,
-enhanced JavaScript interoperability, improved error handling, and full support
-for Dune virtual libraries. Read on for more details.
+Melange is now compatible with OCaml 5.2! In this release, Melange starts
+emitting more ES6 constructs, supports more JavaScript builtins, improves error
+handling, and makes using Dune virtual libraries fully supported. Read on for
+more details.
 
 ---
 
