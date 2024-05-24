@@ -36,6 +36,7 @@
             buildInputs = with python3Packages; [
               mkdocs
               mkdocs-print-site-plugin
+              pkgs.yarn
             ];
           };
         };
