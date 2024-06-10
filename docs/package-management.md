@@ -410,8 +410,8 @@ still useful, compatible BuckleScript libraries can be found on npm, e.g.,
 record it in the `package.json` file at the root of our project.
 
 Dune needs to be made aware of the newly installed package. The
-[`subdir`](https://dune.readthedocs.io/en/stable/dune-files.html#subdir) stanza
-can be handy in these cases:
+[`subdir`](https://dune.readthedocs.io/en/stable/reference/dune/subdir.html)
+stanza can be handy in these cases:
 
 ```text
 (subdir
