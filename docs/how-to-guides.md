@@ -93,7 +93,8 @@ Let's see how the most common configurations in `bsconfig.json` (or
 `rescript.json`) map to `dune` files. You can find more information about these
 configurations in the [Rescript
 docs](https://rescript-lang.org/docs/manual/latest/build-configuration) and in
-the [Dune docs](https://dune.readthedocs.io/en/stable/dune-files.html#library).
+the [Dune
+docs](https://dune.readthedocs.io/en/stable/reference/dune/library.html).
 
 #### `name`, `namespace`
 
@@ -135,11 +136,11 @@ include just the files inside that folder to the library itself (unless the
 subfolders in it, you can use the following combination of stanzas:
 
 - `(include_subdirs unqualified)`
-  ([docs](https://dune.readthedocs.io/en/stable/dune-files.html#include-subdirs)):
+  ([docs](https://dune.readthedocs.io/en/stable/reference/dune/include_subdirs.html)):
   This stanza tells Dune to look for sources in all the subfolders of the folder
   where the `dune` file lives.
 - `(dirs foo bar)`
-  ([docs](https://dune.readthedocs.io/en/stable/dune-files.html#dirs)): This
+  ([docs](https://dune.readthedocs.io/en/stable/reference/dune/dirs.html)): This
   stanza tells Dune to only look into `foo` and `bar` subdirectories of the
   current folder.
 
@@ -260,7 +261,7 @@ This could be expressed in a `dune` file with something like:
 ```
 
 To read more about Dune rules, check [the
-documentation](https://dune.readthedocs.io/en/stable/dune-files.html#rule).
+documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html).
 
 #### `package-specs`
 
@@ -272,7 +273,7 @@ system](./build-system.md#commonjs-or-es6-modules) section.
 Regarding the `"in-source"` configuration, the corresponding field in Dune would
 be the `(promote (until-clean))` configuration, which can be added to a
 `melange.emit` stanza. You can read more about it in [the Dune
-documentation](https://dune.readthedocs.io/en/stable/dune-files.html#promote).
+documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html#promote).
 
 #### `suffix`
 
