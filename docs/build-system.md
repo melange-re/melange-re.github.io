@@ -46,7 +46,7 @@ developers. It provides several benefits, including:
 - Hygiene is maintained in Dune by building out of source: all compilation
   artifacts are placed in a separate `_build` folder. Users can optionally [copy
   them back to the source
-  tree](https://dune.readthedocs.io/en/stable/dune-files.html#promote).
+  tree](https://dune.readthedocs.io/en/stable/reference/dune/rule.html#promote).
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
@@ -98,7 +98,7 @@ only available from version 3.8.
 
 The second line `(using melange 0.1)` tells Dune we want to use the [Melange
 extension of the Dune
-language](https://dune.readthedocs.io/en/stable/dune-files.html#using).
+language](https://dune.readthedocs.io/en/stable/reference/dune-project/using.html).
 
 #### Adding a library
 
@@ -131,7 +131,7 @@ The top level configuration entries —like the `library` one that appears in th
 
 All stanzas are well covered in the Dune documentation site, where we can find
 the reference for the [`library`
-stanza](https://dune.readthedocs.io/en/stable/dune-files.html#library).
+stanza](https://dune.readthedocs.io/en/stable/reference/dune/library.html).
 
 Dune is designed to minimize the need for configuration changes when modifying
 the project folder structure. For example, you can move the `lib` folder to a
