@@ -27,11 +27,6 @@
   (:standard -open Ocamlformat_stdlib))
  (libraries js_of_ocaml ocamlformat-lib))
 
-(install
- (package documentation-site)
- (section bin)
- (files format.bc.js))
-
 (rule
  (alias playground-assets)
  (deps

@@ -2,7 +2,7 @@ import "./App.css";
 import "../../_build/default/playground/reason-react-cmijs";
 import "../../_opam/bin/mel_playground.bc";
 import "../../_opam/bin/melange-cmijs";
-import "../../_opam/bin/format.bc.js";
+import "../../_build/default/playground/format.bc.js";
 
 import * as React from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
@@ -137,19 +137,19 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"4.0.0-51"}</span>
+                <span className="Text-xs Number">{"4.0.0-52"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
-                <span className="Text-xs Number">{"5.1.1"}</span>
+                <span className="Text-xs Number">{"5.2.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"Reason"}</span>
-                <span className="Text-xs Number">{"3.10.0"}</span>
+                <span className="Text-xs Number">{"3.12.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"ReasonReact"}</span>
-                <span className="Text-xs Number">{"dev"}</span>
+                <span className="Text-xs Number">{"0.15.0"}</span>
               </span>
             </div>
           </div>) : null}
