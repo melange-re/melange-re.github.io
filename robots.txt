@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /fun-ocaml-playground
 
 Sitemap: https://melange.re/unstable/sitemap.xml
 
