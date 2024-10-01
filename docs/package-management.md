@@ -354,7 +354,7 @@ like:
 
 then `reason-react` should be added to the `dune` file under the `src` folder:
 
-```text
+```dune
 (melange.emit
  (target output)
  (alias react)
@@ -392,7 +392,7 @@ pin-depends: [
 Once installed, the libraries included in the package can be added to the `dune`
 file:
 
-```text
+```dune
 (melange.emit
  (target output)
  (alias react)
@@ -413,7 +413,7 @@ Dune needs to be made aware of the newly installed package. The
 [`subdir`](https://dune.readthedocs.io/en/stable/reference/dune/subdir.html)
 stanza can be handy in these cases:
 
-```text
+```dune
 (subdir
  node_modules
  (dirs @glennsl)
@@ -436,7 +436,7 @@ under the folder `src/lib`. If we want use the `bs-json` library from within the
 class="text-reasonml">data.re</code> file then we need to add the library name
 to the `dune` file in the same folder, i.e., `src/lib/dune`:
 
-```text
+```dune
 (library
  (name data)
  (libraries bs_json)
