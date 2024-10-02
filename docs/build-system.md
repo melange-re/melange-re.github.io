@@ -414,10 +414,12 @@ feature are globs, that allow to simplify the configuration when depending on
 multiple files. For example:
 
 ```dune
-(melange.runtime_deps
- (glob_files styles/*.css)
- (glob_files images/*.png)
- (glob_files static/*.{pdf,txt}))
+(library
+  ...
+  (melange.runtime_deps
+    (glob_files styles/*.css)
+    (glob_files images/*.png)
+    (glob_files static/*.{pdf,txt})))
 ```
 
 See the [dependency specification

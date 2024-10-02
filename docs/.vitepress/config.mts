@@ -10,7 +10,7 @@ const reasonGrammar = JSON.parse(
 );
 
 // https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/dune.json
-const duneGrammer = JSON.parse(
+const duneGrammar = JSON.parse(
   readFileSync(join(__dirname, "./dune.tmLanguage.json"), "utf8")
 );
 
@@ -33,7 +33,7 @@ export default defineConfig({
     hostname: `https://melange.re/${base}/`,
   },
   markdown: {
-    languages: [reasonGrammar, duneGrammer],
+    languages: [reasonGrammar, duneGrammar],
   },
   themeConfig: {
     outline: { level: [2, 3] },
