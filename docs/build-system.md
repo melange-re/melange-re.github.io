@@ -86,7 +86,7 @@ opam install reason
 Create a file named `dune-project`. This file will tell Dune a few things about
 our project configuration:
 
-```text
+```dune
 (lang dune 3.8)
 
 (using melange 0.1)
@@ -105,7 +105,7 @@ language](https://dune.readthedocs.io/en/stable/reference/dune-project/using.htm
 Next, create a folder `lib`, and a `dune` file inside. Put the following content
 inside the `dune` file:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange))
@@ -147,7 +147,7 @@ application**, but they won’t produce any JavaScript artifacts on their own.
 To generate JavaScript code, we need to define an entry point of our
 application. In the root folder, create another `dune` file:
 
-```text
+```dune
 (melange.emit
  (target app)
  (libraries lib))
@@ -249,7 +249,7 @@ As a more complex example, consider the following setup:
 
 With `emit/dune` being:
 
-```text
+```dune
 (melange.emit
  (target app)
  (libraries lib))
@@ -257,7 +257,7 @@ With `emit/dune` being:
 
 And `lib/dune`:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange))
@@ -318,7 +318,7 @@ them by using the `alias` field.
 
 Let’s define a custom alias `my-app` for our `melange.emit` stanza:
 
-```text
+```dune
 (melange.emit
  (target app)
  (alias my-app)
@@ -371,7 +371,7 @@ that will allow to use the `bs.raw` extension (more about these extensions in
 the ["Communicate with JavaScript"](communicate-with-javascript.md) section), in
 order to get the value of the `__dirname` environment variable:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange)
@@ -413,11 +413,13 @@ Dune offers great flexibility to specify dependencies. Another interesting
 feature are globs, that allow to simplify the configuration when depending on
 multiple files. For example:
 
-```text
-(melange.runtime_deps
- (glob_files styles/*.css)
- (glob_files images/*.png)
- (glob_files static/*.{pdf,txt}))
+```dune
+(library
+  ...
+  (melange.runtime_deps
+    (glob_files styles/*.css)
+    (glob_files images/*.png)
+    (glob_files static/*.{pdf,txt})))
 ```
 
 See the [dependency specification
@@ -445,7 +447,7 @@ Use the `module_systems` field in the [`melange.emit`
 stanza](https://dune.readthedocs.io/en/stable/melange.html#melange-emit) to emit
 ES6 modules:
 
-```text
+```dune
 (melange.emit
  (target app)
  (alias my-app)
