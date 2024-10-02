@@ -2665,6 +2665,39 @@
           ]
         },
         {
+          "comment": "library/melange.runtime_deps",
+          "begin": "\\([[:space:]]*(melange\\.runtime_deps)\\b",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.language.dune"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#dependencies"
+            },
+            {
+              "include": "#general"
+            }
+          ]
+        },
+        {
+          "comment": "library/melange.compile_flags",
+          "begin": "\\([[:space:]]*(melange\\.compile_flags)\\b",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.language.dune"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#general"
+            }
+          ]
+        },
+        {
           "comment": "modules_without_implementation",
           "begin": "\\([[:space:]]*(modules_without_implementation|)\\b",
           "end": "\\)",
