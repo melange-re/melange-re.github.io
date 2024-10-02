@@ -267,7 +267,7 @@ There are two pipe operators available in Melange:
 - A _pipe last_ operator `|>`, available [in
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
-  
+
 - A _pipe first_ operator <code class="text-ocaml">\|.</code><code
   class="text-reasonml">\-\></code>, available exclusively in Melange
 
@@ -471,7 +471,7 @@ This is how each Melange type is converted into JavaScript values:
 | array | array |
 | tuple `(3, 4)` | array `[3, 4]` |
 | bool | boolean |
-| <a class="text-ocaml" target="_self" href="./api/ml/melange/Js/Nullable">Js.Nullable.t</a><a class="text-reasonml" target="_self" href="./api/re/melange/Js/Nullable">Js.Nullable.t</a> | `null` / `undefined` | 
+| <a class="text-ocaml" target="_self" href="./api/ml/melange/Js/Nullable">Js.Nullable.t</a><a class="text-reasonml" target="_self" href="./api/re/melange/Js/Nullable">Js.Nullable.t</a> | `null` / `undefined` |
 | <a class="text-ocaml" target="_self" href="./api/ml/melange/Js/Re">Js.Re.t</a><a class="text-reasonml" target="_self" href="./api/re/melange/Js/Re">Js.Re.t</a> | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | Option.t `None` | `undefined` |
 | Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
@@ -815,7 +815,7 @@ In order to use any of these extension nodes, you will have to add the melange
 PPX preprocessor to your project. To do so, add the following to the `dune`
 file:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange)
