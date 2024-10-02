@@ -28,7 +28,7 @@ install: ## Install development dependencies
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
-.PHONY: 
+.PHONY:
 update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
 	$(DUNE) build @extract-code-blocks --auto-promote || true
 	$(DUNE) build @runtest --auto-promote || true
@@ -70,3 +70,7 @@ build-site: build-playground ## Builds the whole site (including playground)
 .PHONY: build-blog
 build-blog: ## Builds the blog
 	cd blog && yarn && yarn build
+
+.PHONY: dev
+dev: ## Start docs dev server
+	yarn vitepress dev docs

@@ -14,7 +14,7 @@ const base = process.env.BASE || "unstable";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Melange Documentation Site",
-  head:[
+  head: [
     [
       'script',
       {},
@@ -114,6 +114,7 @@ export default defineConfig({
         text: "About",
         items: [
           { text: "Community", link: "/community" },
+          { text: "Resources", link: "/resources" },
           { text: "Roadmap", link: "/roadmap" },
         ],
       },
