@@ -65,7 +65,11 @@ build-playground: ## Builds the playground
 
 .PHONY: build-site
 build-site: build-playground ## Builds the whole site (including playground)
-	yarn && yarn docs:build
+	yarn && make build-docs
+
+.PHONY: build-docs
+build-docs: ## Builds the docs
+	yarn vitepress build docs
 
 .PHONY: build-blog
 build-blog: ## Builds the blog
@@ -74,3 +78,7 @@ build-blog: ## Builds the blog
 .PHONY: dev
 dev: ## Start docs dev server
 	yarn vitepress dev docs
+
+.PHONY: preview
+preview: ## Preview the docs
+	yarn vitepress preview docs
