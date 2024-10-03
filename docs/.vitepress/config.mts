@@ -119,6 +119,7 @@ export default defineConfig({
         text: "About",
         items: [
           { text: "Community", link: "/community" },
+          { text: "Resources", link: "/resources" },
           { text: "Roadmap", link: "/roadmap" },
         ],
       },
