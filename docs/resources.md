@@ -6,20 +6,19 @@ The following are resources about Melange collected around the web.
 
 | Date | Type | Description |
 |----- | ---- | ----------- |
-| Sep 2024 | talk | [Type-Safe React with OCaml by Dillon Mulroy](https://reactalicante.es/#schedule) (video not yet uploaded) |
+| Sep 2024 | talk | [Dillon Mulroy — Type-Safe React with OCaml](https://reactalicante.es/#schedule) (video not yet uploaded) |
 | Sep 2024 | podcast | [The State of Full-Stack OCaml (with António Monteiro)](https://pod.link/developer-voices/episode/4666dc4d7aa59599852c02b6415a36d4) ([video](https://www.youtube.com/watch?v=vSSpbAI_-t0))
-| May 2024 | blog | [Melange 4.0 is here](https://melange.re/blog/posts/melange-4-is-here)
-| Apr 2024 | blog | [A Preview of Universal Libraries in Dune](https://melange.re/blog/posts/dune-universal-libraries-preview)
-| Apr 2024 | talk | [Dillon Mulroy — Melange: The Next Frontier in Type-Safe Web Development](https://www.youtube.com/watch?v=wl8zUq1FUzM)
-| Apr 2024 | blog | [What's 2024 brought to Melange so far?](https://melange.re/blog/posts/whats-2024-brought-to-melange-so-far)
-| Feb 2023 | blog | [Announcing Melange 3](https://melange.re/blog/posts/announcing-melange-3)
+| Jan 2024 | blog | [What's possible with Melange](https://sancho.dev/blog/whats-possible-with-melange)
+| Nov 2023 | talk | [Dillon Mulroy — Melange: The Next Frontier in Type-Safe Web Development](https://www.youtube.com/watch?v=zG7JejHlQoM)
 | Nov 2023 | blog | [Building React Server Components in OCaml](https://tech.ahrefs.com/building-react-server-components-in-ocaml-81c276713f19) |
-| Oct 2023 | blog | [The rest of 2023 in Melange](https://melange.re/blog/posts/the-rest-of-2023-in-melange)
+| Oct 2023 | blog | [Reason and React Meta-Frameworks](https://dev.to/psb/reason-and-react-meta-frameworks-d7n) |
+| Sep 2023 | talk | [David Sancho — Server side rendering React natively with Reason](https://www.youtube.com/watch?v=e3qY-Eg9zRY)
 | Sep 2023 | blog | [Beyond TypeScript: Differences Between Typed Languages](https://tech.ahrefs.com/beyond-typescript-differences-between-typed-languages-f3e14253) |
-| Sep 2023 | blog | [Introducing Melange 2.0](https://melange.re/blog/posts/introducing-melange-20) |
-| July 2023 | blog | [What's next for Melange](https://melange.re/blog/posts/whats-next-for-melange) |
+| Jul 2023 | blog | [Getting started with ReasonReact and Melange](https://dev.to/psb/getting-started-with-reasonreact-and-melange-13hd)
 | May 2023 | podcast | [David Sancho chats to Antonio Monteiro about OCaml and Melange](https://www.youtube.com/watch?v=zKO-Y2_a-yk) |
 | May 2023 | blog | [Ahrefs.com is now built with Melange](https://tech.ahrefs.com/ahrefs-is-now-built-with-melange-b14f5ec56df4) |
+| Aug 2021 | podcast | [Talking with António Monteiro about Melange, Esy, Reason, OCaml and more](https://watch.ocaml.org/w/aEabwHEfXTKGxTNi6Xhy2a) |
+| May 2021 | blog | [Building Ahrefs codebase with Melange](https://tech.ahrefs.com/building-ahrefs-codebase-with-melange-9f881f6d022b)
 
 ## Tutorials, streams, books
 
@@ -33,7 +32,21 @@ The following are resources about Melange collected around the web.
 
 ## Libraries
 
-- [melange-fest](https://ocaml.org/p/melange-fest/)
-- [melange-fetch](https://ocaml.org/p/melange-fetch/)
-- [melange-json](https://ocaml.org/p/melange-json/)
-- [styled-ppx](https://ocaml.org/p/styled-ppx/)
+- [melange-fest](https://ocaml.org/p/melange-fest)
+- [melange-fetch](https://ocaml.org/p/melange-fetch)
+- [melange-jest](https://ocaml.org/p/melange-jest)
+- [melange-json](https://ocaml.org/p/melange-json)
+- [melange-moment](https://ocaml.org/p/melange-moment)
+- [melange-numeral](https://ocaml.org/p/melange-numeral)
+- [melange-radix-icons](https://ocaml.org/p/melange-radix-icons)
+- [melange-react-dates](https://ocaml.org/p/melange-react-dates)
+- [melange-react-query](https://ocaml.org/p/melange-react-query)
+- [melange-recharts](https://ocaml.org/p/melange-recharts)
+- [melange-testing-library](https://ocaml.org/p/melange-testing-library)
+- [melange-webapi](https://ocaml.org/p/melange-webapi)
+- [reason-react](https://ocaml.org/p/reason-react)
+- [reason-react-ppx](https://ocaml.org/p/reason-react-ppx)
+- [reshowcase](https://ocaml.org/p/reshowcase)
+- [styled-ppx](https://ocaml.org/p/styled-ppx)
+
+See [all packages on Opam Repository tagged with 'melange'](https://ocaml.org/packages/search?q=tag%3A%22melange%22)
