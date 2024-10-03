@@ -267,7 +267,6 @@ There are two pipe operators available in Melange:
 - A _pipe last_ operator `|>`, available [in
   OCaml](https://v2.ocaml.org/api/Stdlib.html#1_Compositionoperators) and
   inherited in Melange
-
 - A _pipe first_ operator <code class="text-ocaml">\|.</code><code
   class="text-reasonml">\-\></code>, available exclusively in Melange
 
