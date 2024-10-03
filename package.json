@@ -6,12 +6,6 @@
   "directories": {
     "doc": "docs"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/melange-re/melange-re.github.io.git"
