@@ -32,7 +32,7 @@ section](./package-management.md).
 To get started with the library migration, let's create an `opam` file in your
 library's root folder with the minimum set of packages to start working:
 
-```text
+```opam
 opam-version: "2.0"
 synopsis: "My Melange library"
 description: "A library for Melange"
@@ -208,7 +208,7 @@ for testing. For this scenario, opam provides the `with-test` variable.
 Supposing we want to add `melange-jest` as a dependency to use for tests, you
 could add this in your library `opam` file:
 
-```text
+```opam
 depends: [
   "melange-jest" {with-test}
 ]

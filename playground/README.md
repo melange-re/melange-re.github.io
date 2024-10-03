@@ -6,14 +6,14 @@ The Melange deps are specified in `documentation-site.opam`. Before building the
 
 From the project root:
 
-```
+```bash
 make install
 dune build @playground-assets
 ```
 
 Then, can work on the playground with:
 
-```
+```bash
 cd playground && yarn dev
 ```
 

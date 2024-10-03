@@ -84,7 +84,7 @@ for every platform.
 
 There is a necessary first step before using opam:
 
-```text
+```bash
 opam init -a
 ```
 
@@ -128,7 +128,7 @@ to be done by hand.
 
 A minimal `.opam` file looks like this:
 
-```text
+```opam
 opam-version: "2.0"
 name: "my-app"
 authors: "Louis"
@@ -157,13 +157,13 @@ in the project folder.
 
 If it does not exist, we can create it with:
 
-```text
+```bash
 opam switch create . 5.2.0 --deps-only
 ```
 
 If it exists, we can install the dependencies of the project with:
 
-```text
+```bash
 opam install . --deps-only
 ```
 
@@ -171,7 +171,7 @@ opam install . --deps-only
 
 To add a new package to the opam switch, we can do:
 
-```text
+```bash
 opam install <package_name>
 ```
 
@@ -183,20 +183,20 @@ to be done by hand, by adding the name of the package in the `depends` field.
 This can be achieved with `opam pin`. For example, to pin a package to a
 specific commit on GitHub:
 
-```text
+```bash
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#61bfbfaf8c971dec5152bce7e528d30552c70bc5
 ```
 
 Branch names can also be used.
 
-```text
+```bash
 opam pin add reason-react.dev https://github.com/reasonml/reason-react.git#feature
 ```
 
 For packages that are already published in the opam repository, a shortcut to
 pin to the latest version is to use the `--dev-repo` flag, e.g.
 
-```text
+```bash
 opam pin add melange.dev --dev-repo
 ```
 
@@ -212,13 +212,13 @@ There is one big difference compared to npm: opam stores a local copy of the
 opam repository, like `apt-get` does in Debian. So before doing any upgrades, we
 might want to update this copy before:
 
-```text
+```bash
 opam update
 ```
 
 Then, to upgrade the installed packages to the latest version, run:
 
-```text
+```bash
 opam upgrade <package_name>
 ```
 
@@ -231,7 +231,7 @@ You can use the [`with-dev-setup`
 field](https://opam.ocaml.org/doc/Manual.html#pkgvar-with-dev-setup) to define
 dependencies that are only required at development time. For example:
 
-```text
+```opam
 depends: [
   "ocamlformat" {with-dev-setup}
 ]
@@ -275,7 +275,7 @@ With this plugin, library authors can include constraints in the npm format
 inside the opam `depexts` field, for example, the `reason-react` opam file can
 include a section like this:
 
-```
+```opam
 depexts: [
   ["react" "react-dom"] {npm-version = "^17.0.0 || ^18.0.0"}
 ]
@@ -311,7 +311,7 @@ download, build and install opam packages in your switch. Remember that opam
 won't automatically add the dependency to `<your-project>.opam` file, so it must
 be added manually:
 
-```text
+```opam
 ...
 depends: [
   ...
@@ -378,7 +378,7 @@ git+https://github.com/melange-community/melange-fetch` will obtain
 `melange-fetch` from its Git repository and install it on your switch. Your
 `<your-project>.opam` file should then be updated in two places:
 
-```text
+```opam
 ...
 depends: [
   ...
