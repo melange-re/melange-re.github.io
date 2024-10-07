@@ -14,6 +14,11 @@ const duneGrammar = JSON.parse(
   readFileSync(join(__dirname, "./dune.tmLanguage.json"), "utf8")
 );
 
+// https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/opam.json
+const opamGrammar = JSON.parse(
+  readFileSync(join(__dirname, "./opam.tmLanguage.json"), "utf8")
+);
+
 const base = process.env.BASE || "unstable";
 
 // https://vitepress.dev/reference/site-config
@@ -33,7 +38,7 @@ export default defineConfig({
     hostname: `https://melange.re/${base}/`,
   },
   markdown: {
-    languages: [reasonGrammar, duneGrammar],
+    languages: [reasonGrammar, duneGrammar, opamGrammar],
   },
   themeConfig: {
     outline: { level: [2, 3] },

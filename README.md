@@ -13,7 +13,7 @@ https://github.com/melange-re/melange.
 
 After cloning the repository, install the necessary JavaScript packages:
 
-```
+```bash
 yarn
 ```
 
@@ -25,7 +25,7 @@ Optionally, to run some of the tools to auto-generate parts of the
 documentation, you will need an opam switch with the required dependencies. To
 set it up, run:
 
-```
+```bash
 make init
 ```
 
@@ -39,13 +39,13 @@ generation"](#optional-tooling-for-docs-generation) section.
 
 To run the script:
 
-```
+```bash
 dune build @re
 ```
 
 To promote any changes to the original `md` file, one can run:
 
-```
+```bash
 dune build @re --auto-promote
 ```
 
