@@ -9,12 +9,22 @@ const reasonGrammar = JSON.parse(
   readFileSync(join(__dirname, "./reasonml.tmLanguage.json"), "utf8")
 );
 
+// https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/dune.json
+const duneGrammar = JSON.parse(
+  readFileSync(join(__dirname, "./dune.tmLanguage.json"), "utf8")
+);
+
+// https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/opam.json
+const opamGrammar = JSON.parse(
+  readFileSync(join(__dirname, "./opam.tmLanguage.json"), "utf8")
+);
+
 const base = process.env.BASE || "unstable";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Melange Documentation Site",
-  head:[
+  head: [
     [
       'script',
       {},
@@ -28,7 +38,7 @@ export default defineConfig({
     hostname: `https://melange.re/${base}/`,
   },
   markdown: {
-    languages: [reasonGrammar],
+    languages: [reasonGrammar, duneGrammar, opamGrammar],
   },
   themeConfig: {
     outline: { level: [2, 3] },
@@ -114,6 +124,7 @@ export default defineConfig({
         text: "About",
         items: [
           { text: "Community", link: "/community" },
+          { text: "Resources", link: "/resources" },
           { text: "Roadmap", link: "/roadmap" },
         ],
       },

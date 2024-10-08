@@ -1,4 +1,4 @@
-# How-to guides 
+# How-to guides
 
 ## Migrate a ReScript library to Melange
 
@@ -32,7 +32,7 @@ section](./package-management.md).
 To get started with the library migration, let's create an `opam` file in your
 library's root folder with the minimum set of packages to start working:
 
-```text
+```opam
 opam-version: "2.0"
 synopsis: "My Melange library"
 description: "A library for Melange"
@@ -71,7 +71,7 @@ need some configuration files.
 Create a file named `dune-project` in the library root folder. This file will
 tell Dune a few things about our project configuration:
 
-```text
+```dune
 (lang dune 3.8)
 
 (using melange 0.1)
@@ -83,7 +83,7 @@ Now, we need to add a `dune` file where we will tell Dune about our library. You
 can put this new file next to the library sources, it will look something like
 this:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -119,9 +119,9 @@ your `bsconfig.json` configuration includes a naming scheme like this:
 
 It should be converted into something like:
 
-```text
+```dune
 (library
- (name fooBar) # or (name foo_bar)
+ (name fooBar) ; or (name foo_bar)
  (modes melange)
  (preprocess (pps melange.ppx)))
 ```
@@ -155,7 +155,7 @@ So for example, if your library had this configuration in its `bsconfig.json`:
 
 You might translate this to a `dune` file with the following configuration:
 
-```text
+```dune
 (include_subdirs unqualified)
 (dirs src helper)
 (library
@@ -189,7 +189,7 @@ For example, if `bsconfig.json` had something like this:
 
 Your `dune` file will look something like:
 
-```text
+```dune
 (library
  (name things)
  (libraries reason-react)
@@ -208,7 +208,7 @@ for testing. For this scenario, opam provides the `with-test` variable.
 Supposing we want to add `melange-jest` as a dependency to use for tests, you
 could add this in your library `opam` file:
 
-```text
+```opam
 depends: [
   "melange-jest" {with-test}
 ]
@@ -254,11 +254,10 @@ For example, if you had something like this in `bsconfig.json`:
 
 This could be expressed in a `dune` file with something like:
 
-```text
-(rule 
+```dune
+(rule
   (deps (alias melange))
-  (action (run node ../../postProcessTheFile.js))
-)
+  (action (run node ../../postProcessTheFile.js)))
 ```
 
 To read more about Dune rules, check [the
@@ -305,7 +304,7 @@ For example, if you had a `bsconfig.json` configuration like this:
 
 You can define a similar configuration in your library `dune` file like this:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -383,7 +382,7 @@ field foo is never read.` errors.
 **Fix**: silence the warning in the type definition, e.g.
 
 ```ocaml
-type renderOptions = { 
+type renderOptions = {
   foo : string
 } [@@warning "-69"]
 ```
@@ -415,7 +414,7 @@ external myImage : string = "default" [@@bs.module "./icons/overview.svg"]
 **Fix**: You can include it by using the `melange.runtime_deps` field of the
 library:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -481,7 +480,7 @@ If you get errors of the kind `Unused attribute`, or type errors in externals
 that don't make much sense, then you probably need to add `melange.ppx` to your
 `library` or ` melange.emit` stanzas.
 
-```
+```dune
 (library
  ...
  (preprocess
@@ -554,7 +553,7 @@ The namespaces `Dom` and `Node` are now in the libraries `melange.dom` and
 `melange.node` respectively. These libraries are not included by default by
 Melange, and will need to be added to the `libraries` field explicitly.
 
-#### Effect handlers 
+#### Effect handlers
 
 Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
 for compiling effect handlers to JavaScript. Until it does, they are disabled at
