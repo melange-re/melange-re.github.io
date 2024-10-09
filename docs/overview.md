@@ -120,6 +120,13 @@ Typing optional arguments       | `let print = (~prefix: option(string)=?, text)
 There is no `return` keyword in Reason. The last expression in a block or
 function definition is the returned value.
 
+```ocaml
+let twentyThree () =
+  let x = 10 in
+  let x = x + 10 in
+  (* x + 3 is the implicit return of the function. *)
+  x + 3
+```
 ```reasonml
 let twentyThree = () => {
   let x = 10;
@@ -236,6 +243,11 @@ Value that is absent            | `let y = None;`
 Pattern matching is a very powerful feature in Reason. It matches against variants
 and ensures all cases are covered. Start matching using the `switch` keyword:
 
+```ocaml
+match foo with
+| Some value -> doSomething value
+| None -> error ()
+```
 ```reasonml
 switch (foo) {
 | Some(value) => doSomething(value)
@@ -315,6 +327,28 @@ Module types                    | `module type Foo = { let bar: int; };`
 Functors are like functions that create modules. This is an advanced topic
 that can be very powerful. Here is a basic example:
 
+```ocaml
+module type Stringable = sig
+  type t
+  val toString : t -> string
+end
+
+module Printer (Item : Stringable) = struct
+  let print (t : Item.t) = print_endline (Item.toString t)
+
+  let printList (list : Item.t list) =
+    list |> List.map Item.toString |> String.concat ", " |> print_endline
+end
+
+module IntPrinter = Printer (struct
+  type t = int
+  let toString = string_of_int
+end)
+;;
+
+IntPrinter.print 10; (* 10 *)
+IntPrinter.printList [ 1; 2; 3 ] (* 1, 2, 3 *)
+```
 ```reasonml
 module type Stringable = {
   type t;
