@@ -10,47 +10,47 @@ _Details: [Let Bindings](/let-bindings)_
 
 Feature                         | Example
 --------------------------------|----------
-String value                    | `let hi = "Hello World";`
-Int value                       | `let count = 42;`
-Type annotation on binding      | `let count: int = 42;`
+String value                    | <code class="text-ocaml">let hi = "Hello World"</code><code class="text-reasonml">let hi = "Hello World";</code>
+Int value                       | <code class="text-ocaml">let count = 42</code><code class="text-reasonml">let count = 42;</code>
+Type annotation on binding      | <code class="text-ocaml">let count: int = 42</code><code class="text-reasonml">let count: int = 42;</code>
 
 - Note: Let bindings are immutable and cannot change once created.
 
 ## Built In Types
 
-_Details: [Primitives](primitives)_
+_Details: [Primitives](/primitives)_
 
 Feature                         | Example
 --------------------------------|----------
-Int                             | `let x: int = 10;`
-Float                           | `let x: float = 10.0;`
-Boolean                         | `let x: bool = false;`
-String                          | `let x: string = "ten";`
-Char                            | `let x: char = 'c';`
-Unit                            | `let x: unit = ();`
-Option                          | `let x: option(int) = Some(10);`
-Tuple                           | `let x: (int, string) = (10, "ten");`
-List                            | `let x: list(int) = [1, 2, 3];`
-Array                           | <code>let x: array(int) = [&#124;1, 2, 3&#124;];</code>
-Functions                       | `let x: (int, int) => int = (a, b) => a + b;`
+Int                             | <code class="text-ocaml">let x: int = 10</code><code class="text-reasonml">let x: int = 10;</code>
+Float                           | <code class="text-ocaml">let x: float = 10.0</code><code class="text-reasonml">let x: float = 10.0;</code>
+Boolean                         | <code class="text-ocaml">let x: bool = false</code><code class="text-reasonml">let x: bool = false;</code>
+String                          | <code class="text-ocaml">let x: string = "ten"</code><code class="text-reasonml">let x: string = "ten";</code>
+Char                            | <code class="text-ocaml">let x: char = 'c'</code><code class="text-reasonml">let x: char = 'c';</code>
+Unit                            | <code class="text-ocaml">let x: unit = ()</code><code class="text-reasonml">let x: unit = ();</code>
+Option                          | <code class="text-ocaml">let x: int option = Some 10</code><code class="text-reasonml">let x: option(int) = Some(10);</code>
+Tuple                           | <code class="text-ocaml">let x: (int, string) = (10, "ten")</code><code class="text-reasonml">let x: (int, string) = (10, "ten");</code>
+List                            | <code class="text-ocaml">let x: int list = [1; 2; 3];</code><code class="text-reasonml">let x: list(int) = [1, 2, 3];</code>
+Array                           | <code class="text-ocaml">let x: int array = [&#124;1; 2; 3&#124;]</code><code class="text-reasonml">let x: array(int) = [&#124;1, 2, 3&#124;];</code>
+Functions                       | <code class="text-ocaml">let x : int -> int -> int = fun a b -> a + b</code><code class="text-reasonml">let x: (int, int) => int = (a, b) => a + b;</code>
 
 ## Strings
 
-_Details: [Strings](primitives#strings)_
+_Details: [Strings](/primitives#strings)_
 
 Feature                         | Example
 --------------------------------|----------
 String                          | `"Hello"`
-String concatenation            | `"Hello " ++ "World"`
+String concatenation            | <code class="text-ocaml">"Hello " ^ "World"</code><code class="text-reasonml">"Hello " ++ "World"</code>
 Character                       | `'x'`
-Character at index              | `let x = "Hello"; x.[2];`
+Character at index              | <code class="text-ocaml">let x = "Hello" in x.[2]</code><code class="text-reasonml">let x = "Hello"; x.[2];</code>
 
-- String Functions: [`module String`](https://reasonml.github.io/api/String.html)
+- String Functions: <a class="text-ocaml" href="https://melange.re/v4.0.0/api/ml/melange/Stdlib/String/">module String</a><a class="text-reasonml" href="https://melange.re/v4.0.0/api/re/melange/Stdlib/String/">module String</a>
 
 ## Numbers
 
-- _Details: [Integer](primitives#integer)_
-- _Details: [Float](primitives#float)_
+- _Details: [Integer](/primitives#integer)_
+- _Details: [Float](/primitives#float)_
 
 Feature                         | Example
 --------------------------------|----------
@@ -63,29 +63,29 @@ Float exponentiation            | `2.0 ** 3.0`
 
 ## Booleans and Logical Operators
 
-_Details: [Boolean](primitives#boolean)_
+_Details: [Boolean](/primitives#boolean)_
 
 Feature                         | Example
 --------------------------------|----------
 Boolean Values                  | `true`, `false`
 Comparison                      | `>`, `<`, `>=`, `<=`
-Boolean operations              | `!`, `&&`, <code>&#124;&#124;</code>
-Reference equality              | `===`, `!==`
-Structural equality             | `==`, `!=`
+Boolean operations              | <code class="text-ocaml">not</code><code class="text-reasonml">!</code>, `&&`, <code>&#124;&#124;</code>
+Reference equality              | <code class="text-ocaml">==</code><code class="text-reasonml">===</code>, <code class="text-ocaml">!=</code><code class="text-reasonml">!==</code>
+Structural equality             | <code class="text-ocaml">=</code><code class="text-reasonml">==</code>, <code class="text-ocaml"><></code><code class="text-reasonml">!=</code>
 
 ## If-Else Expressions
 
 Feature                         | Example
 --------------------------------|----------
-If-Else expressions             | `if (condition) { a; } else { b; }`
-Ternary expressions             | `condition ? a : b;`
+If-Else expressions             | <code class="text-ocaml">if condition then a else b</code><code class="text-reasonml">if (condition) { a; } else { b; }</code>
+Ternary expressions             | <span class="text-ocaml">not applicable</span><code class="text-reasonml">condition ? a : b;</code>
 
 - Note: These are expressions and can be assigned to a variable:
-`let x = if (condition) { a; } else { b; };`
+<code class="text-ocaml">let x = if condition then a else b</code><code class="text-reasonml">let x = if (condition) { a; } else { b; };</code>
 
 ## Functions
 
-_Details: [Functions](functions)_
+_Details: [Functions](/functions)_
 
 Feature                         | Example
 --------------------------------|----------
