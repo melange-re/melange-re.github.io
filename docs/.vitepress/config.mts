@@ -50,9 +50,6 @@ export default defineConfig({
   },
   markdown: {
     languages: [duneGrammar, ocamlGrammar, opamGrammar, reasonGrammar],
-    shikiSetup: highlighter => {
-      highlighter.loadLanguage(ocamlGrammar);
-    }
   },
   themeConfig: {
     outline: { level: [2, 3] },
