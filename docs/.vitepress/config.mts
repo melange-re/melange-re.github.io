@@ -1,6 +1,12 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { defineConfig } from "vitepress";
+import { bundledLanguages } from "shiki";
+
+// Modify bundledLanguages so it no longer contains the bundled OCaml grammar. This is needed because vitepress config
+// doesn't allow you to override bundled grammars, see
+// https://github.com/vuejs/vitepress/blob/78c4d3dda085f31912578237dfbe7b1c62f48859/src/node/markdown/plugins/highlight.ts#L65
+delete bundledLanguages['ocaml'];
 
 const toggleSyntaxScript = readFileSync(join(__dirname, './toggleSyntax.js'), 'utf8');
 
@@ -9,14 +15,19 @@ const reasonGrammar = JSON.parse(
   readFileSync(join(__dirname, "./reasonml.tmLanguage.json"), "utf8")
 );
 
-// https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/dune.json
+// From https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/dune.json
 const duneGrammar = JSON.parse(
   readFileSync(join(__dirname, "./dune.tmLanguage.json"), "utf8")
 );
 
-// https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/opam.json
+// From https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/opam.json
 const opamGrammar = JSON.parse(
   readFileSync(join(__dirname, "./opam.tmLanguage.json"), "utf8")
+);
+
+// From https://github.com/ocamllabs/vscode-ocaml-platform/blob/master/syntaxes/ocaml.json
+const ocamlGrammar = JSON.parse(
+  readFileSync(join(__dirname, "./ocaml.tmLanguage.json"), "utf8")
 );
 
 const base = process.env.BASE || "unstable";
@@ -38,7 +49,7 @@ export default defineConfig({
     hostname: `https://melange.re/${base}/`,
   },
   markdown: {
-    languages: [reasonGrammar, duneGrammar, opamGrammar],
+    languages: [duneGrammar, ocamlGrammar, opamGrammar, reasonGrammar],
   },
   themeConfig: {
     outline: { level: [2, 3] },
@@ -110,6 +121,26 @@ export default defineConfig({
             text: "Melange for X Developers",
             link: "/melange-for-x-developers",
           },
+        ],
+      },
+      {
+        text: "Language Basics",
+        items: [
+          { text: "Overview", link: "/overview" },
+          { text: "Let bindings", link: "/let-bindings" },
+          { text: "Primitives", link: "/primitives" },
+          { text: "Basic structures", link: "/basic-structures" },
+          { text: "Types", link: "/types" },
+          { text: "Records", link: "/records" },
+          { text: "Variants", link: "/variants" },
+          { text: "Options and nullability", link: "/options" },
+          { text: "Functions", link: "/functions" },
+          { text: "Recursion", link: "/recursion" },
+          { text: "Destructuring", link: "/destructuring" },
+          { text: "Pattern matching", link: "/pattern-matching" },
+          { text: "Mutable bindings", link: "/mutable-bindings" },
+          { text: "Loops", link: "/loops" },
+          { text: "Module", link: "/module" },
         ],
       },
       {
