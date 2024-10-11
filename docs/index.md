@@ -24,5 +24,6 @@ features:
     details: Use existing JavaScript packages from NPM, or your own JavaScript libraries in your projects. With an expressive bindings language, and an ergonomic compilation model, Melange can help you build robust applications that leverage functionality from the JavaScript ecosystem.
   - title: Stable and Industry Backed
     details: Melange builds on top of decades of type system research, compiler engineering and tooling development to provide a polished developer experience. Companies like Ahrefs use Melange daily to deploy web applications for their users.
----
 
+---
+<Users />
