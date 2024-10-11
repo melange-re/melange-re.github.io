@@ -344,10 +344,10 @@ module IntPrinter = Printer (struct
   type t = int
   let toString = string_of_int
 end)
-;;
 
-IntPrinter.print 10; (* 10 *)
-IntPrinter.printList [ 1; 2; 3 ] (* 1, 2, 3 *)
+let () =
+  IntPrinter.print 10; (* 10 *)
+  IntPrinter.printList [ 1; 2; 3 ] (* 1, 2, 3 *)
 ```
 ```reasonml
 module type Stringable = {
