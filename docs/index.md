@@ -26,4 +26,8 @@ features:
     details: Melange builds on top of decades of type system research, compiler engineering and tooling development to provide a polished developer experience. Companies like Ahrefs use Melange daily to deploy web applications for their users.
 
 ---
+<script setup>
+import Users from '.vitepress/theme/Users.vue'
+</script>
+
 <Users />
