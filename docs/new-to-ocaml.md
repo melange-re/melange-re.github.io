@@ -2,7 +2,7 @@
 
 If you are completely new to OCaml, it is recommended to familiarize yourself
 with the language first. [Learn OCaml](https://ocaml.org/docs) is a good
-starting point. but we recommend the following tutorials from the official OCaml
+starting point, and we also recommend the following tutorials from the official OCaml
 website:
 
 - [A First Hour With OCaml](https://ocaml.org/docs/first-hour)
