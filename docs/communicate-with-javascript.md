@@ -19,6 +19,8 @@ JavaScript, and the features that Melange exposes to do so.
 
 ### Attributes and extension nodes
 
+<!--
+
 In order to interact with JavaScript, Melange needs to extend the language to
 provide blocks that express these interactions.
 
@@ -33,6 +35,8 @@ javascript add : int -> int -> int = {|function(x,y){
 
 But this would break compatibility with OCaml, which is one of the main goals of
 Melange.
+
+I would explain this positively instead. Instead of what melange needs to add, can we explain what’s the actual mechanism? Like OCaml with C bindings: https://v2.ocaml.org/manual/intfc.html#:~:text=User primitives are,C-function-name -->
 
 Fortunately, OCaml provides mechanisms to extend its language without breaking
 compatibility with the parser or the language. These mechanisms are composed by
@@ -84,7 +88,7 @@ additional information. In Melange, attributes are used in two ways to enhance
 the expressiveness of generating JavaScript code: either reusing existing OCaml
 built-in attributes or defining new ones.
 
-##### Reusing OCaml attributes
+##### Supported OCaml attributes
 
 The first approach is leveraging the existing [OCaml’s built-in
 attributes](https://v2.ocaml.org/manual/attributes.html#ss:builtin-attributes)
@@ -121,7 +125,7 @@ var student_name = "alice";
 Other OCaml pre-built attributes like `alert` or `deprecated` can be used with
 Melange as well.
 
-##### Defining new attributes
+##### Melange attributes
 
 The second approach is introducing new attributes specifically designed for
 Melange, such as the [`mel.set` attribute](#bind-to-object-properties) used to
@@ -932,6 +936,8 @@ function f (x,y) {
 Melange provides a relatively type safe approach to use globals that might be
 defined either in the JavaScript runtime environment: `mel.external`.
 
+<!-- lol, I didn’t know about mel.external. Rather rare considering `external` is a keyword. What about mel.global? -->
+
 `[%mel.external id]` will check if the JavaScript value `id` is `undefined` or
 not, and return an `Option.t` value accordingly.
 
@@ -1053,6 +1059,8 @@ JavaScript objects are used in a variety of use cases:
 - As a class.
 - As a module to import/export.
 
+<!-- Mention that Everything in JavaScript is an object -->
+
 Melange separates the binding methods for JavaScript objects based on these four
 use cases. This section documents the first three. Binding to JavaScript module
 objects is described in the ["Using functions from other JavaScript
@@ -1088,6 +1096,15 @@ type person = {
 };
 
 [@mel.module "MySchool"] external john: person = "john";
+(*
+I would explain how to create a record "manually" and latter as a bind
+let reason_person = {
+  name: "Javier",
+  friends: [| "David", "Antonio", "Jordi" |],
+  age: 99,
+};
+
+*)
 let john_name = john.name;
 ```
 
@@ -1165,12 +1182,14 @@ var value = [
 ];
 ```
 
-#### Using `Js.t` objects
+#### “Objects with extensible shape” or unknown shape?
 
 Alternatively to records, Melange offers another type that can be used to
 produce JavaScript objects. This type is <code class="text-ocaml">'a
 Js.t</code><code class="text-reasonml">Js.t('a)</code>, where `'a` is an [OCaml
 object](https://v2.ocaml.org/manual/objectexamples.html).
+
+<!-- I would explain the difference here, since it's a source of confusion for some users -->
 
 The advantage of objects versus records is that no type declaration is needed in
 advance, which can be helpful for prototyping or quickly generating JavaScript
@@ -1200,7 +1219,7 @@ var john = {
 var t = john.name;
 ```
 
-Note that object types allow for some flexibility that the record types do not
+Note that Js.t objects types allow for some flexibility that the record types do not
 have. For example, an object type can be coerced to another with fewer values or
 methods, while it is impossible to coerce a record type to another one with
 fewer fields. So different object types that share some methods can be mixed in
@@ -1463,6 +1482,7 @@ like with objects. But unlike objects, there is no need to add any attributes:
 
 ```ocaml
 (* Abstract type for `timeoutId` *)
+(* Explain that abstract type here is a super nicety of abstract types. “We could bind to integer, that would be correct, but by being abstract we ensure more safety and express intentionaly” *)
 type timeoutId
 external setTimeout : (unit -> unit) -> int -> timeoutId = "setTimeout"
 external clearTimeout : timeoutId -> unit = "clearTimeout"
