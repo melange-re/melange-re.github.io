@@ -16,6 +16,11 @@ export const users = [
     infoLink: "https://atvero.com",
   },
   {
+    name: "Droplet",
+    image: "droplet.png",
+    infoLink: "https://droplet.io",
+  },
+  {
     name: "Instapainting",
     image: "instapainting.svg",
     infoLink: "https://instapainting.com",
