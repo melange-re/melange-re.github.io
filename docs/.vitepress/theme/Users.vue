@@ -15,6 +15,11 @@ export const users = [
     image: "atvero.svg",
     infoLink: "https://atvero.com",
   },
+  {
+    name: "Instapainting",
+    image: "instapainting.svg",
+    infoLink: "https://instapainting.com",
+  }
 ].map(user => { return { ...user, image: `${import.meta.env.BASE_URL}/logos/${user.image}` } })
 
 export default {
@@ -59,8 +64,8 @@ export default {
 }
 
 .logos img {
-  max-height: 70px;
-  width: 70px;
+  height: 70px;
+  max-width: 210px;
   transition: transform 0.2s;
 }
 
