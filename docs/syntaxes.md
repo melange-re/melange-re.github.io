@@ -146,8 +146,8 @@ opam install -y . --deps-only --with-dev-setup
 
 ## VS Code configuration
 
-First, make sure you've already installed [OCaml Platform VS Code
-extension](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
+First, make sure you've already [installed and configured OCaml Platform VS Code
+extension](getting-started#editor-integration).
 
 ### Reason syntax
 
