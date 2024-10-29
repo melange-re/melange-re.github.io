@@ -103,7 +103,7 @@ export default defineConfig({
         items: [
           { text: "What is Melange", link: "/what-is-melange" },
           { text: "Rationale", link: "/rationale" },
-          { text: "Syntaxes", link: "/syntaxes" },
+          { text: "Supported syntaxes", link: "/syntaxes" },
           { text: "Getting Started", link: "/getting-started" },
         ],
       },
