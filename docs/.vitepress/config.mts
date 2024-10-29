@@ -65,6 +65,7 @@ export default defineConfig({
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground/", target: "_self" },
+      { text: "Book", link: "https://react-book.melange.re" },
       { text: "Blog", link: "https://melange.re/blog" },
       {
         text: "unstable",
