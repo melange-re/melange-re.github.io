@@ -152,22 +152,24 @@ extension](getting-started#editor-integration).
 ### Reason syntax
 
 1. To enable format-on-save in VS Code, open your [User Settings JSON
-file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) and
-add this snippet:
+   file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson)
+   and add this snippet:
 
-    ```json
-    "[reason]": {
-      "editor.formatOnSave": true
-    },
-    ```
+   ```json
+   "[reason]": {
+    "editor.formatOnSave": true
+   },
+   ```
+
 1. To control how the Reason formatter breaks up long lines, you can also add
    this snippet:
 
    ```json
    "ocaml.server.extraEnv": {
-      "REFMT_PRINT_WIDTH": "120"
-    },
-    ```
+     "REFMT_PRINT_WIDTH": "120"
+   },
+   ```
+
    In the snippet above, the print width is set to 120 characters, but you can
    use any number you prefer. If you don't set this, the default is 80.
 
@@ -179,17 +181,27 @@ add this snippet:
    ```ini
    m=120
    ```
+
    In the snippet above, the print width is set to 120 characters, but you can
    use any number you prefer. If you don't set this, the default is 80.
 1. To enable format-on-save in VS Code, open your [User Settings JSON
-file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) and
-add this snippet:
+   file](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson)
+   and add this snippet:
 
-    ```json
-    "[ocaml]": {
-      "editor.formatOnSave": true
-    },
-    ```
+   ```json
+   "[ocaml]": {
+     "editor.formatOnSave": true
+   },
+   ```
+
+## Other editors
+
+For Reason syntax, check out [Editor
+Plugins](https://reasonml.github.io/docs/en/editor-plugins) page from Reason
+documentation.
+
+For OCaml syntax, check out the [Editor
+Setup](https://ocamlverse.net/content/editor_setup.html) page from OCamlverse.
 
 ## Formatters
 
