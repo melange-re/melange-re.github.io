@@ -80,11 +80,7 @@ let () =
 ```
 
 As you can see, Reason syntax resembles JavaScript and supports JSX, so it is
-more approachable to JavaScript and TypeScript developers. Most tooling, such as
-the [OCaml Platform VS Code
-extension](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform),
-works well with Reason, but some tools aren't completely aware of it—for
-example, error messages from the compiler still use OCaml syntax.
+more approachable to JavaScript and TypeScript developers.
 
 ## Installation
 
@@ -108,7 +104,7 @@ depends: [
 ]
 ```
 
-On the command line, run
+On the command line, run[^1]
 
 ```bash
 opam install -y . --deps-only
@@ -138,7 +134,7 @@ depends: [
 ]
 ```
 
-On the command line, run
+On the command line, run[^2]
 
 ```bash
 opam install -y . --deps-only --with-dev-setup
@@ -219,3 +215,9 @@ To automatically fix the formatting, run this:
 ```bash
 dune build @fmt --auto-promote
 ```
+
+[^1]: Alternatively, you can first run `opam install -y reason` and then add the
+    appropriate entry to your `<project-name>.opam` file.
+
+[^2]: Alternatively, you can first run `opam install -y ocamlformat` and then
+    add the appropriate entry to your `<project-name>.opam` file.
