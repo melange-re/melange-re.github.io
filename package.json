@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/melange-re/melange-re.github.io#readme",
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.42"
+    "vitepress": "^1.0.0-rc.42",
+    "markdown-it-footnote": "^4.0.0"
   }
 }

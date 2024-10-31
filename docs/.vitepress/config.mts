@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { defineConfig } from "vitepress";
+import markdownItFootnote from 'markdown-it-footnote'
 import { bundledLanguages } from "shiki";
 
 // Modify bundledLanguages so it no longer contains the bundled OCaml grammar. This is needed because vitepress config
@@ -50,6 +51,9 @@ export default defineConfig({
   },
   markdown: {
     languages: [duneGrammar, ocamlGrammar, opamGrammar, reasonGrammar],
+    config: (md) => {
+      md.use(markdownItFootnote)
+    },
   },
   themeConfig: {
     outline: { level: [2, 3] },
@@ -104,6 +108,7 @@ export default defineConfig({
         items: [
           { text: "What is Melange", link: "/what-is-melange" },
           { text: "Rationale", link: "/rationale" },
+          { text: "Supported syntaxes", link: "/syntaxes" },
           { text: "Getting Started", link: "/getting-started" },
         ],
       },
