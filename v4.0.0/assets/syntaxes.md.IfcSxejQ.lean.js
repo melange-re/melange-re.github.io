@@ -1,0 +1,1 @@
+import{_ as s,c as i,o as a,V as n}from"./chunks/framework.BiMgzvQz.js";const y=JSON.parse('{"title":"Supported syntaxes","description":"","frontmatter":{},"headers":[],"relativePath":"syntaxes.md","filePath":"syntaxes.md"}'),t={name:"syntaxes.md"},h=n("",34),l=[h];function e(p,k,r,d,o,E){return a(),i("div",null,l)}const F=s(t,[["render",e]]);export{y as __pageData,F as default};
