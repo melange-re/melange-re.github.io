@@ -145,7 +145,7 @@ function Sidebar({ onExampleClick }) {
               </span>
               <span className="Version">
                 <span className="Text-xs">{"Reason"}</span>
-                <span className="Text-xs Number">{"3.12.0"}</span>
+                <span className="Text-xs Number">{"3.13.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"ReasonReact"}</span>
