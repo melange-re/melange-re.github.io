@@ -11,9 +11,9 @@ export const users = [
     infoLink: "https://qwick.com"
   },
   {
-    name: "Atvero",
-    image: "atvero.svg",
-    infoLink: "https://atvero.com",
+    name: "CMap",
+    image: "cmap.svg",
+    infoLink: "https://www.cmap.io/atvero-pim",
   },
   {
     name: "Droplet",
