@@ -6,7 +6,9 @@ The following are resources about Melange collected around the web.
 
 | Date | Type | Description |
 |----- | ---- | ----------- |
-| Sep 2024 | talk | [Dillon Mulroy — Type-Safe React with OCaml](https://reactalicante.es/#schedule) (video not yet uploaded) |
+| Sep 2024 | talk | [Dillon Mulroy — Type-Safe React with OCaml](https://youtu.be/dDNs2cniTQU) |
+| Sep 2024 | talk | [Antonio Monteiro — A 'Melange' of Tooling Coming Together](https://youtu.be/3oCXT-ycHHs) |
+| Sep 2024 | talk | [David Sancho — Universal React in OCaml](https://youtu.be/Oy3lZl2kE-0) |
 | Sep 2024 | podcast | [The State of Full-Stack OCaml (with António Monteiro)](https://pod.link/developer-voices/episode/4666dc4d7aa59599852c02b6415a36d4) ([video](https://www.youtube.com/watch?v=vSSpbAI_-t0))
 | Jan 2024 | blog | [What's possible with Melange](https://sancho.dev/blog/whats-possible-with-melange)
 | Nov 2023 | talk | [Dillon Mulroy — Melange: The Next Frontier in Type-Safe Web Development](https://www.youtube.com/watch?v=zG7JejHlQoM)

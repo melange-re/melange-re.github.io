@@ -52,8 +52,11 @@ dune build @re --auto-promote
 ## Publishing
 
 Publishing is done automatically from GitHub actions:
-- Every commit to `master` will publish in the `unstable` folder
-- Every tag pushed with the `v*` format will publish on its corresponding folder
+- Every commit to `master` will publish in the `unstable` folder, i.e.
+  https://melange.re/unstable
+- Every tag pushed with the `v*` format will publish to a folder with the same
+  name as the tag. For example, the branch with tag `v4.0.0` will publish to
+  https://melange.re/v4.0.0/.
 
 ### Tracking new versions of `melange` in opam
 
@@ -100,3 +103,15 @@ move-vx.x.x-tag: ## Moves the vx.x.x tag to the latest commit, useful to publish
   - replace the default version with the new one [in
     index.html](https://github.com/melange-re/melange-re.github.io/blob/gh-pages/index.html#L10)
   - update `robots.txt` to point to the new version sitemap
+
+### Update docs for latest stable version
+
+After making changes in the `master` branch, you may want some or all of those
+changes to appear in the latest stable version's docs. As an example, let's say
+that the latest stable version is 4.0.0. Then you should:
+
+1. Checkout branch `4.0.0-patches`
+1. Cherry pick the commits you want to add
+1. Push your changes to the branch
+1. Run `make move-v4.0.0-tag` to publish the branch to
+   https://melange.re/v4.0.0/
