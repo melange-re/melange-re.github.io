@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as r,V as a}from"./chunks/framework.BCxdY_ip.js";const b=JSON.parse('{"title":"Resources","description":"","frontmatter":{},"headers":[],"relativePath":"resources.md","filePath":"resources.md"}'),l={name:"resources.md"},o=a("",9),n=[o];function s(d,h,i,c,g,p){return r(),t("div",null,n)}const m=e(l,[["render",s]]);export{b as __pageData,m as default};
