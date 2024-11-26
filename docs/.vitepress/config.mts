@@ -130,6 +130,18 @@ export default defineConfig({
         ],
       },
       {
+        text: 'Communicate with JavaScript',
+        items: [
+          { text: "Overview", link: "/communicate-with-javascript" },
+          { text: "Language concepts", link: "/language-concepts" },
+          { text: "Data types and runtime representation", link: "/data-types-and-runtime-rep" },
+          { text: "Melange attributes and extension nodes", link: "/attributes-and-extension-nodes" },
+          { text: "Working with JavaScript objects and values", link: "/working-with-js-objects-and-values" },
+          { text: "Advanced JavaScript interoperability", link: "/advanced-js-interop" },
+          { text: "Bindings cookbook", link: "/bindings-cookbook" },
+        ],
+      },
+      {
         text: "Reference",
         items: [{ text: "API", link: "/api" }],
       },
