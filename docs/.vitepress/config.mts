@@ -118,10 +118,6 @@ export default defineConfig({
           { text: "New to OCaml?", link: "/new-to-ocaml" },
           { text: "Package Management", link: "/package-management" },
           { text: "Build System", link: "/build-system" },
-          {
-            text: "Communicate with JavaScript",
-            link: "/communicate-with-javascript",
-          },
           { text: "How-to Guides", link: "/how-to-guides" },
           {
             text: "Melange for X Developers",
