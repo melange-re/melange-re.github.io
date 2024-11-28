@@ -349,8 +349,8 @@ TypeScript, as mentioned in [its
 handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness),
 may sacrifice soundness for practicality when needed. In contrast, OCaml
 implementations provide unsound methods like [the `identity`
-primitive](communicate-with-javascript.md#special-identity-external) but they
-are generally discouraged and rarely used. The OCaml community places a strong
+primitive](language-concepts.md#special-identity-external) but they are
+generally discouraged and rarely used. The OCaml community places a strong
 emphasis on maintaining soundness and prefers safer alternatives to ensure code
 correctness.
 

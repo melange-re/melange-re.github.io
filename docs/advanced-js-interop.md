@@ -2,8 +2,9 @@
 
 ## Generate getters, setters and constructors
 
-As we saw in a [previous section](#non-shared-data-types), there are some types
-in Melange that compile to values that are not easy to manipulate from
+As we saw in a [previous
+section](/data-types-and-runtime-rep#non-shared-data-types), there are some
+types in Melange that compile to values that are not easy to manipulate from
 JavaScript. To facilitate the communication from JavaScript code with values of
 these types, Melange includes an attribute `deriving` that helps generating
 conversion functions, as well as functions to create values from these types. In
@@ -139,7 +140,8 @@ external actionFromJs: int => option(action) = ;
 `actionToJs` returns integers from values of `action` type. It will start with 0
 for `Click`, 3 for `Submit` (because it was annotated with `mel.as`), and then 4
 for `Cancel`, in the same way that we described when [using `mel.int` with
-polymorphic variants](#using-polymorphic-variants-to-bind-to-enums).
+polymorphic
+variants](/working-with-js-objects-and-values#using-polymorphic-variants-to-bind-to-enums).
 
 `actionFromJs` returns a value of type `option`, because not every integer can
 be converted into a variant tag of the `action` type.
@@ -165,8 +167,9 @@ type action =
   | Cancel;
 ```
 
-This feature relies on [abstract types](#abstract-types) to hide the JavaScript
-runtime representation. It will generate functions with the following types:
+This feature relies on [abstract types](/language-concepts#abstract-types) to
+hide the JavaScript runtime representation. It will generate functions with the
+following types:
 
 ```ocaml
 val actionToJs : action -> abs_action
@@ -190,8 +193,8 @@ well.
 
 > **_NOTE:_** Similarly to variants, the `@deriving jsConverter` attribute
 > cannot be used when the polymorphic variant tags have payloads. Refer to the
-> [section on runtime representation](#data-types-and-runtime-representation) to
-> learn more about how polymorphic variants are represented in JavaScript.
+> [section on runtime representation](/data-types-and-runtime-rep) to learn more
+> about how polymorphic variants are represented in JavaScript.
 
 Let’s see an example:
 
@@ -505,9 +508,10 @@ optional field in this case.
 > the record type is annotated with `deriving`, allowing for the renaming of
 > fields in the resulting JavaScript objects, as demonstrated in the section
 > about [binding to objects with static
-> shape](#objects-with-static-shape-record-like). However, the option to pass
-> indices to the `mel.as` decorator (like `[@mel.as "0"]`) to change the runtime
-> representation to an array is not available when using `deriving`.
+> shape](/working-with-js-objects-and-values#objects-with-static-shape-record-like).
+> However, the option to pass indices to the `mel.as` decorator (like `[@mel.as
+> "0"]`) to change the runtime representation to an array is not available when
+> using `deriving`.
 
 ##### Compatibility with OCaml features
 

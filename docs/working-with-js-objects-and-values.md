@@ -56,9 +56,9 @@ var MySchool = require("MySchool");
 var john_name = MySchool.john.name;
 ```
 
-External functions are documented in [a previous section](#external-functions).
-The `mel.module` attribute is documented
-[here](#using-functions-from-other-javascript-modules).
+External functions are documented in [a previous
+section](/language-concepts#external-functions). The `mel.module` attribute is
+documented [here](#using-functions-from-other-javascript-modules).
 
 If you want or need to use different field names on the Melange and the
 JavaScript sides, you can use the `mel.as` decorator:
@@ -186,7 +186,7 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 #### Using external functions
 
 We have already explored one approach for creating JavaScript object literals by
-using [`Js.t` values and the `mel.obj` extension](#using-jst-objects).
+using [`Js.t` values and the `mel.obj` extension](#using-js-t-objects).
 
 Melange additionally offers the `mel.obj` attribute, which can be used in
 combination with external functions to create JavaScript objects. When these
@@ -773,10 +773,10 @@ kind of API can be designed with Melange externals. Depending on which
 convention we want to use, there are two attributes available:
 
 - For a data-first convention, the `mel.send` attribute, in combination with
-  [the pipe first operator](#pipe-first) <code
+  [the pipe first operator](/language-concepts#pipe-first) <code
   class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>
 - For a data-last convention, the `mel.send.pipe` attribute, in combination with
-  OCaml [pipe last operator](#pipe-last) `|>`.
+  OCaml [pipe last operator](/language-concepts#pipe-last) `|>`.
 
 Let’s see first an example of chaining using data-first convention with the pipe
 first operator <code class="text-ocaml">\|.</code><code
@@ -877,7 +877,8 @@ If more dynamism is needed, there is a way to inject elements with different
 types in the array and still have Melange compile to JavaScript values that are
 not wrapped using the OCaml
 [`unboxed`](https://v2.ocaml.org/manual/attributes.html) attribute, which was
-mentioned [in the OCaml attributes section](#reusing-ocaml-attributes):
+mentioned [in the OCaml attributes
+section](/language-concepts#reusing-ocaml-attributes):
 
 ```ocaml
 type hide = Hide : 'a -> hide [@@unboxed]
@@ -989,8 +990,9 @@ padLeft("Hello World", 4);
 padLeft("Hello World", "Message from Melange: ");
 ```
 
-As we saw in the [Non-shared data types](#non-shared-data-types) section, we
-should rather avoid passing variants directly to the JavaScript side. By using
+As we saw in the [Non-shared data
+types](/data-types-and-runtime-rep#non-shared-data-types) section, we should
+rather avoid passing variants directly to the JavaScript side. By using
 `mel.unwrap` we get the best of both worlds: from Melange we can use variants,
 while JavaScript gets the raw values inside them.
 

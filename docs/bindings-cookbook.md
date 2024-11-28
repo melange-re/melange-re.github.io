@@ -11,7 +11,8 @@ external window : Dom.window = "window"
 external window: Dom.window = "window";
 ```
 
-See the [Using global functions or values](#using-global-functions-or-values)
+See the [Using global functions or
+values](/working-with-js-objects-and-values#using-global-functions-or-values)
 section for more information.
 
 ### `window?`: does global variable exist
@@ -29,8 +30,9 @@ let _ =
   };
 ```
 
-See the [Detect global variables](#detect-global-variables) section for more
-information.
+See the [Detect global
+variables](/attributes-and-extension-nodes#detect-global-variables) section for
+more information.
 
 ### `Math.PI`: variable in global module
 
@@ -42,8 +44,8 @@ external pi : float = "PI" [@@mel.scope "Math"]
 ```
 
 See the [Binding to properties inside a module or
-global](#binding-to-properties-inside-a-module-or-global) section for more
-information.
+global](/working-with-js-objects-and-values#binding-to-properties-inside-a-module-or-global)
+section for more information.
 
 ### `console.log`: function in global module
 
@@ -55,8 +57,8 @@ external log : 'a -> unit = "log" [@@mel.scope "console"]
 ```
 
 See the [Binding to properties inside a module or
-global](#binding-to-properties-inside-a-module-or-global) section for more
-information.
+global](/working-with-js-objects-and-values#binding-to-properties-inside-a-module-or-global)
+section for more information.
 
 ## Modules
 
@@ -72,7 +74,7 @@ let dir = join("a", "b");
 ```
 
 See the [Using functions from other JavaScript
-modules](#using-functions-from-other-javascript-modules) section for more
+modules](/working-with-js-objects-and-values#using-functions-from-other-javascript-modules) section for more
 information.
 
 ### `const foo = require('foo'); foo(1)`: import entire module as a value
@@ -87,8 +89,8 @@ let () = foo(1);
 ```
 
 See the [Using functions from other JavaScript
-modules](#using-functions-from-other-javascript-modules) section for more
-information.
+modules](/working-with-js-objects-and-values#using-functions-from-other-javascript-modules)
+section for more information.
 
 ### `import foo from 'foo'; foo(1)`: import ES6 module default export
 
@@ -102,8 +104,8 @@ let () = foo(1);
 ```
 
 See the [Using functions from other JavaScript
-modules](#using-functions-from-other-javascript-modules) section for more
-information.
+modules](/working-with-js-objects-and-values#using-functions-from-other-javascript-modules)
+section for more information.
 
 ### `const foo = require('foo'); foo.bar.baz()`: function scoped inside an object in a module
 
@@ -130,8 +132,8 @@ It is not necessary to nest the binding inside OCaml modules, but mirroring the
 structure of the JavaScript module layout makes the binding more discoverable.
 
 See the [Binding to properties inside a module or
-global](#binding-to-properties-inside-a-module-or-global) section for more
-information.
+global](/working-with-js-objects-and-values#binding-to-properties-inside-a-module-or-global)
+section for more information.
 
 ## Functions
 
@@ -147,8 +149,9 @@ external join: array(string) => string = "join";
 let dir = join([|"a", "b"|]);
 ```
 
-See the [Variadic function arguments](#variadic-function-arguments) section for
-more information.
+See the [Variadic function
+arguments](/working-with-js-objects-and-values#variadic-function-arguments)
+section for more information.
 
 ### `const nums = range(start, stop, step)`: call a function with named arguments for readability
 
@@ -226,7 +229,8 @@ let () = mkdir("src/main", ~options=mkdirOptions(~recursive=true, ()), ());
 ```
 
 See the [Objects with static shape (record-like): Using external
-functions](#using-external-functions) section for more information.
+functions](/working-with-js-objects-and-values#using-external-functions) section
+for more information.
 
 ### `forEach(start, stop, item => console.log(item))`: model a callback
 
@@ -247,8 +251,9 @@ let () = forEach(~start=1, ~stop=10, Js.log);
 When binding to functions with callbacks, you'll want to ensure that the
 callbacks are uncurried. `[@mel.uncurry]` is the recommended way of doing that.
 However, in some circumstances you may be forced to use the static uncurried
-function syntax. See the [Binding to callbacks](#binding-to-callbacks) section
-for more information.
+function syntax. See the [Binding to
+callbacks](/working-with-js-objects-and-values#binding-to-callbacks) section for
+more information.
 
 ## Objects
 
@@ -264,7 +269,9 @@ let person = [%mel.obj { id = 1; name = "Alice" }]
 let person = {"id": 1, "name": "Alice"};
 ```
 
-See the [Using `Js.t` objects](#using-jst-objects) section for more information.
+See the [Using `Js.t`
+objects](/working-with-js-objects-and-values#using-js-t-objects) section for
+more information.
 
 Alternatively, for greater type accuracy, one can create a record type and a
 value:
@@ -281,8 +288,9 @@ type person = {
 let person = {id: 1, name: "Alice"};
 ```
 
-See the [Using OCaml records](#using-ocaml-records) section for more
-information.
+See the [Using OCaml
+records](/working-with-js-objects-and-values#using-ocaml-records) section for
+more information.
 
 ### `person.name`: get a prop
 
@@ -396,14 +404,16 @@ let foo = Foo.make();
 ```
 
 Note the abstract type `t`, which we have revisited already in [its
-corresponding](#abstract-types) section.
+corresponding](/language-concepts#abstract-types) section.
 
 A Melange function binding doesn't have the context that it's binding to a
 JavaScript class like `Foo`, so you will want to explicitly put it inside a
 corresponding module `Foo` to denote the class it belongs to. In other words,
 model JavaScript classes as OCaml modules.
 
-See the [JavaScript classes](#javascript-classes) section for more information.
+See the [JavaScript
+classes](/working-with-js-objects-and-values#javascript-classes) section for
+more information.
 
 ### `const bar = foo.bar`: get an instance property
 
@@ -428,8 +438,9 @@ let foo = Foo.make();
 let bar = Foo.bar(foo);
 ```
 
-See the [Binding to object properties](#bind-to-object-properties) section for
-more information.
+See the [Binding to object
+properties](/working-with-js-objects-and-values#bind-to-object-properties)
+section for more information.
 
 ### `foo.bar = 1`: set an instance property
 
@@ -479,8 +490,9 @@ let foo = Foo.make();
 let () = Foo.meth(foo);
 ```
 
-See the [Calling an object method](#calling-an-object-method) section for more
-information.
+See the [Calling an object
+method](/working-with-js-objects-and-values#calling-an-object-method) section
+for more information.
 
 ### `const newStr = str.replace(substr, newSubstr)`: non-mutating instance method
 
@@ -518,8 +530,9 @@ type.
 Also note that it is not strictly need to use `mel.send.pipe`, one can use
 `mel.send` everywhere.
 
-See the [Calling an object method](#calling-an-object-method) section for more
-information.
+See the [Calling an object
+method](/working-with-js-objects-and-values#calling-an-object-method) section
+for more information.
 
 ### `arr.sort(compareFunction)`: mutating instance method
 
@@ -577,7 +590,8 @@ If you know some value may be `undefined` (but not `null`, see next section),
 and if you know its type is monomorphic (i.e. not generic), then you can model
 it directly as an `Option.t` type.
 
-See the [Non-shared data types](#non-shared-data-types) section for more
+See the [Non-shared data
+types](/data-types-and-runtime-rep#non-shared-data-types) section for more
 information.
 
 ### `foo.bar == null`: check for null or undefined
@@ -614,5 +628,6 @@ use.
 Note that this attribute requires the return type of the binding to be an
 `option` type as well.
 
-See the [Wrapping returned nullable values](#wrapping-returned-nullable-values)
+See the [Wrapping returned nullable
+values](/working-with-js-objects-and-values#wrapping-returned-nullable-values)
 section for more information.
