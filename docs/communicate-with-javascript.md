@@ -20,8 +20,7 @@ and return value.
 
 ---
 
-Because the topic of bindings is quite big, we've broken it up into multiple
-pages:
+This section has the following pages:
 
 - [Language concepts](/language-concepts) - Learn about the language features
   that make bindings possible
