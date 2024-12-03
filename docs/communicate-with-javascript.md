@@ -855,13 +855,14 @@ let add = [%mel.raw {|
 let () = Js.log (add 1 2)
 ```
 ```reasonml
-let add =
-  {%mel.raw |
+let add = [%mel.raw
+  {|
   function(a, b) {
     console.log("hello from raw JavaScript!");
     return a + b;
   }
-|};
+|}
+];
 
 let () = Js.log(add(1, 2));
 ```
