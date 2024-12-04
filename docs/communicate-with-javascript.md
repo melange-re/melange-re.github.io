@@ -20,19 +20,19 @@ and return value.
 
 ---
 
-This section has the following pages:
+In this section:
 
-- [Language concepts](/language-concepts) - Learn about the language features
+- [Language concepts](./language-concepts.md): Learn about the language features
   that make bindings possible
-- [Data types and runtime representations](/data-types-and-runtime-rep) - See
+- [Data types and runtime representations](./data-types-and-runtime-rep.md): See
   how Melange types map to JavaScript runtime types
-- [Melange attributes and extension nodes](/attributes-and-extension-nodes) - A
-  reference of all the built-in attributes and extension nodes that can be used
-  to create bindings
+- [Melange attributes and extension nodes](./attributes-and-extension-nodes.md):
+  A reference of all the built-in attributes and extension nodes that can be
+  used to create bindings
 - [Working with JavaScript objects and
-  values](/working-with-js-objects-and-values) - A rundown of all the common
+  values](./working-with-js-objects-and-values.md): A rundown of all the common
   scenarios when binding to JavaScript objects and values (including functions)
-- [Advanced JavaScript interoperability](/advanced-js-interop.md) - Advanced
+- [Advanced JavaScript interoperability](./advanced-js-interop.md): Advanced
   topics such as code generation using `@deriving`
-- [Bindings cookbook](/bindings-cookbook) - A collection of recipes that show
+- [Bindings cookbook](./bindings-cookbook.md): A collection of recipes that show
   JavaScript snippets and the equivalent code in Melange

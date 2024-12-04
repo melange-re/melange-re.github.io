@@ -83,7 +83,7 @@ records and variants with a single tag to their raw values. This is useful when
 defining type aliases that we don’t want to mix up, or when binding to
 JavaScript code that uses heterogeneous collections. An example of the latter is
 discussed in the [variadic function
-arguments](/working-with-js-objects-and-values#variadic-function-arguments)
+arguments](./working-with-js-objects-and-values.md#variadic-function-arguments)
 section.
 
 For instance:
@@ -113,9 +113,10 @@ Melange as well.
 
 The second approach is introducing new attributes specifically designed for
 Melange, such as the [`mel.set`
-attribute](/working-with-js-objects-and-values#bind-to-object-properties) used
-to bind to properties of JavaScript objects. The complete list of attributes
-introduced by Melange can be found [here](/attributes-and-extension-nodes).
+attribute](./working-with-js-objects-and-values.md#bind-to-object-properties)
+used to bind to properties of JavaScript objects. The complete list of
+attributes introduced by Melange can be found
+[here](./attributes-and-extension-nodes.md).
 
 Attribute annotations can use one, two or three `@` characters depending on
 their placement in the code and which kind of syntax tree node they are
@@ -123,8 +124,8 @@ annotating. More information about attributes can be found in the [dedicated
 OCaml manual page](https://v2.ocaml.org/manual/attributes.html).
 
 Here are some samples using Melange attributes
-[`mel.set`](/working-with-js-objects-and-values#bind-to-object-properties) and
-[`mel.as`](/working-with-js-objects-and-values#using-ocaml-records):
+[`mel.set`](./working-with-js-objects-and-values.md#bind-to-object-properties)
+and [`mel.as`](./working-with-js-objects-and-values.md#using-ocaml-records):
 
 ```ocaml
 type document
@@ -174,11 +175,11 @@ functions or values that exist in the runtime JavaScript code, and will be used
 from Melange.
 
 In Melange, externals can be used to [bind to global JavaScript
-objects](/working-with-js-objects-and-values#using-global-functions-or-values).
+objects](./working-with-js-objects-and-values.md#using-global-functions-or-values).
 They can also be decorated with certain `[@mel.xxx]` attributes to facilitate
 the creation of bindings in specific scenarios. Each one of the [available
-attributes](/attributes-and-extension-nodes#attributes) will be further explained
-in the next sections.
+attributes](./attributes-and-extension-nodes.md#attributes) will be further
+explained in the next sections.
 
 Once declared, one can use an `external` as a normal value. Melange external
 functions are turned into the expected JavaScript values, inlined into their
@@ -246,8 +247,10 @@ external document: document = "document";
 ```
 
 Subsequent sections delve into the details about the
-[`mel.set`](/working-with-js-objects-and-values#bind-to-object-properties) attribute and [how to bind to global
-values](/working-with-js-objects-and-values#using-global-functions-or-values) like `document`.
+[`mel.set`](./working-with-js-objects-and-values.md#bind-to-object-properties)
+attribute and [how to bind to global
+values](./working-with-js-objects-and-values.md#using-global-functions-or-values)
+like `document`.
 
 For a comprehensive understanding of abstract types and their usefulness, refer
 to the "Encapsulation" section of the [OCaml Cornell
@@ -442,7 +445,7 @@ natural with the way the code is being written.
 
 Melange supports writing bindings to JavaScript using any of the two
 conventions, data-first or data-last, as shown in the ["Chaining"
-section](/working-with-js-objects-and-values#chaining).
+section](./working-with-js-objects-and-values.md#chaining).
 
 For further details about the differences between the two operators, the
 data-first and data-last conventions and the trade-offs between them, one can

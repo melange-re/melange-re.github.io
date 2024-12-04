@@ -4,57 +4,70 @@
 
 These attributes are used to annotate `external` definitions:
 
-- [`mel.get`](/working-with-js-objects-and-values#bind-to-object-properties): read JavaScript object properties
-  statically by name, using the dot notation `.`
-- [`mel.get_index`](/working-with-js-objects-and-values#bind-to-object-properties): read a JavaScript object’s
-  properties dynamically by using the bracket notation `[]`
-- [`mel.module`](/working-with-js-objects-and-values#using-functions-from-other-javascript-modules): bind to a
-  value from a JavaScript module
-- [`mel.new`](/working-with-js-objects-and-values#javascript-classes): bind to a JavaScript class constructor
-- [`mel.obj`](/working-with-js-objects-and-values#using-external-functions): create a JavaScript object
-- [`mel.return`](/working-with-js-objects-and-values#wrapping-returned-nullable-values): automate conversion from
-  nullable values to `Option.t` values
-- [`mel.send`](/working-with-js-objects-and-values#calling-an-object-method): call a JavaScript object method using
-  [pipe first](/language-concepts#pipe-first) convention
-- [`mel.send.pipe`](/working-with-js-objects-and-values#calling-an-object-method): call a JavaScript object method
-  using [pipe last](/language-concepts#pipe-last) convention
-- [`mel.set`](/working-with-js-objects-and-values#bind-to-object-properties): set JavaScript object properties
-  statically by name, using the dot notation `.`
-- [`mel.set_index`](/working-with-js-objects-and-values#bind-to-object-properties): set JavaScript object
-  properties dynamically by using the bracket notation `[]`
-- [`mel.scope`](/working-with-js-objects-and-values#binding-to-properties-inside-a-module-or-global): reach to
-  deeper properties inside a JavaScript object
-- [`mel.splice`](/working-with-js-objects-and-values#variadic-function-arguments): a deprecated attribute, is an
-  alternate form of `mel.variadic`
-- [`mel.variadic`](/working-with-js-objects-and-values#variadic-function-arguments): bind to a function taking
-  variadic arguments from an array
+- [`mel.get`](./working-with-js-objects-and-values.md#bind-to-object-properties):
+  read JavaScript object properties statically by name, using the dot notation
+  `.`
+- [`mel.get_index`](./working-with-js-objects-and-values.md#bind-to-object-properties):
+  read a JavaScript object’s properties dynamically by using the bracket
+  notation `[]`
+- [`mel.module`](./working-with-js-objects-and-values.md#using-functions-from-other-javascript-modules):
+  bind to a value from a JavaScript module
+- [`mel.new`](./working-with-js-objects-and-values.md#javascript-classes): bind
+  to a JavaScript class constructor
+- [`mel.obj`](./working-with-js-objects-and-values.md#using-external-functions):
+  create a JavaScript object
+- [`mel.return`](./working-with-js-objects-and-values.md#wrapping-returned-nullable-values):
+  automate conversion from nullable values to `Option.t` values
+- [`mel.send`](./working-with-js-objects-and-values.md#calling-an-object-method):
+  call a JavaScript object method using [pipe
+  first](./language-concepts.md#pipe-first) convention
+- [`mel.send.pipe`](./working-with-js-objects-and-values.md#calling-an-object-method):
+  call a JavaScript object method using [pipe
+  last](./language-concepts.md#pipe-last) convention
+- [`mel.set`](./working-with-js-objects-and-values.md#bind-to-object-properties):
+  set JavaScript object properties statically by name, using the dot notation
+  `.`
+- [`mel.set_index`](./working-with-js-objects-and-values.md#bind-to-object-properties):
+  set JavaScript object properties dynamically by using the bracket notation
+  `[]`
+- [`mel.scope`](./working-with-js-objects-and-values.md#binding-to-properties-inside-a-module-or-global):
+  reach to deeper properties inside a JavaScript object
+- [`mel.splice`](./working-with-js-objects-and-values.md#variadic-function-arguments):
+  a deprecated attribute, is an alternate form of `mel.variadic`
+- [`mel.variadic`](./working-with-js-objects-and-values.md#variadic-function-arguments):
+  bind to a function taking variadic arguments from an array
 
 These attributes are used to annotate arguments in `external` definitions:
 
-- [`u`](/working-with-js-objects-and-values#binding-to-callbacks): define function arguments as uncurried (manual)
-- [`mel.int`](/working-with-js-objects-and-values#using-polymorphic-variants-to-bind-to-enums): compile function
-  argument to an int
-- [`mel.string`](/working-with-js-objects-and-values#using-polymorphic-variants-to-bind-to-enums): compile function
-  argument to a string
-- [`mel.this`](/working-with-js-objects-and-values#modeling-this-based-callbacks): bind to `this` based callbacks
-- [`mel.uncurry`](/working-with-js-objects-and-values#binding-to-callbacks): define function arguments as uncurried
-  (automated)
-- [`mel.unwrap`](/working-with-js-objects-and-values#approach-2-polymorphic-variant-mel-unwrap): unwrap variant
-  values
+- [`u`](./working-with-js-objects-and-values.md#binding-to-callbacks): define
+  function arguments as uncurried (manual)
+- [`mel.int`](./working-with-js-objects-and-values.md#using-polymorphic-variants-to-bind-to-enums):
+  compile function argument to an int
+- [`mel.string`](./working-with-js-objects-and-values.md#using-polymorphic-variants-to-bind-to-enums):
+  compile function argument to a string
+- [`mel.this`](./working-with-js-objects-and-values.md#modeling-this-based-callbacks):
+  bind to `this` based callbacks
+- [`mel.uncurry`](./working-with-js-objects-and-values.md#binding-to-callbacks):
+  define function arguments as uncurried (automated)
+- [`mel.unwrap`](./working-with-js-objects-and-values.md#approach-2-polymorphic-variant-mel-unwrap):
+  unwrap variant values
 
 These attributes are used in places like records, fields, arguments, functions,
 and more:
 
 - `mel.as`: redefine the name generated in the JavaScript output code. Used in
-  [constant function arguments](/working-with-js-objects-and-values#constant-values-as-arguments),
-  [variants](/advanced-js-interop#conversion-functions), polymorphic variants (either [inlined in
-  external functions](/working-with-js-objects-and-values#using-polymorphic-variants-to-bind-to-enums) or [in type
-  definitions](/advanced-js-interop#polymorphic-variants)) and [record
-  fields](/working-with-js-objects-and-values#objects-with-static-shape-record-like).
-- [`deriving`](/advanced-js-interop#generate-getters-setters-and-constructors): generate getters and
-  setters for some types
+  [constant function
+  arguments](./working-with-js-objects-and-values.md#constant-values-as-arguments),
+  [variants](./advanced-js-interop.md#conversion-functions), polymorphic
+  variants (either [inlined in external
+  functions](./working-with-js-objects-and-values.md#using-polymorphic-variants-to-bind-to-enums)
+  or [in type definitions](./advanced-js-interop.md#polymorphic-variants)) and
+  [record
+  fields](./working-with-js-objects-and-values.md#objects-with-static-shape-record-like).
+- [`deriving`](./advanced-js-interop.md#generate-getters-setters-and-constructors):
+  generate getters and setters for some types
 - [`mel.inline`](#inlining-constant-values): forcefully inline constant values
-- [`optional`](/advanced-js-interop#generate-javascript-objects-with-optional-properties):
+- [`optional`](./advanced-js-interop.md#generate-javascript-objects-with-optional-properties):
   translates optional fields in a record to omitted properties in the generated
   JavaScript object (combines with `deriving`)
 
@@ -78,9 +91,11 @@ Here is the list of all the extension nodes supported by Melange:
 
 - [`mel.debugger`](#debugger): insert `debugger` statements
 - [`mel.external`](#detect-global-variables): read global values
-- [`mel.obj`](/working-with-js-objects-and-values#using-js-t-objects): create JavaScript object literals
+- [`mel.obj`](./working-with-js-objects-and-values.md#using-js-t-objects):
+  create JavaScript object literals
 - [`mel.raw`](#generate-raw-javascript): write raw JavaScript code
-- [`mel.re`](/data-types-and-runtime-rep#regular-expressions): insert regular expressions
+- [`mel.re`](./data-types-and-runtime-rep.md#regular-expressions): insert
+  regular expressions
 
 ## Generate raw JavaScript
 

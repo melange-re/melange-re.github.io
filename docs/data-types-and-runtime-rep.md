@@ -236,7 +236,8 @@ non-shared data types (like variants), these values should be transformed
 separately, and not be directly used in JavaScript.
 
 Extensive documentation about interfacing with JavaScript objects using records
-can be found in [the section below](/working-with-js-objects-and-values#bind-to-js-object).
+can be found in [the section
+below](./working-with-js-objects-and-values.md#bind-to-js-object).
 
 ### Regular expressions
 
@@ -273,7 +274,9 @@ them before doing so.
 
 - Variants and polymorphic variants: Better transform them into readable
   JavaScript values before manipulating them from JavaScript, Melange provides
-  [some helpers](/advanced-js-interop#generate-getters-setters-and-constructors) to do so.
+  [some
+  helpers](./advanced-js-interop.md#generate-getters-setters-and-constructors)
+  to do so.
 - Exceptions
 - Option (a variant type): Better use the `Js.Nullable.fromOption` and
   `Js.Nullable.toOption` functions in the <a class="text-ocaml" target="_self"

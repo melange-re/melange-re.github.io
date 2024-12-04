@@ -538,14 +538,14 @@ v3, but node extensions (`%bs.*`) are not.
 
 The `@bs` attribute, used for uncurried application (see the ["Binding to
 callbacks"
-section](/working-with-js-objects-and-values.md#binding-to-callbacks)), becomes
+section](./working-with-js-objects-and-values.md#binding-to-callbacks)), becomes
 `@u`.
 
 #### `@bs.val` is gone
 
 The `@bs.val` attribute is no longer necessary, and can be removed from
 `external` definitions. See more information in the ["Using global functions or
-values"](/working-with-js-objects-and-values.md#using-global-functions-or-values)
+values"](./working-with-js-objects-and-values.md#using-global-functions-or-values)
 section.
 
 #### `Dom` and `Node` are in their own libraries
