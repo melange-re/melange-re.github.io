@@ -266,7 +266,10 @@ literal directly:
 let person = [%mel.obj { id = 1; name = "Alice" }]
 ```
 ```reasonml
-let person = {"id": 1, "name": "Alice"};
+let person = {
+  "id": 1,
+  "name": "Alice",
+};
 ```
 
 See the [Using `Js.t`
@@ -285,7 +288,10 @@ type person = {
   id: int,
   name: string,
 };
-let person = {id: 1, name: "Alice"};
+let person = {
+  id: 1,
+  name: "Alice",
+};
 ```
 
 See the [Using OCaml
@@ -349,7 +355,10 @@ type person = {
   name: string,
 };
 
-let person = {id: 1, name: "Alice"};
+let person = {
+  id: 1,
+  name: "Alice",
+};
 let {id, name} = person;
 ```
 

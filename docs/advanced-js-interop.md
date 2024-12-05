@@ -208,7 +208,11 @@ type action =
 ```
 ```reasonml
 [@deriving jsConverter]
-type action = [ | `Click | [@mel.as "submit"] `Submit | `Cancel];
+type action = [
+  | `Click
+  | [@mel.as "submit"] `Submit
+  | `Cancel
+];
 ```
 
 Akin to the variant example, the following two functions will be generated:

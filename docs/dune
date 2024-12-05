@@ -16,6 +16,102 @@
    communicate-with-javascript.md.processed)))
 
 (rule
+ (deps language-concepts.md)
+ (target language-concepts.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff language-concepts.md language-concepts.md.processed)))
+
+(rule
+ (deps data-types-and-runtime-rep.md)
+ (target data-types-and-runtime-rep.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff
+   data-types-and-runtime-rep.md
+   data-types-and-runtime-rep.md.processed)))
+
+(rule
+ (deps attributes-and-extension-nodes.md)
+ (target attributes-and-extension-nodes.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff
+   attributes-and-extension-nodes.md
+   attributes-and-extension-nodes.md.processed)))
+
+(rule
+ (deps working-with-js-objects-and-values.md)
+ (target working-with-js-objects-and-values.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff
+   working-with-js-objects-and-values.md
+   working-with-js-objects-and-values.md.processed)))
+
+(rule
+ (deps advanced-js-interop.md)
+ (target advanced-js-interop.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff advanced-js-interop.md advanced-js-interop.md.processed)))
+
+(rule
+ (deps bindings-cookbook.md)
+ (target bindings-cookbook.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:process_md})))))
+
+(rule
+ (alias re)
+ (action
+  (diff bindings-cookbook.md bindings-cookbook.md.processed)))
+
+(rule
  (deps build-system.md)
  (target build-system.md.processed)
  (action

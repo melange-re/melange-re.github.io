@@ -110,7 +110,10 @@ type t = {
   bar: string,
 };
 
-let value = {foo: 7, bar: "baz"};
+let value = {
+  foo: 7,
+  bar: "baz",
+};
 ```
 
 And its JavaScript generated code:
@@ -142,7 +145,10 @@ let john = [%mel.obj { name = "john"; age = 99 }]
 let t = john##name
 ```
 ```reasonml
-let john = {"name": "john", "age": 99};
+let john = {
+  "name": "john",
+  "age": 99,
+};
 let t = john##name;
 ```
 
@@ -175,8 +181,16 @@ let two = name_extended [%mel.obj { name = "jane"; address = "1 infinite loop" }
 ```reasonml
 let name_extended = obj => obj##name ++ " wayne";
 
-let one = name_extended({"name": "john", "age": 99});
-let two = name_extended({"name": "jane", "address": "1 infinite loop"});
+let one =
+  name_extended({
+    "name": "john",
+    "age": 99,
+  });
+let two =
+  name_extended({
+    "name": "jane",
+    "address": "1 infinite loop",
+  });
 ```
 
 To read more about objects and polymorphism we recommend checking the [OCaml
@@ -976,7 +990,14 @@ let _ = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
 ```reasonml
 external padLeft:
-  (string, [@mel.unwrap] [ | `Str(string) | `Int(int)]) => string =
+  (
+    string,
+    [@mel.unwrap] [
+      | `Str(string)
+      | `Int(int)
+    ]
+  ) =>
+  string =
   "padLeft";
 
 let _ = padLeft("Hello World", `Int(4));
@@ -1022,7 +1043,14 @@ let _ = read_file_sync ~name:"xx.txt" `ascii
 ```reasonml
 [@mel.module "fs"]
 external read_file_sync:
-  (~name: string, [@mel.string] [ | `utf8 | `ascii]) => string =
+  (
+    ~name: string,
+    [@mel.string] [
+      | `utf8
+      | `ascii
+    ]
+  ) =>
+  string =
   "readFileSync";
 
 let _ = read_file_sync(~name="xx.txt", `ascii);
@@ -1107,7 +1135,15 @@ let value = test_int_type `on_open
 ```
 ```reasonml
 external test_int_type:
-  ([@mel.int] [ | `on_closed | [@mel.as 20] `on_open | `in_bin]) => int =
+  (
+  [@mel.int]
+  [
+    | `on_closed
+    | [@mel.as 20] `on_open
+    | `in_bin
+  ]
+  ) =>
+  int =
   "testIntType";
 
 let value = test_int_type(`on_open);
@@ -1148,7 +1184,10 @@ type readline;
 external on:
   (
     readline,
-    [@mel.string] [ | `close(unit => unit) | `line(string => unit)]
+    [@mel.string] [
+      | `close(unit => unit)
+      | `line(string => unit)
+    ]
   ) =>
   readline =
   "on";
