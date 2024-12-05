@@ -349,8 +349,8 @@ TypeScript, as mentioned in [its
 handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness),
 may sacrifice soundness for practicality when needed. In contrast, OCaml
 implementations provide unsound methods like [the `identity`
-primitive](communicate-with-javascript.md#special-identity-external) but they
-are generally discouraged and rarely used. The OCaml community places a strong
+primitive](./language-concepts.md#special-identity-external) but they are
+generally discouraged and rarely used. The OCaml community places a strong
 emphasis on maintaining soundness and prefers safer alternatives to ensure code
 correctness.
 
@@ -492,8 +492,8 @@ starts the conversion process earlier in the compiler pipeline, as it transforms
 the compiler lambda representation into JavaScript.
 
 Js\_of\_ocaml is a project with years of development and evolution behind it,
-while Melange [appearance](rationale.md#a-bit-of-history) is relatively recent
-in comparison.
+while Melange's [appearance](./rationale.md#a-bit-of-history) is relatively
+recent in comparison.
 
 These aspects translate into different trade-offs. Compared to Js\_of\_ocaml:
 
@@ -534,7 +534,7 @@ of its characteristics:
   JavaScript file.
 - The libraries provided by ReScript (Belt and Js) are available in Melange too.
 - The mechanisms provided for [communicating with JavaScript
-  code](communicate-with-javascript.md) are mostly the same.
+  code](./communicate-with-javascript.md) are mostly the same.
 
 However, one of Melange’s goals is to maximize compatibility with the OCaml
 ecosystem. This goal translates into fundamental differences in how Melange and
@@ -545,14 +545,14 @@ ReScript function from the perspective of both library authors and users.
 ReScript projects rely exclusively on npm for all packages they depend on.
 Melange projects, on the other hand, will use opam for native packages, and npm
 for JavaScript ones. Melange package management is explained in detail in [the
-dedicated section](package-management.md).
+dedicated section](./package-management.md).
 
 ### Build system
 
 ReScript has its own build system, originally based on Ninja.
 
 Melange defers to [Dune](https://dune.build/) for build orchestration, as it is
-explained in detail in [the corresponding section](build-system.md). By
+explained in detail in [the corresponding section](./build-system.md). By
 integrating with Dune, Melange can benefit from the multiple features provided.
 One of the most useful features is first-class supports for monorepos. But there
 are multiple others, like virtual libraries, watch mode, or integrations with

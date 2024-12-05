@@ -118,15 +118,23 @@ export default defineConfig({
           { text: "New to OCaml?", link: "/new-to-ocaml" },
           { text: "Package Management", link: "/package-management" },
           { text: "Build System", link: "/build-system" },
-          {
-            text: "Communicate with JavaScript",
-            link: "/communicate-with-javascript",
-          },
           { text: "How-to Guides", link: "/how-to-guides" },
           {
             text: "Melange for X Developers",
             link: "/melange-for-x-developers",
           },
+        ],
+      },
+      {
+        text: 'Communicate with JavaScript',
+        items: [
+          { text: "Overview", link: "/communicate-with-javascript" },
+          { text: "Language concepts", link: "/language-concepts" },
+          { text: "Data types and runtime representation", link: "/data-types-and-runtime-rep" },
+          { text: "Melange attributes and extension nodes", link: "/attributes-and-extension-nodes" },
+          { text: "Working with JavaScript objects and values", link: "/working-with-js-objects-and-values" },
+          { text: "Advanced JavaScript interoperability", link: "/advanced-js-interop" },
+          { text: "Bindings cookbook", link: "/bindings-cookbook" },
         ],
       },
       {
