@@ -15,6 +15,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ cat > input.ml <<\EOF
+  > 
+  > let sum = List.fold_left ( + ) 0
+  > let square x = x * x
+  > 
   > let sum_sq =
   >   [ 1; 2; 3 ]
   >   |. Belt.List.map String.cat
@@ -22,13 +26,19 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 5-8:
-  4 |   |. sum
-           ^^^
-  Error: Unbound value sum
+  File "input.ml", line 7, characters 19-29:
+  7 |   |. Belt.List.map String.cat
+                         ^^^^^^^^^^
+  Error: This expression has type string -> string -> string
+         but an expression was expected of type int -> 'a
+         Type string is not compatible with type int
   [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > let sum = List.fold_left ( + ) 0
+  > let square x = x * x
+  > 
   > let sum_sq =
   >   [ 1; 2; 3 ]
   >   |. Belt.List.map square
@@ -36,13 +46,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 5-8:
-  4 |   |. sum
-           ^^^
-  Error: Unbound value sum
-  [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > let sum = List.fold_left ( + ) 0
+  > 
   > let sum_sq =
   >   [ 1; 2; 3 ]
   >   |> List.map String.cat
@@ -50,13 +58,17 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 5-8:
-  4 |   |> sum
-           ^^^
-  Error: Unbound value sum
+  File "input.ml", line 5, characters 4-5:
+  5 |   [ 1; 2; 3 ]
+          ^
+  Error: This expression has type int but an expression was expected of type
+           string
   [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > let square x = x * x
+  > 
   > let sum = List.fold_left ( + ) 0
   > 
   > let sum_sq =
@@ -66,33 +78,24 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 14-20:
-  5 |   |> List.map square (* [1; 4; 9] *)
-                    ^^^^^^
-  Error: Unbound value square
-  [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > let square x = x * x
+  > 
   > let ten = 3 |> square |> succ
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 15-21:
-  1 | let ten = 3 |> square |> succ
-                     ^^^^^^
-  Error: Unbound value square
-  [1]
 
   $ cat > input.ml <<\EOF
+  > 
+  > let square x = x * x
+  > 
   > let ten = succ (square 3)
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 16-22:
-  1 | let ten = succ (square 3)
-                      ^^^^^^
-  Error: Unbound value square
-  [1]
 
   $ cat > input.ml <<\EOF
   > let square x = x * x
