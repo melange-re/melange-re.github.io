@@ -21,15 +21,14 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > let foo, bar = 1, 2
+  > module React = struct let useEffect2 _ _ = () end
+  > 
   > let () = React.useEffect2 (fun () -> None) (foo, bar)
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 9-25:
-  1 | let () = React.useEffect2 (fun () -> None) (foo, bar)
-               ^^^^^^^^^^^^^^^^
-  Error: Unbound module React
-  [1]
 
   $ cat > input.ml <<\EOF
   > let world = {j|世界|j}
