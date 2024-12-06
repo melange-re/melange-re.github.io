@@ -45,17 +45,14 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
+  > 
   > let add x y = x + y
   > let _ = map [||] [||] add
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 2, characters 8-11:
-  2 | let _ = map [||] [||] add
-              ^^^
-  Error: Unbound value map
-  Hint: Did you mean max?
-  [1]
 
   $ cat > input.ml <<\EOF
   > external map :
@@ -71,16 +68,19 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
+  > 
   > let add x y = x + y
   > let _ = map [||] [||] add
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 2, characters 8-11:
-  2 | let _ = map [||] [||] add
-              ^^^
-  Error: Unbound value map
-  Hint: Did you mean max?
+  File "input.ml", line 5, characters 22-25:
+  5 | let _ = map [||] [||] add
+                            ^^^
+  Error: This expression has type int -> int -> int
+         but an expression was expected of type ('a -> 'b -> 'c [@u])
   [1]
 
   $ cat > input.ml <<\EOF
@@ -129,15 +129,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   [@@mel.send]
   > 
   > let register rl =
-  >   rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
+  >   rl |. on (`close (fun _event -> ())) |. on (`line (fun line -> Js.log line))
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 10, characters 24-29:
-  10 |   rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
-                               ^^^^^
-  Error (warning 27 [unused-var-strict]): unused variable event.
-  [1]
 
   $ cat > input.ml <<\EOF
   > external test_int_type :
@@ -176,17 +171,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > external read_file_sync :
-  >   name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  >   name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   >   [@@mel.module "fs"]
   > 
   > let _ = read_file_sync ~name:"xx.txt" `ascii
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 2, characters 18-36:
-  2 |   name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
-                        ^^^^^^^^^^^^^^^^^^
-  Alert redundant: [@mel.string] is redundant here, you can safely remove it
 
   $ cat > input.ml <<\EOF
   > external padLeft:
@@ -338,17 +329,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type param
-  > external executeCommands : string -> param array -> unit = ""
+  > external executeCommands : string -> param array -> unit = "executeCommands"
   >   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
   > 
   > let f a b c = executeCommands "hi" [| a; b; c |]
   > EOF
 
   $ dune build @melange
-  File "input.ml", lines 2-3, characters 0-67:
-  2 | external executeCommands : string -> param array -> unit = ""
-  3 |   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
-  Alert fragile: executeCommands : the external name is inferred from val name is unsafe from refactoring when changing value name
 
   $ cat > input.ml <<\EOF
   > external dirname : string -> string = "dirname" [@@mel.module "path"]
@@ -425,24 +412,29 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > external route :
+  >   _type:string ->
+  >   path:string ->
+  >   action:(string list -> unit) ->
+  >   ?options:'a ->
+  >   unit ->
+  >   'b = ""
+  >   [@@mel.obj]
+  > 
   > let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 16-21:
-  1 | let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
-                      ^^^^^
-  Error: Unbound value route
-  [1]
 
   $ cat > input.ml <<\EOF
   > external route :
   >   _type:string ->
   >   path:string ->
   >   action:(string list -> unit) ->
-  >   ?options:< .. > ->
+  >   ?options:'a ->
   >   unit ->
-  >   _ = ""
+  >   'b = ""
   >   [@@mel.obj]
   > EOF
 

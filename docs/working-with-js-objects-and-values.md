@@ -231,9 +231,9 @@ external route :
   _type:string ->
   path:string ->
   action:(string list -> unit) ->
-  ?options:< .. > ->
+  ?options:'a ->
   unit ->
-  _ = ""
+  'b = ""
   [@@mel.obj]
 ```
 ```reasonml
@@ -243,10 +243,10 @@ external route:
     ~_type: string,
     ~path: string,
     ~action: list(string) => unit,
-    ~options: {..}=?,
+    ~options: 'a=?,
     unit
   ) =>
-  _;
+  'b;
 ```
 
 Note that the empty string at the end of the function is used to make it
@@ -271,6 +271,16 @@ the `mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
+<!--#prelude#
+external route :
+  _type:string ->
+  path:string ->
+  action:(string list -> unit) ->
+  ?options:'a ->
+  unit ->
+  'b = ""
+  [@@mel.obj]
+-->
 ```ocaml
 let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
 ```
@@ -523,7 +533,7 @@ can do:
 
 ```ocaml
 type param
-external executeCommands : string -> param array -> unit = ""
+external executeCommands : string -> param array -> unit = "executeCommands"
   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
 
 let f a b c = executeCommands "hi" [| a; b; c |]
@@ -531,7 +541,7 @@ let f a b c = executeCommands "hi" [| a; b; c |]
 ```reasonml
 type param;
 [@mel.scope "commands"] [@mel.module "vscode"] [@mel.variadic]
-external executeCommands: (string, array(param)) => unit;
+external executeCommands: (string, array(param)) => unit = "executeCommands";
 
 let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
 ```
@@ -1035,7 +1045,7 @@ If the values are strings, we can use the `mel.string` attribute:
 
 ```ocaml
 external read_file_sync :
-  name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   [@@mel.module "fs"]
 
 let _ = read_file_sync ~name:"xx.txt" `ascii
@@ -1045,7 +1055,7 @@ let _ = read_file_sync ~name:"xx.txt" `ascii
 external read_file_sync:
   (
     ~name: string,
-    [@mel.string] [
+    [
       | `utf8
       | `ascii
     ]
@@ -1175,7 +1185,7 @@ external on :
   [@@mel.send]
 
 let register rl =
-  rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
+  rl |. on (`close (fun _event -> ())) |. on (`line (fun line -> Js.log line))
 ```
 ```reasonml
 type readline;
@@ -1193,7 +1203,7 @@ external on:
   "on";
 
 let register = rl =>
-  rl->(on(`close(event => ())))->(on(`line(line => Js.log(line))));
+  rl->(on(`close(_event => ())))->(on(`line(line => Js.log(line))));
 ```
 
 This generates:
@@ -1367,6 +1377,9 @@ except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
+<!--#prelude#
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
@@ -1415,6 +1428,9 @@ external map:
 
 Now if we try to call `map` with a regular `add` function:
 
+<!--#prelude#
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
