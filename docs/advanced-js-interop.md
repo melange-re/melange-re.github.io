@@ -126,15 +126,18 @@ type action =
 
 This will generate a couple of functions with the following types:
 
+<!--#prelude#
+type action
+-->
 ```ocaml
 val actionToJs : action -> int
 
 val actionFromJs : int -> action option
 ```
 ```reasonml
-external actionToJs: action => int = ;
+let actionToJs: action => int;
 
-external actionFromJs: int => option(action) = ;
+let actionFromJs: int => option(action);
 ```
 
 `actionToJs` returns integers from values of `action` type. It will start with 0
@@ -171,15 +174,19 @@ This feature relies on [abstract types](./language-concepts.md#abstract-types)
 to hide the JavaScript runtime representation. It will generate functions with
 the following types:
 
+<!--#prelude#
+type action
+type abs_action
+-->
 ```ocaml
 val actionToJs : action -> abs_action
 
 val actionFromJs : abs_action -> action
 ```
 ```reasonml
-external actionToJs: action => abs_action = ;
+let actionToJs: action => abs_action;
 
-external actionFromJs: abs_action => action = ;
+let actionFromJs: abs_action => action;
 ```
 
 In the case of `actionFromJs`, the return value, unlike the previous case, is
@@ -217,15 +224,18 @@ type action = [
 
 Akin to the variant example, the following two functions will be generated:
 
+<!--#prelude#
+type action
+-->
 ```ocaml
 val actionToJs : action -> string
 
 val actionFromJs : string -> action option
 ```
 ```reasonml
-external actionToJs: action => string = ;
+let actionToJs: action => string;
 
-external actionFromJs: string => option(action) = ;
+let actionFromJs: string => option(action);
 ```
 
 The `jsConverter { newType }` payload can also be used with polymorphic
@@ -339,12 +349,12 @@ example, the OCaml signature would look like this after preprocessing:
 ```ocaml
 type person
 
-val person : name:string -> ?age:int -> unit -> person
+external person : name:string -> ?age:int -> unit -> person = "person"
 ```
 ```reasonml
 type person;
 
-external person: (~name: string, ~age: int=?, unit) => person = ;
+external person: (~name: string, ~age: int=?, unit) => person = "person";
 ```
 
 The `person` function can be used to create values of `person`. It is the only
@@ -359,7 +369,7 @@ type person = {
   name : string;
   age : int option; [@mel.optional]
 }
-[@@deriving jsDeriving]
+[@@deriving jsProperties]
 -->
 ```ocaml
 let alice = person ~name:"Alice" ~age:20 ()
@@ -533,14 +543,14 @@ type person = {
   name : string;
   mutable age : int;
 }
-[@@deriving getSet]
+[@@deriving jsProperties, getSet]
 
 let alice = person ~name:"Alice" ~age:20
 
 let () = ageSet alice 21
 ```
 ```reasonml
-[@deriving getSet]
+[@deriving (jsProperties, getSet)]
 type person = {
   name: string,
   mutable age: int,

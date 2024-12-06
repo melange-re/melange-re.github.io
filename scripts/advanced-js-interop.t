@@ -41,7 +41,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   mutable age : int;
   > }
-  > [@@deriving getSet]
+  > [@@deriving jsProperties, getSet]
   > 
   > let alice = person ~name:"Alice" ~age:20
   > 
@@ -49,11 +49,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 7, characters 12-18:
-  7 | let alice = person ~name:"Alice" ~age:20
-                  ^^^^^^
-  Error: Unbound value person
-  [1]
 
   $ cat > input.ml <<\EOF
   > type person = {
@@ -111,39 +106,21 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   name : string;
   >   age : int option; [@mel.optional]
   > }
-  > [@@deriving jsDeriving]
+  > [@@deriving jsProperties]
   > 
   > let alice = person ~name:"Alice" ~age:20 ()
   > let bob = person ~name:"Bob" ()
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 22-34:
-  4 |   age : int option; [@mel.optional]
-                            ^^^^^^^^^^^^
-  Alert unused: Unused attribute [@mel.optional]
-  This means such annotation is not annotated properly.
-  For example, some annotations are only meaningful in externals
-  
-  File "input.ml", line 6, characters 12-22:
-  6 | [@@deriving jsDeriving]
-                  ^^^^^^^^^^
-  Error: Ppxlib.Deriving: 'jsDeriving' is not a supported type deriving
-         generator
-  [1]
 
   $ cat > input.ml <<\EOF
   > type person
   > 
-  > val person : name:string -> ?age:int -> unit -> person
+  > external person : name:string -> ?age:int -> unit -> person = "person"
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 3, characters 0-54:
-  3 | val person : name:string -> ?age:int -> unit -> person
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  Error: Value declarations are only allowed in signatures
-  [1]
 
   $ cat > input.ml <<\EOF
   > type person = {
@@ -182,17 +159,19 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > type action
+  > 
   > val actionToJs : action -> string
   > 
   > val actionFromJs : string -> action option
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 17-23:
-  1 | val actionToJs : action -> string
-                       ^^^^^^
-  Error: Unbound type constructor action
-  Hint: Did you mean option?
+  File "input.ml", line 4, characters 0-33:
+  4 | val actionToJs : action -> string
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Error: Value declarations are only allowed in signatures
   [1]
 
   $ cat > input.ml <<\EOF
@@ -207,17 +186,20 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > type action
+  > type abs_action
+  > 
   > val actionToJs : action -> abs_action
   > 
   > val actionFromJs : abs_action -> action
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 17-23:
-  1 | val actionToJs : action -> abs_action
-                       ^^^^^^
-  Error: Unbound type constructor action
-  Hint: Did you mean option?
+  File "input.ml", line 5, characters 0-37:
+  5 | val actionToJs : action -> abs_action
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Error: Value declarations are only allowed in signatures
   [1]
 
   $ cat > input.ml <<\EOF
@@ -231,17 +213,19 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > type action
+  > 
   > val actionToJs : action -> int
   > 
   > val actionFromJs : int -> action option
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 17-23:
-  1 | val actionToJs : action -> int
-                       ^^^^^^
-  Error: Unbound type constructor action
-  Hint: Did you mean option?
+  File "input.ml", line 4, characters 0-30:
+  4 | val actionToJs : action -> int
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Error: Value declarations are only allowed in signatures
   [1]
 
   $ cat > input.ml <<\EOF
