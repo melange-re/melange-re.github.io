@@ -110,7 +110,10 @@ type t = {
   bar: string,
 };
 
-let value = {foo: 7, bar: "baz"};
+let value = {
+  foo: 7,
+  bar: "baz",
+};
 ```
 
 And its JavaScript generated code:
@@ -142,7 +145,10 @@ let john = [%mel.obj { name = "john"; age = 99 }]
 let t = john##name
 ```
 ```reasonml
-let john = {"name": "john", "age": 99};
+let john = {
+  "name": "john",
+  "age": 99,
+};
 let t = john##name;
 ```
 
@@ -175,8 +181,16 @@ let two = name_extended [%mel.obj { name = "jane"; address = "1 infinite loop" }
 ```reasonml
 let name_extended = obj => obj##name ++ " wayne";
 
-let one = name_extended({"name": "john", "age": 99});
-let two = name_extended({"name": "jane", "address": "1 infinite loop"});
+let one =
+  name_extended({
+    "name": "john",
+    "age": 99,
+  });
+let two =
+  name_extended({
+    "name": "jane",
+    "address": "1 infinite loop",
+  });
 ```
 
 To read more about objects and polymorphism we recommend checking the [OCaml
@@ -217,9 +231,9 @@ external route :
   _type:string ->
   path:string ->
   action:(string list -> unit) ->
-  ?options:< .. > ->
+  ?options:'a ->
   unit ->
-  _ = ""
+  'b = ""
   [@@mel.obj]
 ```
 ```reasonml
@@ -229,10 +243,10 @@ external route:
     ~_type: string,
     ~path: string,
     ~action: list(string) => unit,
-    ~options: {..}=?,
+    ~options: 'a=?,
     unit
   ) =>
-  _;
+  'b;
 ```
 
 Note that the empty string at the end of the function is used to make it
@@ -257,6 +271,16 @@ the `mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
+<!--#prelude#
+external route :
+  _type:string ->
+  path:string ->
+  action:(string list -> unit) ->
+  ?options:'a ->
+  unit ->
+  'b = ""
+  [@@mel.obj]
+-->
 ```ocaml
 let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
 ```
@@ -509,7 +533,7 @@ can do:
 
 ```ocaml
 type param
-external executeCommands : string -> param array -> unit = ""
+external executeCommands : string -> param array -> unit = "executeCommands"
   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
 
 let f a b c = executeCommands "hi" [| a; b; c |]
@@ -517,7 +541,7 @@ let f a b c = executeCommands "hi" [| a; b; c |]
 ```reasonml
 type param;
 [@mel.scope "commands"] [@mel.module "vscode"] [@mel.variadic]
-external executeCommands: (string, array(param)) => unit;
+external executeCommands: (string, array(param)) => unit = "executeCommands";
 
 let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
 ```
@@ -976,7 +1000,14 @@ let _ = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
 ```reasonml
 external padLeft:
-  (string, [@mel.unwrap] [ | `Str(string) | `Int(int)]) => string =
+  (
+    string,
+    [@mel.unwrap] [
+      | `Str(string)
+      | `Int(int)
+    ]
+  ) =>
+  string =
   "padLeft";
 
 let _ = padLeft("Hello World", `Int(4));
@@ -1014,7 +1045,7 @@ If the values are strings, we can use the `mel.string` attribute:
 
 ```ocaml
 external read_file_sync :
-  name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   [@@mel.module "fs"]
 
 let _ = read_file_sync ~name:"xx.txt" `ascii
@@ -1022,7 +1053,14 @@ let _ = read_file_sync ~name:"xx.txt" `ascii
 ```reasonml
 [@mel.module "fs"]
 external read_file_sync:
-  (~name: string, [@mel.string] [ | `utf8 | `ascii]) => string =
+  (
+    ~name: string,
+    [
+      | `utf8
+      | `ascii
+    ]
+  ) =>
+  string =
   "readFileSync";
 
 let _ = read_file_sync(~name="xx.txt", `ascii);
@@ -1107,7 +1145,15 @@ let value = test_int_type `on_open
 ```
 ```reasonml
 external test_int_type:
-  ([@mel.int] [ | `on_closed | [@mel.as 20] `on_open | `in_bin]) => int =
+  (
+  [@mel.int]
+  [
+    | `on_closed
+    | [@mel.as 20] `on_open
+    | `in_bin
+  ]
+  ) =>
+  int =
   "testIntType";
 
 let value = test_int_type(`on_open);
@@ -1139,7 +1185,7 @@ external on :
   [@@mel.send]
 
 let register rl =
-  rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
+  rl |. on (`close (fun _event -> ())) |. on (`line (fun line -> Js.log line))
 ```
 ```reasonml
 type readline;
@@ -1148,13 +1194,16 @@ type readline;
 external on:
   (
     readline,
-    [@mel.string] [ | `close(unit => unit) | `line(string => unit)]
+    [@mel.string] [
+      | `close(unit => unit)
+      | `line(string => unit)
+    ]
   ) =>
   readline =
   "on";
 
 let register = rl =>
-  rl->(on(`close(event => ())))->(on(`line(line => Js.log(line))));
+  rl->(on(`close(_event => ())))->(on(`line(line => Js.log(line))));
 ```
 
 This generates:
@@ -1328,6 +1377,9 @@ except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
+<!--#prelude#
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
@@ -1376,6 +1428,9 @@ external map:
 
 Now if we try to call `map` with a regular `add` function:
 
+<!--#prelude#
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add

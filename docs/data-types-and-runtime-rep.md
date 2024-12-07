@@ -212,6 +212,10 @@ JavaScript arrays by Melange.
 
 For example, some code like this:
 
+<!--#prelude#
+let foo, bar = 1, 2
+module React = struct let useEffect2 _ _ = () end
+-->
 ```ocaml
 let () = React.useEffect2 (fun () -> None) (foo, bar)
 ```
