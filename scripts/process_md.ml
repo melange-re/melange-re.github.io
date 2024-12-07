@@ -9,17 +9,15 @@ let print_re = print_with Reason_toolchain.RE.print_implementation_with_comments
 
 (* Remove the first and second to last lines of a string and dedent every line *)
 let designature s =
-  match String.split_on_char '\n' s with
-  | [] | [ _ ] | [ _; _ ] -> ""
-  | _ :: rest -> (
-      match List.rev rest with
-      | [] | [ _ ] -> ""
-      | last :: _ :: rest ->
-          let dedent s =
-            let n = String.length s in
-            if n <= 2 then "" else String.sub s 2 (n - 2)
-          in
-          last :: rest |> List.map dedent |> List.rev |> String.concat "\n")
+  let dedent s =
+    let n = String.length s in
+    if n <= 2 then "" else String.sub s 2 (n - 2)
+  in
+  let lines = String.split_on_char '\n' s in
+  let len = List.length lines in
+  lines
+  |> List.filteri (fun i _ -> i <> 0 && i <> len - 2)
+  |> List.map dedent |> String.concat "\n"
 
 let to_re str =
   let is_type_signature, str =
