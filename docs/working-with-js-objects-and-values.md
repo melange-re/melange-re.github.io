@@ -110,7 +110,10 @@ type t = {
   bar: string,
 };
 
-let value = {foo: 7, bar: "baz"};
+let value = {
+  foo: 7,
+  bar: "baz",
+};
 ```
 
 And its JavaScript generated code:
@@ -142,7 +145,10 @@ let john = [%mel.obj { name = "john"; age = 99 }]
 let t = john##name
 ```
 ```reasonml
-let john = {"name": "john", "age": 99};
+let john = {
+  "name": "john",
+  "age": 99,
+};
 let t = john##name;
 ```
 
@@ -175,8 +181,16 @@ let two = name_extended [%mel.obj { name = "jane"; address = "1 infinite loop" }
 ```reasonml
 let name_extended = obj => obj##name ++ " wayne";
 
-let one = name_extended({"name": "john", "age": 99});
-let two = name_extended({"name": "jane", "address": "1 infinite loop"});
+let one =
+  name_extended({
+    "name": "john",
+    "age": 99,
+  });
+let two =
+  name_extended({
+    "name": "jane",
+    "address": "1 infinite loop",
+  });
 ```
 
 To read more about objects and polymorphism we recommend checking the [OCaml
@@ -188,7 +202,7 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 We have already explored one approach for creating JavaScript object literals by
 using [`Js.t` values and the `mel.obj` extension](#using-js-t-objects).
 
-Melange additionally offers the `mel.obj` attribute, which can be used in
+Melange additionally offers the `@mel.obj` attribute, which can be used in
 combination with external functions to create JavaScript objects. When these
 functions are called, they generate objects with fields corresponding to the
 labeled arguments of the function.
@@ -201,47 +215,44 @@ optional keys are emitted at runtime.
 For example, assuming we need to bind to a JavaScript object like this:
 
 ```js
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: () => console.log("Home"),
-  // options: ...
+let place = {
+  name: "Boring"
+  type: "city",
+  greeting: () => console.log("Howdy"),
+  // attractions: ...
 };
 ```
 
-The first three fields are required and the `options` field is optional. You can
-declare a binding function like:
+The first three fields are required and the `attractions` field is optional. You
+can declare a binding function like this:
 
 ```ocaml
-external route :
+external makePlace :
+  name:string ->
   _type:string ->
-  path:string ->
-  action:(string list -> unit) ->
-  ?options:< .. > ->
+  greeting:(unit -> unit) ->
+  ?attractions:string array ->
   unit ->
   _ = ""
-  [@@mel.obj]
+[@@mel.obj]
 ```
 ```reasonml
 [@mel.obj]
-external route:
+external makePlace:
   (
+    ~name: string,
     ~_type: string,
-    ~path: string,
-    ~action: list(string) => unit,
-    ~options: {..}=?,
+    ~greeting: unit => unit,
+    ~attractions: array(string)=?,
     unit
   ) =>
   _;
 ```
 
-Note that the empty string at the end of the function is used to make it
-syntactically valid. The value of this string is ignored by the compiler.
-
-Since there is an optional argument `options`, an additional unlabeled argument
-of type `unit` is included after it. It allows to omit the optional argument on
-function application. More information about labeled optional arguments can be
-found in the [OCaml
+Since there is an optional argument `attractions`, an additional unlabeled
+argument of type `unit` is included after it. It allows to omit the optional
+argument on function application. More information about labeled optional
+arguments can be found in the [OCaml
 manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The return type of the function should be left unspecified using the wildcard
@@ -252,31 +263,77 @@ In the route function, the `_type` argument starts with an underscore. When
 binding to JavaScript objects with fields that are reserved keywords in OCaml,
 Melange allows the use of an underscore prefix for the labeled arguments. The
 resulting JavaScript object will have the underscore removed from the field
-names. This is only required for the `mel.obj` attribute, while for other cases,
-the `mel.as` attribute can be used to rename fields.
+names. This is only required for the `@mel.obj` attribute, while for other
+cases, the `@mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
+<!--#prelude#
+external makePlace :
+  name:string ->
+  _type:string ->
+  greeting:(unit -> unit) ->
+  ?attractions:string array ->
+  unit ->
+  _ = ""
+[@@mel.obj]
+-->
 ```ocaml
-let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+let place1 =
+  makePlace ~name:"Boring" ~_type:"city" ~greeting:(fun () -> Js.log "Howdy") ()
+
+let place2 =
+  makePlace ~name:"Singapore" ~_type:"city state"
+    ~greeting:(fun () -> Js.log "Hello lah")
+    ~attractions:[| "Buddha Tooth"; "Baba House"; "Night Safari" |]
+    ()
 ```
 ```reasonml
-let homeRoute =
-  route(~_type="GET", ~path="/", ~action=_ => Js.log("Home"), ());
+let place1 =
+  makePlace(
+    ~name="Boring",
+    ~_type="city",
+    ~greeting=() => Js.log("Howdy"),
+    (),
+  );
+
+let place2 =
+  makePlace(
+    ~name="Singapore",
+    ~_type="city state",
+    ~greeting=() => Js.log("Hello lah"),
+    ~attractions=[|"Buddha Tooth", "Baba House", "Night Safari"|],
+    (),
+  );
 ```
 
-We get the following JavaScript, which does not include the `options` field
-since its argument wasn’t present:
+We get the following JavaScript:
 
 ```javascript
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: (function (param) {
-      console.log("Home");
+const place1 = {
+  name: "Boring",
+  type: "city",
+  greeting: (function (param) {
+      console.log("Howdy");
     })
 };
+
+const place2 = {
+  name: "Singapore",
+  type: "city state",
+  greeting: (function (param) {
+      console.log("Hello lah");
+    }),
+  attractions: [
+    "Buddha Tooth",
+    "Baba House",
+    "Night Safari"
+  ]
+};
 ```
+
+Not that `place1` object doesn't include the `attractions` field since its
+argument wasn’t present.
 
 #### Bind to object properties
 
@@ -509,7 +566,7 @@ can do:
 
 ```ocaml
 type param
-external executeCommands : string -> param array -> unit = ""
+external executeCommands : string -> param array -> unit = "executeCommands"
   [@@mel.scope "commands"] [@@mel.module "vscode"] [@@mel.variadic]
 
 let f a b c = executeCommands "hi" [| a; b; c |]
@@ -517,7 +574,7 @@ let f a b c = executeCommands "hi" [| a; b; c |]
 ```reasonml
 type param;
 [@mel.scope "commands"] [@mel.module "vscode"] [@mel.variadic]
-external executeCommands: (string, array(param)) => unit;
+external executeCommands: (string, array(param)) => unit = "executeCommands";
 
 let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
 ```
@@ -976,7 +1033,14 @@ let _ = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
 ```reasonml
 external padLeft:
-  (string, [@mel.unwrap] [ | `Str(string) | `Int(int)]) => string =
+  (
+    string,
+    [@mel.unwrap] [
+      | `Str(string)
+      | `Int(int)
+    ]
+  ) =>
+  string =
   "padLeft";
 
 let _ = padLeft("Hello World", `Int(4));
@@ -1014,7 +1078,7 @@ If the values are strings, we can use the `mel.string` attribute:
 
 ```ocaml
 external read_file_sync :
-  name:string -> ([ `utf8 | `ascii ][@mel.string]) -> string = "readFileSync"
+  name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   [@@mel.module "fs"]
 
 let _ = read_file_sync ~name:"xx.txt" `ascii
@@ -1022,7 +1086,14 @@ let _ = read_file_sync ~name:"xx.txt" `ascii
 ```reasonml
 [@mel.module "fs"]
 external read_file_sync:
-  (~name: string, [@mel.string] [ | `utf8 | `ascii]) => string =
+  (
+    ~name: string,
+    [
+      | `utf8
+      | `ascii
+    ]
+  ) =>
+  string =
   "readFileSync";
 
 let _ = read_file_sync(~name="xx.txt", `ascii);
@@ -1107,7 +1178,15 @@ let value = test_int_type `on_open
 ```
 ```reasonml
 external test_int_type:
-  ([@mel.int] [ | `on_closed | [@mel.as 20] `on_open | `in_bin]) => int =
+  (
+  [@mel.int]
+  [
+    | `on_closed
+    | [@mel.as 20] `on_open
+    | `in_bin
+  ]
+  ) =>
+  int =
   "testIntType";
 
 let value = test_int_type(`on_open);
@@ -1139,7 +1218,7 @@ external on :
   [@@mel.send]
 
 let register rl =
-  rl |. on (`close (fun event -> ())) |. on (`line (fun line -> Js.log line))
+  rl |. on (`close (fun _event -> ())) |. on (`line (fun line -> Js.log line))
 ```
 ```reasonml
 type readline;
@@ -1148,13 +1227,16 @@ type readline;
 external on:
   (
     readline,
-    [@mel.string] [ | `close(unit => unit) | `line(string => unit)]
+    [@mel.string] [
+      | `close(unit => unit)
+      | `line(string => unit)
+    ]
   ) =>
   readline =
   "on";
 
 let register = rl =>
-  rl->(on(`close(event => ())))->(on(`line(line => Js.log(line))));
+  rl->(on(`close(_event => ())))->(on(`line(line => Js.log(line))));
 ```
 
 This generates:
@@ -1328,6 +1410,10 @@ except the former’s arity is guaranteed to be N while the latter is unknown.
 
 If we try now to call `map` using `add`:
 
+<!--#prelude#
+(* not expected to type check *)
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add
@@ -1376,6 +1462,9 @@ external map:
 
 Now if we try to call `map` with a regular `add` function:
 
+<!--#prelude#
+external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@mel.uncurry]) -> 'c array = "map"
+-->
 ```ocaml
 let add x y = x + y
 let _ = map [||] [||] add

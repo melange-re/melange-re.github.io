@@ -300,6 +300,9 @@ let square = x => x * x;
 
 We are using it like:
 
+<!--#prelude#
+let square x = x * x
+-->
 ```ocaml
 let ten = succ (square 3)
 ```
@@ -311,6 +314,9 @@ The pipe operator allows to write the computation for `ten` in left-to-right
 order, as [it has left
 associativity](https://v2.ocaml.org/manual/expr.html#ss:precedence-and-associativity):
 
+<!--#prelude#
+let square x = x * x
+-->
 ```ocaml
 let ten = 3 |> square |> succ
 ```
@@ -322,6 +328,9 @@ When working with functions that can take multiple arguments, the pipe operator
 works best when the functions take the data we are processing as the last
 argument. For example:
 
+<!--#prelude#
+let square x = x * x
+-->
 ```ocaml
 let sum = List.fold_left ( + ) 0
 
@@ -349,6 +358,10 @@ language.
 However, there are some limitations when using data-last when it comes to error
 handling. In the given example, if we mistakenly used the wrong function:
 
+<!--#prelude#
+(* not expected to type check *)
+let sum = List.fold_left ( + ) 0
+-->
 ```ocaml
 let sum_sq =
   [ 1; 2; 3 ]
@@ -402,6 +415,10 @@ with the pipe first operator.
 For example, we can rewrite the example above using `Belt.List.map` and the pipe
 first operator:
 
+<!--#prelude#
+let sum = List.fold_left ( + ) 0
+let square x = x * x
+-->
 ```ocaml
 let sum_sq =
   [ 1; 2; 3 ]
@@ -415,6 +432,11 @@ let sum_sq = [1, 2, 3]->(Belt.List.map(square))->sum;
 We can see the difference on the error we get if the wrong function is passed to
 `Belt.List.map`:
 
+<!--#prelude#
+(* not expected to type check *)
+let sum = List.fold_left ( + ) 0
+let square x = x * x
+-->
 ```ocaml
 let sum_sq =
   [ 1; 2; 3 ]
