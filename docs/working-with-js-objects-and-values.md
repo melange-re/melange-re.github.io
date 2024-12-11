@@ -202,7 +202,7 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 We have already explored one approach for creating JavaScript object literals by
 using [`Js.t` values and the `mel.obj` extension](#using-js-t-objects).
 
-Melange additionally offers the `mel.obj` attribute, which can be used in
+Melange additionally offers the `@mel.obj` attribute, which can be used in
 combination with external functions to create JavaScript objects. When these
 functions are called, they generate objects with fields corresponding to the
 labeled arguments of the function.
@@ -215,47 +215,44 @@ optional keys are emitted at runtime.
 For example, assuming we need to bind to a JavaScript object like this:
 
 ```js
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: () => console.log("Home"),
-  // options: ...
+let place = {
+  name: "Boring"
+  type: "city",
+  greeting: () => console.log("Howdy"),
+  // attractions: ...
 };
 ```
 
-The first three fields are required and the `options` field is optional. You can
-declare a binding function like:
+The first three fields are required and the `attractions` field is optional. You
+can declare a binding function like this:
 
 ```ocaml
-external route :
+external makePlace :
+  name:string ->
   _type:string ->
-  path:string ->
-  action:(string list -> unit) ->
-  ?options:'a ->
+  greeting:(unit -> unit) ->
+  ?attractions:string array ->
   unit ->
-  'b = ""
-  [@@mel.obj]
+  _ = ""
+[@@mel.obj]
 ```
 ```reasonml
 [@mel.obj]
-external route:
+external makePlace:
   (
+    ~name: string,
     ~_type: string,
-    ~path: string,
-    ~action: list(string) => unit,
-    ~options: 'a=?,
+    ~greeting: unit => unit,
+    ~attractions: array(string)=?,
     unit
   ) =>
-  'b;
+  _;
 ```
 
-Note that the empty string at the end of the function is used to make it
-syntactically valid. The value of this string is ignored by the compiler.
-
-Since there is an optional argument `options`, an additional unlabeled argument
-of type `unit` is included after it. It allows to omit the optional argument on
-function application. More information about labeled optional arguments can be
-found in the [OCaml
+Since there is an optional argument `attractions`, an additional unlabeled
+argument of type `unit` is included after it. It allows to omit the optional
+argument on function application. More information about labeled optional
+arguments can be found in the [OCaml
 manual](https://v2.ocaml.org/manual/lablexamples.html#s:optional-arguments).
 
 The return type of the function should be left unspecified using the wildcard
@@ -266,41 +263,77 @@ In the route function, the `_type` argument starts with an underscore. When
 binding to JavaScript objects with fields that are reserved keywords in OCaml,
 Melange allows the use of an underscore prefix for the labeled arguments. The
 resulting JavaScript object will have the underscore removed from the field
-names. This is only required for the `mel.obj` attribute, while for other cases,
-the `mel.as` attribute can be used to rename fields.
+names. This is only required for the `@mel.obj` attribute, while for other
+cases, the `@mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
 <!--#prelude#
-external route :
+external makePlace :
+  name:string ->
   _type:string ->
-  path:string ->
-  action:(string list -> unit) ->
-  ?options:'a ->
+  greeting:(unit -> unit) ->
+  ?attractions:string array ->
   unit ->
-  'b = ""
-  [@@mel.obj]
+  _ = ""
+[@@mel.obj]
 -->
 ```ocaml
-let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+let place1 =
+  makePlace ~name:"Boring" ~_type:"city" ~greeting:(fun () -> Js.log "Howdy") ()
+
+let place2 =
+  makePlace ~name:"Singapore" ~_type:"city state"
+    ~greeting:(fun () -> Js.log "Hello lah")
+    ~attractions:[| "Buddha Tooth"; "Baba House"; "Night Safari" |]
+    ()
 ```
 ```reasonml
-let homeRoute =
-  route(~_type="GET", ~path="/", ~action=_ => Js.log("Home"), ());
+let place1 =
+  makePlace(
+    ~name="Boring",
+    ~_type="city",
+    ~greeting=() => Js.log("Howdy"),
+    (),
+  );
+
+let place2 =
+  makePlace(
+    ~name="Singapore",
+    ~_type="city state",
+    ~greeting=() => Js.log("Hello lah"),
+    ~attractions=[|"Buddha Tooth", "Baba House", "Night Safari"|],
+    (),
+  );
 ```
 
-We get the following JavaScript, which does not include the `options` field
-since its argument wasn’t present:
+We get the following JavaScript:
 
 ```javascript
-var homeRoute = {
-  type: "GET",
-  path: "/",
-  action: (function (param) {
-      console.log("Home");
+const place1 = {
+  name: "Boring",
+  type: "city",
+  greeting: (function (param) {
+      console.log("Howdy");
     })
 };
+
+const place2 = {
+  name: "Singapore",
+  type: "city state",
+  greeting: (function (param) {
+      console.log("Hello lah");
+    }),
+  attractions: [
+    "Buddha Tooth",
+    "Baba House",
+    "Night Safari"
+  ]
+};
 ```
+
+Not that `place1` object doesn't include the `attractions` field since its
+argument wasn’t present.
 
 #### Bind to object properties
 

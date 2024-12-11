@@ -414,29 +414,36 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
-  > external route :
+  > external makePlace :
+  >   name:string ->
   >   _type:string ->
-  >   path:string ->
-  >   action:(string list -> unit) ->
-  >   ?options:'a ->
+  >   greeting:(unit -> unit) ->
+  >   ?attractions:string array ->
   >   unit ->
-  >   'b = ""
-  >   [@@mel.obj]
+  >   _ = ""
+  > [@@mel.obj]
   > 
-  > let homeRoute = route ~_type:"GET" ~path:"/" ~action:(fun _ -> Js.log "Home") ()
+  > let place1 =
+  >   makePlace ~name:"Boring" ~_type:"city" ~greeting:(fun () -> Js.log "Howdy") ()
+  > 
+  > let place2 =
+  >   makePlace ~name:"Singapore" ~_type:"city state"
+  >     ~greeting:(fun () -> Js.log "Hello lah")
+  >     ~attractions:[| "Buddha Tooth"; "Baba House"; "Night Safari" |]
+  >     ()
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external route :
+  > external makePlace :
+  >   name:string ->
   >   _type:string ->
-  >   path:string ->
-  >   action:(string list -> unit) ->
-  >   ?options:'a ->
+  >   greeting:(unit -> unit) ->
+  >   ?attractions:string array ->
   >   unit ->
-  >   'b = ""
-  >   [@@mel.obj]
+  >   _ = ""
+  > [@@mel.obj]
   > EOF
 
   $ dune build @melange
