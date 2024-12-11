@@ -1378,6 +1378,7 @@ except the former’s arity is guaranteed to be N while the latter is unknown.
 If we try now to call `map` using `add`:
 
 <!--#prelude#
+(* not expected to type check *)
 external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
 -->
 ```ocaml

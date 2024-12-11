@@ -359,6 +359,7 @@ However, there are some limitations when using data-last when it comes to error
 handling. In the given example, if we mistakenly used the wrong function:
 
 <!--#prelude#
+(* not expected to type check *)
 let sum = List.fold_left ( + ) 0
 -->
 ```ocaml
@@ -432,6 +433,7 @@ We can see the difference on the error we get if the wrong function is passed to
 `Belt.List.map`:
 
 <!--#prelude#
+(* not expected to type check *)
 let sum = List.fold_left ( + ) 0
 let square x = x * x
 -->

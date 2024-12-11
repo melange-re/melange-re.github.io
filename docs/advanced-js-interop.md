@@ -127,6 +127,7 @@ type action =
 This will generate a couple of functions with the following types:
 
 <!--#prelude#
+(* type signature *)
 type action
 -->
 ```ocaml
@@ -175,6 +176,7 @@ to hide the JavaScript runtime representation. It will generate functions with
 the following types:
 
 <!--#prelude#
+(* type signature *)
 type action
 type abs_action
 -->
@@ -225,6 +227,7 @@ type action = [
 Akin to the variant example, the following two functions will be generated:
 
 <!--#prelude#
+(* type signature *)
 type action
 -->
 ```ocaml

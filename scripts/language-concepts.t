@@ -16,6 +16,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* not expected to type check *)
   > let sum = List.fold_left ( + ) 0
   > let square x = x * x
   > 
@@ -26,8 +27,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 7, characters 19-29:
-  7 |   |. Belt.List.map String.cat
+  File "input.ml", line 8, characters 19-29:
+  8 |   |. Belt.List.map String.cat
                          ^^^^^^^^^^
   Error: This expression has type string -> string -> string
          but an expression was expected of type int -> 'a
@@ -49,6 +50,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* not expected to type check *)
   > let sum = List.fold_left ( + ) 0
   > 
   > let sum_sq =
@@ -58,8 +60,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 4-5:
-  5 |   [ 1; 2; 3 ]
+  File "input.ml", line 6, characters 4-5:
+  6 |   [ 1; 2; 3 ]
           ^
   Error: This expression has type int but an expression was expected of type
            string

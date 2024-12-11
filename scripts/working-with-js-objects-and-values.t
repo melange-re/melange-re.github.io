@@ -69,6 +69,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* not expected to type check *)
   > external map : 'a array -> 'b array -> (('a -> 'b -> 'c)[@u]) -> 'c array = "map"
   > 
   > let add x y = x + y
@@ -76,8 +77,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 22-25:
-  5 | let _ = map [||] [||] add
+  File "input.ml", line 6, characters 22-25:
+  6 | let _ = map [||] [||] add
                             ^^^
   Error: This expression has type int -> int -> int
          but an expression was expected of type ('a -> 'b -> 'c [@u])

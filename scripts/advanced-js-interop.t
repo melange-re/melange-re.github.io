@@ -160,6 +160,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* type signature *)
   > type action
   > 
   > val actionToJs : action -> string
@@ -168,8 +169,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 0-33:
-  4 | val actionToJs : action -> string
+  File "input.ml", line 5, characters 0-33:
+  5 | val actionToJs : action -> string
       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   Error: Value declarations are only allowed in signatures
   [1]
@@ -187,6 +188,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* type signature *)
   > type action
   > type abs_action
   > 
@@ -196,8 +198,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 5, characters 0-37:
-  5 | val actionToJs : action -> abs_action
+  File "input.ml", line 6, characters 0-37:
+  6 | val actionToJs : action -> abs_action
       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   Error: Value declarations are only allowed in signatures
   [1]
@@ -214,6 +216,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > 
+  > (* type signature *)
   > type action
   > 
   > val actionToJs : action -> int
@@ -222,8 +225,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 4, characters 0-30:
-  4 | val actionToJs : action -> int
+  File "input.ml", line 5, characters 0-30:
+  5 | val actionToJs : action -> int
       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   Error: Value declarations are only allowed in signatures
   [1]
