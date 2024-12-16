@@ -7,14 +7,33 @@ let print_with f structureAndComments =
 let parse_ml = parse_with Reason_toolchain.ML.implementation_with_comments
 let print_re = print_with Reason_toolchain.RE.print_implementation_with_comments
 
+(* Remove the first and second to last lines of a string and dedent every line *)
+let designature s =
+  let dedent s =
+    let n = String.length s in
+    if n <= 2 then "" else String.sub s 2 (n - 2)
+  in
+  let lines = String.split_on_char '\n' s in
+  let len = List.length lines in
+  lines
+  |> List.filteri (fun i _ -> i <> 0 && i <> len - 2)
+  |> List.map dedent |> String.concat "\n"
+
 let to_re str =
+  let is_type_signature, str =
+    (* assume that any snippet starting with "val" is a partial type signature *)
+    if String.starts_with str ~prefix:"val " then
+      (true, "module type _FAKE_  = sig " ^ str ^ " end")
+    else (false, str)
+  in
   try
     let parsed_ast = parse_ml str in
-    print_re parsed_ast
+    let output = print_re parsed_ast in
+    if is_type_signature then designature output else output
   with _ ->
     failwith ("Failed to convert OCaml snippet to Reason syntax: " ^ str)
 
-let remove_last_endline s =
+let remove_last_newline s =
   let n = String.length s in
   if n > 0 && s.[n - 1] = '\n' then String.sub s 0 (n - 1) else s
 
@@ -31,7 +50,7 @@ let insert_reason_blocks doc =
             let ocaml_code_str =
               String.concat "\n" (List.map Block_line.to_string ocaml_code)
             in
-            let reason_code_str = remove_last_endline (to_re ocaml_code_str) in
+            let reason_code_str = remove_last_newline (to_re ocaml_code_str) in
             let reason_code = Block_line.list_of_string reason_code_str in
             let cb =
               Block.Code_block.make ~layout ~info_string:reason_info reason_code
@@ -50,12 +69,10 @@ let cmark_to_commonmark : strict:bool -> string -> string =
   let processed = insert_reason_blocks doc in
   Cmarkit_commonmark.of_doc processed
 
-let maybe_read_line () = try Some (read_line ()) with End_of_file -> None
-
 let rec loop acc =
-  match maybe_read_line () with
-  | Some line -> loop (line :: acc)
-  | None -> List.rev acc
+  match read_line () with
+  | exception End_of_file -> List.rev acc
+  | line -> loop (line :: acc)
 
 let input = String.concat "\n" (loop [])
 let () = print_endline (cmark_to_commonmark ~strict:false input)

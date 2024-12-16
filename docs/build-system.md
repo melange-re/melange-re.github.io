@@ -160,6 +160,9 @@ application. In the root folder, create another `dune` file:
   And an <code>app.re</code> file:
 </div>
 
+<!--#prelude#
+module Lib = struct let name = "" end
+-->
 ```ocaml
 let () = Js.log Lib.name
 ```
