@@ -216,7 +216,7 @@ For example, assuming we need to bind to a JavaScript object like this:
 
 ```js
 let place = {
-  name: "Boring"
+  name: "Boring, Oregon"
   type: "city",
   greeting: () => console.log("Howdy"),
   // attractions: ...
@@ -259,10 +259,10 @@ The return type of the function should be left unspecified using the wildcard
 type `_`. Melange will automatically infer the type of the resulting JavaScript
 object.
 
-In the route function, the `_type` argument starts with an underscore. When
-binding to JavaScript objects with fields that are reserved keywords in OCaml,
-Melange allows the use of an underscore prefix for the labeled arguments. The
-resulting JavaScript object will have the underscore removed from the field
+In the `makePlace` function, the `_type` argument starts with an underscore.
+When binding to JavaScript objects with fields that are reserved keywords in
+OCaml, Melange allows the use of an underscore prefix for the labeled arguments.
+The resulting JavaScript object will have the underscore removed from the field
 names. This is only required for the `@mel.obj` attribute, while for other
 cases, the `@mel.as` attribute can be used to rename fields.
 
@@ -280,7 +280,9 @@ external makePlace :
 -->
 ```ocaml
 let place1 =
-  makePlace ~name:"Boring" ~_type:"city" ~greeting:(fun () -> Js.log "Howdy") ()
+  makePlace ~name:"Boring, Oregon" ~_type:"city"
+    ~greeting:(fun () -> Js.log "Howdy")
+    ()
 
 let place2 =
   makePlace ~name:"Singapore" ~_type:"city state"
@@ -291,7 +293,7 @@ let place2 =
 ```reasonml
 let place1 =
   makePlace(
-    ~name="Boring",
+    ~name="Boring, Oregon",
     ~_type="city",
     ~greeting=() => Js.log("Howdy"),
     (),

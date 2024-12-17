@@ -424,7 +424,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > [@@mel.obj]
   > 
   > let place1 =
-  >   makePlace ~name:"Boring" ~_type:"city" ~greeting:(fun () -> Js.log "Howdy") ()
+  >   makePlace ~name:"Boring, Oregon" ~_type:"city"
+  >     ~greeting:(fun () -> Js.log "Howdy")
+  >     ()
   > 
   > let place2 =
   >   makePlace ~name:"Singapore" ~_type:"city state"
