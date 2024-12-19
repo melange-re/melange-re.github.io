@@ -51,9 +51,9 @@ let john_name = john.name;
 This is the generated JavaScript:
 
 ```js
-var MySchool = require("MySchool");
+import * as MySchool from "MySchool";
 
-var john_name = MySchool.john.name;
+const john_name = MySchool.john.name;
 ```
 
 External functions are documented in [a previous
@@ -82,14 +82,14 @@ let action = {type_: "ADD_USER"};
 Which generates the JavaScript code:
 
 ```js
-var action = {
+const action = {
   type: "ADD_USER"
 };
 ```
 
 This is useful to map to JavaScript attribute names that cannot be expressed in
 Melange, for example, where the JavaScript name we want to generate is a
-[reserved keyword](https://v2.ocaml.org/manual/lex.html#sss:keywords).
+[reserved keyword in OCaml](https://v2.ocaml.org/manual/lex.html#sss:keywords).
 
 It is also possible to map a Melange record to a JavaScript array by passing
 indices to the `mel.as` decorator:
@@ -119,7 +119,7 @@ let value = {
 And its JavaScript generated code:
 
 ```js
-var value = [
+const value = [
   7,
   "baz"
 ];
@@ -155,12 +155,12 @@ let t = john##name;
 Which generates:
 
 ```js
-var john = {
+const john = {
   name: "john",
   age: 99
 };
 
-var t = john.name;
+const t = john.name;
 ```
 
 Note that object types allow for some flexibility that the record types do not
@@ -202,7 +202,7 @@ manual](https://v2.ocaml.org/manual/objectexamples.html).
 We have already explored one approach for creating JavaScript object literals by
 using [`Js.t` values and the `mel.obj` extension](#using-js-t-objects).
 
-Melange additionally offers the `@mel.obj` attribute, which can be used in
+Melange additionally offers the `mel.obj` attribute, which can be used in
 combination with external functions to create JavaScript objects. When these
 functions are called, they generate objects with fields corresponding to the
 labeled arguments of the function.
@@ -263,8 +263,8 @@ In the `makePlace` function, the `_type` argument starts with an underscore.
 When binding to JavaScript objects with fields that are reserved keywords in
 OCaml, Melange allows the use of an underscore prefix for the labeled arguments.
 The resulting JavaScript object will have the underscore removed from the field
-names. This is only required for the `@mel.obj` attribute, while for other
-cases, the `@mel.as` attribute can be used to rename fields.
+names. This is only required for the `mel.obj` attribute, while for other cases,
+the `mel.as` attribute can be used to rename fields.
 
 If we call the function like this:
 
