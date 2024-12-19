@@ -51,9 +51,9 @@ let john_name = john.name;
 This is the generated JavaScript:
 
 ```js
-var MySchool = require("MySchool");
+import * as MySchool from "MySchool";
 
-var john_name = MySchool.john.name;
+const john_name = MySchool.john.name;
 ```
 
 External functions are documented in [a previous
@@ -82,14 +82,14 @@ let action = {type_: "ADD_USER"};
 Which generates the JavaScript code:
 
 ```js
-var action = {
+const action = {
   type: "ADD_USER"
 };
 ```
 
 This is useful to map to JavaScript attribute names that cannot be expressed in
 Melange, for example, where the JavaScript name we want to generate is a
-[reserved keyword](https://v2.ocaml.org/manual/lex.html#sss:keywords).
+[reserved keyword in OCaml](https://v2.ocaml.org/manual/lex.html#sss:keywords).
 
 It is also possible to map a Melange record to a JavaScript array by passing
 indices to the `mel.as` decorator:
@@ -119,7 +119,7 @@ let value = {
 And its JavaScript generated code:
 
 ```js
-var value = [
+const value = [
   7,
   "baz"
 ];
@@ -155,12 +155,12 @@ let t = john##name;
 Which generates:
 
 ```js
-var john = {
+const john = {
   name: "john",
   age: 99
 };
 
-var t = john.name;
+const t = john.name;
 ```
 
 Note that object types allow for some flexibility that the record types do not
