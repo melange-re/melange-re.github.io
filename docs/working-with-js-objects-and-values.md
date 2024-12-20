@@ -51,9 +51,9 @@ let john_name = john.name;
 This is the generated JavaScript:
 
 ```js
-var MySchool = require("MySchool");
+import * as MySchool from "MySchool";
 
-var john_name = MySchool.john.name;
+const john_name = MySchool.john.name;
 ```
 
 External functions are documented in [a previous
@@ -82,14 +82,14 @@ let action = {type_: "ADD_USER"};
 Which generates the JavaScript code:
 
 ```js
-var action = {
+const action = {
   type: "ADD_USER"
 };
 ```
 
 This is useful to map to JavaScript attribute names that cannot be expressed in
 Melange, for example, where the JavaScript name we want to generate is a
-[reserved keyword](https://v2.ocaml.org/manual/lex.html#sss:keywords).
+[reserved keyword in OCaml](https://v2.ocaml.org/manual/lex.html#sss:keywords).
 
 It is also possible to map a Melange record to a JavaScript array by passing
 indices to the `mel.as` decorator:
@@ -119,7 +119,7 @@ let value = {
 And its JavaScript generated code:
 
 ```js
-var value = [
+const value = [
   7,
   "baz"
 ];
@@ -155,21 +155,21 @@ let t = john##name;
 Which generates:
 
 ```js
-var john = {
+const john = {
   name: "john",
   age: 99
 };
 
-var t = john.name;
+const t = john.name;
 ```
 
-Note that object types allow for some flexibility that the record types do not
-have. For example, an object type can be coerced to another with fewer values or
+Note that object types allow for some flexibility that record types do not have.
+For example, an object type can be coerced to another with fewer values or
 methods, while it is impossible to coerce a record type to another one with
 fewer fields. So different object types that share some methods can be mixed in
 a data structure where only their common methods are visible.
 
-To give an example, one can create a function that operates in all the object
+To give an example, one can create a function that operates on all the object
 types that include a field `name` that is of type string, e.g.:
 
 ```ocaml
@@ -370,7 +370,7 @@ let () = set_title(document, "melange");
 This generates:
 
 ```javascript
-var current = document.title;
+const current = document.title;
 document.title = "melange";
 ```
 
@@ -405,7 +405,7 @@ let () = {
 Which generates:
 
 ```js
-var i32arr = new Int32Array(3);
+const i32arr = new Int32Array(3);
 i32arr[0] = 42;
 console.log(i32arr[0]);
 ```
@@ -446,7 +446,7 @@ let date = create_date();
 Which generates:
 
 ```js
-var date = new Date();
+const date = new Date();
 ```
 
 You can chain `mel.new` and `mel.module` if the JavaScript class you want to
