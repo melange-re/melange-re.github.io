@@ -51,9 +51,9 @@ let john_name = john.name;
 This is the generated JavaScript:
 
 ```js
-var MySchool = require("MySchool");
+import * as MySchool from "MySchool";
 
-var john_name = MySchool.john.name;
+const john_name = MySchool.john.name;
 ```
 
 External functions are documented in [a previous
@@ -82,14 +82,14 @@ let action = {type_: "ADD_USER"};
 Which generates the JavaScript code:
 
 ```js
-var action = {
+const action = {
   type: "ADD_USER"
 };
 ```
 
 This is useful to map to JavaScript attribute names that cannot be expressed in
 Melange, for example, where the JavaScript name we want to generate is a
-[reserved keyword](https://v2.ocaml.org/manual/lex.html#sss:keywords).
+[reserved keyword in OCaml](https://v2.ocaml.org/manual/lex.html#sss:keywords).
 
 It is also possible to map a Melange record to a JavaScript array by passing
 indices to the `mel.as` decorator:
@@ -119,7 +119,7 @@ let value = {
 And its JavaScript generated code:
 
 ```js
-var value = [
+const value = [
   7,
   "baz"
 ];
@@ -155,21 +155,21 @@ let t = john##name;
 Which generates:
 
 ```js
-var john = {
+const john = {
   name: "john",
   age: 99
 };
 
-var t = john.name;
+const t = john.name;
 ```
 
-Note that object types allow for some flexibility that the record types do not
-have. For example, an object type can be coerced to another with fewer values or
+Note that object types allow for some flexibility that record types do not have.
+For example, an object type can be coerced to another with fewer values or
 methods, while it is impossible to coerce a record type to another one with
 fewer fields. So different object types that share some methods can be mixed in
 a data structure where only their common methods are visible.
 
-To give an example, one can create a function that operates in all the object
+To give an example, one can create a function that operates on all the object
 types that include a field `name` that is of type string, e.g.:
 
 ```ocaml
@@ -370,7 +370,7 @@ let () = set_title(document, "melange");
 This generates:
 
 ```javascript
-var current = document.title;
+const current = document.title;
 document.title = "melange";
 ```
 
@@ -405,7 +405,7 @@ let () = {
 Which generates:
 
 ```js
-var i32arr = new Int32Array(3);
+const i32arr = new Int32Array(3);
 i32arr[0] = 42;
 console.log(i32arr[0]);
 ```
@@ -446,7 +446,7 @@ let date = create_date();
 Which generates:
 
 ```js
-var date = new Date();
+const date = new Date();
 ```
 
 You can chain `mel.new` and `mel.module` if the JavaScript class you want to
@@ -466,8 +466,8 @@ let myBook = book();
 Which generates:
 
 ```js
-var Book = require("Book");
-var myBook = new Book();
+import * as Book from "Book";
+const myBook = new Book();
 ```
 
 ## Bind to JavaScript functions or values
@@ -505,9 +505,9 @@ let () = clearTimeout(id);
 Generates:
 
 ```javascript
-var id = setTimeout(function (param) {
+const id = setTimeout((function (param) {
   console.log("hello");
-}, 100);
+}), 100);
 
 clearTimeout(id);
 ```
@@ -519,20 +519,20 @@ Global bindings can also be applied to values:
 type document
 
 external document : document = "document"
-let document = document
+let doc = document
 ```
 ```reasonml
 /* Abstract type for `document` */
 type document;
 
 external document: document = "document";
-let document = document;
+let doc = document;
 ```
 
 Which generates:
 
 ```javascript
-var doc = document;
+const doc = document;
 ```
 
 ### Using functions from other JavaScript modules
@@ -552,8 +552,8 @@ let root = dirname("/User/github");
 Generates:
 
 ```js
-var Path = require("path");
-var root = Path.dirname("/User/github");
+import * as Path from "path";
+const root = Path.dirname("/User/github");
 ```
 
 ### Binding to properties inside a module or global
@@ -584,7 +584,7 @@ let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
 Which compiles to:
 
 ```javascript
-var Vscode = require("vscode");
+import * as Vscode from "vscode";
 
 function f(a, b, c) {
   Vscode.commands.executeCommands("hi", a, b, c);
@@ -616,13 +616,12 @@ let camera_type_back = back;
 Which generates:
 
 ```javascript
-var ExpoCamera = require("expo-camera");
+import * as ExpoCamera from "expo-camera";
 
-var camera_type_back = ExpoCamera.Camera.Constants.Type.back;
+const camera_type_back = ExpoCamera.Camera.Constants.Type.back;
 ```
 
-It can be used without `mel.module`, to created scoped bindings to global
-values:
+It can be used without `mel.module` to create scoped bindings to global values:
 
 ```ocaml
 external imul : int -> int -> int = "imul" [@@mel.scope "Math"]
@@ -638,7 +637,7 @@ let res = imul(1, 2);
 Which produces:
 
 ```javascript
-var res = Math.imul(1, 2);
+const res = Math.imul(1, 2);
 ```
 
 Or it can be used together with `mel.new`:
@@ -664,9 +663,9 @@ Which generates:
 
 
 ```javascript
-var DatGui = require("dat.gui");
+import * as DatGui from "dat.gui";
 
-var gui = new (DatGui.default.GUI)();
+const gui = new (DatGui.default.GUI)();
 ```
 
 ### Labeled arguments
@@ -711,7 +710,7 @@ let () = draw(~x=10, ~y=20, ());
 Generates:
 
 ```js
-var MyGame = require("MyGame");
+import * as MyGame from "MyGame";
 
 MyGame.draw(10, 20, true);
 MyGame.draw(10, 20, undefined);
@@ -720,11 +719,11 @@ MyGame.draw(10, 20, undefined);
 The generated JavaScript function is the same, but now the usage in Melange is
 much clearer.
 
-**Note**: in this particular case, a final param of type unit, `()` must be
-added after `border`, since `border` is an optional argument at the last
-position. Not having the last param `unit` would lead to a warning, which is
-explained in detail [in the OCaml
-documentation](https://ocaml.org/docs/labels#warning-this-optional-argument-cannot-be-erased).
+> **Note**: in this particular case, a final param of type unit, `()` must be
+> added after `border`, since `border` is an optional argument at the last
+> position. Not having the last param `unit` would lead to a warning, which is
+> explained in detail [in the OCaml
+> documentation](https://ocaml.org/docs/labels#warning-this-optional-argument-cannot-be-erased).
 
 Note that you can freely reorder the labeled arguments when applying the
 function on the Melange side. The generated code will maintain the original
@@ -746,7 +745,7 @@ let () = draw(~y=20, ~x=10, ());
 Generates:
 
 ```js
-var MyGame = require("MyGame");
+import * as MyGame from "MyGame";
 
 MyGame.draw(10, 20, undefined);
 MyGame.draw(10, 20, undefined);
@@ -785,7 +784,7 @@ let el = get_by_id(document, "my-id");
 Generates:
 
 ```js
-var el = document.getElementById("my-id");
+const el = document.getElementById("my-id");
 ```
 
 When using `mel.send`, the first argument will be the object that holds the
@@ -822,7 +821,7 @@ let el = get_by_id("my-id", document);
 Generates the same code as `mel.send`:
 
 ```js
-var el = document.getElementById("my-id");
+const el = document.getElementById("my-id");
 ```
 
 #### Chaining
@@ -871,7 +870,7 @@ let el = document->(get_by_id("my-id"))->(get_by_classname("my-class"));
 Will generate:
 
 ```javascript
-var el = document.getElementById("my-id").getElementsByClassName("my-class");
+const el = document.getElementById("my-id").getElementsByClassName("my-class");
 ```
 
 Now with pipe last operator `|>`:
@@ -904,7 +903,7 @@ let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
 Will generate the same JavaScript as the pipe first version:
 
 ```javascript
-var el = document.getElementById("my-id").getElementsByClassName("my-class");
+const el = document.getElementById("my-id").getElementsByClassName("my-class");
 ```
 
 ### Variadic function arguments
@@ -928,8 +927,8 @@ let v = join([|"a", "b"|]);
 Generates:
 
 ```js
-var Path = require("path");
-var v = Path.join("a", "b");
+import * as Path from "path";
+const v = Path.join("a", "b");
 ```
 
 If more dynamism is needed, there is a way to inject elements with different
@@ -960,9 +959,8 @@ let v = join([|Hide("a"), Hide(2)|]);
 Compiles to:
 
 ```javascript
-var Path = require("path");
-
-var v = Path.join("a", 2);
+import * as Path from "path";
+const v = Path.join("a", 2);
 ```
 
 ### Bind to a polymorphic function
@@ -1019,7 +1017,8 @@ certain requirements on the type it is applied to:
   variant](https://v2.ocaml.org/manual/polyvariant.html)
 - Its definition needs to be inlined
 - Each variant tag needs to have an argument
-- The variant type can not be opened (can’t use `>`)
+- The variant type cannot be opened ([can’t use
+  `>`](http://reasonmlhub.com/exploring-reasonml/ch_polymorphic-variants.html#upper-and-lower-bounds-for-polymorphic-variants))
 
 ```ocaml
 external padLeft:
@@ -1030,8 +1029,8 @@ external padLeft:
   -> string
   = "padLeft"
 
-let _ = padLeft "Hello World" (`Int 4)
-let _ = padLeft "Hello World" (`Str "Message from Melange: ")
+let s1 = padLeft "Hello World" (`Int 4)
+let s2 = padLeft "Hello World" (`Str "Message from Melange: ")
 ```
 ```reasonml
 external padLeft:
@@ -1045,22 +1044,22 @@ external padLeft:
   string =
   "padLeft";
 
-let _ = padLeft("Hello World", `Int(4));
-let _ = padLeft("Hello World", `Str("Message from Melange: "));
+let s1 = padLeft("Hello World", `Int(4));
+let s2 = padLeft("Hello World", `Str("Message from Melange: "));
 ```
 
 Which produces the following JavaScript:
 
 ```js
-padLeft("Hello World", 4);
-padLeft("Hello World", "Message from Melange: ");
+const s1 = padLeft("Hello World", 4);
+const s2 = padLeft("Hello World", "Message from Melange: ");
 ```
 
 As we saw in the [Non-shared data
 types](./data-types-and-runtime-rep.md#non-shared-data-types) section, we should
-rather avoid passing variants directly to the JavaScript side. By using
-`mel.unwrap` we get the best of both worlds: from Melange we can use variants,
-while JavaScript gets the raw values inside them.
+avoid passing variants directly to the JavaScript side. By using `mel.unwrap` we
+get the best of both worlds: from Melange we can use variants, while JavaScript
+gets the raw values inside them.
 
 ### Using polymorphic variants to bind to enums
 
@@ -1076,20 +1075,20 @@ not prevent consumers of the external function from calling it using values that
 are unsupported by the JavaScript function. Let’s see how we can use polymorphic
 variants to avoid runtime errors.
 
-If the values are strings, we can use the `mel.string` attribute:
+If the values are strings, we can directly use polymorphic variants:
 
 ```ocaml
 external read_file_sync :
-  name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
+  path:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   [@@mel.module "fs"]
 
-let _ = read_file_sync ~name:"xx.txt" `ascii
+let text = read_file_sync ~path:"xx.txt" `ascii
 ```
 ```reasonml
 [@mel.module "fs"]
 external read_file_sync:
   (
-    ~name: string,
+    ~path: string,
     [
       | `utf8
       | `ascii
@@ -1098,14 +1097,14 @@ external read_file_sync:
   string =
   "readFileSync";
 
-let _ = read_file_sync(~name="xx.txt", `ascii);
+let text = read_file_sync(~path="xx.txt", `ascii);
 ```
 
 Which generates:
 
 ```js
-var Fs = require("fs");
-Fs.readFileSync("xx.txt", "ascii");
+import * as Fs from "fs";
+const text = Fs.readFileSync("xx.txt", "ascii");
 ```
 
 This technique can be combined with the `mel.as` attribute to modify the strings
@@ -1119,7 +1118,7 @@ external document : document = "document"
 external get_by_id : document -> string -> Dom.element = "getElementById"
 [@@mel.send]
 external style : Dom.element -> style = "style" [@@mel.get]
-external transition_timing_function :
+external set_transition_timing_function :
   style ->
   ([ `ease
    | `easeIn [@mel.as "ease-in"]
@@ -1131,7 +1130,7 @@ external transition_timing_function :
 [@@mel.set]
 
 let element_style = style (get_by_id document "my-id")
-let () = transition_timing_function element_style `easeIn
+let () = set_transition_timing_function element_style `easeIn
 ```
 ```reasonml
 type document;
@@ -1142,7 +1141,7 @@ external document: document = "document";
 external get_by_id: (document, string) => Dom.element = "getElementById";
 [@mel.get] external style: Dom.element => style = "style";
 [@mel.set]
-external transition_timing_function:
+external set_transition_timing_function:
   (
     style,
     [@mel.string] [
@@ -1157,13 +1156,13 @@ external transition_timing_function:
   "transitionTimingFunction";
 
 let element_style = style(get_by_id(document, "my-id"));
-let () = transition_timing_function(element_style, `easeIn);
+let () = set_transition_timing_function(element_style, `easeIn);
 ```
 
 This will generate:
 
 ```javascript
-var element_style = document.getElementById("my-id").style;
+const element_style = document.getElementById("my-id").style;
 
 element_style.transitionTimingFunction = "ease-in";
 ```
@@ -1176,7 +1175,9 @@ external test_int_type :
   ([ `on_closed | `on_open [@mel.as 20] | `in_bin ][@mel.int]) -> int
   = "testIntType"
 
-let value = test_int_type `on_open
+let value1 = test_int_type `on_closed
+let value2 = test_int_type `on_open
+let value3 = test_int_type `in_bin
 ```
 ```reasonml
 external test_int_type:
@@ -1191,7 +1192,9 @@ external test_int_type:
   int =
   "testIntType";
 
-let value = test_int_type(`on_open);
+let value1 = test_int_type(`on_closed);
+let value2 = test_int_type(`on_open);
+let value3 = test_int_type(`in_bin);
 ```
 
 In this example, `on_closed` will be encoded as 0, `on_open` will be 20 due to
@@ -1202,7 +1205,9 @@ values counting up from the previous one.
 This code generates:
 
 ```js
-var value = testIntType(20);
+const value1 = testIntType(0);
+const value2 = testIntType(20);
+const value3 = testIntType(21);
 ```
 
 ### Using polymorphic variants to bind to event listeners
@@ -1246,7 +1251,7 @@ This generates:
 ```js
 function register(rl) {
   return rl
-    .on("close", function($$event) {})
+    .on("close", function(_event) {})
     .on("line", function(line) {
       console.log(line);
     });
@@ -1280,9 +1285,9 @@ let () =
 This generates:
 
 ```js
-process.on("exit", function (exitCode) {
-  console.log("error code: " + exitCode.toString());
-});
+process.on("exit", (function (exit_code) {
+  console.log("error code: " + String(exit_code));
+}));
 ```
 
 The `mel.as "exit"` and the wildcard `_` pattern together will tell Melange to
@@ -1305,8 +1310,8 @@ let add = (x, y) => x + y;
 
 Its type will be `int -> int -> int`. This means that one can partially apply
 `add` by calling `add 1`, which will return another function expecting the
-second argument of the addition. This kind of functions are called "curried"
-functions, more information about currying in OCaml can be found in [this
+second argument of the addition. This kind of function is called a "curried"
+function. More information about currying in OCaml can be found in [this
 chapter](https://cs3110.github.io/textbook/chapters/hop/currying.html) of the
 "OCaml Programming: Correct + Efficient + Beautiful" book.
 
@@ -1316,7 +1321,7 @@ example, let’s say we have an `add` function implemented in JavaScript, simila
 to the one above:
 
 ```javascript
-var add = function (a, b) {
+const add = function (a, b) {
     return a + b;
 };
 ```
@@ -1330,9 +1335,9 @@ want to write bindings for a JavaScript function like this:
 
 ```javascript
 function map (a, b, f){
-  var i = Math.min(a.length, b.length);
-  var c = new Array(i);
-  for(var j = 0; j < i; ++j){
+  const i = Math.min(a.length, b.length);
+  const c = new Array(i);
+  for(let j = 0; j < i; ++j){
     c[j] = f(a[i],b[i])
   }
   return c ;
@@ -1506,7 +1511,7 @@ external x : x = "x"
 external set_onload : x -> ((x -> int -> unit)[@mel.this]) -> unit = "onload"
   [@@mel.set]
 external resp : x -> int = "response" [@@mel.get]
-let _ =
+let () =
   set_onload x
     begin
       fun [@mel.this] o v -> Js.log (resp o + v)
@@ -1518,16 +1523,16 @@ external x: x = "x";
 [@mel.set]
 external set_onload: (x, [@mel.this] ((x, int) => unit)) => unit = "onload";
 [@mel.get] external resp: x => int = "response";
-let _ = set_onload(x, [@mel.this] (o, v) => Js.log(resp(o) + v));
+let () = set_onload(x, [@mel.this] (o, v) => Js.log(resp(o) + v));
 ```
 
 Which generates:
 
 ```javascript
-x.onload = function (v) {
-  var o = this;
-  console.log((o.response + v) | 0);
-};
+x.onload = (function (v) {
+  let o = this ;
+  console.log(o.response + v | 0);
+});
 ```
 
 Note that the first argument will be reserved for `this`.
@@ -1575,7 +1580,7 @@ Which generates:
 
 ```js
 function test($$document) {
-  var elem = $$document.getElementById("header");
+  const elem = $$document.getElementById("header");
   if (elem == null) {
     return 1;
   } else {
