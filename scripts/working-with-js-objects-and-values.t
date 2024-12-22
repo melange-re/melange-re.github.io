@@ -35,7 +35,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > external set_onload : x -> ((x -> int -> unit)[@mel.this]) -> unit = "onload"
   >   [@@mel.set]
   > external resp : x -> int = "response" [@@mel.get]
-  > let _ =
+  > let () =
   >   set_onload x
   >     begin
   >       fun [@mel.this] o v -> Js.log (resp o + v)
@@ -140,7 +140,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   ([ `on_closed | `on_open [@mel.as 20] | `in_bin ][@mel.int]) -> int
   >   = "testIntType"
   > 
-  > let value = test_int_type `on_open
+  > let value1 = test_int_type `on_closed
+  > let value2 = test_int_type `on_open
+  > let value3 = test_int_type `in_bin
   > EOF
 
   $ dune build @melange
@@ -153,7 +155,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > external get_by_id : document -> string -> Dom.element = "getElementById"
   > [@@mel.send]
   > external style : Dom.element -> style = "style" [@@mel.get]
-  > external transition_timing_function :
+  > external set_transition_timing_function :
   >   style ->
   >   ([ `ease
   >    | `easeIn [@mel.as "ease-in"]
@@ -165,17 +167,17 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > [@@mel.set]
   > 
   > let element_style = style (get_by_id document "my-id")
-  > let () = transition_timing_function element_style `easeIn
+  > let () = set_transition_timing_function element_style `easeIn
   > EOF
 
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
   > external read_file_sync :
-  >   name:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
+  >   path:string -> ([ `utf8 | `ascii ]) -> string = "readFileSync"
   >   [@@mel.module "fs"]
   > 
-  > let _ = read_file_sync ~name:"xx.txt" `ascii
+  > let text = read_file_sync ~path:"xx.txt" `ascii
   > EOF
 
   $ dune build @melange
@@ -189,8 +191,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   >   -> string
   >   = "padLeft"
   > 
-  > let _ = padLeft "Hello World" (`Int 4)
-  > let _ = padLeft "Hello World" (`Str "Message from Melange: ")
+  > let s1 = padLeft "Hello World" (`Int 4)
+  > let s2 = padLeft "Hello World" (`Str "Message from Melange: ")
   > EOF
 
   $ dune build @melange
@@ -350,7 +352,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type document
   > 
   > external document : document = "document"
-  > let document = document
+  > let doc = document
   > EOF
 
   $ dune build @melange
