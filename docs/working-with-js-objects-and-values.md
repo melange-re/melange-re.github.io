@@ -137,8 +137,13 @@ advance, which can be helpful for prototyping or quickly generating JavaScript
 object literals.
 
 Melange provides some ways to create `Js.t` object values, as well as accessing
-the properties inside them. To create values, the `[%mel.obj]` extension is
-used, and the `##` infix operator allows to read from the object properties:
+the properties inside them.
+
+- To create values, use the <span class="text-ocaml">`[%mel.obj]` extension
+  enclosing a record</span><span class="text-reasonml">`{ "key1": value1,
+  "key2": value2, ... }` syntax (note that the names of keys must be surrounded
+  by double quotes)</span>
+- To access object properties, use the `##` infix operator.
 
 ```ocaml
 let john = [%mel.obj { name = "john"; age = 99 }]
