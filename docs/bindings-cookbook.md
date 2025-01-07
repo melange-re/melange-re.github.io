@@ -367,7 +367,7 @@ let {id, name} = person;
 In Melange it is idiomatic to bind to class properties and methods as functions
 which take the instance as just a normal function argument. So e.g., instead of
 
-```javascript
+```js
 const foo = new Foo();
 foo.bar();
 ```

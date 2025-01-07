@@ -316,7 +316,7 @@ let place2 =
 
 We get the following JavaScript:
 
-```javascript
+```js
 const place1 = {
   name: "Boring",
   type: "city",
@@ -374,7 +374,7 @@ let () = set_title(document, "melange");
 
 This generates:
 
-```javascript
+```js
 const current = document.title;
 document.title = "melange";
 ```
@@ -509,7 +509,7 @@ let () = clearTimeout(id);
 
 Generates:
 
-```javascript
+```js
 const id = setTimeout((function (param) {
   console.log("hello");
 }), 100);
@@ -536,7 +536,7 @@ let doc = document;
 
 Which generates:
 
-```javascript
+```js
 const doc = document;
 ```
 
@@ -588,7 +588,7 @@ let f = (a, b, c) => executeCommands("hi", [|a, b, c|]);
 
 Which compiles to:
 
-```javascript
+```js
 import * as Vscode from "vscode";
 
 function f(a, b, c) {
@@ -620,7 +620,7 @@ let camera_type_back = back;
 
 Which generates:
 
-```javascript
+```js
 import * as ExpoCamera from "expo-camera";
 
 const camera_type_back = ExpoCamera.Camera.Constants.Type.back;
@@ -641,7 +641,7 @@ let res = imul(1, 2);
 
 Which produces:
 
-```javascript
+```js
 const res = Math.imul(1, 2);
 ```
 
@@ -667,7 +667,7 @@ let gui = create();
 Which generates:
 
 
-```javascript
+```js
 import * as DatGui from "dat.gui";
 
 const gui = new (DatGui.default.GUI)();
@@ -874,7 +874,7 @@ let el = document->(get_by_id("my-id"))->(get_by_classname("my-class"));
 
 Will generate:
 
-```javascript
+```js
 const el = document.getElementById("my-id").getElementsByClassName("my-class");
 ```
 
@@ -907,7 +907,7 @@ let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
 
 Will generate the same JavaScript as the pipe first version:
 
-```javascript
+```js
 const el = document.getElementById("my-id").getElementsByClassName("my-class");
 ```
 
@@ -963,7 +963,7 @@ let v = join([|Hide("a"), Hide(2)|]);
 
 Compiles to:
 
-```javascript
+```js
 import * as Path from "path";
 const v = Path.join("a", 2);
 ```
@@ -1166,7 +1166,7 @@ let () = set_transition_timing_function(element_style, `easeIn);
 
 This will generate:
 
-```javascript
+```js
 const element_style = document.getElementById("my-id").style;
 
 element_style.transitionTimingFunction = "ease-in";
@@ -1325,7 +1325,7 @@ where all function calls always apply all the arguments. To continue the
 example, let’s say we have an `add` function implemented in JavaScript, similar
 to the one above:
 
-```javascript
+```js
 const add = function (a, b) {
     return a + b;
 };
@@ -1338,7 +1338,7 @@ will get `NaN` as a result.
 To illustrate this difference and how it affects Melange bindings, let’s say we
 want to write bindings for a JavaScript function like this:
 
-```javascript
+```js
 function map (a, b, f){
   const i = Math.min(a.length, b.length);
   const c = new Array(i);
@@ -1377,7 +1377,7 @@ let add = x => {
 
 This will be compiled to:
 
-```javascript
+```js
 function add(x) {
   return (function (y) {
     return x + y | 0;
@@ -1533,7 +1533,7 @@ let () = set_onload(x, [@mel.this] (o, v) => Js.log(resp(o) + v));
 
 Which generates:
 
-```javascript
+```js
 x.onload = (function (v) {
   let o = this ;
   console.log(o.response + v | 0);

@@ -225,7 +225,7 @@ let () = React.useEffect2(() => None, (foo, bar));
 
 Will produce:
 
-```javascript
+```js
 React.useEffect(function () {}, [foo, bar]);
 ```
 
