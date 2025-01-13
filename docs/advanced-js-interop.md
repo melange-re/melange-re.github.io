@@ -69,7 +69,7 @@ let cancel: action = Cancel;
 
 Which will result in the following JavaScript code after compilation:
 
-```javascript
+```js
 function submit(param_0) {
   return /* Submit */{
           _0: param_0
@@ -85,7 +85,7 @@ Note the generated definitions are lower-cased, and they can be safely used from
 JavaScript code. For example, if the above JavaScript generated code was located
 in a `generators.js` file, the definitions can be used like this:
 
-```javascript
+```js
 const generators = require('./generators.js');
 
 const hello = generators.submit("Hello");
@@ -471,7 +471,7 @@ let bob = nameGet(bob);
 
 This generates:
 
-```javascript
+```js
 var twenty = alice.age;
 
 var bob = bob.name;
@@ -507,7 +507,7 @@ let aliceName = name(alice);
 
 Which generates:
 
-```javascript
+```js
 var alice = {
   name: "Alice",
   age: 20
@@ -566,7 +566,7 @@ let () = ageSet(alice, 21);
 
 This will generate:
 
-```javascript
+```js
 var alice = {
   name: "Alice",
   age: 20

@@ -181,7 +181,7 @@ let f = (x, y) => {
 
 Output:
 
-```javascript
+```js
 function f (x,y) {
   debugger; // JavaScript developer tools will set a breakpoint and stop here
   return x + y | 0;

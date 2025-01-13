@@ -255,7 +255,7 @@ These are some of the differences between both.
 
 In TypeScript, the types for the input parameters have to be defined:
 
-```javascript
+```typescript
 let sum = (a: number, b: number) => a + b;
 ```
 
@@ -290,7 +290,7 @@ In TypeScript, all typing is structural. This means that it is hard sometimes to
 establish a boundary or separation between two types that have the same
 implementation. For these cases, nominal typing can be emulated using tags:
 
-```js
+```typescript
 type Email = string & { readonly __tag: unique symbol };
 type City = string & { readonly __tag: unique symbol };
 ```
@@ -313,14 +313,14 @@ TypeScript has two base primitives to work with immutability: `const` and
 
 The first one is used to prevent variable reference change.
 
-```js
+```typescript
 const a = 1;
 a = 2; // Error: Cannot assign to 'a' because it is a constant.
 ```
 
 And the second one is used to make properties immutable.
 
-```js
+```typescript
 type A = {
   readonly x: number;
 }
