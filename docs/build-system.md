@@ -65,7 +65,7 @@ First of all, create an opam switch, as shown in the [package management
 section](package-management.md):
 
 ```bash
-opam switch create . 5.2.0 --deps-only
+opam switch create . 5.3.0 --deps-only
 ```
 
 Install the latest versions of Dune and Melange in the switch:

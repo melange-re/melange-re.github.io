@@ -158,7 +158,7 @@ in the project folder.
 If it does not exist, we can create it with:
 
 ```bash
-opam switch create . 5.2.0 --deps-only
+opam switch create . 5.3.0 --deps-only
 ```
 
 If it exists, we can install the dependencies of the project with:
