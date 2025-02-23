@@ -112,14 +112,17 @@ let add: int -> int -> int = [%mel.raw {|
 let () = Js.log (add 1 2)
 ```
 ```reasonml
-let add = [%mel.raw
-  {|
+let add: (int, int) => int = (
+  [%mel.raw
+    {|
   function(a, b) {
     console.log("hello from raw JavaScript!");
     return a + b;
   }
 |}
-];
+  ]:
+    (int, int) => int
+);
 
 let () = Js.log(add(1, 2));
 ```

@@ -515,8 +515,10 @@ let newSubstr = "hello"
 let newStr = replace ~substr ~newSubstr str
 ```
 ```reasonml
-[@mel.send: string]
-external replace: (~substr: string, ~newSubstr: string, [@mel.this] string) => string = "replace";
+[@mel.send]
+external replace:
+  (~substr: string, ~newSubstr: string, [@mel.this] string) => string =
+  "replace";
 
 let str = "goodbye world";
 let substr = "goodbye";

@@ -205,7 +205,7 @@ type action =
 [@deriving jsConverter({newType: newType})]
 type action = [
   | `Click
-  | [@mel.as 3] `Submit
+  | [@mel.as "submit"] `Submit
   | `Cancel
 ];
 ```

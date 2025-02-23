@@ -818,7 +818,8 @@ type document;
 
 external document: document = "document";
 [@mel.send]
-external get_by_id: (string, [@mel.this] document) => Dom.element = "getElementById";
+external get_by_id: (string, [@mel.this] document) => Dom.element =
+  "getElementById";
 
 let el = get_by_id("my-id", document);
 ```
@@ -899,9 +900,11 @@ type document;
 
 external document: document = "document";
 [@mel.send]
-external get_by_id: (string, [@mel.this] document) => Dom.element = "getElementById";
+external get_by_id: (string, [@mel.this] document) => Dom.element =
+  "getElementById";
 [@mel.send]
-external get_by_classname: (string, [@mel.this] Dom.element) => Dom.element = "getElementsByClassName";
+external get_by_classname: (string, [@mel.this] Dom.element) => Dom.element =
+  "getElementsByClassName";
 
 let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
 ```
