@@ -49,7 +49,7 @@ For Visual Studio Code, install the [OCaml Platform Visual Studio Code
 extension](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
 from the Visual Studio Marketplace. When you load an OCaml source file for the
 first time, you may be prompted to select the toolchain to use. Select the
-version of OCaml you are using from the list, such as 5.2.0. Refer to [Supported
+version of OCaml you are using from the list, such as 5.3.0. Refer to [Supported
 Syntaxes](/syntaxes) to learn how to set up format-on-save. Further
 instructions for configuration can be found in the [extension
 repository](https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project).

@@ -60,7 +60,7 @@ switch](https://opam.ocaml.org/blog/opam-local-switches/) to start working on
 our library:
 
 ```bash
-opam switch create . 5.2.0 -y --deps-only
+opam switch create . 5.3.0 -y --deps-only
 ```
 
 Once this step is done, we can call `dune` from the library folder, but first we
@@ -450,7 +450,7 @@ opam update
 Now, update the version of the OCaml compiler in the local switch to 5.1:
 
 ```bash
-opam install --update-invariant ocaml-base-compiler.5.2.0
+opam install --update-invariant ocaml-base-compiler.5.3.0
 ```
 
 Finally, we can upgrade all packages to get Melange v2 and the latest version of
