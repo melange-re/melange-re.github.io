@@ -30,7 +30,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   File "input.ml", line 8, characters 19-29:
   8 |   |. Belt.List.map String.cat
                          ^^^^^^^^^^
-  Error: This expression has type string -> string -> string
+  Error: The value String.cat has type string -> string -> string
          but an expression was expected of type int -> 'a
          Type string is not compatible with type int
   [1]
@@ -63,7 +63,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   File "input.ml", line 6, characters 4-5:
   6 |   [ 1; 2; 3 ]
           ^
-  Error: This expression has type int but an expression was expected of type
+  Error: The constant 1 has type int but an expression was expected of type
            string
   [1]
 

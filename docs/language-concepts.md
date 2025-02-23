@@ -377,11 +377,11 @@ The compiler would rightfully raise an error:
 <div class="language-text vp-adaptive-theme">
   <pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>4 |   [ 1; 2; 3 ]
           ^
-  Error: This expression has type int but an expression was expected of type
+  Error: The constant 1 has type int but an expression was expected of type
           string</code></pre>
   <pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>1 |   [ 1, 2, 3 ]
           ^
-  Error: This expression has type int but an expression was expected of type
+  Error: The constant 1 has type int but an expression was expected of type
           string</code></pre>
 </div>
 
@@ -452,7 +452,7 @@ The compiler will show this error message:
 <div class="language-text vp-adaptive-theme">
 <pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>4 |   |. Belt.List.map String.cat
                        ^^^^^^^^^^
-Error: This expression has type string -> string -> string
+Error: The value String.cat has type string -> string -> string
        but an expression was expected of type int -> 'a
        Type string is not compatible with type int</code></pre>
 <pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>2 | let sum_sq = [1, 2, 3]->(Belt.List.map(String.cat))->sum;

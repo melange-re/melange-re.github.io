@@ -162,6 +162,35 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > (* type signature *)
   > type action
+  > type abs_action
+  > 
+  > val actionToJs : action -> abs_action
+  > 
+  > val actionFromJs : abs_action -> action
+  > EOF
+
+  $ dune build @melange
+  File "input.ml", line 6, characters 0-37:
+  6 | val actionToJs : action -> abs_action
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Error: Value declarations are only allowed in signatures
+  [1]
+
+  $ cat > input.ml <<\EOF
+  > type action =
+  >   [ `Click
+  >   | `Submit [@mel.as "submit"]
+  >   | `Cancel
+  >   ]
+  > [@@deriving jsConverter { newType }]
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
+  > 
+  > (* type signature *)
+  > type action
   > 
   > val actionToJs : action -> string
   > 
@@ -190,34 +219,6 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > 
   > (* type signature *)
   > type action
-  > type abs_action
-  > 
-  > val actionToJs : action -> abs_action
-  > 
-  > val actionFromJs : abs_action -> action
-  > EOF
-
-  $ dune build @melange
-  File "input.ml", line 6, characters 0-37:
-  6 | val actionToJs : action -> abs_action
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  Error: Value declarations are only allowed in signatures
-  [1]
-
-  $ cat > input.ml <<\EOF
-  > type action =
-  >   | Click
-  >   | Submit [@mel.as 3]
-  >   | Cancel
-  > [@@deriving jsConverter { newType }]
-  > EOF
-
-  $ dune build @melange
-
-  $ cat > input.ml <<\EOF
-  > 
-  > (* type signature *)
-  > type action
   > 
   > val actionToJs : action -> int
   > 
@@ -233,10 +234,9 @@ file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > input.ml <<\EOF
   > type action =
-  >   | Click
-  >   | Submit [@mel.as 3]
-  >   | Cancel
-  > [@@deriving jsConverter]
+  >   | Click [@mel.as "click"]
+  >   | Submit [@mel.as "submit"]
+  >   | Cancel [@mel.as "cancel"]
   > EOF
 
   $ dune build @melange
