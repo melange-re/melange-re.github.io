@@ -508,7 +508,7 @@ These aspects translate into different trade-offs. Compared to Js\_of\_ocaml:
 - Libraries like `Unix` or `Str` are available in Js\_of\_ocaml but not in
   Melange.
 - Js\_of\_ocaml supports sourcemaps, which Melange do not support yet (as of May
-  2023\).
+  2023).
 
 On the upside, in Melange:
 
@@ -613,7 +613,7 @@ not be supported in Melange:
 - The `async` / `await` syntax: similar functionality can be achieved in Melange
   through the usage of [binding
   operators](https://v2.ocaml.org/manual/bindingops.html) (introduced in OCaml
-  4\.13).
+  4.13).
 - Optional fields in records, like `type t = { x : int, @optional y : int }`.
 - Uncurried by default.
 
