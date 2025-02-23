@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: 3.x
       - run: python3 -m pip install -r ./pip-requirements.txt
-      - uses: ocaml/setup-ocaml@v2
+      - uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: 4.14.x
           dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
