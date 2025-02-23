@@ -82,3 +82,9 @@ dev: ## Start docs dev server
 .PHONY: preview
 preview: ## Preview the docs
 	yarn vitepress preview docs
+
+.PHONY: move-v5.0.0-tag
+move-v5.0.0-tag: ## Moves the v5.0.0 tag to the latest commit, useful to publish the v5 docs
+	git push origin :refs/tags/v5.0.0
+	git tag -fa v5.0.0
+	git push origin --tags
