@@ -92,36 +92,27 @@ const hello = generators.submit("Hello");
 const click = generators.click;
 ```
 
-#### Conversion functions
+#### Customizing compiled variant values and tags
 
-Use `@deriving jsConverter` on a variant type to create converter functions that
-allow to transform back and forth between JavaScript integers and Melange
-variant values.
+Melange supports customizing both the value and the tag name for OCaml
+variants.
 
-There are a few differences with `@deriving accessors`:
+Use `@mel.as` on variant arms, in their type declarations, to specify how they
+should be compiled in the resulting JavaScript.
 
-- `jsConverter` works with the `mel.as` attribute, while `accessors` does not
-- `jsConverter` does not support variant tags with payload, while `accessors`
-  does
-- `jsConverter` generates functions to transform values back and forth, while
-  `accessors` generates functions to create values
-
-Let’s see a version of the previous example, adapted to work with `jsConverter`
-given the constraints above:
+Let’s see a version of the previous example, adapted to work with `@mel.as`:
 
 ```ocaml
 type action =
-  | Click
-  | Submit [@mel.as 3]
-  | Cancel
-[@@deriving jsConverter]
+  | Click [@mel.as "click"]
+  | Submit [@mel.as "submit"]
+  | Cancel [@mel.as "cancel"]
 ```
 ```reasonml
-[@deriving jsConverter]
 type action =
-  | Click
-  | [@mel.as 3] Submit
-  | Cancel;
+  | [@mel.as "click"] Click
+  | [@mel.as "submit"] Submit
+  | [@mel.as "cancel"] Cancel;
 ```
 
 This will generate a couple of functions with the following types:
@@ -149,51 +140,6 @@ variants](./working-with-js-objects-and-values.md#using-polymorphic-variants-to-
 
 `actionFromJs` returns a value of type `option`, because not every integer can
 be converted into a variant tag of the `action` type.
-
-##### Hide runtime types
-
-For extra type safety, we can hide the runtime representation of variants
-(`int`) from the generated functions, by using `jsConverter { newType }` payload
-with `@deriving`:
-
-```ocaml
-type action =
-  | Click
-  | Submit [@mel.as 3]
-  | Cancel
-[@@deriving jsConverter { newType }]
-```
-```reasonml
-[@deriving jsConverter({newType: newType})]
-type action =
-  | Click
-  | [@mel.as 3] Submit
-  | Cancel;
-```
-
-This feature relies on [abstract types](./language-concepts.md#abstract-types)
-to hide the JavaScript runtime representation. It will generate functions with
-the following types:
-
-<!--#prelude#
-(* type signature *)
-type action
-type abs_action
--->
-```ocaml
-val actionToJs : action -> abs_action
-
-val actionFromJs : abs_action -> action
-```
-```reasonml
-let actionToJs: action => abs_action;
-
-let actionFromJs: abs_action => action;
-```
-
-In the case of `actionFromJs`, the return value, unlike the previous case, is
-not an option type. This is an example of "correct by construction": the only
-way to create an `abs_action` is by calling the `actionToJs` function.
 
 ### Polymorphic variants
 
@@ -241,8 +187,52 @@ let actionToJs: action => string;
 let actionFromJs: string => option(action);
 ```
 
-The `jsConverter { newType }` payload can also be used with polymorphic
-variants.
+##### Hide runtime types
+
+For extra type safety, we can hide the runtime representation of variants
+(`int`) from the generated functions, by using `jsConverter { newType }` payload
+with `@deriving`:
+
+```ocaml
+type action =
+  [ `Click
+  | `Submit [@mel.as "submit"]
+  | `Cancel
+  ]
+[@@deriving jsConverter { newType }]
+```
+```reasonml
+[@deriving jsConverter({newType: newType})]
+type action = [
+  | `Click
+  | [@mel.as 3] `Submit
+  | `Cancel
+];
+```
+
+This feature relies on [abstract types](./language-concepts.md#abstract-types)
+to hide the JavaScript runtime representation. It will generate functions with
+the following types:
+
+<!--#prelude#
+(* type signature *)
+type action
+type abs_action
+-->
+```ocaml
+val actionToJs : action -> abs_action
+
+val actionFromJs : abs_action -> action
+```
+```reasonml
+let actionToJs: action => abs_action;
+
+let actionFromJs: abs_action => action;
+```
+
+In the case of `actionFromJs`, the return value, unlike the previous case, is
+not an option type. This is an example of "correct by construction": the only
+way to create an `abs_action` is by calling the `actionToJs` function.
 
 ### Records
 

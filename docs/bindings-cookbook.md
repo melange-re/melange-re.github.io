@@ -506,8 +506,8 @@ section for more information.
 ### `const newStr = str.replace(substr, newSubstr)`: non-mutating instance method
 
 ```ocaml
-external replace : substr:string -> newSubstr:string -> string = "replace"
-[@@mel.send.pipe: string]
+external replace : substr:string -> newSubstr:string -> (string [@mel.this]) -> string = "replace"
+[@@mel.send]
 
 let str = "goodbye world"
 let substr = "goodbye"
@@ -515,8 +515,8 @@ let newSubstr = "hello"
 let newStr = replace ~substr ~newSubstr str
 ```
 ```reasonml
-[@mel.send.pipe: string]
-external replace: (~substr: string, ~newSubstr: string) => string = "replace";
+[@mel.send: string]
+external replace: (~substr: string, ~newSubstr: string, [@mel.this] string) => string = "replace";
 
 let str = "goodbye world";
 let substr = "goodbye";
@@ -524,20 +524,12 @@ let newSubstr = "hello";
 let newStr = replace(~substr, ~newSubstr, str);
 ```
 
-`mel.send.pipe` injects a parameter of the given type (in this case `string`) as
-the final positional parameter of the binding. In other words, it creates the
-binding with the real signature <code class="text-ocaml">substr:string -\>
-newSubstr:string -\> string -\> string</code><code
-class="text-reasonml">(~substr: string, ~newSubstr: string, string) =\>
-string</code>. This is handy for non-mutating functions as they traditionally
-take the instance as the final parameter.
+`mel.send` with `mel.this` allows specifying the "self" / "this" argument on the
+left-hand side of the method call (e.g. `self.method_name(arg1)`).
 
 It is not strictly necessary to use named arguments in this binding, but it
 helps readability with multiple arguments, especially if some have the same
 type.
-
-Also note that it is not strictly need to use `mel.send.pipe`, one can use
-`mel.send` everywhere.
 
 See the [Calling an object
 method](./working-with-js-objects-and-values.md#calling-an-object-method)

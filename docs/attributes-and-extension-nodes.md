@@ -19,11 +19,7 @@ These attributes are used to annotate `external` definitions:
 - [`mel.return`](./working-with-js-objects-and-values.md#wrapping-returned-nullable-values):
   automate conversion from nullable values to `Option.t` values
 - [`mel.send`](./working-with-js-objects-and-values.md#calling-an-object-method):
-  call a JavaScript object method using [pipe
-  first](./language-concepts.md#pipe-first) convention
-- [`mel.send.pipe`](./working-with-js-objects-and-values.md#calling-an-object-method):
-  call a JavaScript object method using [pipe
-  last](./language-concepts.md#pipe-last) convention
+  call a JavaScript object method
 - [`mel.set`](./working-with-js-objects-and-values.md#bind-to-object-properties):
   set JavaScript object properties statically by name, using the dot notation
   `.`
@@ -106,7 +102,7 @@ To do it, we will use the `mel.raw`
 [extension](https://v2.ocaml.org/manual/extensionnodes.html):
 
 ```ocaml
-let add = [%mel.raw {|
+let add: int -> int -> int = [%mel.raw {|
   function(a, b) {
     console.log("hello from raw JavaScript!");
     return a + b;

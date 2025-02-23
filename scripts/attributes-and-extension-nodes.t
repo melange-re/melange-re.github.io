@@ -63,7 +63,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > let add = [%mel.raw {|
+  > let add: int -> int -> int = [%mel.raw {|
   >   function(a, b) {
   >     console.log("hello from raw JavaScript!");
   >     return a + b;

@@ -798,17 +798,17 @@ first operator <code class="text-ocaml">\|.</code><code
 class="text-reasonml">\-\></code>, see the ["Chaining"](#chaining) section
 below.
 
-If we want to design our bindings to be used with OCaml pipe last operator `|>`,
-there is an alternate `mel.send.pipe` attribute. Let’s rewrite the example above
-using it:
+If we want to design our bindings to be used with OCaml pipe last operator
+`|>`, we can use `mel.this` on the argument that we want to be treated as
+"self". Let’s rewrite the example above using it:
 
 ```ocaml
 (* Abstract type for the `document` global *)
 type document
 
 external document : document = "document"
-external get_by_id : string -> Dom.element = "getElementById"
-  [@@mel.send.pipe: document]
+external get_by_id : string -> (document [@mel.this]) -> Dom.element = "getElementById"
+  [@@mel.send]
 
 let el = get_by_id "my-id" document
 ```
@@ -817,13 +817,13 @@ let el = get_by_id "my-id" document
 type document;
 
 external document: document = "document";
-[@mel.send.pipe: document]
-external get_by_id: string => Dom.element = "getElementById";
+[@mel.send]
+external get_by_id: (string, [@mel.this] document) => Dom.element = "getElementById";
 
 let el = get_by_id("my-id", document);
 ```
 
-Generates the same code as `mel.send`:
+The generated code looks the same:
 
 ```js
 const el = document.getElementById("my-id");
@@ -838,8 +838,9 @@ convention we want to use, there are two attributes available:
 - For a data-first convention, the `mel.send` attribute, in combination with
   [the pipe first operator](./language-concepts.md#pipe-first) <code
   class="text-ocaml">\|.</code><code class="text-reasonml">\-\></code>
-- For a data-last convention, the `mel.send.pipe` attribute, in combination with
-  OCaml [pipe last operator](./language-concepts.md#pipe-last) `|>`.
+- For a data-last convention, the `mel.send` attribute and a `mel.this`
+  annotation on the "self" argument, in combination with OCaml [pipe last
+  operator](./language-concepts.md#pipe-last) `|>`.
 
 Let’s see first an example of chaining using data-first convention with the pipe
 first operator <code class="text-ocaml">\|.</code><code
@@ -885,10 +886,10 @@ Now with pipe last operator `|>`:
 type document
 
 external document : document = "document"
-external get_by_id : string -> Dom.element = "getElementById"
-  [@@mel.send.pipe: document]
-external get_by_classname : string -> Dom.element = "getElementsByClassName"
-  [@@mel.send.pipe: Dom.element]
+external get_by_id : string -> (document [@mel.this]) -> Dom.element = "getElementById"
+  [@@mel.send]
+external get_by_classname : string -> (Dom.element [@mel.this]) -> Dom.element = "getElementsByClassName"
+  [@@mel.send]
 
 let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
 ```
@@ -897,10 +898,10 @@ let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
 type document;
 
 external document: document = "document";
-[@mel.send.pipe: document]
-external get_by_id: string => Dom.element = "getElementById";
-[@mel.send.pipe: Dom.element]
-external get_by_classname: string => Dom.element = "getElementsByClassName";
+[@mel.send]
+external get_by_id: (string, [@mel.this] document) => Dom.element = "getElementById";
+[@mel.send]
+external get_by_classname: (string, [@mel.this] Dom.element) => Dom.element = "getElementsByClassName";
 
 let el = document |> get_by_id("my-id") |> get_by_classname("my-class");
 ```
@@ -1439,8 +1440,8 @@ We will get an error:
 ```text
 let _ = map [||] [||] add
                       ^^^
-This expression has type int -> int -> int
-but an expression was expected of type ('a -> 'b -> 'c) Js.Fn.arity2
+Error: The value add has type int -> int -> int
+       but an expression was expected of type ('a -> 'b -> 'c [@u])
 ```
 
 To solve this, we add <span class="text-ocaml">`@u`</span><span

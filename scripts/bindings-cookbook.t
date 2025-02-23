@@ -52,8 +52,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
-  > external replace : substr:string -> newSubstr:string -> string = "replace"
-  > [@@mel.send.pipe: string]
+  > external replace : substr:string -> newSubstr:string -> (string [@mel.this]) -> string = "replace"
+  > [@@mel.send]
   > 
   > let str = "goodbye world"
   > let substr = "goodbye"

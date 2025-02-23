@@ -80,7 +80,7 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   File "input.ml", line 6, characters 22-25:
   6 | let _ = map [||] [||] add
                             ^^^
-  Error: This expression has type int -> int -> int
+  Error: The value add has type int -> int -> int
          but an expression was expected of type ('a -> 'b -> 'c [@u])
   [1]
 
@@ -229,10 +229,10 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type document
   > 
   > external document : document = "document"
-  > external get_by_id : string -> Dom.element = "getElementById"
-  >   [@@mel.send.pipe: document]
-  > external get_by_classname : string -> Dom.element = "getElementsByClassName"
-  >   [@@mel.send.pipe: Dom.element]
+  > external get_by_id : string -> (document [@mel.this]) -> Dom.element = "getElementById"
+  >   [@@mel.send]
+  > external get_by_classname : string -> (Dom.element [@mel.this]) -> Dom.element = "getElementsByClassName"
+  >   [@@mel.send]
   > 
   > let el = document |> get_by_id "my-id" |> get_by_classname "my-class"
   > EOF
@@ -260,8 +260,8 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   > type document
   > 
   > external document : document = "document"
-  > external get_by_id : string -> Dom.element = "getElementById"
-  >   [@@mel.send.pipe: document]
+  > external get_by_id : string -> (document [@mel.this]) -> Dom.element = "getElementById"
+  >   [@@mel.send]
   > 
   > let el = get_by_id "my-id" document
   > EOF
