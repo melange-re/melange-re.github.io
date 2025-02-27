@@ -13,7 +13,7 @@ help: ## Print this help message
 
 .PHONY: create-switch
 create-switch: ## Create opam switch
-	opam switch create . 5.1.0 -y --deps-only
+	opam switch create . 5.3.0 -y --deps-only
 
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
@@ -28,7 +28,7 @@ install: ## Install development dependencies
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
-.PHONY: 
+.PHONY:
 update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
 	$(DUNE) build @extract-code-blocks --auto-promote || true
 	$(DUNE) build @runtest --auto-promote || true
@@ -62,3 +62,23 @@ format-check: ## Checks if format is correct
 build-playground: ## Builds the playground
 	$(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
+
+.PHONY: build-site
+build-site: build-playground ## Builds the whole site (including playground)
+	yarn && make build-docs
+
+.PHONY: build-docs
+build-docs: ## Builds the docs
+	yarn vitepress build docs
+
+.PHONY: build-blog
+build-blog: ## Builds the blog
+	cd blog && yarn && yarn build
+
+.PHONY: dev
+dev: ## Start docs dev server
+	yarn vitepress dev docs
+
+.PHONY: preview
+preview: ## Preview the docs
+	yarn vitepress preview docs

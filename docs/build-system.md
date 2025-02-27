@@ -46,7 +46,7 @@ developers. It provides several benefits, including:
 - Hygiene is maintained in Dune by building out of source: all compilation
   artifacts are placed in a separate `_build` folder. Users can optionally [copy
   them back to the source
-  tree](https://dune.readthedocs.io/en/stable/dune-files.html#promote).
+  tree](https://dune.readthedocs.io/en/stable/reference/dune/rule.html#promote).
 - Dune provides a variety of additional features including [cram
   tests](https://dune.readthedocs.io/en/stable/tests.html), integration with
   [Odoc](https://dune.readthedocs.io/en/stable/documentation.html), Melange,
@@ -65,7 +65,7 @@ First of all, create an opam switch, as shown in the [package management
 section](package-management.md):
 
 ```bash
-opam switch create . 5.1.0 --deps-only
+opam switch create . 5.3.0 --deps-only
 ```
 
 Install the latest versions of Dune and Melange in the switch:
@@ -76,7 +76,7 @@ opam install dune melange
 ```
 
 <div class="text-reasonml">
-As we will be using Reason syntax, let’s install the `reason` package too:
+As we will be using Reason syntax, let’s install the <code>reason</code> package too:
 
 ```bash
 opam install reason
@@ -86,7 +86,7 @@ opam install reason
 Create a file named `dune-project`. This file will tell Dune a few things about
 our project configuration:
 
-```text
+```dune
 (lang dune 3.8)
 
 (using melange 0.1)
@@ -98,14 +98,14 @@ only available from version 3.8.
 
 The second line `(using melange 0.1)` tells Dune we want to use the [Melange
 extension of the Dune
-language](https://dune.readthedocs.io/en/stable/dune-files.html#using).
+language](https://dune.readthedocs.io/en/stable/reference/dune-project/using.html).
 
 #### Adding a library
 
 Next, create a folder `lib`, and a `dune` file inside. Put the following content
 inside the `dune` file:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange))
@@ -131,7 +131,7 @@ The top level configuration entries —like the `library` one that appears in th
 
 All stanzas are well covered in the Dune documentation site, where we can find
 the reference for the [`library`
-stanza](https://dune.readthedocs.io/en/stable/dune-files.html#library).
+stanza](https://dune.readthedocs.io/en/stable/reference/dune/library.html).
 
 Dune is designed to minimize the need for configuration changes when modifying
 the project folder structure. For example, you can move the `lib` folder to a
@@ -147,7 +147,7 @@ application**, but they won’t produce any JavaScript artifacts on their own.
 To generate JavaScript code, we need to define an entry point of our
 application. In the root folder, create another `dune` file:
 
-```text
+```dune
 (melange.emit
  (target app)
  (libraries lib))
@@ -160,6 +160,9 @@ application. In the root folder, create another `dune` file:
   And an <code>app.re</code> file:
 </div>
 
+<!--#prelude#
+module Lib = struct let name = "" end
+-->
 ```ocaml
 let () = Js.log Lib.name
 ```
@@ -174,7 +177,8 @@ docs](https://dune.readthedocs.io/en/stable/melange.html#melange-emit).
 
 The file structure of the app should look something like this:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── lib
 │   ├── dune
@@ -182,7 +186,7 @@ The file structure of the app should look something like this:
 ├── dune-project
 ├── dune
 └── app.ml</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── _opam
 ├── lib
 │   ├── dune
@@ -190,6 +194,7 @@ The file structure of the app should look something like this:
 ├── dune-project
 ├── dune
 └── app.re</code></pre>
+</div>
 
 #### Building the project
 
@@ -228,24 +233,26 @@ to know where to place the generated JavaScript artifacts.
 
 As a more complex example, consider the following setup:
 
-<pre class="text-ocaml"><code class="language-text hljs plaintext">project_name/
+<div class="language-text vp-adaptive-theme">
+<pre class="text-ocaml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.ml
 └── emit
     └── dune</code></pre>
-<pre class="text-reasonml"><code class="language-text hljs plaintext">project_name/
+<pre class="text-reasonml shiki shiki-themes github-light github-dark vp-code"><code>project_name/
 ├── dune-project
 ├── lib
 │   ├── dune
 │   └── foo.re
 └── emit
     └── dune</code></pre>
+</div>
 
 With `emit/dune` being:
 
-```text
+```dune
 (melange.emit
  (target app)
  (libraries lib))
@@ -253,7 +260,7 @@ With `emit/dune` being:
 
 And `lib/dune`:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange))
@@ -314,7 +321,7 @@ them by using the `alias` field.
 
 Let’s define a custom alias `my-app` for our `melange.emit` stanza:
 
-```text
+```dune
 (melange.emit
  (target app)
  (alias my-app)
@@ -367,7 +374,7 @@ that will allow to use the `bs.raw` extension (more about these extensions in
 the ["Communicate with JavaScript"](communicate-with-javascript.md) section), in
 order to get the value of the `__dirname` environment variable:
 
-```text
+```dune
 (library
  (name lib)
  (modes melange)
@@ -409,11 +416,13 @@ Dune offers great flexibility to specify dependencies. Another interesting
 feature are globs, that allow to simplify the configuration when depending on
 multiple files. For example:
 
-```text
-(melange.runtime_deps
- (glob_files styles/*.css)
- (glob_files images/*.png)
- (glob_files static/*.{pdf,txt}))
+```dune
+(library
+  ...
+  (melange.runtime_deps
+    (glob_files styles/*.css)
+    (glob_files images/*.png)
+    (glob_files static/*.{pdf,txt})))
 ```
 
 See the [dependency specification
@@ -441,7 +450,7 @@ Use the `module_systems` field in the [`melange.emit`
 stanza](https://dune.readthedocs.io/en/stable/melange.html#melange-emit) to emit
 ES6 modules:
 
-```text
+```dune
 (melange.emit
  (target app)
  (alias my-app)

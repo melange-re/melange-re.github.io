@@ -20,6 +20,8 @@
  (applies_to add_canonical)
  (deps %{bin:add_canonical}))
 
+;; Extract code blocks from markdown files
+
 (rule
  (deps ../docs/communicate-with-javascript.md)
  (target communicate-with-javascript.md.processed)
@@ -38,6 +40,100 @@
    communicate-with-javascript.md.processed)))
 
 (rule
+ (deps ../docs/language-concepts.md)
+ (target language-concepts.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff language-concepts.t language-concepts.md.processed)))
+
+(rule
+ (deps ../docs/data-types-and-runtime-rep.md)
+ (target data-types-and-runtime-rep.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff data-types-and-runtime-rep.t data-types-and-runtime-rep.md.processed)))
+
+(rule
+ (deps ../docs/attributes-and-extension-nodes.md)
+ (target attributes-and-extension-nodes.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff
+   attributes-and-extension-nodes.t
+   attributes-and-extension-nodes.md.processed)))
+
+(rule
+ (deps ../docs/working-with-js-objects-and-values.md)
+ (target working-with-js-objects-and-values.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff
+   working-with-js-objects-and-values.t
+   working-with-js-objects-and-values.md.processed)))
+
+(rule
+ (deps ../docs/advanced-js-interop.md)
+ (target advanced-js-interop.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff advanced-js-interop.t advanced-js-interop.md.processed)))
+
+(rule
+ (deps ../docs/bindings-cookbook.md)
+ (target bindings-cookbook.md.processed)
+ (action
+  (with-stdout-to
+   %{target}
+   (with-stdin-from
+    %{deps}
+    (run %{bin:extract_code_blocks})))))
+
+(rule
+ (alias extract-code-blocks)
+ (action
+  (diff bindings-cookbook.t bindings-cookbook.md.processed)))
+
+(rule
  (deps ../docs/build-system.md)
  (target build-system.md.processed)
  (action
@@ -51,3 +147,4 @@
  (alias extract-code-blocks)
  (action
   (diff build-system.t build-system.md.processed)))
+

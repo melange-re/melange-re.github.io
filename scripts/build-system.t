@@ -23,15 +23,13 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > 
+  > module Lib = struct let name = "" end
+  > 
   > let () = Js.log Lib.name
   > EOF
 
   $ dune build @melange
-  File "input.ml", line 1, characters 16-24:
-  1 | let () = Js.log Lib.name
-                      ^^^^^^^^
-  Error: Unbound module Lib
-  [1]
 
   $ cat > input.ml <<\EOF
   > let name = "Jane"

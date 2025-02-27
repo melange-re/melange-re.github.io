@@ -62,7 +62,7 @@ initWorkerizedReducer(
     switch (action.type) {
       case "clear.logs":
         Console.flush();
-        state.logs = [];
+        state.logCaptures = [];
         break;
       case "bundle":
         const code = action.code;
@@ -125,18 +125,17 @@ initWorkerizedReducer(
           // bundling always happens in worker as it's expensive. Evaluation too,
           // but if there is DOM manipulation, then defer evaluation to the
           // main thread, as worker doesn't have access to DOM
-          const requireReactString = "import * as React";
-          if (code.indexOf(requireReactString) >= 0) {
+          if (code.indexOf("react/jsx-runtime") >= 0 || code.indexOf("react-dom/client") >= 0) {
             state.bundledCode = output[0].code;
           } else {
             state.bundledCode = undefined;
             eval2(output[0].code);
           }
         } catch (e) {
-          console.log(e);
+          console.error("Error while evaluating JavaScript code: " + e.message);
         }
-        // We always set logs, if `code` is undefined we will erase them
-        state.logs = Console.printCaptures(Console.getCaptures());
+        // We always set logCaptures, if `code` is undefined we will erase them
+        state.logCaptures = Console.getCaptures();
         Console.stop();
         break;
       default:

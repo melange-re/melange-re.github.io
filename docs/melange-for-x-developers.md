@@ -255,7 +255,7 @@ These are some of the differences between both.
 
 In TypeScript, the types for the input parameters have to be defined:
 
-```javascript
+```typescript
 let sum = (a: number, b: number) => a + b;
 ```
 
@@ -290,7 +290,7 @@ In TypeScript, all typing is structural. This means that it is hard sometimes to
 establish a boundary or separation between two types that have the same
 implementation. For these cases, nominal typing can be emulated using tags:
 
-```js
+```typescript
 type Email = string & { readonly __tag: unique symbol };
 type City = string & { readonly __tag: unique symbol };
 ```
@@ -313,14 +313,14 @@ TypeScript has two base primitives to work with immutability: `const` and
 
 The first one is used to prevent variable reference change.
 
-```js
+```typescript
 const a = 1;
 a = 2; // Error: Cannot assign to 'a' because it is a constant.
 ```
 
 And the second one is used to make properties immutable.
 
-```js
+```typescript
 type A = {
   readonly x: number;
 }
@@ -349,8 +349,8 @@ TypeScript, as mentioned in [its
 handbook](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#a-note-on-soundness),
 may sacrifice soundness for practicality when needed. In contrast, OCaml
 implementations provide unsound methods like [the `identity`
-primitive](communicate-with-javascript.md#special-identity-external) but they
-are generally discouraged and rarely used. The OCaml community places a strong
+primitive](./language-concepts.md#special-identity-external) but they are
+generally discouraged and rarely used. The OCaml community places a strong
 emphasis on maintaining soundness and prefers safer alternatives to ensure code
 correctness.
 
@@ -439,8 +439,8 @@ type email = string;</code></pre> </td> </tr>
       <td>
         <pre><code>const a = 1;
 type A = { readonly x: number };
-type ImmutableA = Readonly<A>;
-const arr: ReadonlyArray<number> = [1, 2, 3];
+type ImmutableA = Readonly&lt;A&gt;;
+const arr: ReadonlyArray&lt;number&gt; = [1, 2, 3];
 type A = { readonly [x: string]: number };
 </code></pre>
       </td>
@@ -492,8 +492,8 @@ starts the conversion process earlier in the compiler pipeline, as it transforms
 the compiler lambda representation into JavaScript.
 
 Js\_of\_ocaml is a project with years of development and evolution behind it,
-while Melange [appearance](rationale.md#a-bit-of-history) is relatively recent
-in comparison.
+while Melange's [appearance](./rationale.md#a-bit-of-history) is relatively
+recent in comparison.
 
 These aspects translate into different trade-offs. Compared to Js\_of\_ocaml:
 
@@ -534,7 +534,7 @@ of its characteristics:
   JavaScript file.
 - The libraries provided by ReScript (Belt and Js) are available in Melange too.
 - The mechanisms provided for [communicating with JavaScript
-  code](communicate-with-javascript.md) are mostly the same.
+  code](./communicate-with-javascript.md) are mostly the same.
 
 However, one of Melange’s goals is to maximize compatibility with the OCaml
 ecosystem. This goal translates into fundamental differences in how Melange and
@@ -545,14 +545,14 @@ ReScript function from the perspective of both library authors and users.
 ReScript projects rely exclusively on npm for all packages they depend on.
 Melange projects, on the other hand, will use opam for native packages, and npm
 for JavaScript ones. Melange package management is explained in detail in [the
-dedicated section](package-management.md).
+dedicated section](./package-management.md).
 
 ### Build system
 
 ReScript has its own build system, originally based on Ninja.
 
 Melange defers to [Dune](https://dune.build/) for build orchestration, as it is
-explained in detail in [the corresponding section](build-system.md). By
+explained in detail in [the corresponding section](./build-system.md). By
 integrating with Dune, Melange can benefit from the multiple features provided.
 One of the most useful features is first-class supports for monorepos. But there
 are multiple others, like virtual libraries, watch mode, or integrations with
@@ -581,7 +581,8 @@ architectures are not included in the pre-built binaries.
 ### OCaml compiler version
 
 ReScript is compatible with the 4.06 version of the OCaml compiler, while
-Melange is compatible with the version 5.1.0 (as of Oct 2023).
+Melange is compatible with OCaml versions 4.14, 5.1.1, 5.2.x and 5.3.0 (as of
+February 2025).
 
 ### Editor integration
 

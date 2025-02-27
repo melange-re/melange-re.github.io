@@ -1,0 +1,23 @@
+{
+  "name": "melange.re",
+  "version": "1.0.0",
+  "description": "This repository contains the source for Melange public documentation site.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melange-re/melange-re.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/melange-re/melange-re.github.io/issues"
+  },
+  "homepage": "https://github.com/melange-re/melange-re.github.io#readme",
+  "devDependencies": {
+    "vitepress": "^1.0.0-rc.42",
+    "markdown-it-footnote": "^4.0.0"
+  }
+}

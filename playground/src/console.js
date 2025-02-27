@@ -69,28 +69,3 @@ export let flush = () => {
 export let getCaptures = () => {
   return captures;
 }
-
-export let printCaptures = (captures) => {
-  return captures.map(capture => { return capture.args.join(" ") });
-}
-
-let makeOriginalLog = (log) => {
-  resetToOriginalFunctions();
-
-  if (overridableFunctionNames.includes(log.function)) {
-    const finalArgs = log.args.map(arg => {
-      if (typeof arg == 'string') {
-        try {
-          const obj = JSON.parse(arg);
-          return obj.stack ? obj.stack : obj;
-        } catch {
-          return arg;
-        }
-      }
-      return arg;
-    });
-    console[log.function](...finalArgs);
-  } else {
-    throw Error('Invalid Log type');
-  }
-}

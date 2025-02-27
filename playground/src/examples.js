@@ -78,34 +78,37 @@ Belt.Array.makeBy(42, _ => random_gaussian())->(Belt.Array.forEach(Js.log));`,
     name: "React Greeting",
     ml: `module Greeting = struct
   let make () = (button ~children:[ React.string "Hello!" ] () [@JSX])
-    [@@react.component]
+  [@@react.component]
 end
 
 let element = ReactDOM.querySelector "#preview"
 
 let () =
   match element with
-  | Some root ->
-      ReactDOM.render (Greeting.createElement ~children:[] () [@JSX]) root
+  | Some element ->
+      let root = ReactDOM.Client.createRoot element in
+      ReactDOM.Client.render root
+        (Greeting.createElement ~children:[] () [@JSX])
   | None ->
       Js.Console.error
-        "Failed to start React: couldn't find the #preview element"
-  `,
+        "Failed to start React: couldn't find the #preview element"`,
     re: `module Greeting = {
   [@react.component]
-  let make = () => {
-    <button> {React.string("Hello!")} </button>;
-  };
+  let make = () => <button> {React.string("Hello!")} </button>;
 };
-ReactDOM.querySelector("#preview")
-->(
-    fun
-    | Some(root) => ReactDOM.render(<Greeting />, root)
-    | None =>
-      Js.Console.error(
-        "Failed to start React: couldn't find the #preview element",
-      )
-  );`,
+
+let element = ReactDOM.querySelector("#preview");
+
+let () =
+  switch (element) {
+  | Some(element) =>
+    let root = ReactDOM.Client.createRoot(element);
+    ReactDOM.Client.render(root, <Greeting />);
+  | None =>
+    Js.Console.error(
+      "Failed to start React: couldn't find the #preview element",
+    )
+  };`,
   },
 ];
 

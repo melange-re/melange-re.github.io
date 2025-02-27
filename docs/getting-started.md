@@ -1,8 +1,17 @@
 # Getting started
 
-<p class="centered">Get up and running with Melange in no time!</p>
+If you would like to learn OCaml and Melange from scratch, we recommend you to
+read ["Melange for React Devs"](https://react-book.melange.re/). This book will
+give you an overview of the OCaml language, as well as showcase some of the
+mechanisms that Melange offers to interact with JavaScript code. You’ll build a
+few projects along the way, and by the end, you’ll have a solid grasp of the
+language.
 
----
+Alternatively, if you want to start your project from scratch, the easiest way
+to get started with Melange is by using the
+[melange-opam-template](https://github.com/melange-re/melange-opam-template).
+
+Keep reading to get up and running with Melange in no time!
 
 ## Install a package manager
 
@@ -16,11 +25,9 @@ Instructions for installing opam on different operating systems can be found at
 the opam [install page](https://opam.ocaml.org/doc/Install.html), and you can
 find [a whole section about it](package-management.md) on this website.
 
-## Template
+## Get the template
 
-The easiest way to get started with Melange is by using the
-[melange-opam-template](https://github.com/melange-re/melange-opam-template).
-You can clone it from [this
+You can clone `melange-opam-template` from [this
 link](https://github.com/melange-re/melange-opam-template/generate), and follow
 the instructions in the [readme
 file](https://github.com/melange-re/melange-opam-template/blob/main/README.md)
@@ -42,7 +49,8 @@ For Visual Studio Code, install the [OCaml Platform Visual Studio Code
 extension](https://marketplace.visualstudio.com/items?itemName=ocamllabs.ocaml-platform)
 from the Visual Studio Marketplace. When you load an OCaml source file for the
 first time, you may be prompted to select the toolchain to use. Select the
-version of OCaml you are using from the list, such as 5.1.0. Further
+version of OCaml you are using from the list, such as 5.3.0. Refer to [Supported
+Syntaxes](/syntaxes) to learn how to set up format-on-save. Further
 instructions for configuration can be found in the [extension
 repository](https://github.com/ocamllabs/vscode-ocaml-platform#setting-up-the-extension-for-your-project).
 
@@ -110,8 +118,8 @@ To enter a Melange development shell, run `nix develop -c $SHELL`.
 ### [esy](https://esy.sh/)
 
 First, make sure `esy` is
-[installed](https://esy.sh/docs/en/getting-started.html#install-esy). `npm i -g
-esy` does the trick in most setups.
+[installed](https://esy.sh/docs/getting-started#install-esy). `npm i -g esy`
+does the trick in most setups.
 
 The following is an example `esy.json` that can help start a Melange project. A
 [project template for esy](https://github.com/melange-re/melange-esy-template)

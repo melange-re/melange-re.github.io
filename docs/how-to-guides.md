@@ -1,4 +1,4 @@
-# How-to guides 
+# How-to guides
 
 ## Migrate a ReScript library to Melange
 
@@ -25,13 +25,14 @@ Let's go through them in detail:
 ### Add an `opam` file
 
 To migrate your ReScript library to Melange, you will need some packages.
-Melange is designed to be used with [opam](https://opam.ocaml.org/), the package manager
-of OCaml, which is explained in [its own section](./package-management.md).
+Melange is designed to be used with [opam](https://opam.ocaml.org/), the package
+manager of OCaml, which is explained in [its own
+section](./package-management.md).
 
 To get started with the library migration, let's create an `opam` file in your
 library's root folder with the minimum set of packages to start working:
 
-```text
+```opam
 opam-version: "2.0"
 synopsis: "My Melange library"
 description: "A library for Melange"
@@ -59,7 +60,7 @@ switch](https://opam.ocaml.org/blog/opam-local-switches/) to start working on
 our library:
 
 ```bash
-opam switch create . 5.1.0 -y --deps-only
+opam switch create . 5.3.0 -y --deps-only
 ```
 
 Once this step is done, we can call `dune` from the library folder, but first we
@@ -70,7 +71,7 @@ need some configuration files.
 Create a file named `dune-project` in the library root folder. This file will
 tell Dune a few things about our project configuration:
 
-```text
+```dune
 (lang dune 3.8)
 
 (using melange 0.1)
@@ -82,7 +83,7 @@ Now, we need to add a `dune` file where we will tell Dune about our library. You
 can put this new file next to the library sources, it will look something like
 this:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -93,7 +94,8 @@ Let's see how the most common configurations in `bsconfig.json` (or
 `rescript.json`) map to `dune` files. You can find more information about these
 configurations in the [Rescript
 docs](https://rescript-lang.org/docs/manual/latest/build-configuration) and in
-the [Dune docs](https://dune.readthedocs.io/en/stable/dune-files.html#library).
+the [Dune
+docs](https://dune.readthedocs.io/en/stable/reference/dune/library.html).
 
 #### `name`, `namespace`
 
@@ -117,9 +119,9 @@ your `bsconfig.json` configuration includes a naming scheme like this:
 
 It should be converted into something like:
 
-```text
+```dune
 (library
- (name fooBar) # or (name foo_bar)
+ (name fooBar) ; or (name foo_bar)
  (modes melange)
  (preprocess (pps melange.ppx)))
 ```
@@ -135,11 +137,11 @@ include just the files inside that folder to the library itself (unless the
 subfolders in it, you can use the following combination of stanzas:
 
 - `(include_subdirs unqualified)`
-  ([docs](https://dune.readthedocs.io/en/stable/dune-files.html#include-subdirs)):
+  ([docs](https://dune.readthedocs.io/en/stable/reference/dune/include_subdirs.html)):
   This stanza tells Dune to look for sources in all the subfolders of the folder
   where the `dune` file lives.
 - `(dirs foo bar)`
-  ([docs](https://dune.readthedocs.io/en/stable/dune-files.html#dirs)): This
+  ([docs](https://dune.readthedocs.io/en/stable/reference/dune/dirs.html)): This
   stanza tells Dune to only look into `foo` and `bar` subdirectories of the
   current folder.
 
@@ -153,7 +155,7 @@ So for example, if your library had this configuration in its `bsconfig.json`:
 
 You might translate this to a `dune` file with the following configuration:
 
-```text
+```dune
 (include_subdirs unqualified)
 (dirs src helper)
 (library
@@ -187,7 +189,7 @@ For example, if `bsconfig.json` had something like this:
 
 Your `dune` file will look something like:
 
-```text
+```dune
 (library
  (name things)
  (libraries reason-react)
@@ -206,7 +208,7 @@ for testing. For this scenario, opam provides the `with-test` variable.
 Supposing we want to add `melange-jest` as a dependency to use for tests, you
 could add this in your library `opam` file:
 
-```text
+```opam
 depends: [
   "melange-jest" {with-test}
 ]
@@ -252,15 +254,14 @@ For example, if you had something like this in `bsconfig.json`:
 
 This could be expressed in a `dune` file with something like:
 
-```text
-(rule 
+```dune
+(rule
   (deps (alias melange))
-  (action (run node ../../postProcessTheFile.js))
-)
+  (action (run node ../../postProcessTheFile.js)))
 ```
 
 To read more about Dune rules, check [the
-documentation](https://dune.readthedocs.io/en/stable/dune-files.html#rule).
+documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html).
 
 #### `package-specs`
 
@@ -272,7 +273,7 @@ system](./build-system.md#commonjs-or-es6-modules) section.
 Regarding the `"in-source"` configuration, the corresponding field in Dune would
 be the `(promote (until-clean))` configuration, which can be added to a
 `melange.emit` stanza. You can read more about it in [the Dune
-documentation](https://dune.readthedocs.io/en/stable/dune-files.html#promote).
+documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html#promote).
 
 #### `suffix`
 
@@ -303,7 +304,7 @@ For example, if you had a `bsconfig.json` configuration like this:
 
 You can define a similar configuration in your library `dune` file like this:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -381,7 +382,7 @@ field foo is never read.` errors.
 **Fix**: silence the warning in the type definition, e.g.
 
 ```ocaml
-type renderOptions = { 
+type renderOptions = {
   foo : string
 } [@@warning "-69"]
 ```
@@ -413,7 +414,7 @@ external myImage : string = "default" [@@bs.module "./icons/overview.svg"]
 **Fix**: You can include it by using the `melange.runtime_deps` field of the
 library:
 
-```text
+```dune
 (library
  (name things)
  (modes melange)
@@ -449,7 +450,7 @@ opam update
 Now, update the version of the OCaml compiler in the local switch to 5.1:
 
 ```bash
-opam install --update-invariant ocaml-base-compiler.5.1.0
+opam install --update-invariant ocaml-base-compiler.5.3.0
 ```
 
 Finally, we can upgrade all packages to get Melange v2 and the latest version of
@@ -466,7 +467,7 @@ subcommand:
 opam list --installed melange
 # Packages matching: name-match(melange) & installed
 # Name  # Installed    # Synopsis
-melange 2.0.0          Toolchain to produce JS from Reason/OCaml
+melange 5.0.0-53       Toolchain to produce JS from Reason/OCaml
 ```
 
 Before building, we have to update some parts of the configuration to make it
@@ -479,7 +480,7 @@ If you get errors of the kind `Unused attribute`, or type errors in externals
 that don't make much sense, then you probably need to add `melange.ppx` to your
 `library` or ` melange.emit` stanzas.
 
-```
+```dune
 (library
  ...
  (preprocess
@@ -536,14 +537,15 @@ v3, but node extensions (`%bs.*`) are not.
 #### `@bs` attribute becomes `@u`
 
 The `@bs` attribute, used for uncurried application (see the ["Binding to
-callbacks" section](./communicate-with-javascript.md#binding-to-callbacks)),
-becomes `@u`.
+callbacks"
+section](./working-with-js-objects-and-values.md#binding-to-callbacks)), becomes
+`@u`.
 
 #### `@bs.val` is gone
 
 The `@bs.val` attribute is no longer necessary, and can be removed from
 `external` definitions. See more information in the ["Using global functions or
-values"](./communicate-with-javascript.md#using-global-functions-or-values)
+values"](./working-with-js-objects-and-values.md#using-global-functions-or-values)
 section.
 
 #### `Dom` and `Node` are in their own libraries
@@ -552,7 +554,7 @@ The namespaces `Dom` and `Node` are now in the libraries `melange.dom` and
 `melange.node` respectively. These libraries are not included by default by
 Melange, and will need to be added to the `libraries` field explicitly.
 
-#### Effect handlers 
+#### Effect handlers
 
 Although Melange v2 requires OCaml 5.1, it doesn't yet provide a good solution
 for compiling effect handlers to JavaScript. Until it does, they are disabled at
