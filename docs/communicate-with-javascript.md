@@ -468,9 +468,9 @@ This is how each Melange type is converted into JavaScript values:
 | bool | boolean |
 | <a class="text-ocaml" href="../api/ml/melange/Js/Nullable">Js.Nullable.t</a><a class="text-reasonml" href="../api/re/melange/Js/Nullable">Js.Nullable.t</a> | `null` / `undefined` | 
 | <a class="text-ocaml" href="../api/ml/melange/Js/Re">Js.Re.t</a><a class="text-reasonml" href="../api/re/melange/Js/Re">Js.Re.t</a> | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
-| Option.t `None` | `undefined` |
-| Option.t <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
-| Option.t <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
+| option `None` | `undefined` |
+| option <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
+| option <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
 | record <code class="text-ocaml">{x = 1; y = 2}</code><code class="text-reasonml">{x: 1; y: 2}</code> | object `{x: 1, y: 2}` |
 | int64 | array of 2 elements `[high, low]` high is signed, low unsigned |
 | char | `'a'` -\> `97` (ascii code) |
@@ -755,7 +755,7 @@ These attributes are used to annotate `external` definitions:
 - [`mel.new`](#javascript-classes): bind to a JavaScript class constructor
 - [`mel.obj`](#using-external-functions): create a JavaScript object
 - [`mel.return`](#wrapping-returned-nullable-values): automate conversion from
-  nullable values to `Option.t` values
+  nullable values to `option` values
 - [`mel.send`](#calling-an-object-method): call a JavaScript object method using
   [pipe first](#pipe-first) convention
 - [`mel.send.pipe`](#calling-an-object-method): call a JavaScript object method
@@ -920,7 +920,7 @@ Melange provides a relatively type safe approach to use globals that might be
 defined either in the JavaScript runtime environment: `mel.external`.
 
 `[%mel.external id]` will check if the JavaScript value `id` is `undefined` or
-not, and return an `Option.t` value accordingly.
+not, and return an `option` value accordingly.
 
 For example:
 
