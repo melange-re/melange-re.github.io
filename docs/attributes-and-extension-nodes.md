@@ -17,7 +17,7 @@ These attributes are used to annotate `external` definitions:
 - [`mel.obj`](./working-with-js-objects-and-values.md#using-external-functions):
   create a JavaScript object
 - [`mel.return`](./working-with-js-objects-and-values.md#wrapping-returned-nullable-values):
-  automate conversion from nullable values to `Option.t` values
+  automate conversion from nullable values to `option` values
 - [`mel.send`](./working-with-js-objects-and-values.md#calling-an-object-method):
   call a JavaScript object method
 - [`mel.set`](./working-with-js-objects-and-values.md#bind-to-object-properties):
@@ -193,7 +193,7 @@ Melange provides a relatively type safe approach to use globals that might be
 defined either in the JavaScript runtime environment: `mel.external`.
 
 `[%mel.external id]` will check if the JavaScript value `id` is `undefined` or
-not, and return an `Option.t` value accordingly.
+not, and return an `option` value accordingly.
 
 For example:
 
@@ -226,8 +226,8 @@ let () =
 ```
 
 `[%mel.external id]` makes `id` available as a value of type <code
-class="text-ocaml">'a Option.t</code><code
-class="text-reasonml">Option.t('a)</code>, meaning its wrapped value is
+class="text-ocaml">'a option</code><code
+class="text-reasonml">option('a)</code>, meaning its wrapped value is
 compatible with any type. If you use the value, it is recommended to annotate it
 into a known type first to avoid runtime issues.
 

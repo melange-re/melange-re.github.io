@@ -591,7 +591,7 @@ let _result =
 
 If you know some value may be `undefined` (but not `null`, see next section),
 and if you know its type is monomorphic (i.e. not generic), then you can model
-it directly as an `Option.t` type.
+it directly as an `option` type.
 
 See the [Non-shared data
 types](./data-types-and-runtime-rep.md#non-shared-data-types) section for more
