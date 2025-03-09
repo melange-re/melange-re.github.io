@@ -208,7 +208,7 @@ The code above marks the `array('a)` argument as the instance to call the
 Besides being more versatile, having an explicit marker with `@mel.this` is
 also more visually intuitive: when scanning Melange code containing `external`
 bindings, it becomes easier to spot which is the "this" argument. This feature
-is 100% backwards compatible with `@mel.send`: in the absence of `@mel.this`,
+is fully backwards compatible with `@mel.send`: in the absence of `@mel.this`,
 the instance argument defaults to the first one declared in the signature, as
 previously supported.
 
