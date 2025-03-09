@@ -43,7 +43,7 @@ down:
    compile-time, but Melange will skip emitting static JavaScript `import ..`
    declarations if the values are exclusively used through `Js.import(..)`.
 
-### Dynamically `import()`ing OCaml code
+### Dynamically importing OCaml code
 
 The example below makes it clear: we import the entire `Stdlib.Int` module,
 specify its type signature, and observe that no static `import`s appear in the
@@ -54,7 +54,7 @@ resulting JavaScript:
 
 module type int = (module type of Int);
 
-let _: Js. Promise.t(unit) = {
+let _: Js.Promise.t(unit) = {
   Js.import((module Stdlib.Int): (module int))
   |> Js.Promise.then_((module Int: int) =>
       Js.Promise.resolve(Js.log(Int.max))
@@ -70,13 +70,13 @@ import("melange/int.js").then(function (Int) {
 });
 ```
 
-### Dynamically `import()`ing JavaScript from OCaml
+### Dynamically importing JavaScript from OCaml
 
 One of Melange's primary operating principles is the ability to support
 seamless interop with JavaScript constructs. As such, we implemented `import()`
 in a way that also allows importing JS modules dynamically: you can call
 `Js.import` on JavaScript values declared with `external`. The abstractions
-compose nicely here to produce the expected result. Check out this example of
+compose nicely to produce the expected result. Check out this example of
 dynamically importing `React.useEffect`:
 
 ```js
@@ -237,8 +237,8 @@ Melange without compiling its own runtime and stdlib (essentially, in
 combination with `(emit_stdlib false)` in `(melange.emit ..)`).
 
 This can be useful in monorepos that compile multiple Melange applications but,
-perhaps most importantly, it enables Melange libraries and packages to be
-published without the weight of the full runtime / stdlib.
+perhaps most importantly, it enables Melange libraries and packages to also
+be published in NPM without the weight of the full runtime / stdlib.
 
 ### Better editor support for Melange `external`s
 
