@@ -20,6 +20,8 @@ which we'll describe in detail below.
 
 Read on for the highlights.
 
+---
+
 ## Dynamic `import()` without sacrificing type safety
 
 Support for JavaScript's dynamic `import()` is probably what I'm most excited
@@ -246,7 +248,7 @@ payload](https://ocaml.org/manual/5.3/intfc.html#external-declaration). In
 practice, hovering over one of these in your editor could end up looking a bit
 weird:
 
-![](https://private-user-images.githubusercontent.com/661909/386930735-af1c5c90-2ba7-4813-b4d8-80a4f9a74aae.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEzOTE4MjIsIm5iZiI6MTc0MTM5MTUyMiwicGF0aCI6Ii82NjE5MDkvMzg2OTMwNzM1LWFmMWM1YzkwLTJiYTctNDgxMy1iNGQ4LTgwYTRmOWE3NGFhZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA3JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwN1QyMzUyMDJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0xYTVmNDA3Nzk4MjhlNGEzNjE0MmVkMGVlOTM3NDgzMzM4MzUwYWVlNjJjNmMxMmY1NjU2Mjg4MjM2NGYyYTI0JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.T6wIwTPOmHyWpcCBcJoon1d42nQjMGzqch7P2BbRI3Q)
+![](/blog/images/externals-before.png)
 
 Since
 [melange-re/melange#1222](https://github.com/melange-re/melange/pull/1222),
@@ -255,7 +257,7 @@ Melange compiler recognizes. These don't show up when hovering over
 declarations in editors, making the resulting output much less jarring to look
 at:
 
-![](https://private-user-images.githubusercontent.com/661909/386930792-1d8f67ac-5e30-4e28-9c28-06bb93c4e400.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEzOTE4MjIsIm5iZiI6MTc0MTM5MTUyMiwicGF0aCI6Ii82NjE5MDkvMzg2OTMwNzkyLTFkOGY2N2FjLTVlMzAtNGUyOC05YzI4LTA2YmI5M2M0ZTQwMC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA3JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwN1QyMzUyMDJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zZWIzYjhkNjU4YTVhZjAzZjcxOWRhMzk1OWZkMzJkNjdiMmM4M2NhYTEwYmM4YTNkYTAxYzc2MGEzOGY0MjlhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.2XLxUv-Zjc29HK4BqIM5aH4jzSM6lr3RI6iSn4Dgz0Q)
+![](/blog/images/externals-after.png)
 
 ### Prettified JavaScript Output
 
