@@ -248,7 +248,7 @@ payload](https://ocaml.org/manual/5.3/intfc.html#external-declaration). In
 practice, hovering over one of these in your editor could end up looking a bit
 weird:
 
-![](/blog/images/externals-before.png)
+![](/externals-before.png)
 
 Since
 [melange-re/melange#1222](https://github.com/melange-re/melange/pull/1222),
@@ -257,7 +257,7 @@ Melange compiler recognizes. These don't show up when hovering over
 declarations in editors, making the resulting output much less jarring to look
 at:
 
-![](/blog/images/externals-after.png)
+![](/externals-after.png)
 
 ### Prettified JavaScript Output
 
