@@ -17,7 +17,7 @@ After cloning the repository, install the necessary JavaScript packages:
 yarn
 ```
 
-Then run `yarn docs:dev` from the folder where the repository lives.
+Then run `make dev` from the folder where the repository lives.
 
 ### (Optional) Tooling for docs generation
 
