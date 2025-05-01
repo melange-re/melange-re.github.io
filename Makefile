@@ -82,3 +82,17 @@ dev: ## Start docs dev server
 .PHONY: preview
 preview: ## Preview the docs
 	yarn vitepress preview docs
+
+.PHONY: pull-melange-docs
+pull-melange-docs: ## Pull melange docs
+	if [ ! -d "melange.dev" ]; then \
+		opam source melange; \
+	fi
+	cd melange.dev
+	dune build @docs
+	cd ..
+	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/stdlib.odocl
+	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/js.odocl
+	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/belt.odocl
+	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/dom.odocl
+	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/node.odocl
