@@ -1,0 +1,7 @@
+pin-depends: [
+  ["melange.dev" "git+https://github.com/melange-re/melange.git#973fa8d80c55ea31e468bae390da2200580ddda6"]
+  ["melange-playground.dev" "git+https://github.com/melange-re/melange.git#973fa8d80c55ea31e468bae390da2200580ddda6"]
+  ["cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91"]
+  ["odoc.dev" "git+https://github.com/davesnx/odoc.git#d03bd566013841bcc83af9d964859f1aa8a30324"]
+  ["odoc-parser.dev" "git+https://github.com/davesnx/odoc.git#d03bd566013841bcc83af9d964859f1aa8a30324"]
+]
