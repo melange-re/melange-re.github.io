@@ -1,8 +1,14 @@
+
 # Module `HashSet.Int`
+
 Specalized when key type is `int`, more efficient than the generic type
+
 This module is [`Belt.HashSet`](./Belt-HashSet.md) specialized with key type to be a primitive type.
+
 It is more efficient in general, the API is the same with [`Belt.HashSet`](./Belt-HashSet.md) except its key type is fixed, and identity is not needed(using the built-in one)
+
 **See** [`Belt.HashSet`](./Belt-HashSet.md)
+
 ```
 type key = int
 ```

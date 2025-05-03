@@ -1,6 +1,10 @@
+
 # Module `Js.Map`
+
 Bindings to functions in `Map`
+
 ES6 Map API
+
 ```
 type ('k, 'v) t
 ```

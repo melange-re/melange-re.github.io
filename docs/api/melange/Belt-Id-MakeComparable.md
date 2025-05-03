@@ -1,9 +1,15 @@
+
 # Module `Id.MakeComparable`
+
+
 ## Parameters
+
 ```
 module M : sig ... end
 ```
+
 ## Signature
+
 ```
 type identity
 ```

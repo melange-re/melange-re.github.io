@@ -1,12 +1,22 @@
+
 # Module `Belt.Map`
+
 [`Belt.Map`](#),
+
 The top level provides generic **immutable** map operations.
+
 It also has three specialized inner modules [`Belt.Map.Int`](./Belt-Map-Int.md), [`Belt.Map.String`](./Belt-Map-String.md) and
+
 [`Belt.Map.Dict`](./Belt-Map-Dict.md): This module separates data from function which is more verbose but slightly more efficient
+
 A *immutable* sorted map module which allows customize *compare* behavior.
+
 The implementation uses balanced binary trees, and therefore searching and insertion take time logarithmic in the size of the map.
+
 For more info on this module's usage of identity, \`make\` and others, please see the top level documentation of Belt, **A special encoding for collection safety**.
+
 Example usage:
+
 ```ocaml
  module PairComparator = Belt.Id.MakeComparable(struct
    type t = int * int
@@ -20,25 +30,33 @@ Example usage:
  let myMap2 = Belt.Map.set myMap (1, 2) "myValue"
 ```
 The API documentation below will assume a predeclared comparator module for integers, IntCmp
+
 ```
 module Int : sig ... end
 ```
 Specalized when key type is `int`, more efficient than the generic type, its compare behavior is fixed using the built-in comparison
+
 ```
 module String : sig ... end
 ```
 specalized when key type is `string`, more efficient than the generic type, its compare behavior is fixed using the built-in comparison
+
 ```
 module Dict : sig ... end
 ```
 This module seprate identity from data, it is a bit more verboe but slightly more efficient due to the fact that there is no need to pack identity and data back after each operation
+
 ```
 type ('key, 'value, 'identity) t
 ```
 `('key, 'identity) t`
+
 `'key` is the field type
+
 `'value` is the element type
+
 `'identity` the identity of the collection
+
 ```
 type ('key, 'id) id =
   (module Belt__.Belt_Id.Comparable
@@ -46,10 +64,12 @@ type ('key, 'id) id =
    and type t = 'key)
 ```
 The identity needed for making an empty map
+
 ```
 val make : id:('k, 'id) id -> ('k, 'v, 'id) t
 ```
 `make ~id` creates a new map by taking in the comparator
+
 ```ocaml
   let m = Belt.Map.make ~id:(module IntCmp)
 ```
@@ -57,6 +77,7 @@ val make : id:('k, 'id) id -> ('k, 'v, 'id) t
 val isEmpty : (_, _, _) t -> bool
 ```
 `isEmpty m` checks whether a map m is empty
+
 ```ocaml
   isEmpty (fromArray [|1,"1"|] ~id:(module IntCmp)) = false
 ```
@@ -64,6 +85,7 @@ val isEmpty : (_, _, _) t -> bool
 val has : ('k, 'v, 'id) t -> 'k -> bool
 ```
 `has m k` checks whether m has the key k
+
 ```ocaml
   has (fromArray [|1,"1"|] ~id:(module IntCmp)) 1 = true
 ```
@@ -78,8 +100,11 @@ val cmpU :
 val cmp : ('k, 'v, 'id) t -> ('k, 'v, 'id) t -> ('v -> 'v -> int) -> int
 ```
 `cmp m0 m1 vcmp`
+
 Total ordering of map given total ordering of value function.
+
 It will compare size first and each element following the order one by one.
+
 ```
 val eqU : 
   ('k, 'v, 'id) t ->
@@ -91,6 +116,7 @@ val eqU :
 val eq : ('k, 'v, 'id) t -> ('k, 'v, 'id) t -> ('v -> 'v -> bool) -> bool
 ```
 `eq m1 m2 veq` tests whether the maps `m1` and `m2` are equal, that is, contain equal keys and associate them with equal data. `veq` is the equality predicate used to compare the data associated with the keys.
+
 ```
 val findFirstByU : 
   ('k, 'v, 'id) t ->
@@ -101,6 +127,7 @@ val findFirstByU :
 val findFirstBy : ('k, 'v, 'id) t -> ('k -> 'v -> bool) -> ('k * 'v) option
 ```
 `findFirstBy m p` uses funcion `f` to find the first key value pair to match predicate `p`.
+
 ```ocaml
   let s0 = fromArray ~id:(module IntCmp) [|4,"4";1,"1";2,"2,"3""|];;
   findFirstBy s0 (fun k v -> k = 4 ) = option (4, "4");;
@@ -112,6 +139,7 @@ val forEachU : ('k, 'v, 'id) t -> ('k -> 'v -> unit) Js.Fn.arity2 -> unit
 val forEach : ('k, 'v, 'id) t -> ('k -> 'v -> unit) -> unit
 ```
 `forEach m f` applies `f` to all bindings in map `m`. `f` receives the 'k as first argument, and the associated value as second argument. The bindings are passed to `f` in increasing order with respect to the ordering over the type of the keys.
+
 ```ocaml
   let s0 = fromArray ~id:(module IntCmp) [|4,"4";1,"1";2,"2,"3""|];;
   let acc = ref [] ;;
@@ -130,6 +158,7 @@ val reduceU :
 val reduce : ('k, 'v, 'id) t -> 'acc -> ('acc -> 'k -> 'v -> 'acc) -> 'acc
 ```
 `reduce m a f` computes `(f kN dN ... (f k1 d1 a)...)`, where `k1 ... kN` are the keys of all bindings in `m` (in increasing order), and `d1 ... dN` are the associated data.
+
 ```ocaml
   let s0 = fromArray ~id:(module IntCmp) [|4,"4";1,"1";2,"2,"3""|];;
   reduce s0 [] (fun acc k v -> (k,v) acc ) = [4,"4";3,"3";2,"2";1,"1"];;
@@ -141,6 +170,7 @@ val everyU : ('k, 'v, 'id) t -> ('k -> 'v -> bool) Js.Fn.arity2 -> bool
 val every : ('k, 'v, 'id) t -> ('k -> 'v -> bool) -> bool
 ```
 `every m p` checks if all the bindings of the map satisfy the predicate `p`. Order unspecified
+
 ```
 val someU : ('k, 'v, 'id) t -> ('k -> 'v -> bool) Js.Fn.arity2 -> bool
 ```
@@ -148,10 +178,12 @@ val someU : ('k, 'v, 'id) t -> ('k -> 'v -> bool) Js.Fn.arity2 -> bool
 val some : ('k, 'v, 'id) t -> ('k -> 'v -> bool) -> bool
 ```
 `some m p` checks if at least one binding of the map satisfy the predicate `p`. Order unspecified
+
 ```
 val size : ('k, 'v, 'id) t -> int
 ```
 `size s`
+
 ```ocaml
   size (fromArray [2,"2"; 2,"1"; 3,"3"] ~id:(module IntCmp)) = 2 ;;
 ```
@@ -159,6 +191,7 @@ val size : ('k, 'v, 'id) t -> int
 val toArray : ('k, 'v, 'id) t -> ('k * 'v) array
 ```
 `toArray s`
+
 ```ocaml
   toArray (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp)) = [1,"1";2,"2";3,"3"]
 ```
@@ -166,11 +199,14 @@ val toArray : ('k, 'v, 'id) t -> ('k * 'v) array
 val toList : ('k, 'v, 'id) t -> ('k * 'v) list
 ```
 In increasing order
+
 **See** [`toArray`](./#val-toArray)
+
 ```
 val fromArray : ('k * 'v) array -> id:('k, 'id) id -> ('k, 'v, 'id) t
 ```
 `fromArray kvs ~id`
+
 ```ocaml
   toArray (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp)) = [1,"1";2,"2";3,"3"]
 ```
@@ -178,6 +214,7 @@ val fromArray : ('k * 'v) array -> id:('k, 'id) id -> ('k, 'v, 'id) t
 val keysToArray : ('k, 'v, 'id) t -> 'k array
 ```
 `keysToArray s`
+
 ```ocaml
   keysToArray (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp)) =
   [|1;2;3|];;
@@ -186,6 +223,7 @@ val keysToArray : ('k, 'v, 'id) t -> 'k array
 val valuesToArray : ('k, 'v, 'id) t -> 'v array
 ```
 `valuesToArray s`
+
 ```ocaml
   valuesToArray (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp)) =
   [|"1";"2";"3"|];;
@@ -194,42 +232,51 @@ val valuesToArray : ('k, 'v, 'id) t -> 'v array
 val minKey : ('k, _, _) t -> 'k option
 ```
 `minKey s`
+
 returns the minimum key, None if not exist
 ```
 val minKeyUndefined : ('k, _, _) t -> 'k Js.undefined
 ```
 **See** [`minKey`](./#val-minKey)
+
 ```
 val maxKey : ('k, _, _) t -> 'k option
 ```
 `maxKey s`
+
 returns the maximum key, None if not exist
 ```
 val maxKeyUndefined : ('k, _, _) t -> 'k Js.undefined
 ```
 **See** [`maxKey`](./#val-maxKey)
+
 ```
 val minimum : ('k, 'v, _) t -> ('k * 'v) option
 ```
 `minimum s`
+
 returns the minimum key value pair, None if not exist
 ```
 val minUndefined : ('k, 'v, _) t -> ('k * 'v) Js.undefined
 ```
 **See** [`minimum`](./#val-minimum)
+
 ```
 val maximum : ('k, 'v, _) t -> ('k * 'v) option
 ```
 `maximum s`
+
 returns the maximum key value pair, None if not exist
 ```
 val maxUndefined : ('k, 'v, _) t -> ('k * 'v) Js.undefined
 ```
 **See** [`maximum`](./#val-maximum)
+
 ```
 val get : ('k, 'v, 'id) t -> 'k -> 'v option
 ```
 `get s k`
+
 ```ocaml
   get (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp)) 2 =
   Some "2";;
@@ -240,23 +287,30 @@ val get : ('k, 'v, 'id) t -> 'k -> 'v option
 val getUndefined : ('k, 'v, 'id) t -> 'k -> 'v Js.undefined
 ```
 **See** [`get`](./#val-get)
+
 returns undefined when not found
 ```
 val getWithDefault : ('k, 'v, 'id) t -> 'k -> 'v -> 'v
 ```
 `getWithDefault s k default`
+
 **See** [`get`](./#val-get)
+
 returns default when k is not found
 ```
 val getExn : ('k, 'v, 'id) t -> 'k -> 'v
 ```
 `getExn s k`
+
 **See** [`getExn`](./#val-getExn)
+
 **raise** when `k` not exist
+
 ```
 val remove : ('k, 'v, 'id) t -> 'k -> ('k, 'v, 'id) t
 ```
 `remove m x` when `x` is not in `m`, `m` is returned reference unchanged.
+
 ```ocaml
   let s0 =  (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp));;
 
@@ -269,11 +323,14 @@ val remove : ('k, 'v, 'id) t -> 'k -> ('k, 'v, 'id) t
 val removeMany : ('k, 'v, 'id) t -> 'k array -> ('k, 'v, 'id) t
 ```
 `removeMany s xs`
+
 Removing each of `xs` to `s`, note unlike [`remove`](./#val-remove), the reference of return value might be changed even if none in `xs` exists `s`
+
 ```
 val set : ('k, 'v, 'id) t -> 'k -> 'v -> ('k, 'v, 'id) t
 ```
 `set m x y ` returns a map containing the same bindings as `m`, with a new binding of `x` to `y`. If `x` was already bound in `m`, its previous binding disappears.
+
 ```ocaml
   let s0 =  (fromArray [2,"2"; 1,"1"; 3,"3"] ~id:(module IntCmp));;
 
@@ -296,11 +353,14 @@ val update :
   ('k, 'v, 'id) t
 ```
 `update m x f` returns a map containing the same bindings as `m`, except for the binding of `x`. Depending on the value of `y` where `y` is `f (get x m)`, the binding of `x` is added, removed or updated. If `y` is `None`, the binding is removed if it exists; otherwise, if `y` is `Some z` then `x` is associated to `z` in the resulting map.
+
 ```
 val mergeMany : ('k, 'v, 'id) t -> ('k * 'v) array -> ('k, 'v, 'id) t
 ```
 `mergeMany s xs`
+
 Add each of `xs` to `s`, note unlike [`set`](./#val-set), the reference of return value might be changed even if all values in `xs` exist `s`
+
 ```
 val mergeU : 
   ('k, 'v, 'id) t ->
@@ -316,6 +376,7 @@ val merge :
   ('k, 'v3, 'id) t
 ```
 `merge m1 m2 f` computes a map whose keys is a subset of keys of `m1` and of `m2`. The presence of each such binding, and the corresponding value, is determined with the function `f`.
+
 ```
 val keepU : 
   ('k, 'v, 'id) t ->
@@ -326,6 +387,7 @@ val keepU :
 val keep : ('k, 'v, 'id) t -> ('k -> 'v -> bool) -> ('k, 'v, 'id) t
 ```
 `keep m p` returns the map with all the bindings in `m` that satisfy predicate `p`.
+
 ```
 val partitionU : 
   ('k, 'v, 'id) t ->
@@ -339,6 +401,7 @@ val partition :
   ('k, 'v, 'id) t * ('k, 'v, 'id) t
 ```
 `partition m p` returns a pair of maps `(m1, m2)`, where `m1` contains all the bindings of `s` that satisfy the predicate `p`, and `m2` is the map with all the bindings of `s` that do not satisfy `p`.
+
 ```
 val split : 
   ('k, 'v, 'id) t ->
@@ -346,6 +409,7 @@ val split :
   (('k, 'v, 'id) t * ('k, 'v, 'id) t) * 'v option
 ```
 `split x m` returns a tuple `(l r), data`, where `l` is the map with all the bindings of `m` whose 'k is strictly less than `x`; `r` is the map with all the bindings of `m` whose 'k is strictly greater than `x`; `data` is `None` if `m` contains no binding for `x`, or `Some v` if `m` binds `v` to `x`.
+
 ```
 val mapU : ('k, 'v, 'id) t -> ('v -> 'v2) Js.Fn.arity1 -> ('k, 'v2, 'id) t
 ```
@@ -353,6 +417,7 @@ val mapU : ('k, 'v, 'id) t -> ('v -> 'v2) Js.Fn.arity1 -> ('k, 'v2, 'id) t
 val map : ('k, 'v, 'id) t -> ('v -> 'v2) -> ('k, 'v2, 'id) t
 ```
 `map m f` returns a map with same domain as `m`, where the associated value `a` of all bindings of `m` has been replaced by the result of the application of `f` to `a`. The bindings are passed to `f` in increasing order with respect to the ordering over the type of the keys.
+
 ```
 val mapWithKeyU : 
   ('k, 'v, 'id) t ->
@@ -363,18 +428,24 @@ val mapWithKeyU :
 val mapWithKey : ('k, 'v, 'id) t -> ('k -> 'v -> 'v2) -> ('k, 'v2, 'id) t
 ```
 `mapWithKey m f`
+
 The same as [`map`](./#val-map) except that `f` is supplied with one more argument: the key
+
 ```
 val getData : ('k, 'v, 'id) t -> ('k, 'v, 'id) Belt__.Belt_MapDict.t
 ```
 `getData s0`
+
 **Advanced usage only**
+
 returns the raw data (detached from comparator), but its type is still manifested, so that user can pass identity directly without boxing
 ```
 val getId : ('k, 'v, 'id) t -> ('k, 'id) id
 ```
 `getId s0`
+
 **Advanced usage only**
+
 returns the identity of s0
 ```
 val packIdData : 
@@ -383,5 +454,7 @@ val packIdData :
   ('k, 'v, 'id) t
 ```
 `packIdData ~id ~data`
+
 **Advanced usage only**
+
 returns the packed collection

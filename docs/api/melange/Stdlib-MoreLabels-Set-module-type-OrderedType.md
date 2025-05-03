@@ -1,9 +1,13 @@
+
 # Module type `Set.OrderedType`
+
 Input signature of the functor [`Make`](./Stdlib-MoreLabels-Set-Make.md).
+
 ```
 type t
 ```
 The type of the set elements.
+
 ```
 val compare : t -> t -> int
 ```

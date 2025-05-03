@@ -1,4 +1,6 @@
+
 # Module type `Id.Comparable`
+
 ```
 type identity
 ```

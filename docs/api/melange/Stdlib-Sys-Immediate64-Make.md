@@ -1,12 +1,18 @@
+
 # Module `Immediate64.Make`
+
+
 ## Parameters
+
 ```
 module Immediate : Immediate
 ```
 ```
 module Non_immediate : Non_immediate
 ```
+
 ## Signature
+
 ```
 type t
 ```

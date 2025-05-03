@@ -1,5 +1,8 @@
+
 # Module type `Hashtbl.S`
+
 The output signature of the functor [`Make`](./Stdlib-Hashtbl-Make.md).
+
 ```
 type key
 ```

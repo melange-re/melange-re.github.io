@@ -1,4 +1,6 @@
+
 # Parameter `MakeHashableU.M`
+
 ```
 type t
 ```

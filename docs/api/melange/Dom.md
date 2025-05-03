@@ -1,4 +1,6 @@
+
 # Module `Dom`
+
 ```
 type _baseClass
 ```

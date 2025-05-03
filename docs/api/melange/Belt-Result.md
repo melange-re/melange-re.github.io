@@ -1,8 +1,14 @@
+
 # Module `Belt.Result`
+
 [`Belt.Result`](#)
+
 Utilities for result data type.
+
 `Belt.Result` is a data type with two variants: `Ok` and `Error`. Each of these variants can contain data, and those two pieces of data need not have the same data type. `Belt.Result` is useful when you need to not only determine whether some data is valid or not (use `Belt.Option` for that), but also keep information about the invalid data.
+
 In the examples, we presume the existence of two variables:
+
 ```ocaml
 let good = Ok 42
 let bad = Error "Invalid data"
@@ -23,7 +29,9 @@ type ('a, 'b) t = ('a, 'b) result =
 val getExn : ('a, 'b) t -> 'a
 ```
 `getExn res`
+
 when `res` is `Ok n`, returns `n` when `res` is `Error m`, **raise** an exception
+
 ```ocaml
   getExn good = 42;;
   getExn bad;; (* raises exception *)
@@ -35,7 +43,9 @@ val mapWithDefaultU : ('a, 'c) t -> 'b -> ('a -> 'b) Js.Fn.arity1 -> 'b
 val mapWithDefault : ('a, 'c) t -> 'b -> ('a -> 'b) -> 'b
 ```
 `mapWithDefault res default f`
+
 When `res` is `Ok n`, returns `f n`, otherwise `default`.
+
 ```ocaml
   mapWithDefault good 0 (fun x -> x / 2) = 21
   mapWithDefault bad 0 (fun x -> x / 2) = 0
@@ -47,7 +57,9 @@ val mapU : ('a, 'c) t -> ('a -> 'b) Js.Fn.arity1 -> ('b, 'c) t
 val map : ('a, 'c) t -> ('a -> 'b) -> ('b, 'c) t
 ```
 `map res f`
+
 When `res` is `Ok n`, returns `Ok (f n)`. Otherwise returns `res` unchanged. Function `f` takes a value of the same type as `n` and returns an ordinary value.
+
 ```ocaml
   let f x = sqrt (float_of_int x)
   map (Ok 64) f = Ok 8.0
@@ -60,7 +72,9 @@ val flatMapU : ('a, 'c) t -> ('a -> ('b, 'c) t) Js.Fn.arity1 -> ('b, 'c) t
 val flatMap : ('a, 'c) t -> ('a -> ('b, 'c) t) -> ('b, 'c) t
 ```
 `flatMap res f`
+
 When `res` is `Ok n`, returns `f n`. Otherwise, returns `res` unchanged. Function `f` takes a value of the same type as `n` and returns a `Belt.Result`.
+
 ```ocaml
 let recip x =
   if x != 0.0
@@ -77,7 +91,9 @@ let recip x =
 val getWithDefault : ('a, 'b) t -> 'a -> 'a
 ```
 `getWithDefault res defaultValue`
+
 if `res` is `Ok n`, returns `n`, otherwise `default`
+
 ```ocaml
   getWithDefault (Ok 42) 0 = 42
   getWithDefault (Error "Invalid Data") = 0
@@ -86,12 +102,16 @@ if `res` is `Ok n`, returns `n`, otherwise `default`
 val isOk : ('a, 'b) t -> bool
 ```
 `isOk res`
+
 Returns `true` if `res` is of the form `Ok n`, `false` if it is the `Error e` variant.
+
 ```
 val isError : ('a, 'b) t -> bool
 ```
 `isError res`
+
 Returns `true` if `res` is of the form `Error e`, `false` if it is the `Ok n` variant.
+
 ```
 val eqU : ('a, 'c) t -> ('b, 'd) t -> ('a -> 'b -> bool) Js.Fn.arity2 -> bool
 ```
@@ -99,7 +119,9 @@ val eqU : ('a, 'c) t -> ('b, 'd) t -> ('a -> 'b -> bool) Js.Fn.arity2 -> bool
 val eq : ('a, 'c) t -> ('b, 'd) t -> ('a -> 'b -> bool) -> bool
 ```
 `eq res1 res2 f`
+
 Determine if two `Belt.Result` variables are equal with respect to an equality function. If `res1` and `res2` are of the form `Ok n` and `Ok m`, return the result of `f n m`. If one of `res1` and `res2` are of the form `Error e`, return false If both `res1` and `res2` are of the form `Error e`, return true
+
 ```ocaml
   let good1 = Ok 42
   let good2 = Ok 32
@@ -121,8 +143,11 @@ val cmpU : ('a, 'c) t -> ('b, 'd) t -> ('a -> 'b -> int) Js.Fn.arity2 -> int
 val cmp : ('a, 'c) t -> ('b, 'd) t -> ('a -> 'b -> int) -> int
 ```
 `cmp res1 res2 f`
+
 Compare two `Belt.Result` variables with respect to a comparison function. The comparison function returns \-1 if the first variable is "less than" the second, 0 if the two variables are equal, and 1 if the first is "greater than" the second.
+
 If `res1` and `res2` are of the form `Ok n` and `Ok m`, return the result of `f n m`. If `res1` is of the form `Error e` and `res2` of the form `Ok n`, return \-1 (nothing is less than something) If `res1` is of the form `Ok n` and `res2` of the form `Error e`, return 1 (something is greater than nothing) If both `res1` and `res2` are of the form `Error e`, return 0 (equal)
+
 ```ocaml
   let good1 = Ok 59
   let good2 = Ok 37

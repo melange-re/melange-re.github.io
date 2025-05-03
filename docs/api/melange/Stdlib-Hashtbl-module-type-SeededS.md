@@ -1,5 +1,8 @@
+
 # Module type `Hashtbl.SeededS`
+
 The output signature of the functor [`MakeSeeded`](./Stdlib-Hashtbl-MakeSeeded.md).
+
 since 4.00
 ```
 type key

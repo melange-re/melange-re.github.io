@@ -1,4 +1,6 @@
+
 # Parameter `MakeComparable.M`
+
 ```
 type t
 ```

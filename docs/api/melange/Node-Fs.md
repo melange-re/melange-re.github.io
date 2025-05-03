@@ -1,10 +1,14 @@
+
 # Module `Node.Fs`
+
 Node FS API
+
 see [https://blogs.janestreet.com/a-and-a/](https://blogs.janestreet.com/a-and-a/) refernce documentation
 ```
 val readdirSync : string -> string array
 ```
 Most fs functions let you omit the callback argument. If you do, a default callback is used that rethrows errors. To get a trace to the original call site, set the \`NODE\_DEBUG\` environment variable.
+
 ```
 val renameSync : string -> string -> unit
 ```
@@ -15,6 +19,7 @@ type fd = private int
 type path = string
 ```
 The relative path to a filename can be used. Remember, however, that this path will be relative to `process.cwd()`.
+
 ```
 module Watch : sig ... end
 ```

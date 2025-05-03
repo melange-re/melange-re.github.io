@@ -1,5 +1,8 @@
+
 # Module `Typed_array.DataView`
+
 The DataView view provides a low-level interface for reading and writing multiple number types in an ArrayBuffer irrespective of the platform's endianness.
+
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/DataView](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView) MDN
 ```
 type t

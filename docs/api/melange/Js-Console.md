@@ -1,4 +1,6 @@
+
 # Module `Js.Console`
+
 ```
 val log : 'a -> unit
 ```

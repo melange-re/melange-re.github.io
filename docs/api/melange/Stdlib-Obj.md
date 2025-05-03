@@ -1,6 +1,10 @@
+
 # Module `Stdlib.Obj`
+
 Operations on internal representations of values.
+
 Not for the casual user.
+
 ```
 type t
 ```
@@ -32,6 +36,7 @@ val size : t -> int
 val reachable_words : t -> int
 ```
 Computes the total size (in words, including the headers) of all heap blocks accessible from the argument. Statically allocated blocks are included.
+
 since 4.04
 ```
 val field : t -> int -> t
@@ -40,9 +45,13 @@ val field : t -> int -> t
 val set_field : t -> int -> t -> unit
 ```
 When using flambda:
+
 `set_field` MUST NOT be called on immutable blocks. (Blocks allocated in C stubs, or with `new_block` below, are always considered mutable.)
+
 The same goes for `set_double_field`.
+
 For experts only: `set_field` et al can be made safe by first wrapping the block in [`Sys.opaque_identity`](./Stdlib-Sys.md#val-opaque_identity), so any information about its contents will not be propagated.
+
 ```
 val double_field : t -> int -> float
 ```

@@ -1,13 +1,18 @@
+
 # Module `Js.Types`
+
 Utility functions for runtime reflection on JS types
+
 ```
 type symbol
 ```
 Js symbol type only available in ES6
+
 ```
 type bigint_val
 ```
 Js bigint type only available in ES2020
+
 ```
 type obj_val
 ```
@@ -15,10 +20,12 @@ type obj_val
 type undefined_val
 ```
 This type has only one value `undefined`
+
 ```
 type null_val
 ```
 This type has only one value `null`
+
 ```
 type function_val
 ```

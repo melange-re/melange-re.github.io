@@ -1,4 +1,6 @@
+
 # Module `Typed_array.Uint16Array`
+
 ```
 type elt = int
 ```
@@ -66,6 +68,7 @@ val lastIndexOfFrom : value:elt -> from:int -> t -> int
 val slice : ?start:int -> ?end_:int -> t -> t
 ```
 `start` is inclusive, `end_` exclusive
+
 ```
 val copy : t -> t
 ```
@@ -73,6 +76,7 @@ val copy : t -> t
 val subarray : ?start:int -> ?end_:int -> t -> t
 ```
 `start` is inclusive, `end_` exclusive
+
 ```
 val toString : t -> string
 ```

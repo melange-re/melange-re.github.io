@@ -1,12 +1,16 @@
+
 # Parameter `MakeSeeded.H`
+
 ```
 type t
 ```
 The type of the hashtable keys.
+
 ```
 val equal : t -> t -> bool
 ```
 The equality predicate used to compare keys.
+
 ```
 val seeded_hash : int -> t -> int
 ```

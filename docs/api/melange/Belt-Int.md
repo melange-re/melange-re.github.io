@@ -1,5 +1,8 @@
+
 # Module `Belt.Int`
+
 [`Belt.Int`](#) Utililites for Int
+
 ```
 val toFloat : int -> float
 ```

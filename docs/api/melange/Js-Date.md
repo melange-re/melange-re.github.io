@@ -1,6 +1,10 @@
+
 # Module `Js.Date`
+
 Bindings to the functions in JS's `Date.prototype`
+
 JavaScript Date API
+
 ```
 type t
 ```
@@ -8,10 +12,12 @@ type t
 val valueOf : t -> float
 ```
 returns the primitive value of this date, equivalent to getTime
+
 ```
 val make : unit -> t
 ```
 returns a date representing the current time
+
 ```
 val fromFloat : float -> t
 ```
@@ -83,18 +89,22 @@ val utcWithYMDHMS :
 val now : unit -> float
 ```
 returns the number of milliseconds since Unix epoch
+
 ```
 val parseAsFloat : string -> float
 ```
 returns NaN if passed invalid date string
+
 ```
 val getDate : t -> float
 ```
 return the day of the month (1-31)
+
 ```
 val getDay : t -> float
 ```
 returns the day of the week (0-6)
+
 ```
 val getFullYear : t -> float
 ```
@@ -111,6 +121,7 @@ val getMinutes : t -> float
 val getMonth : t -> float
 ```
 returns the month (0-11)
+
 ```
 val getSeconds : t -> float
 ```
@@ -118,6 +129,7 @@ val getSeconds : t -> float
 val getTime : t -> float
 ```
 returns the number of milliseconds since Unix epoch
+
 ```
 val getTimezoneOffset : t -> float
 ```
@@ -125,10 +137,12 @@ val getTimezoneOffset : t -> float
 val getUTCDate : t -> float
 ```
 return the day of the month (1-31)
+
 ```
 val getUTCDay : t -> float
 ```
 returns the day of the week (0-6)
+
 ```
 val getUTCFullYear : t -> float
 ```
@@ -145,6 +159,7 @@ val getUTCMinutes : t -> float
 val getUTCMonth : t -> float
 ```
 returns the month (0-11)
+
 ```
 val getUTCSeconds : t -> float
 ```

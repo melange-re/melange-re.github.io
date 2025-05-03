@@ -1,6 +1,10 @@
+
 # Module `Js.WeakSet`
+
 Bindings to functions in `WeakSet`
+
 ES6 WeakSet API
+
 ```
 type 'a t
 ```

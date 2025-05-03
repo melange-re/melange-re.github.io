@@ -1,6 +1,10 @@
+
 # Module `Js.Set`
+
 Bindings to functions in `Set`
+
 ES6 Set API
+
 ```
 type 'a t
 ```

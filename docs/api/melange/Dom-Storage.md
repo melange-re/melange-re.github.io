@@ -1,4 +1,6 @@
+
 # Module `Dom.Storage`
+
 ```
 type t
 ```

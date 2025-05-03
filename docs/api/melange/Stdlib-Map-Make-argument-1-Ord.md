@@ -1,8 +1,11 @@
+
 # Parameter `Make.Ord`
+
 ```
 type t
 ```
 The type of the map keys.
+
 ```
 val compare : t -> t -> int
 ```

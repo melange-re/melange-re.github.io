@@ -1,8 +1,14 @@
+
 # Module `Belt.MutableStack`
+
 [`Belt.MutableStack`](#)
+
 An FILO(first in last out) stack data structure
+
 First in last out stack.
+
 This module implements stacks, with in-place modification.
+
 ```
 type 'a t
 ```
@@ -14,10 +20,12 @@ returns a new stack, initially empty.
 val clear : 'a t -> unit
 ```
 Discard all elements from the stack.
+
 ```
 val copy : 'a t -> 'a t
 ```
 `copy x` O(1) operation, return a new stack
+
 ```
 val push : 'a t -> 'a -> unit
 ```

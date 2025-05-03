@@ -1,6 +1,10 @@
+
 # Module `Js.Promise`
+
 Bindings to JS `Promise` functions
+
 Specialized bindings to Promise. Note: For simplicity, this binding does not track the error type, it treat it as an opaque type
+
 ```
 type +'a t = 'a Js.promise
 ```

@@ -1,11 +1,18 @@
+
 # Module `Hashtbl.MakeSeeded`
+
 Functor building an implementation of the hashtable structure. The functor `Hashtbl.MakeSeeded` returns a structure containing a type `key` of keys and a type `'a t` of hash tables associating data of type `'a` to keys of type `key`. The operations perform similarly to those of the generic interface, but use the seeded hashing and equality functions specified in the functor argument `H` instead of generic equality and hashing. The `create` operation of the result structure supports the `~random` optional parameter and returns randomized hash tables if `~random:true` is passed or if randomization is globally on (see [`Hashtbl.randomize`](./Stdlib-MoreLabels-Hashtbl.md#val-randomize)).
+
 since 4.00
+
 ## Parameters
+
 ```
 module H : SeededHashedType
 ```
+
 ## Signature
+
 ```
 type key = H.t
 ```

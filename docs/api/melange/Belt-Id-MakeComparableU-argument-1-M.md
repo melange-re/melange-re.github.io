@@ -1,4 +1,6 @@
+
 # Parameter `MakeComparableU.M`
+
 ```
 type t
 ```

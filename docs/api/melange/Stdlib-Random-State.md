@@ -1,20 +1,26 @@
+
 # Module `Random.State`
+
 ```
 type t
 ```
 The type of PRNG states.
+
 ```
 val make : int array -> t
 ```
 Create a new state and initialize it with the given seed.
+
 ```
 val make_self_init : unit -> t
 ```
 Create a new state and initialize it with a random seed chosen in a system-dependent way. The seed is obtained as described in [`Random.self_init`](./Stdlib-Random.md#val-self_init).
+
 ```
 val copy : t -> t
 ```
 Return a copy of the given state.
+
 ```
 val bits : t -> int
 ```

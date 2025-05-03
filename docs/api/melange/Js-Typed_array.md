@@ -1,11 +1,16 @@
+
 # Module `Js.Typed_array`
+
 Bindings to the functions in `TypedArray.prototype`
+
 JavaScript Typed Array API
+
 see [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/TypedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray) MDN
 ```
 module ArrayBuffer : sig ... end
 ```
 The underlying buffer that the typed arrays provide views of
+
 ```
 module Int8Array : sig ... end
 ```

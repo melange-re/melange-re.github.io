@@ -1,9 +1,13 @@
+
 # Module `Stdlib.Oo`
+
 Operations on objects
+
 ```
 val copy : < .. > as 'a -> 'a
 ```
 `Oo.copy o` returns a copy of object `o`, that is a fresh object with the same methods and instance variables as `o`.
+
 alert unsynchronized\_access Unsynchronized accesses to mutable objects are a programming error.
 ```
 val id : < .. > -> int

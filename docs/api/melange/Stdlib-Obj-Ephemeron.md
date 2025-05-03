@@ -1,21 +1,28 @@
+
 # Module `Obj.Ephemeron`
+
 Ephemeron with arbitrary arity and untyped
+
 ```
 type obj_t = t
 ```
 alias for [`Obj.t`](./Stdlib-Obj.md#type-t)
+
 ```
 type t
 ```
 an ephemeron cf [`Ephemeron`](#)
+
 ```
 val create : int -> t
 ```
 `create n` returns an ephemeron with `n` keys. All the keys and the data are initially empty. The argument `n` must be between zero and [`max_ephe_length`](./#val-max_ephe_length) (limits included).
+
 ```
 val length : t -> int
 ```
 return the number of keys
+
 ```
 val get_key : t -> int -> obj_t option
 ```

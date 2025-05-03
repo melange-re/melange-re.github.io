@@ -1,5 +1,8 @@
+
 # Module `Node.Buffer`
+
 Node Buffer API
+
 ```
 type t = Node.buffer
 ```

@@ -1,4 +1,6 @@
+
 # Parameter `MakeHashable.M`
+
 ```
 type t
 ```

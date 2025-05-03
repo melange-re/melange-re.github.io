@@ -1,6 +1,10 @@
+
 # Module `Js.Array`
+
 Bindings to the functions in `Array.prototype`
+
 JavaScript Array API
+
 ```
 type 'a t = 'a array
 ```
@@ -20,6 +24,7 @@ val isArray : 'a -> bool
 val length : 'a array -> int
 ```
 Mutating functions
+
 ```
 val copyWithin : to_:int -> ?start:int -> ?end_:int -> 'a t -> 'a t
 ```
@@ -30,6 +35,7 @@ val fill : value:'a -> ?start:int -> ?end_:int -> 'a t -> 'a t
 val pop : 'a t -> 'a option
 ```
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/Array/push
+
 ```
 val push : value:'a -> 'a t -> int
 ```
@@ -73,10 +79,12 @@ val concatMany : arrays:'a t array -> 'a t -> 'a t
 val includes : value:'a -> 'a t -> bool
 ```
 ES2015
+
 ```
 val join : ?sep:string -> 'a t -> string
 ```
 Accessor functions
+
 ```
 val indexOf : value:'a -> ?start:int -> 'a t -> int
 ```
@@ -99,6 +107,7 @@ val toString : 'a t -> string
 val toLocaleString : 'a t -> string
 ```
 Iteration functions
+
 ```
 val entries : 'a t -> (int * 'a) Js.iterator
 ```

@@ -1,10 +1,17 @@
+
 # Module `Hashtbl.Make`
+
 Functor building an implementation of the hashtable structure. The functor `Hashtbl.Make` returns a structure containing a type `key` of keys and a type `'a t` of hash tables associating data of type `'a` to keys of type `key`. The operations perform similarly to those of the generic interface, but use the hashing and equality functions specified in the functor argument `H` instead of generic equality and hashing. Since the hash function is not seeded, the `create` operation of the result structure always returns non-randomized hash tables.
+
+
 ## Parameters
+
 ```
 module H : HashedType
 ```
+
 ## Signature
+
 ```
 type key = H.t
 ```

@@ -1,14 +1,19 @@
+
 # Module type `Hashtbl.SeededHashedType`
+
 The input signature of the functor [`MakeSeeded`](./Stdlib-Hashtbl-MakeSeeded.md).
+
 since 4.00
 ```
 type t
 ```
 The type of the hashtable keys.
+
 ```
 val equal : t -> t -> bool
 ```
 The equality predicate used to compare keys.
+
 ```
 val seeded_hash : int -> t -> int
 ```

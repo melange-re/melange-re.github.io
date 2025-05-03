@@ -1,5 +1,8 @@
+
 # Module `HashMap.Int`
+
 Specalized when key type is `int`, more efficient than the generic type
+
 ```
 type key = int
 ```
@@ -19,6 +22,7 @@ val isEmpty : _ t -> bool
 val set : 'a t -> key -> 'a -> unit
 ```
 `setDone tbl k v` if `k` does not exist, add the binding `k,v`, otherwise, update the old value with the new `v`
+
 ```
 val copy : 'a t -> 'a t
 ```

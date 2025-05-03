@@ -1,14 +1,23 @@
+
 # Module `Stdlib.Printf`
+
 Formatted output functions.
+
 ```
 val fprintf : out_channel -> ('a, out_channel, unit) format -> 'a
 ```
 `fprintf outchan format arg1 ... argN` formats the arguments `arg1` to `argN` according to the format string `format`, and outputs the resulting string on the channel `outchan`.
+
 The format string is a character string which contains two types of objects: plain characters, which are simply copied to the output channel, and conversion specifications, each of which causes conversion and printing of arguments.
+
 Conversion specifications have the following form:
+
 `% [flags] [width] [.precision] type`
+
 In short, a conversion specification consists in the `%` character, followed by optional modifiers and a type which is made of one or two characters.
+
 The types and their meanings are:
+
 - `d`, `i`: convert an integer argument to signed decimal. The flag `#` adds underscores to large values for readability.
 - `u`, `n`, `l`, `L`, or `N`: convert an integer argument to unsigned decimal. Warning: `n`, `l`, `L`, and `N` are used for `scanf`, and should not be used for `printf`. The flag `#` adds underscores to large values for readability.
 - `x`: convert an integer argument to unsigned hexadecimal, using lowercase letters. The flag `#` adds a `0x` prefix to non zero values.
@@ -37,41 +46,52 @@ The types and their meanings are:
 - `\@`: take no argument and output one `\@` character.
 - `,`: take no argument and output nothing: a no-op delimiter for conversion specifications.
 The optional `flags` are:
+
 - `-`: left-justify the output (default is right justification).
 - `0`: for numerical conversions, pad with zeroes instead of spaces.
 - `+`: for signed numerical conversions, prefix number with a `+` sign if positive.
 - space: for signed numerical conversions, prefix number with a space if positive.
 - `#`: request an alternate formatting style for the integer types and the floating-point type `F`.
 The optional `width` is an integer indicating the minimal width of the result. For instance, `%6d` prints an integer, prefixing it with spaces to fill at least 6 characters.
+
 The optional `precision` is a dot `.` followed by an integer indicating how many digits follow the decimal point in the `%f`, `%e`, `%E`, `%h`, and `%H` conversions or the maximum number of significant digits to appear for the `%F`, `%g` and `%G` conversions. For instance, `%.4f` prints a `float` with 4 fractional digits.
+
 The integer in a `width` or `precision` can also be specified as `*`, in which case an extra integer argument is taken to specify the corresponding `width` or `precision`. This integer argument precedes immediately the argument to print. For instance, `%.*f` prints a `float` with as many fractional digits as the value of the argument given before the float.
+
 ```
 val printf : ('a, out_channel, unit) format -> 'a
 ```
 Same as [`Printf.fprintf`](./#val-fprintf), but output on `stdout`.
+
 ```
 val eprintf : ('a, out_channel, unit) format -> 'a
 ```
 Same as [`Printf.fprintf`](./#val-fprintf), but output on `stderr`.
+
 ```
 val sprintf : ('a, unit, string) format -> 'a
 ```
 Same as [`Printf.fprintf`](./#val-fprintf), but instead of printing on an output channel, return a string containing the result of formatting the arguments.
+
 ```
 val bprintf : Buffer.t -> ('a, Buffer.t, unit) format -> 'a
 ```
 Same as [`Printf.fprintf`](./#val-fprintf), but instead of printing on an output channel, append the formatted arguments to the given extensible buffer (see module [`Buffer`](./Stdlib-Buffer.md)).
+
 ```
 val ifprintf : 'b -> ('a, 'b, 'c, unit) format4 -> 'a
 ```
 Same as [`Printf.fprintf`](./#val-fprintf), but does not print anything. Useful to ignore some material when conditionally printing.
+
 since 3.10
 ```
 val ibprintf : Buffer.t -> ('a, Buffer.t, unit) format -> 'a
 ```
 Same as [`Printf.bprintf`](./#val-bprintf), but does not print anything. Useful to ignore some material when conditionally printing.
+
 since 4.11
 Formatted output functions with continuations.
+
 ```
 val kfprintf : 
   (out_channel -> 'd) ->
@@ -80,16 +100,19 @@ val kfprintf :
   'a
 ```
 Same as `fprintf`, but instead of returning immediately, passes the out channel to its first argument at the end of printing.
+
 since 3.09
 ```
 val ikfprintf : ('b -> 'd) -> 'b -> ('a, 'b, 'c, 'd) format4 -> 'a
 ```
 Same as `kfprintf` above, but does not print anything. Useful to ignore some material when conditionally printing.
+
 since 4.01
 ```
 val ksprintf : (string -> 'd) -> ('a, unit, string, 'd) format4 -> 'a
 ```
 Same as `sprintf` above, but instead of returning the string, passes it to the first argument.
+
 since 3.09
 ```
 val kbprintf : 
@@ -99,6 +122,7 @@ val kbprintf :
   'a
 ```
 Same as `bprintf`, but instead of returning immediately, passes the buffer to its first argument at the end of printing.
+
 since 3.10
 ```
 val ikbprintf : 
@@ -108,10 +132,13 @@ val ikbprintf :
   'a
 ```
 Same as `kbprintf` above, but does not print anything. Useful to ignore some material when conditionally printing.
+
 since 4.11
 Deprecated
+
 ```
 val kprintf : (string -> 'b) -> ('a, unit, string, 'b) format4 -> 'a
 ```
 A deprecated synonym for `ksprintf`.
+
 deprecated Use Printf.ksprintf instead.

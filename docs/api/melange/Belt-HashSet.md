@@ -1,10 +1,18 @@
+
 # Module `Belt.HashSet`
+
 [`Belt.HashSet`](#)
+
 The top level provides generic **mutable** hash set operations.
+
 It also has two specialized inner modules [`Belt.HashSet.Int`](./Belt-HashSet-Int.md) and [`Belt.HashSet.String`](./Belt-HashSet-String.md)
+
 A **mutable** Hash set which allows customized hash behavior.
+
 All data are parameterized by not its only type but also a unique identity in the time of initialization, so that two *HashSets of ints* initialized with different *hash* functions will have different type.
+
 For example:
+
 ```ocaml
   type t = int
   module I0 =
@@ -21,12 +29,15 @@ For example:
   let s1 = make ~id:(module I1) ~hintSize:40
 ```
 The invariant must be held: for two elements who are *equal*, their hashed value should be the same
+
 Here the compiler would infer `s0` and `s1` having different type so that it would not mix.
+
 ```ocaml
   val s0 :  (int, I0.identity) t
   val s1 :  (int, I1.identity) t
 ```
 We can add elements to the collection:
+
 ```ocaml
 
   let () =
@@ -34,18 +45,22 @@ We can add elements to the collection:
     add s1 1
 ```
 Since this is an mutable data strucure, `s1` will contain two pairs.
+
 ```
 module Int : sig ... end
 ```
 Specalized when key type is `int`, more efficient than the generic type
+
 ```
 module String : sig ... end
 ```
 Specalized when key type is `string`, more efficient than the generic type
+
 ```
 type ('a, 'id) t
 ```
 The type of hash tables from type `'a` to type `'b`.
+
 ```
 type ('a, 'id) id =
   (module Belt__.Belt_Id.Hashable
@@ -80,6 +95,7 @@ val forEachU : ('a, 'id) t -> ('a -> unit) Js.Fn.arity1 -> unit
 val forEach : ('a, 'id) t -> ('a -> unit) -> unit
 ```
 Order unspecified.
+
 ```
 val reduceU : ('a, 'id) t -> 'c -> ('c -> 'a -> 'c) Js.Fn.arity2 -> 'c
 ```
@@ -87,6 +103,7 @@ val reduceU : ('a, 'id) t -> 'c -> ('c -> 'a -> 'c) Js.Fn.arity2 -> 'c
 val reduce : ('a, 'id) t -> 'c -> ('c -> 'a -> 'c) -> 'c
 ```
 Order unspecified.
+
 ```
 val size : ('a, 'id) t -> int
 ```

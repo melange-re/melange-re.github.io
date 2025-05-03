@@ -1,4 +1,6 @@
+
 # Module `Node`
+
 ```
 type node_exports
 ```
@@ -41,14 +43,17 @@ type _ string_buffer_kind =
 val test : string_buffer -> 't string_buffer_kind * 't
 ```
 We expect a good inliner will eliminate such boxing in the future
+
 ```
 module Path : sig ... end
 ```
 Node Path API
+
 ```
 module Fs : sig ... end
 ```
 Node FS API
+
 ```
 module Process : sig ... end
 ```
@@ -56,10 +61,12 @@ module Process : sig ... end
 module Module : sig ... end
 ```
 Node Module API
+
 ```
 module Buffer : sig ... end
 ```
 Node Buffer API
+
 ```
 module Child_process : sig ... end
 ```

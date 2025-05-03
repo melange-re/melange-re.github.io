@@ -1,9 +1,15 @@
+
 # Module `Id.MakeHashableU`
+
+
 ## Parameters
+
 ```
 module M : sig ... end
 ```
+
 ## Signature
+
 ```
 type identity
 ```

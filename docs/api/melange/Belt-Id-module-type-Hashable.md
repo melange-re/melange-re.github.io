@@ -1,4 +1,6 @@
+
 # Module type `Id.Hashable`
+
 ```
 type identity
 ```

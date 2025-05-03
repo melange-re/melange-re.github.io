@@ -1,9 +1,13 @@
+
 # Module type `Map.OrderedType`
+
 Input signature of the functor [`Make`](./Stdlib-Map-Make.md).
+
 ```
 type t
 ```
 The type of the map keys.
+
 ```
 val compare : t -> t -> int
 ```

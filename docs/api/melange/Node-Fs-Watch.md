@@ -1,4 +1,6 @@
+
 # Module `Fs.Watch`
+
 ```
 type t
 ```
@@ -17,6 +19,7 @@ val config :
 val watch : string -> ?config:config -> unit -> t
 ```
 there is no need to accept listener, since we return a `watcher` back it can register event listener there. Currently we introduce a type `string_buffer`, for the `filename`, it will be `Buffer` when the encoding is `` `utf8 ``. This is dependent type which can be tracked by GADT in some way, but to make things simple, let's just introduce an or type
+
 ```
 val on : 
   t ->

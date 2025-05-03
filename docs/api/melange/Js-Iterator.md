@@ -1,5 +1,8 @@
+
 # Module `Js.Iterator`
+
 Bindings to functions on `Iterator`
+
 ```
 type 'a t = 'a Js.iterator
 ```

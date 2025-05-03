@@ -1,6 +1,10 @@
+
 # Module `Js.WeakMap`
+
 Bindings to functions in `WeakMap`
+
 ES6 WeakMap API
+
 ```
 type ('k, 'v) t
 ```
