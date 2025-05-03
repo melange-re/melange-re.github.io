@@ -7,9 +7,5 @@ node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
 docs/public/playground
-docs/public/api/ml
-docs/public/api/re
-docs/api/ml
-docs/api/re
 
 melange.dev
