@@ -89,10 +89,18 @@ pull-melange-docs: ## Pull melange docs
 		opam source melange; \
 	fi
 	cd melange.dev
-	dune build @docs
+	dune build @doc
 	cd ..
-	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/stdlib.odocl
-	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/js.odocl
-	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/belt.odocl
-	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/dom.odocl
-	odoc markdown-generate -o docs/api ./_build/default/_doc/_odocls/melange/node.odocl
+	odoc markdown-generate -o docs/api/ml ./_build/default/_doc/_odocls/melange/stdlib.odocl
+	odoc markdown-generate -o docs/api/ml ./_build/default/_doc/_odocls/melange/js.odocl
+	odoc markdown-generate -o docs/api/ml ./_build/default/_doc/_odocls/melange/belt.odocl
+	odoc markdown-generate -o docs/api/ml ./_build/default/_doc/_odocls/melange/dom.odocl
+	odoc markdown-generate -o docs/api/ml ./_build/default/_doc/_odocls/melange/node.odocl
+	cd melange.dev
+	ODOC_SYNTAX="re" dune build @doc
+	cd ..
+	odoc markdown-generate -o docs/api/re ./_build/default/_doc/_odocls/melange/stdlib.odocl
+	odoc markdown-generate -o docs/api/re ./_build/default/_doc/_odocls/melange/js.odocl
+	odoc markdown-generate -o docs/api/re ./_build/default/_doc/_odocls/melange/belt.odocl
+	odoc markdown-generate -o docs/api/re ./_build/default/_doc/_odocls/melange/dom.odocl
+	odoc markdown-generate -o docs/api/re ./_build/default/_doc/_odocls/melange/node.odocl
