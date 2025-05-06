@@ -662,3 +662,157 @@ Note that this attribute requires the return type of the binding to be an
 See the [Wrapping returned nullable
 values](./working-with-js-objects-and-values.md#wrapping-returned-nullable-values)
 section for more information.
+
+## React Components
+
+The following examples show how to bind to and use React components that were written in JavaScript. These bindings allow seamless integration between OCaml/ReasonML and JavaScript React components.
+
+### Basic component binding
+
+To bind to a simple React component from JavaScript:
+
+```ocaml
+module Button = struct
+  external make : label:string -> onClick:(unit -> unit) -> React.element
+    = "default"
+  [@@mel.module "./ButtonInJavaScript.js"] [@@react.component]
+end
+
+(* Usage *)
+Button.createElement ~label:"Click me"
+  ~onClick:(fun () -> Js.log "Clicked!")
+  ~children:[] () [@JSX]
+
+```
+```reasonml
+module Button = {
+  [@mel.module "./ButtonInJavaScript.js"] [@react.component]
+  external make: (~label: string, ~onClick: unit => unit) => React.element =
+    "default";
+};
+
+// Usage
+<Button label="Click me" onClick={() => Js.log("Clicked!")} />;
+```
+
+### Component with optional props
+
+To bind to a React component with optional props:
+
+```ocaml
+module Card = struct
+  external make : title:string -> ?description:string -> React.element
+    = "default"
+  [@@mel.module "./Card.js"] [@@react.component]
+end
+
+(* Usage *)
+let cardWithDescription =
+  Card.createElement ~title:"Hello" ~description:"This has a description"
+    ~children:[] () [@JSX]
+
+let cardWithNoDescription =
+  Card.createElement ~title:"This doesn't have a description" ~children:[] ()
+  [@JSX]
+```
+```reasonml
+module Card = {
+  [@mel.module "./Card.js"] [@react.component]
+  external make: (~title: string, ~description: string=?) => React.element =
+    "default";
+};
+
+// Usage
+let cardWithDescription = <Card title="Hello" description="This has a description" />;
+let cardWithNoDescription = <Card title="This doesn't have a description" />;
+```
+
+### Component with children
+
+To bind to a React component that accepts children:
+
+```ocaml
+module Container = struct
+  external make : title:string -> ?children:React.element -> React.element
+    = "default"
+  [@@mel.module "./Container.js"] [@@react.component]
+end
+
+(* Usage *)
+let containerWithNoChildren =
+  Container.createElement ~title:"Container with no children" ~children:[] ()
+  [@JSX]
+
+let containerWithChildren =
+  Container.createElement ~title:"Container with children"
+    ~children:[ (div ~children:[ React.string "This is a child" ] () [@JSX]) ]
+    () [@JSX]
+
+```
+```reasonml
+module Container = {
+  [@mel.module "./Container.js"] [@react.component]
+  external make: (~title: string, ~children: React.element=?) => React.element =
+    "default";
+};
+
+// Usage
+let containerWithNoChildren = <Container title="Container with no children" />;
+let containerWithChildren = <Container title="Container with children">
+  <div> {React.string("This is a child")} </div>
+</Container>;
+```
+
+### Component with uppercase props
+
+To bind to a React component with uppercase props:
+
+```ocaml
+module Greeting = struct
+  external make : _Name:string -> React.element = "default"
+  [@@mel.module "./Greeting.js"] [@@react.component]
+end
+
+(* Usage *)
+let greeting = Greeting.createElement ~_Name:"John" ~children:[] () [@JSX]
+```
+```reasonml
+module Greeting = {
+  [@mel.module "./Greeting.js"] [@react.component]
+  external make: (~_Name: string) => React.element = "default";
+};
+
+let greeting = <Greeting _Name="John" />;
+```
+
+### Component with default props
+
+To bind to a React component and set your own default props:
+
+```ocaml
+module Card = struct
+  external make : title:string -> ?description:string -> React.element
+    = "default"
+  [@@mel.module "./Card.js"] [@@react.component]
+
+  let makeProps ?(description = "Default description") = makeProps ~description
+end
+
+(* Usage *)
+let cardWithDefaultDescription = Card.createElement ~title:"Card title" ~children:[] () [@JSX]
+let cardWithCustomDescription = Card.createElement ~title:"Card title" ~description:"Custom description" ~children:[] () [@JSX]
+```
+```reasonml
+module Card = {
+  [@mel.module "./Card.js"] [@react.component]
+  external make: (~title: string, ~description: string=?) => React.element =
+    "default";
+
+  let makeProps = (~description="Default description") =>
+    makeProps(~description);
+};
+
+// Usage
+let cardWithDefaultDescription = <Card title="Card title" />;
+let cardWithCustomDescription = <Card title="Card title" description="Custom description" />;
+```
