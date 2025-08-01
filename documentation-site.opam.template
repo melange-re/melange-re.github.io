@@ -4,5 +4,5 @@ pin-depends: [
   ["cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91"]
   ["odoc.dev" "git+https://github.com/davesnx/odoc.git#d03bd566013841bcc83af9d964859f1aa8a30324"]
   ["odoc-parser.dev" "git+https://github.com/davesnx/odoc.git#d03bd566013841bcc83af9d964859f1aa8a30324"]
-  ["dune.dev" "git+https://github.com/davesnx/dune.git#f3481f5b3c54f01ec5022c619fd2582cb4119ed8"]
+  ["dune.dev" "git+https://github.com/davesnx/dune.git#74cd7f053526cb4409a44f75f0a8505d100f51b4"]
 ]
