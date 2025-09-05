@@ -91,5 +91,9 @@ pull-melange-docs: ## Pull melange docs
 	cd melange.dev
 	dune build @doc-markdown
 	cd ..
+	rm -rf docs/api/ml
+	cp -r _build/default/_doc/_markdown/melange/ docs/api/ml
 	cd melange.dev
 	ODOC_SYNTAX="re" dune build @doc-markdown
+	rm -rf docs/api/re
+	cp -r _build/default/_doc/_markdown/melange/ docs/api/re
