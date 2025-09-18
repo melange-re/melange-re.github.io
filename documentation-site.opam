@@ -27,7 +27,6 @@ depends: [
   "odoc-parser" {dev}
   "melange-playground" {dev}
   "ocaml-lsp-server" {dev}
-  "odoc" {with-doc}
 ]
 build: [
   ["dune" "subst"] {dev}
