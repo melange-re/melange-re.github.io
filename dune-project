@@ -29,6 +29,7 @@
   reason-react-ppx
   ocamlformat
   js_of_ocaml
+  (melange (= "5.0.1-53"))
   (cmarkit :dev)
   (melange :dev)
   (odoc :dev)

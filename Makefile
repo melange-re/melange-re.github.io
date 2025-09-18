@@ -85,11 +85,12 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
-	opam reinstall -y melange --with-doc
+	if [ ! -d "melange.dev" ]; then \
+		opam source melange \
+	fi
 	dune build @doc-markdown
 	rm -rf docs/api/ml
 	cp -r _build/default/_doc/_markdown/melange/ docs/api/ml
-	opam reinstall -y melange --with-doc
 	ODOC_SYNTAX="re" dune build @doc-markdown
 	rm -rf docs/api/re
 	cp -r _build/default/_doc/_markdown/melange/ docs/api/re
