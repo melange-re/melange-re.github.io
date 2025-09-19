@@ -30,5 +30,4 @@
   ocamlformat
   js_of_ocaml
   (cmarkit :dev)
-  (odoc :dev)
   (ocaml-lsp-server :dev)))
