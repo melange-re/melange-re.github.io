@@ -30,8 +30,5 @@
   ocamlformat
   js_of_ocaml
   (cmarkit :dev)
-  (melange (= "5.0.1-53"))
   (odoc :dev)
-  (odoc-parser :dev)
-  (melange-playground :dev)
   (ocaml-lsp-server :dev)))

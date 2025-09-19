@@ -1,7 +1,6 @@
 project_name = documentation-site
 
 DUNE = opam exec -- dune
-
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -13,7 +12,7 @@ help: ## Print this help message
 
 .PHONY: create-switch
 create-switch: ## Create opam switch
-	opam switch create . 5.3.0 -y --deps-only
+	opam switch create . 5.3.0 -y --deps-only --no-install
 
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
@@ -85,8 +84,8 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
-	if [ ! -d "vendor/melange" ]; then \
-		opam source melange.$$(opam show melange -f version) --dir vendor/melange; \
+	if [ ! -d "melange" ]; then \
+		opam source melange.$$(opam show melange -f version) --dir melange; \
 	fi
 	dune build @doc-markdown
 	rm -rf docs/api/ml
