@@ -28,16 +28,14 @@
  (libraries js_of_ocaml ocamlformat-lib))
 
 (rule
- (enabled_if
-  (= %{env:BUILD_PLAYGROUND=false} true))
+ (alias playground-assets)
  (deps ../melange/playground/mel_playground.bc.js)
  (target mel_playground.bc.js)
  (action
   (copy %{deps} %{target})))
 
 (rule
- (enabled_if
-  (= %{env:BUILD_PLAYGROUND=false} true))
+ (alias playground-assets)
  (deps ../melange/playground/melange-cmijs.js)
  (target melange-cmijs.js)
  (action
@@ -45,8 +43,6 @@
 
 (rule
  (alias playground-assets)
- (enabled_if
-  (= %{env:BUILD_PLAYGROUND=false} true))
  (deps
   (alias playground-runtime-js)
   format.bc.js
