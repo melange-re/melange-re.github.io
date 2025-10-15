@@ -13,7 +13,7 @@ help: ## Print this help message
 
 .PHONY: create-switch
 create-switch: ## Create opam switch
-	opam switch create . 5.3.0 -y --deps-only --no-install
+	opam switch create . 5.3.0 -y --deps-only
 
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
@@ -85,6 +85,7 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
+	$(DUNE) --version
 	if [ ! -d "melange" ]; then \
 		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
 	fi
