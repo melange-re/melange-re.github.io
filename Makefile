@@ -35,13 +35,8 @@ update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
 	$(DUNE) build @runtest --auto-promote || true
 
 .PHONY: check-extracted-code-blocks
-check-extracted-code-blocks: update-extracted-code-blocks ## Checks that code blocks extracted from markdown have been updated to latest
-	@status=$$(git status --porcelain); \
-	if [ ! -z "$${status}" ]; \
-	then \
-		echo "Error - working directory is dirty. Make sure the auto-generated tests are updated ('make update-extracted-code-blocks')"; \
-		exit 1; \
-	fi
+check-extracted-code-blocks: ## Checks that code blocks extracted from markdown have been updated to latest
+	$(DUNE) build @runtest
 
 .PHONY: test
 test: ## Runs @runtest alias
@@ -61,7 +56,7 @@ format-check: ## Checks if format is correct
 
 .PHONY: build-playground
 build-playground: ## Builds the playground
-	$(DUNE) build @playground-assets
+	BUILD_PLAYGROUND=true $(DUNE) build @playground-assets
 	cd playground && yarn && yarn build
 
 .PHONY: build-site
