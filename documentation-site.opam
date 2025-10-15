@@ -41,6 +41,6 @@ build: [
 ]
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [
-  ["dune.dev" "git+https://github.com/davesnx/dune.git#e2e04ac9da46185268c50b73f702973b483ed139"]
+  ["dune.dev" "git+https://github.com/davesnx/dune.git#ea3c270f9aa0238fcbb387f71bbfe0e5fd027de5"]
   ["cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91"]
 ]
