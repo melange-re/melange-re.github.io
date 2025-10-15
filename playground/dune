@@ -29,14 +29,14 @@
 
 (rule
  (alias playground-assets)
- (deps ../melange/playground/mel_playground.bc.js)
+ (deps %{bin:mel_playground.bc.js})
  (target mel_playground.bc.js)
  (action
   (copy %{deps} %{target})))
 
 (rule
  (alias playground-assets)
- (deps ../melange/playground/melange-cmijs.js)
+ (deps %{bin:melange-cmijs.js})
  (target melange-cmijs.js)
  (action
   (copy %{deps} %{target})))
