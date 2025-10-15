@@ -1,7 +1,7 @@
 import "./App.css";
 import "../../_build/default/playground/reason-react-cmijs";
-import "../../_opam/bin/mel_playground.bc";
-import "../../_opam/bin/melange-cmijs";
+import "../../_build/default/playground/mel_playground.bc.js";
+import "../../_build/default/playground/melange-cmijs.js";
 import "../../_build/default/playground/format.bc.js";
 
 import * as React from "react";
