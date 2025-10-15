@@ -87,7 +87,7 @@ preview: ## Preview the docs
 pull-melange-docs: ## Pull melange docs
 
 	if [ ! -d "melange" ]; then \
-		opam source melange.$$(opam show melange -f version) --dir melange; \
+		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
 	fi
 	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
 	rm -rf docs/api/$(SYNTAX)
