@@ -28,10 +28,24 @@
  (libraries js_of_ocaml ocamlformat-lib))
 
 (rule
+ (deps ../melange/playground/mel_playground.bc.js)
+ (target mel_playground.bc.js)
+ (action
+  (copy %{deps} %{target})))
+
+(rule
+ (deps ../melange/playground/melange-cmijs.js)
+ (target melange-cmijs.js)
+ (action
+  (copy %{deps} %{target})))
+
+(rule
  (alias playground-assets)
  (deps
   (alias playground-runtime-js)
   format.bc.js
-  reason-react-cmijs.js)
+  reason-react-cmijs.js
+  mel_playground.bc.js
+  melange-cmijs.js)
  (action
   (echo "assets generated")))
