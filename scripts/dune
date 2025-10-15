@@ -147,4 +147,3 @@
  (alias extract-code-blocks)
  (action
   (diff build-system.t build-system.md.processed)))
-
