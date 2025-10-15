@@ -23,8 +23,10 @@ jobs:
           dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
       - name: Install all deps
         run: make install
-      - name: Generate melange library docs
-        run: make pull-melange-docs
+      - name: Generate melange library docs for OCaml syntax
+        run: make pull-melange-docs SYNTAX=ml
+      - name: Generate melange library docs for Reason syntax
+        run: make pull-melange-docs SYNTAX=re
       - name: Run canonical script
         run: opam exec -- dune exec add_canonical docs/public/api
       - name: Check Reason syntax

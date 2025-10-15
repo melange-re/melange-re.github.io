@@ -1,6 +1,7 @@
 project_name = documentation-site
 
 DUNE = opam exec -- dune
+SYNTAX ?= ml
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -84,12 +85,14 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
+
 	if [ ! -d "melange" ]; then \
 		opam source melange.$$(opam show melange -f version) --dir melange; \
 	fi
-	dune build @doc-markdown
-	rm -rf docs/api/ml
-	cp -r _build/default/_doc/_markdown/melange/ docs/api/ml/melange
-	ODOC_SYNTAX="re" dune build @doc-markdown
-	rm -rf docs/api/re
-	cp -r _build/default/_doc/_markdown/melange/ docs/api/re/melange
+	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
+	rm -rf docs/api/$(SYNTAX)
+	mkdir -p docs/api/$(SYNTAX)
+	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
+	# Keep only Js*, Belt*, Dom*, and Node* files (but exclude Js_parser)
+	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_parser*.md" -delete
+	cd docs/api/$(SYNTAX)/melange && find . -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
