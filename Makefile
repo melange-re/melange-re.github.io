@@ -86,10 +86,15 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
+	if [ ! -d "melange" ]; then \
+		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
+	fi
 	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
 	rm -rf docs/api/$(SYNTAX)
 	mkdir -p docs/api/$(SYNTAX)
 	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
 	# Keep only Belt*, Dom*, Node* files and Js* (but exclude Js_parser)
+	# Exclude Js_Nullable until https://github.com/melange-re/melange/pull/1619
+	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_Nullable*.md" -delete
 	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_parser*.md" -delete
 	cd docs/api/$(SYNTAX)/melange && find . -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
