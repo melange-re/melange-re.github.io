@@ -36,7 +36,7 @@ const base = process.env.BASE || "unstable";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   // Some links in the API are death, some of them because of the removal in Makefile "pull-melange-docs"
-  // We can't use  (_, source) => source.toLowerCase().includes('api')
+  // We can't use (_, source) => source.toLowerCase().includes('api') since it comes from vitepress 2, using true (which ignores all deadlinks)
   ignoreDeadLinks: true,
   title: "Melange Documentation Site",
   head: [
