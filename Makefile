@@ -94,7 +94,12 @@ pull-melange-docs: ## Pull melange docs
 	mkdir -p docs/api/$(SYNTAX)
 	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
 	# Keep only Belt*, Dom*, Node* files and Js* (but exclude Js_parser)
-	# Exclude Js_Nullable until https://github.com/melange-re/melange/pull/1619
-	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_Nullable*.md" -delete
-	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_parser*.md" -delete
-	cd docs/api/$(SYNTAX)/melange && find . -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
+	find docs/api/$(SYNTAX)/melange -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
+	find docs/api/$(SYNTAX)/melange -type f -name "Js_parser*.md" -delete
+	# Exclude some docs until https://github.com/melange-re/melange/pull/1619
+	find docs/api/$(SYNTAX)/melange -type f \( -name "Js-Null.md" -o -name "Js-Undefined.md" -o -name "Js-Re.md" -o -name "Js-Nullable.md" -o -name "Js-Null.md" \) -delete
+
+.PHONY: pull-melange-docs-both
+pull-melange-docs-both: ## Pull melange docs for both OCaml and Reason syntax
+	make pull-melange-docs SYNTAX="ml"
+	make pull-melange-docs SYNTAX="re"
