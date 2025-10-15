@@ -1,4 +1,4 @@
 pin-depends: [
-  ["dune.dev" "git+https://github.com/davesnx/dune.git#08114d521b1d9b3c7323694aa785c218a1db2ae0"]
+  ["dune.dev" "git+https://github.com/davesnx/dune.git#b2fe8d310ffc7088a6328920d53a7cc708b8fa24"]
   ["cmarkit.dev" "git+https://github.com/dbuenzli/cmarkit.git#f37c8ea86fd0be8dba7a8babcee3682e0e047d91"]
 ]
