@@ -23,6 +23,7 @@ install: ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-doc
 	opam pin -y add $(project_name).dev .
+	opam source melange.$$(opam show melange -f version --color never) --dir melange
 
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
@@ -85,10 +86,6 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
-	$(DUNE) --version
-	if [ ! -d "melange" ]; then \
-		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
-	fi
 	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
 	rm -rf docs/api/$(SYNTAX)
 	mkdir -p docs/api/$(SYNTAX)
