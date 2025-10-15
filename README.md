@@ -19,6 +19,15 @@ yarn
 
 Then run `make dev` from the folder where the repository lives.
 
+## (Optional) Fetch melange documentation API
+
+Optionally, to fetch the melange odoc documentation and generate markdown into docs/api, you will need the melange package installed into your switch and run:
+
+```bash
+make pull-melange-docs SYNTAX="re"
+make pull-melange-docs SYNTAX="ml"
+```
+
 ### (Optional) Tooling for docs generation
 
 Optionally, to run some of the tools to auto-generate parts of the
