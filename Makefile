@@ -1,7 +1,7 @@
 project_name = documentation-site
 
 DUNE = opam exec -- dune
-
+SYNTAX ?= ml
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -13,7 +13,7 @@ help: ## Print this help message
 
 .PHONY: create-switch
 create-switch: ## Create opam switch
-	opam switch create . 5.3.0 -y --deps-only
+	opam switch create . 5.3.0 -y --deps-only --no-install
 
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
@@ -82,3 +82,17 @@ dev: ## Start docs dev server
 .PHONY: preview
 preview: ## Preview the docs
 	yarn vitepress preview docs
+
+.PHONY: pull-melange-docs
+pull-melange-docs: ## Pull melange docs
+
+	if [ ! -d "melange" ]; then \
+		opam source melange.$$(opam show melange -f version) --dir melange; \
+	fi
+	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
+	rm -rf docs/api/$(SYNTAX)
+	mkdir -p docs/api/$(SYNTAX)
+	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
+	# Keep only Js*, Belt*, Dom*, and Node* files (but exclude Js_parser)
+	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_parser*.md" -delete
+	cd docs/api/$(SYNTAX)/melange && find . -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete

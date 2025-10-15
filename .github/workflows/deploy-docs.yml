@@ -23,14 +23,10 @@ jobs:
           dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
       - name: Install all deps
         run: make install
-      - name: Generate melange docs in ml syntax
-        run: opam reinstall -y melange --with-doc
-      - name: Copy melange docs in ml syntax
-        run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/public/api/ml
-      - name: Generate melange docs in re syntax
-        run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc
-      - name: Copy melange docs in re syntax
-        run: cp -r _opam/.opam-switch/build/melange.dev/_build/default/_doc/_html docs/public/api/re
+      - name: Generate melange library docs for OCaml syntax
+        run: make pull-melange-docs SYNTAX=ml
+      - name: Generate melange library docs for Reason syntax
+        run: make pull-melange-docs SYNTAX=re
       - name: Run canonical script
         run: opam exec -- dune exec add_canonical docs/public/api
       - name: Check Reason syntax
@@ -46,7 +42,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
       - name: Fetch and checkout gh-pages
-        run:  |
+        run: |
           git fetch origin gh-pages --depth=1
           git checkout gh-pages
       - name: Copy published site into folder
