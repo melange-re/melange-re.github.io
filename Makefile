@@ -84,6 +84,7 @@ pull-melange-docs: ## Pull melange docs
 	if [ ! -d "melange" ]; then \
 		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
 	fi
+	rm -rf melange/test melange/jscomp/test
 	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
 	rm -rf docs/api/$(SYNTAX)
 	mkdir -p docs/api/$(SYNTAX)
