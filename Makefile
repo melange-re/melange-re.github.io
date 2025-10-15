@@ -92,6 +92,6 @@ pull-melange-docs: ## Pull melange docs
 	rm -rf docs/api/$(SYNTAX)
 	mkdir -p docs/api/$(SYNTAX)
 	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
-	# Keep only Js*, Belt*, Dom*, and Node* files (but exclude Js_parser)
+	# Keep only Belt*, Dom*, Node* files and Js* (but exclude Js_parser)
 	cd docs/api/$(SYNTAX)/melange && find . -type f -name "Js_parser*.md" -delete
 	cd docs/api/$(SYNTAX)/melange && find . -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
