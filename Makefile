@@ -85,7 +85,6 @@ preview: ## Preview the docs
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
-
 	if [ ! -d "melange" ]; then \
 		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
 	fi
