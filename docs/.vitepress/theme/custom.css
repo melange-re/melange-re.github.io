@@ -10,3 +10,12 @@
     margin-top: 16px !important;
   }
 }
+
+/* Hide VitePress elements on blog pages */
+body.blog-page .VPLocalNav {
+  display: none !important;
+}
+
+body.blog-page .VPDocOutlineDropdown {
+  display: none !important;
+}

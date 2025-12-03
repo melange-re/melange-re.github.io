@@ -2,6 +2,7 @@ project_name = documentation-site
 
 DUNE = opam exec -- dune
 SYNTAX ?= ml
+BASE ?= unstable
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -60,20 +61,19 @@ build-playground: ## Builds the playground
 	cd playground && yarn && yarn build
 
 .PHONY: build-site
-build-site: build-playground ## Builds the whole site (including playground)
-	yarn && make build-docs
+build-site: build-playground build-docs fix-blog-paths ## Builds the whole site (including playground and blog)
 
 .PHONY: build-docs
-build-docs: ## Builds the docs
-	yarn vitepress build docs
+build-docs: ## Builds the docs (including blog in /{version}/blog/)
+	BASE=$(BASE) yarn vitepress build docs
 
-.PHONY: build-blog
-build-blog: ## Builds the blog
-	cd blog && yarn && yarn build
+.PHONY: fix-blog-paths
+fix-blog-paths: ## Post-process blog to move from /{version}/blog/ to /blog/
+	node scripts/fix-blog-paths.js $(BASE)
 
 .PHONY: dev
-dev: ## Start docs dev server
-	yarn vitepress dev docs
+dev: ## Start docs dev server with blog at /blog/ (use BASE= for root paths)
+	BASE= yarn vitepress dev docs
 
 .PHONY: preview
 preview: ## Preview the docs

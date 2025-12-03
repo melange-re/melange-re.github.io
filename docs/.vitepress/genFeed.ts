@@ -1,5 +1,5 @@
 import path from 'path'
-import { writeFileSync } from 'fs'
+import { writeFileSync, mkdirSync } from 'fs'
 import { Feed } from 'feed'
 import { createContentLoader, type SiteConfig } from 'vitepress'
 
@@ -16,7 +16,7 @@ export async function genFeed(config: SiteConfig) {
       'Copyright (c) 2021-present, Melange blog contributors'
   })
 
-  const posts = await createContentLoader('posts/*.md', {
+  const posts = await createContentLoader('blog/posts/*.md', {
     excerpt: true,
     render: true
   }).load()
@@ -28,10 +28,13 @@ export async function genFeed(config: SiteConfig) {
   )
 
   for (const { url, excerpt, frontmatter, html } of posts) {
+    // URL from createContentLoader is like /blog/posts/xxx
+    // We want the final URL to be https://melange.re/blog/posts/xxx
+    const postUrl = url.startsWith('/blog') ? url : `/blog${url}`
     feed.addItem({
       title: frontmatter.title,
-      id: `${baseUrl}${url}`,
-      link: `${baseUrl}${url}`,
+      id: `https://melange.re${postUrl}`,
+      link: `https://melange.re${postUrl}`,
       description: excerpt,
       content: html?.replaceAll('&ZeroWidthSpace;', ''),
       author: [
@@ -46,5 +49,8 @@ export async function genFeed(config: SiteConfig) {
     })
   }
 
-  writeFileSync(path.join(config.outDir, 'feed.rss'), feed.rss2())
+  // Write feed.rss to the blog directory within the output
+  const blogOutDir = path.join(config.outDir, 'blog')
+  mkdirSync(blogOutDir, { recursive: true })
+  writeFileSync(path.join(blogOutDir, 'feed.rss'), feed.rss2())
 }

@@ -1,0 +1,1334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Sandtracks</title>
+        <link>https://melange.re/blog</link>
+        <description>The official blog for the Melange project</description>
+        <lastBuildDate>Wed, 03 Dec 2025 15:43:21 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <copyright>Copyright (c) 2021-present, Melange blog contributors</copyright>
+        <item>
+            <title><![CDATA[Announcing Melange 5]]></title>
+            <link>https://melange.re/blog/posts/announcing-melange-5</link>
+            <guid>https://melange.re/blog/posts/announcing-melange-5</guid>
+            <pubDate>Wed, 05 Mar 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>We are excited to announce the release of Melange 5, the compiler for OCaml
+that targets JavaScript.</p>
+<p>A lot of goodies went into this release! While our focus was mostly on features
+that make it easy to express more JavaScript constructs and supporting OCaml
+5.3, we also managed to fit additional improvements in the release: better
+editor support for Melange <code>external</code>s, code generation improvements, and
+better compiler output for generated JS. The most notable feature we're
+shipping in Melange 5 is support for JavaScript's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import" target="_blank" rel="noreferrer">dynamic
+<code>import()</code></a>,
+which we'll describe in detail below.</p>
+<p>Read on for the highlights.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>We are excited to announce the release of Melange 5, the compiler for OCaml
+that targets JavaScript.</p>
+<p>A lot of goodies went into this release! While our focus was mostly on features
+that make it easy to express more JavaScript constructs and supporting OCaml
+5.3, we also managed to fit additional improvements in the release: better
+editor support for Melange <code>external</code>s, code generation improvements, and
+better compiler output for generated JS. The most notable feature we're
+shipping in Melange 5 is support for JavaScript's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import" target="_blank" rel="noreferrer">dynamic
+<code>import()</code></a>,
+which we'll describe in detail below.</p>
+<p>Read on for the highlights.</p>
+<hr>
+<h2 id="dynamic-import-without-sacrificing-type-safety" tabindex="-1">Dynamic <code>import()</code> without sacrificing type safety <a class="header-anchor" href="#dynamic-import-without-sacrificing-type-safety" aria-label="Permalink to &quot;Dynamic `import()` without sacrificing type safety&quot;"></a></h2>
+<p>Support for JavaScript's dynamic <code>import()</code> is probably what I'm most excited
+about in this Melange release. In Melange 5, we're releasing support for
+JavaScript's <code>import()</code> via a new function in <code>melange.js</code>, <code>Js.import: 'a -&gt; 'a promise</code>. I gave a small preview of dynamic <code>import()</code> during my <a href="https://www.youtube.com/watch?v=3oCXT-ycHHs" target="_blank" rel="noreferrer">Melange
+talk</a> at <a href="https://fun-ocaml.com" target="_blank" rel="noreferrer">Fun OCaml
+2024</a>.</p>
+<p><code>Js.import</code> is <strong>type-safe</strong> and <strong>build system-compatible</strong>. Let's break it
+down:</p>
+<ol>
+<li><strong>build system-compatible</strong>: dynamic <code>import()</code>s in Melange work with Dune
+out of the box: as usual, you must specify your <code>(library ..)</code> dependencies
+in the <code>dune</code> file. At compile time, Melange will be aware of the
+dynamically imported module locations to emit the arguments to
+<code>import(&quot;/path/to/module.js)</code> automatically.</li>
+<li><strong>type-safe</strong>: your OCaml code is still aware of its dependencies at
+compile-time, but Melange will skip emitting static JavaScript <code>import ..</code>
+declarations if the values are exclusively used through <code>Js.import(..)</code>.</li>
+</ol>
+<h3 id="dynamically-importing-ocaml-code" tabindex="-1">Dynamically importing OCaml code <a class="header-anchor" href="#dynamically-importing-ocaml-code" aria-label="Permalink to &quot;Dynamically importing OCaml code&quot;"></a></h3>
+<p>The example below makes it clear: we import the entire <code>Stdlib.Int</code> module,
+specify its type signature, and observe that no static <code>import</code>s appear in the
+resulting JavaScript:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// dynamic_import_int.re</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">module</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> type</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> = (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">module</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> type</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> of</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> _</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Js</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">t</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">unit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  Js.import((module Stdlib.Int): (</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">module</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> int))</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  |></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> Js.Promise.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">then_</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">((</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">module</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70"> Int</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=></span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      Js.Promise.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">resolve</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(Js.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">log</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(Int.max))</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  );</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+</div><div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// dynamic_import_int.js</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"melange/int.js"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">).</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">then</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">function</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">Int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> Promise</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">resolve</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">((console.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">log</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(Int.max), </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">undefined</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">));</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span></code></pre>
+</div><h3 id="dynamically-importing-javascript-from-ocaml" tabindex="-1">Dynamically importing JavaScript from OCaml <a class="header-anchor" href="#dynamically-importing-javascript-from-ocaml" aria-label="Permalink to &quot;Dynamically importing JavaScript from OCaml&quot;"></a></h3>
+<p>One of Melange's primary operating principles is the ability to support
+seamless interop with JavaScript constructs. As such, we implemented <code>import()</code>
+in a way that also allows importing JS modules dynamically: you can call
+<code>Js.import</code> on JavaScript values declared with <code>external</code>. The abstractions
+compose nicely to produce the expected result. Check out this example of
+dynamically importing <code>React.useEffect</code>:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// dynamically_imported_useEffect.re</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[@mel.module </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"react"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">external </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">useEffect</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">([@</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">mel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">uncurry</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">] (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">unit</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> option</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">unit</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> unit))) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> unit </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "useEffect"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> dynamicallyImportedUseEffect </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> Js.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(useEffect);</span></span></code></pre>
+</div><p>And the JS output:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">// dynamically_imported_useEffect.js</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> dynamicallyImportedUseEffect</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"react"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">).</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">then</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">function</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">m</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> m.useEffect;</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  dynamicallyImportedUseEffect,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+</div><h2 id="discriminated-unions-support-mel-as-in-variants" tabindex="-1">Discriminated unions support: <code>@mel.as</code> in variants <a class="header-anchor" href="#discriminated-unions-support-mel-as-in-variants" aria-label="Permalink to &quot;Discriminated unions support: `@mel.as` in variants&quot;"></a></h2>
+<p>This release of Melange includes a major feature that improves the compilation
+of variants, including really good support for representing <a href="https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#discriminated-unions" target="_blank" rel="noreferrer">discriminated
+unions</a>,
+a common pattern to represent polymorphic objects with a discriminator in
+JavaScript/TypeScript.</p>
+<p>In <a href="https://github.com/melange-re/melange/pull/1189" target="_blank" rel="noreferrer">melange-re/melange#1189</a>,
+we introduced support for 2 attributes in OCaml types that define variants:</p>
+<h3 id="mel-as" tabindex="-1"><code>@mel.as</code> <a class="header-anchor" href="#mel-as" aria-label="Permalink to &quot;`@mel.as`&quot;"></a></h3>
+<p>Specifying <code>[@mel.as &quot;..&quot;]</code> changes the variant emission in JavaScript to that
+string value.</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">type</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> t</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  |</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> [@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">mel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "World"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">] </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Hello</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> t </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> Hello</span></span></code></pre>
+</div><div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> t</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D"> /* Hello */</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "World"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre>
+</div><h3 id="mel-tag" tabindex="-1"><code>@mel.tag</code> <a class="header-anchor" href="#mel-tag" aria-label="Permalink to &quot;`@mel.tag`&quot;"></a></h3>
+<p>A <code>@mel.as</code> variant type combined with <code>@mel.tag</code> allows expressing
+discriminated unions in an unobtrusive way:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[@mel.tag </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"kind"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">type</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> t</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  |</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> [@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">mel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "Foo"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">] </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Foo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({ </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">a</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">b</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, })</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">  |</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> [@</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">mel</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">as</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "Bar"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">] </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">Bar</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({ </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">c</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> string</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, });</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> x </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Foo</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({ a: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"a"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, b: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"b"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, });</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> y </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Bar</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">({ c: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"c"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, d: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"d"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, });</span></span></code></pre>
+</div><p>The Reason code above produces the following JavaScript:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> x</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  kind: </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">/* Foo */</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "Foo"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  a: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"a"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  b: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"b"</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> y</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  kind: </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">/* Bar */</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "Bar"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  c: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"c"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  d: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"d"</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+</div><p>In summary:</p>
+<ul>
+<li><code>[@mel.tag &quot;kind&quot;]</code> specifies that each variant containing a payload should
+be tagged with <code>&quot;kind&quot;</code>.</li>
+<li>the <code>[@mel.as &quot;..&quot;]</code> attribute in each variant type specifies what that
+payload should be for each branch of the variant type.</li>
+</ul>
+<h2 id="mel-send-is-way-way-better" tabindex="-1"><code>@mel.send</code> is way, way better <a class="header-anchor" href="#mel-send-is-way-way-better" aria-label="Permalink to &quot;`@mel.send` is way, way better&quot;"></a></h2>
+<p>When binding to methods of an object in JavaScript, Melange has historically
+supported 2 different ways of achieving the same: <code>@mel.send</code> and
+<code>@mel.send.pipe</code>. The only real reason why 2 constructs existed to do the same
+was to support two alternatives for chaining them in OCaml:
+<a href="https://melange.re/v5.0.0/language-concepts.html#pipe-first" target="_blank" rel="noreferrer">pipe-first</a> and
+<a href="https://melange.re/v5.0.0/language-concepts.html#pipe-last" target="_blank" rel="noreferrer">pipe-last</a>. But
+this always felt like an afterthought, and code using <code>@mel.send.pipe</code> never
+felt intuitive to look at (e.g. in <code>external say: unit [@mel.send.pipe: t]</code>,
+one had to mentally place the <code>t</code> before <code>unit</code>, since the real signature is <code>t -&gt; unit</code>).</p>
+<p>In Melange 5, we wanted to remove this weird split and further reduce the
+cognitive overhead of writing bindings to call JavaScript methods on an object
+or instance.</p>
+<p>We're introducing a way to mark the &quot;self&quot; instance argument with
+<code>@mel.this</code> and recommending only the use of <code>@mel.send</code> going forward.
+Starting from this release, <code>@mel.send.pipe</code> has been deprecated, and will be
+removed in the next major release of Melange. Here's an example:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[@mel.send]</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">external </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">push</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">~</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">value: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'a=?, [@mel.this] array('</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">a)) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> unit </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "push"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> push</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">([</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">||</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">], </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">~</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">value</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span></code></pre>
+</div><p>The code above marks the <code>array('a)</code> argument as the instance to call the
+<code>push</code> method, which produces the following JavaScript:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[].</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">push</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">);</span></span></code></pre>
+</div><p>Besides being more versatile, having an explicit marker with <code>@mel.this</code> is
+also more visually intuitive: when scanning Melange code containing <code>external</code>
+bindings, it becomes easier to spot which is the &quot;this&quot; argument. This feature
+is fully backwards compatible with <code>@mel.send</code>: in the absence of <code>@mel.this</code>,
+the instance argument defaults to the first one declared in the signature, as
+previously supported.</p>
+<h2 id="additional-quality-of-life-improvements" tabindex="-1">Additional quality of life improvements <a class="header-anchor" href="#additional-quality-of-life-improvements" aria-label="Permalink to &quot;Additional quality of life improvements&quot;"></a></h2>
+<h3 id="ocaml-5-3-compatibility-stdlib-upgrade" tabindex="-1">OCaml 5.3 Compatibility / Stdlib Upgrade <a class="header-anchor" href="#ocaml-5-3-compatibility-stdlib-upgrade" aria-label="Permalink to &quot;OCaml 5.3 Compatibility / Stdlib Upgrade&quot;"></a></h3>
+<p>Since <a href="https://anmonteiro.com/2021/03/on-ocaml-and-the-js-platform/" target="_blank" rel="noreferrer">Melange's
+inception</a>, one
+of its goals has been to keep it up to date with the latest OCaml releases.
+<a href="https://github.com/melange-re/melange/releases/download/5.0.1-53/melange-5.0.1-53.tbz" target="_blank" rel="noreferrer">This
+release</a>
+brings Melange up to speed with OCaml 5.3, including upgrades to the <code>Stdlib</code>
+library as well. We're also releasing Melange 5 for OCaml
+<a href="https://github.com/melange-re/melange/releases/download/5.0.1-414/melange-5.0.1-414.tbz" target="_blank" rel="noreferrer">4.14</a>,
+<a href="https://github.com/melange-re/melange/releases/download/5.0.1-51/melange-5.0.1-51.tbz" target="_blank" rel="noreferrer">5.1</a>
+and
+<a href="https://github.com/melange-re/melange/releases/download/5.0.1-52/melange-5.0.1-52.tbz" target="_blank" rel="noreferrer">5.2</a>.</p>
+<h3 id="melange-runtime-npm-packages" tabindex="-1">Melange runtime NPM packages <a class="header-anchor" href="#melange-runtime-npm-packages" aria-label="Permalink to &quot;Melange runtime NPM packages&quot;"></a></h3>
+<p>Starting from this release, we're shipping NPM packages with the precompiled
+Melange runtime. This feature, requested by a few users in
+<a href="https://github.com/melange-re/melange/issues/620" target="_blank" rel="noreferrer">melange#620</a> allows to use
+Melange without compiling its own runtime and stdlib (essentially, in
+combination with <code>(emit_stdlib false)</code> in <code>(melange.emit ..)</code>).</p>
+<p>This can be useful in monorepos that compile multiple Melange applications but,
+perhaps most importantly, it enables Melange libraries and packages to also
+be published in NPM without the weight of the full runtime / stdlib.</p>
+<h3 id="better-editor-support-for-melange-externals" tabindex="-1">Better editor support for Melange <code>external</code>s <a class="header-anchor" href="#better-editor-support-for-melange-externals" aria-label="Permalink to &quot;Better editor support for Melange `external`s&quot;"></a></h3>
+<p>Melange bindings to JavaScript, specified through <code>external</code> declarations, used
+to propagate internal information in the <a href="https://ocaml.org/manual/5.3/intfc.html#external-declaration" target="_blank" rel="noreferrer">native
+payload</a>. In
+practice, hovering over one of these in your editor could end up looking a bit
+weird:</p>
+<p><img src="/blog/externals-before.png" alt=""></p>
+<p>Since
+<a href="https://github.com/melange-re/melange/pull/1222" target="_blank" rel="noreferrer">melange-re/melange#1222</a>,
+Melange now propagates this information via internal attributes that only the
+Melange compiler recognizes. These don't show up when hovering over
+declarations in editors, making the resulting output much less jarring to look
+at:</p>
+<p><img src="/blog/externals-after.png" alt=""></p>
+<h3 id="prettified-javascript-output" tabindex="-1">Prettified JavaScript Output <a class="header-anchor" href="#prettified-javascript-output" aria-label="Permalink to &quot;Prettified JavaScript Output&quot;"></a></h3>
+<p>In Melange 5, we modernized the JavaScript emitter to produce cleaner, more
+readable, and better-indented code. Melange 5 generated JS looks remarkably
+closer to hand-written JavaScript, with this release enhancing that quality
+even further.</p>
+<h2 id="conclusion" tabindex="-1">Conclusion <a class="header-anchor" href="#conclusion" aria-label="Permalink to &quot;Conclusion&quot;"></a></h2>
+<p>Melange 5 crosses a major milestone for JavaScript expressivity, bringing great
+features like idiomatic dynamic <code>import()</code>s and support for discriminated
+unions. Compatibility with OCaml 5.3 marks Melange's commitment to parity with
+the latest OCaml versions. In this latest version, Melange raises the bar for
+increasingly prettier JavaScript prettification, and the Melange precompiled
+runtime starts to be available on NPM.</p>
+<p>Check out the <a href="https://github.com/melange-re/melange/blob/main/Changes.md#500-53-2025-02-09" target="_blank" rel="noreferrer">full
+changelog</a>
+for detailed information on all the changes that made it into this release. If
+you find any issues or have questions, feel free to open an issue on our
+<a href="https://github.com/melange-re/melange/issues" target="_blank" rel="noreferrer">GitHub issue tracker</a>.</p>
+<p>This release was sponsored by the generous support of
+<a href="https://ahrefs.com/" target="_blank" rel="noreferrer">Ahrefs</a> and the <a href="https://ocaml-sf.org/" target="_blank" rel="noreferrer">OCaml Software
+Foundation</a>.</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Melange 4.0 is here]]></title>
+            <link>https://melange.re/blog/posts/melange-4-is-here</link>
+            <guid>https://melange.re/blog/posts/melange-4-is-here</guid>
+            <pubDate>Wed, 22 May 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>Today, we're introducing Melange 4.0, the latest version of our backend for the
+OCaml compiler that emits JavaScript.</p>
+<p>Melange is now compatible with OCaml 5.2! In this release, Melange starts
+emitting more ES6 constructs, supports more JavaScript builtins, improves error
+handling, and makes using Dune virtual libraries fully supported. Read on for
+more details.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>Today, we're introducing Melange 4.0, the latest version of our backend for the
+OCaml compiler that emits JavaScript.</p>
+<p>Melange is now compatible with OCaml 5.2! In this release, Melange starts
+emitting more ES6 constructs, supports more JavaScript builtins, improves error
+handling, and makes using Dune virtual libraries fully supported. Read on for
+more details.</p>
+<hr>
+<h2 id="embracing-ocaml-5-2" tabindex="-1">Embracing OCaml 5.2 <a class="header-anchor" href="#embracing-ocaml-5-2" aria-label="Permalink to &quot;Embracing OCaml 5.2&quot;"></a></h2>
+<p>OCaml 5.2 was released just last week. With Melange 4, you can now leverage all
+the power and enhancements in this latest OCaml version. We've upgraded the
+OCaml type checker and the standard library to match OCaml 5.2's, ensuring you
+can select a 5.2-compatible Melange in your projects.</p>
+<p>This does <strong>not</strong> mean Melange is only compatible with OCaml 5.2. As previously
+mentioned in the <a href="./announcing-melange-3.html#multiple-ocaml-version-releases">Melange 3
+announcement</a>, each
+Melange version ships one release for every compiler version that it supports;
+for OCaml 5.1, this would correspond to Melange <code>4.0.0-51</code>.</p>
+<h2 id="full-support-for-dune-virtual-libraries" tabindex="-1">Full Support for Dune Virtual Libraries <a class="header-anchor" href="#full-support-for-dune-virtual-libraries" aria-label="Permalink to &quot;Full Support for Dune Virtual Libraries&quot;"></a></h2>
+<p>Melange now fully supports <a href="https://dune.readthedocs.io/en/stable/variants.html" target="_blank" rel="noreferrer">Dune virtual
+libraries</a>, which requires
+Dune 3.15.2. There were a few bumps in road when we thought it wouldn't be
+possible to support this use case in Melange. We were thankfully proven wrong
+(<a href="https://github.com/melange-re/melange/pull/1067" target="_blank" rel="noreferrer">#1067</a>), and we think that
+virtual libraries can become an interesting way to write libraries that work
+across Melange and native OCaml, sharing a common interface.</p>
+<h2 id="emitting-es6-and-enhanced-javascript-interop" tabindex="-1">Emitting ES6 and Enhanced JavaScript Interop <a class="header-anchor" href="#emitting-es6-and-enhanced-javascript-interop" aria-label="Permalink to &quot;Emitting ES6 and Enhanced JavaScript Interop&quot;"></a></h2>
+<p>In this release, Melange starts emitting ES6, particularly:</p>
+<ul>
+<li>Melange 4.0 emits <code>let</code> instead of <code>var</code>, and <code>const</code> where possible
+(<a href="https://github.com/melange-re/melange/pull/1019" target="_blank" rel="noreferrer">#1019</a>,
+<a href="https://github.com/melange-re/melange/pull/1059" target="_blank" rel="noreferrer">#1059</a>).</li>
+<li>Emitting <code>let</code> allowed us to remove a bit of legacy code related to compiling
+<code>for</code> loops, taking advantage of <code>let</code>'s lexical scoping.
+(<a href="https://github.com/melange-re/melange/pull/1020" target="_blank" rel="noreferrer">#1020</a>)</li>
+</ul>
+<p>In our effort to expand the API surface area for JavaScript interoperability,
+we've added new bindings to a few more JavaScript features in the <code>melange.js</code>
+library (whose main entrypoint is the <code>Js</code> module):</p>
+<ul>
+<li><strong>Js.Bigint</strong>: <a href="https://github.com/melange-re/melange/pull/1044" target="_blank" rel="noreferrer">#1044</a> added
+bindings to work with <code>BigInt</code>;</li>
+<li>The <strong>Js.Set</strong> and <strong>Js.Map</strong> modules now bind to even more methods available
+in these JavaScript data structures
+(<a href="https://github.com/melange-re/melange/pull/1047" target="_blank" rel="noreferrer">#1047</a>,
+<a href="https://github.com/melange-re/melange/pull/1101" target="_blank" rel="noreferrer">#1101</a>).</li>
+<li><strong>JS Iterators</strong>: We introduced minimal bindings for JavaScript iterators,
+making it easier to work with iterable objects, which some other modules'
+methods can now return
+(<a href="https://github.com/melange-re/melange/pull/1060" target="_blank" rel="noreferrer">#1060</a>).</li>
+<li><strong>WeakMap and WeakSet</strong>: Bindings for these weakly referenced collections
+have also been added
+(<a href="https://github.com/melange-re/melange/pull/1058" target="_blank" rel="noreferrer">#1058</a>).</li>
+</ul>
+<h2 id="improved-error-handling-and-code-generation" tabindex="-1">Improved Error Handling and Code Generation <a class="header-anchor" href="#improved-error-handling-and-code-generation" aria-label="Permalink to &quot;Improved Error Handling and Code Generation&quot;"></a></h2>
+<p>In this release, we've also made significant improvements in how Melange
+handles errors and generates JavaScript code:</p>
+<ul>
+<li>Instead of throwing JavaScript objects with Melange exception payloads, we
+now emit a Melange-specific error (<code>throw new MelangeError(..)</code>) for more
+consistent error handling
+(<a href="https://github.com/melange-re/melange/pull/1036" target="_blank" rel="noreferrer">#1036</a>).
+<ul>
+<li>An interesting corollary to this change is that catching Melange errors
+from external JavaScript only needs to check <code>instanceof MelangeError</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="additional-fixes-enhancements" tabindex="-1">Additional Fixes &amp; Enhancements <a class="header-anchor" href="#additional-fixes-enhancements" aria-label="Permalink to &quot;Additional Fixes &amp; Enhancements&quot;"></a></h2>
+<ul>
+<li><strong>Slimmer Executable</strong>: We've removed unnecessary internal code from
+<code>melange-compiler-libs</code>, making the Melange compiled executable smaller in
+size and faster to build
+(<a href="https://github.com/melange-re/melange/pull/1075" target="_blank" rel="noreferrer">#1075</a>).</li>
+<li><strong>Float Operations</strong>: Fixed runtime primitives for <code>Float.{min,max}</code> and
+related functions, ensuring more accurate mathematical operations
+(<a href="https://github.com/melange-re/melange/pull/1050" target="_blank" rel="noreferrer">#1050</a>).</li>
+<li><strong>Warning 51 (<code>wrong-tailcall-expectation</code>)</strong>: Melange 4 ships with support
+for enabling warning 51 and triggering the warning when
+<a href="https://ocaml.org/manual/5.2/attributes.html#ss:builtin-attributes" target="_blank" rel="noreferrer"><code>[@tailcall]</code></a>
+is used (<a href="https://github.com/melange-re/melange/pull/1075" target="_blank" rel="noreferrer">#1075</a>).</li>
+</ul>
+<h2 id="conclusion" tabindex="-1">Conclusion <a class="header-anchor" href="#conclusion" aria-label="Permalink to &quot;Conclusion&quot;"></a></h2>
+<p>The <a href="https://github.com/melange-re/melange/blob/main/Changes.md#400-2024-05-15" target="_blank" rel="noreferrer">Melange 4.0
+changelog</a>
+lists all the changes that made it to this release.</p>
+<p>Thanks for reading and stay tuned for more updates. Happy hacking!</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[A Preview of Universal Libraries in Dune]]></title>
+            <link>https://melange.re/blog/posts/dune-universal-libraries-preview</link>
+            <guid>https://melange.re/blog/posts/dune-universal-libraries-preview</guid>
+            <pubDate>Wed, 10 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>I recently shared a <a href="./whats-2024-brought-to-melange-so-far.html">2024 progress
+update</a> about our work on Melange. In
+that message, I briefly wrote about &quot;universal libraries&quot; in Dune, the ability
+to write a shared OCaml / Melange codebase while varying specific module
+implementations, flags, preprocessing steps, etc. according to the compilation
+target.</p>
+<p>I also promised to dive deeper into what &quot;universal libraries&quot; are all about,
+and the new use cases that they unlock in Dune. Keep reading for an in-depth
+look at the history behind this new feature rolling out in Dune 3.16.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>I recently shared a <a href="./whats-2024-brought-to-melange-so-far.html">2024 progress
+update</a> about our work on Melange. In
+that message, I briefly wrote about &quot;universal libraries&quot; in Dune, the ability
+to write a shared OCaml / Melange codebase while varying specific module
+implementations, flags, preprocessing steps, etc. according to the compilation
+target.</p>
+<p>I also promised to dive deeper into what &quot;universal libraries&quot; are all about,
+and the new use cases that they unlock in Dune. Keep reading for an in-depth
+look at the history behind this new feature rolling out in Dune 3.16.</p>
+<hr>
+<h2 id="the-bird-s-eye-view" tabindex="-1">The Bird's-eye View <a class="header-anchor" href="#the-bird-s-eye-view" aria-label="Permalink to &quot;The Bird's-eye View&quot;"></a></h2>
+<p>Let's walk backwards from our end-goal: having a shared OCaml / Melange
+codebase that can render React.js components on the server, such that the
+<a href="https://ahrefs.com" target="_blank" rel="noreferrer">Ahrefs</a> website can be rendered on the server without
+JavaScript. And, finally, having React.js hydrate the server-rendered HTML in
+the browser. <a href="https://twitter.com/davesnx" target="_blank" rel="noreferrer">Dave</a> explains the motivation behind
+this goal in more depth <a href="https://sancho.dev/blog/server-side-rendering-react-in-ocaml" target="_blank" rel="noreferrer">in his blog
+</a>.</p>
+<p>To look at a specific example, we'll start with a Melange codebase already
+using <a href="https://github.com/reasonml/reason-react" target="_blank" rel="noreferrer"><code>reason-react</code></a>. Our goal is
+to get those <code>reason-react</code> components to compile server-side with the OCaml
+compiler, where we'll use
+<a href="https://github.com/ml-in-barcelona/server-reason-react" target="_blank" rel="noreferrer"><code>server-reason-react</code></a>
+as a drop-in replacement for <code>reason-react</code>.</p>
+<p>What gets in our way is that:</p>
+<ul>
+<li>not everything is supported on both sides: some Melange modules use APIs that
+don't exist in OCaml (and extensive shimming is undesirable).
+<ul>
+<li>vice-versa on the Melange side; especially code that calls into C bindings.</li>
+</ul>
+</li>
+<li>we can't choose what implementation to use inside a module or conditionally
+apply different preprocessing steps and/or flags.</li>
+</ul>
+<p>In summary, we would like to vary specific module implementations across the
+same library, based on their compilation target. If we try to use it in a
+real-world codebase, we'll also find the need to specify different
+preprocessing definitions, compilation flags, the set of modules belonging to
+the library – effectively most fields in the <code>(library ..)</code> stanza.</p>
+<h2 id="a-first-hack-approach" tabindex="-1">A First <s>Hack</s> Approach <a class="header-anchor" href="#a-first-hack-approach" aria-label="Permalink to &quot;A First ~~Hack~~ Approach&quot;"></a></h2>
+<p>We concluded that it would be desirable to write two library definitions. That
+would allow us to configure each <code>(library ..)</code> stanza field separately,
+achieving our goal.</p>
+<p>But Dune doesn't allow you to have two libraries with the same name. How could
+it? If Dune derives the artifact directory for libraries from their <code>(name ..)</code>
+field, two conflicting names compete for the same artifact directory.</p>
+<p>So we first tried to work around that, and set up:</p>
+<ul>
+<li>unwrapped (<code>(wrapped false)</code>) Dune libraries with different names
+<ul>
+<li>with unwrapped libraries, we could share modules across compilation
+targets, e.g. <code>react.ml</code> originating from both <code>reason-react</code> and
+<code>server-reason-react</code>;</li>
+</ul>
+</li>
+<li>defined in different directories;</li>
+<li><code>(copy_files ..)</code> from one of the directories into the other, duplicating
+shared modules.
+<ul>
+<li>Modules with the same name and different implementations, specific to
+each directory.</li>
+</ul>
+</li>
+</ul>
+<div class="language-clj vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">clj</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; native/dune</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">library</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> native_lib)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">wrapped</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a b c))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; melange/dune</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">library</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> melange_lib)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">wrapped</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> melange)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a b c))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; Copy modules `A` and `B` from `../native`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">copy_files#</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ../native</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">files</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {a,b}.ml{,i}))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; module `C` has a specific Melange implementation</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">rule</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">with-stdout-to</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> c.ml</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "let backend = </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">melange</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)))</span></span></code></pre>
+</div><p>This worked until it didn't: we quickly ran into a limitation in <code>(copy_files ..)</code> (<a href="https://github.com/ocaml/dune/issues/9709" target="_blank" rel="noreferrer">dune#9709</a>). Because this
+stanza operates in the build directory, it was impossible to exclude some of
+build artifacts that get generated with <code>.ml{,i}</code> extensions from the copy glob
+– Dune uses extensions such as <code>.pp.ml</code> and <code>.re.pp.ml</code> as targets of its
+<a href="https://dune.readthedocs.io/en/stable/overview.html#term-dialect" target="_blank" rel="noreferrer">dialect</a> and
+<a href="https://dune.readthedocs.io/en/stable/reference/preprocessing-spec.html" target="_blank" rel="noreferrer">preprocessing</a>
+phases.</p>
+<h2 id="limiting-copy-files-to-source-files-only" tabindex="-1">Limiting <code>(copy_files ..)</code> to source-files only <a class="header-anchor" href="#limiting-copy-files-to-source-files-only" aria-label="Permalink to &quot;Limiting `(copy_files ..)` to source-files only&quot;"></a></h2>
+<p>What we would want from <code>copy_files</code> in our scenario is the ability to limit
+copying only to files that are present in source. That way we can address all
+the <code>.re{,i}</code> and <code>.ml{,i}</code> files in source directories without worrying about
+polluting our target directories with some intermediate Dune targets.</p>
+<p>In <a href="https://github.com/ocaml/dune/pull/9827" target="_blank" rel="noreferrer">dune#9827</a>, we added a new option
+to <code>copy_files</code> that allows precisely that: if the field <code>(only_sources &lt;optional_boolean_language&gt;)</code> is present, Dune will only match files in the
+source directory, and won't apply the glob to the targets of rules.</p>
+<p>After this change, our Dune file just needs to contemplate one more line:</p>
+<div class="language-diff vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">diff</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ;; Copy modules `A` and `B` from `../native`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (copy_files# ../native</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">+ (only_sources)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (files {a,b}.ml{,i}))</span></span></code></pre>
+</div><h2 id="checkpoint" tabindex="-1">Checkpoint <a class="header-anchor" href="#checkpoint" aria-label="Permalink to &quot;Checkpoint&quot;"></a></h2>
+<p>Our Dune file allows us to move forward. We were now able to define multiple
+libraries that share common implementations across native code and Melange.
+Though library names still need to be different. And, overall, we still face
+some other glaring limitations:</p>
+<ul>
+<li>The <code>(wrapped false)</code> requirement makes it impossible to namespace these
+libraries;</li>
+<li>Defining libraries in different directories and using <code>copy_files</code> places
+extra separation between common implementations, and adds extra build
+configuration overhead;</li>
+<li>Publishing a library with <code>(modes :standard melange)</code> adds a non-optional
+dependency on Melange, which should really be optional for native-only
+consumers.</li>
+<li>Extensive usage of <code>(copy_files ..)</code> as shared in the example above breaks
+editor integration and &quot;jump to definition&quot;; Merlin and OCaml-LSP don't track
+the original source in this scenario.</li>
+</ul>
+<h2 id="testing-a-new-solution" tabindex="-1">Testing a New Solution <a class="header-anchor" href="#testing-a-new-solution" aria-label="Permalink to &quot;Testing a New Solution&quot;"></a></h2>
+<p>We became intentful on removing these limitations, and realized at some point
+that our use case is somewhat similar to cross-compilation, which Dune <a href="https://dune.readthedocs.io/en/stable/cross-compilation.html" target="_blank" rel="noreferrer">already
+supports well</a>.
+The key insight, which we shared in a Dune proposal
+(<a href="https://github.com/ocaml/dune/issues/10222" target="_blank" rel="noreferrer">dune#10222</a>), is that we could
+share library names as long as they resolved to a single library per <a href="https://dune.readthedocs.io/en/stable/reference/dune-workspace/context.html" target="_blank" rel="noreferrer">build
+context</a>.</p>
+<p>After making the proposed changes to Dune
+(<a href="https://github.com/ocaml/dune/pull/10220" target="_blank" rel="noreferrer">dune#10220</a>,
+<a href="https://github.com/ocaml/dune/pull/10307" target="_blank" rel="noreferrer">dune#10307</a>,
+<a href="https://github.com/ocaml/dune/pull/10354" target="_blank" rel="noreferrer">dune#10354</a>,
+<a href="https://github.com/ocaml/dune/pull/10355" target="_blank" rel="noreferrer">dune#10355</a>) we found ourselves
+having implemented support for:</p>
+<ul>
+<li>Dune libraries with the same name;</li>
+<li>which may be defined in the same directory;</li>
+<li>as long as they don't conflict in the same context.
+<ul>
+<li>to achieve that, we use e.g. <code>(enabled_if (= %{context_name} melange))</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Putting it all together, our example can be adapted to look like:</p>
+<div class="language-clj vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">clj</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; src/dune</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">library</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a b c)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">enabled_if</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> %{context_name} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">default</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D">;; can also be defined in src/dune(!)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">library</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">name</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modes</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> melange)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">modules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> a b c)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">enabled_if</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> %{context_name} melange)))</span></span></code></pre>
+</div><p>In other words, we define two libraries named <code>a</code>, each in their own build
+context (with build artifacts ending up in <code>_build/default</code> and
+<code>_build/melange</code>). In the <code>melange</code> context, the library has <code>(modes melange)</code>.</p>
+<p>Both libraries contain modules <code>A</code>, <code>B</code> and <code>C</code> like before. Their
+corresponding source files can live in a single directory, no copying required.
+If we need to vary <code>C</code>'s implementation, we can express that in Dune rules:</p>
+<div class="language-clj vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">clj</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">rule</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">target</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> c.ml)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">deps</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> c.native.ml)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">action</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">with-stdout-to</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">   %{target}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">   (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "let backend = </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">OCaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)))</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">enabled_if</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> %{context_name} </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">default</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">rule</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">target</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> c.ml)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">deps</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> c.melange.ml)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">action</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">with-stdout-to</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">   %{target}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">   (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> "let backend = </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">Melange</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)))</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">enabled_if</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> %{context_name} melange)))</span></span></code></pre>
+</div><p>In short, both libraries get a module <code>C</code>. <code>c.ml</code>'s contents vary according to
+the build context. The example above is currently illustrative, even if
+functional. We're still working on the developer experience of multi-context
+libraries. This might not be the best setup for editor support, which we'll
+find out as we take it for a spin.</p>
+<h2 id="missing-pieces" tabindex="-1">Missing Pieces <a class="header-anchor" href="#missing-pieces" aria-label="Permalink to &quot;Missing Pieces&quot;"></a></h2>
+<p>We proved that compiling libraries with the same name in different contexts can
+work after migrating some of the libraries to the new configuration.</p>
+<p>Before deploying such a major change at scale, we need to get the developer
+experience right. To illustrate some examples:</p>
+<ul>
+<li><a href="https://github.com/ocaml/dune/pull/10324" target="_blank" rel="noreferrer">Dune</a> and
+<a href="https://github.com/ocaml/ocaml-lsp/pull/1238" target="_blank" rel="noreferrer"><code>ocaml-lsp</code></a> must support
+selecting the context to know where to look for compiled artifacts;</li>
+<li>Editor plugins must have commands or configuration associating certain files
+with their respective context;</li>
+<li>Dune can do better to <a href="https://github.com/ocaml/dune/issues/10378" target="_blank" rel="noreferrer">show the
+context</a> to which errors belong</li>
+</ul>
+<p>We will need some additional time to let all pieces fall in their right places
+before we can start recommending compiling Melange code in a separate Dune
+context. Before that happens, we wanted to share the problems we faced, how we
+ended up lifting some interesting limitations in a composable way, and the new
+constructs that will be available in Dune 3.16.</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[What's 2024 brought to Melange so far?]]></title>
+            <link>https://melange.re/blog/posts/whats-2024-brought-to-melange-so-far</link>
+            <guid>https://melange.re/blog/posts/whats-2024-brought-to-melange-so-far</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>Last year we saw the <a href="https://anmonteiro.substack.com/p/melange-10-is-here" target="_blank" rel="noreferrer">first major
+release</a> of Melange. Over
+the course of 2023, what started as disjoint sets of tooling has gradually
+evolved into a cohesive development experience within the <a href="https://ocaml.org/docs/platform" target="_blank" rel="noreferrer">OCaml
+Platform</a>.</p>
+<p>But we're not done yet. In the next few paragraphs, I'll tell you everything
+we've shipped so far in the first 3 months of 2024.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>Last year we saw the <a href="https://anmonteiro.substack.com/p/melange-10-is-here" target="_blank" rel="noreferrer">first major
+release</a> of Melange. Over
+the course of 2023, what started as disjoint sets of tooling has gradually
+evolved into a cohesive development experience within the <a href="https://ocaml.org/docs/platform" target="_blank" rel="noreferrer">OCaml
+Platform</a>.</p>
+<p>But we're not done yet. In the next few paragraphs, I'll tell you everything
+we've shipped so far in the first 3 months of 2024.</p>
+<hr>
+<h2 id="releasing-melange-3" tabindex="-1">Releasing <a href="./announcing-melange-3.html">Melange 3</a> <a class="header-anchor" href="#releasing-melange-3" aria-label="Permalink to &quot;Releasing [Melange 3](./announcing-melange-3)&quot;"></a></h2>
+<p>We released Melange 3.0 in February. This release mostly focused on addressing
+long-standing deprecations, crashes, error messages and making the Melange
+distribution leaner.</p>
+<p>One highlight of the Melange 3 release is the support for more versions of
+OCaml. Melange 3 supports OCaml 4.14 and 5.1; the next major release will
+additionally feature support for OCaml 5.2.</p>
+<p><a href="https://github.com/reasonml/reason-react" target="_blank" rel="noreferrer"><code>reason-react</code></a> and the Melange
+libraries in <a href="https://github.com/melange-community" target="_blank" rel="noreferrer"><code>melange-community</code></a> were
+also updated and released with support for this new Melange major version.</p>
+<p>Melange 3 has been running in production at Ahrefs since its release. This is
+the largest Melange codebase that we are aware of (on the scale of tens of
+libraries with support for <code>(modes melange)</code> and <code>melange.emit</code> stanzas, across
+dozens of apps).</p>
+<h2 id="emitting-es6" tabindex="-1">Emitting <a href="https://github.com/melange-re/melange/issues/134" target="_blank" rel="noreferrer">ES6</a> <a class="header-anchor" href="#emitting-es6" aria-label="Permalink to &quot;Emitting [ES6](https://github.com/melange-re/melange/issues/134)&quot;"></a></h2>
+<p>As the great majority of browsers <a href="https://caniuse.com/?search=es6." target="_blank" rel="noreferrer">supports ECMAScript 2015
+(ES6)</a>, we decided to bump the version that
+Melange targets. In
+<a href="https://github.com/melange-re/melange/pull/1019" target="_blank" rel="noreferrer">melange#1019</a> and
+<a href="https://github.com/melange-re/melange/pull/1059" target="_blank" rel="noreferrer">melange#1059</a> we changed the
+emission of <code>var</code> to <code>let</code> (and <code>const</code>, where possible). <code>let</code>'s lexical scope
+makes some closure allocations in <code>for</code> loops unnecessary, which we promptly
+removed in <a href="https://github.com/melange-re/melange/pull/1020" target="_blank" rel="noreferrer">melange#1020</a>.
+This change also results in a slight reduction of bundle size as Melange emits
+a bit less code.</p>
+<p>Starting to emit ES6 also unblocks working on
+<a href="https://github.com/melange-re/melange/issues/342" target="_blank" rel="noreferrer">melange#342</a>, which requests
+support for tagged <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals" target="_blank" rel="noreferrer">template
+literals</a>.
+We'll consider adding support for more features in ES6 and later on a
+case-per-case basis, if the added expressivity justifies the complexity of the
+implementation. Feel free to <a href="https://github.com/melange-re/melange/issues/new" target="_blank" rel="noreferrer">open an
+issue</a> if you feel that
+Melange should emit ES6 features that your project requires.</p>
+<h2 id="identifying-melange-exceptions-in-javascript" tabindex="-1">Identifying Melange exceptions in JavaScript <a class="header-anchor" href="#identifying-melange-exceptions-in-javascript" aria-label="Permalink to &quot;Identifying Melange exceptions in JavaScript&quot;"></a></h2>
+<p>Until Melange 3, exceptions originating from OCaml code compiled with Melange
+are roughly thrown as such:</p>
+<div class="language-js vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">js</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">throw</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  MEL_EXN_ID: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Assert_failure"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  _1: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"x.ml"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">8</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">],</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  Error: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0"> Error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">()</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+</div><p>As stated in an <a href="https://github.com/rescript-lang/rescript-compiler/issues/4506" target="_blank" rel="noreferrer">old ReScript
+issue</a>, the
+encoding above is at odds with user exception monitoring in popular vendors.</p>
+<p>We set out to fix this for Melange 4. The next release of Melange includes
+<a href="https://github.com/melange-re/melange/pull/1036" target="_blank" rel="noreferrer">melange#1036</a> and
+<a href="https://github.com/melange-re/melange/pull/1043" target="_blank" rel="noreferrer">melange#1043</a>, where we
+changed the encoding to throw a dedicated <code>MelangeError</code> instance:</p>
+<div class="language-diff vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">diff</span><pre class="shiki shiki-themes github-light github-dark vp-code" v-pre=""><code><span class="line"><span style="--shiki-light:#B31D28;--shiki-dark:#FDAEB7">-throw {</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">+throw new Caml_js_exceptions.MelangeError("Assert_failure", {</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  MEL_EXN_ID: "Assert_failure",</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  _1: ["x.ml", 42, 8],</span></span>
+<span class="line"><span style="--shiki-light:#B31D28;--shiki-dark:#FDAEB7">- Error: new Error()</span></span>
+<span class="line"><span style="--shiki-light:#B31D28;--shiki-dark:#FDAEB7">-};</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#85E89D">+});</span></span></code></pre>
+</div><p>Besides fixing the immediate issue – vendor SDKs for error monitoring now
+understand Melange runtime errors – this change brings a few additional
+benefits to users of Melange:</p>
+<ul>
+<li>Detecting an exception originating from Melange-compiled code is now as easy
+as using the JS <code>instanceof</code> operator to check if the exception is an
+instance of <code>Caml_js_exceptions.MelangeError</code>.</li>
+<li><code>MelangeError</code> adds support for – and polyfills, if necessary – the
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause" target="_blank" rel="noreferrer"><code>cause</code></a>
+property in instances of <code>Error</code>, which lets us squeeze out some extra
+<a href="https://caniuse.com/mdn-javascript_builtins_error_cause" target="_blank" rel="noreferrer">browser support</a>.
+<ul>
+<li>Additionally, this enables even better integrations with 3rd party
+monitoring tools, which will look for JavaScript error details in
+<code>Error.prototype.cause</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="melange-js-keeps-getting-better" tabindex="-1"><code>melange.js</code> keeps getting better <a class="header-anchor" href="#melange-js-keeps-getting-better" aria-label="Permalink to &quot;`melange.js` keeps getting better&quot;"></a></h2>
+<p>The <a href="./announcing-melange-3.html#runtime-stdlib">Melange 3
+announcement</a>
+touched a bit on the improvements we did in the <code>Js.*</code> modules recently. We're
+always trying to improve the number of zero-cost bindings to functions in the
+JS runtime, and their quality. In next release, we're adding more functions to
+cover <code>Map</code>, <code>Set</code>, <code>WeakMap</code>, <code>WeakSet</code>, <code>BigInt</code> and <code>Iterator</code>.</p>
+<p>We're also taking advantage of Dune's obscure extension that models libraries
+like the OCaml <code>Stdlib</code> (<code>(using experimental_building_ocaml_compiler_with_dune 0.1)</code> in <code>dune-project</code>, the <code>stdlib</code> field in <code>library</code> stanzas). Here's the
+difference between a &quot;stdlib library&quot; and a regular library: a stdlib library's
+main module depends on just a subset of the internal modules in the libraries,
+while others depend on this main module. Dune doesn't allow regular library
+modules to depend on their main module name.</p>
+<p>In the next release of Melange, we treat the <code>Js.*</code> modules like a &quot;stdlib&quot;
+library (<a href="https://github.com/melange-re/melange/pull/1091" target="_blank" rel="noreferrer">melange#1091</a>):
+modules are only accessible through the <code>Js.*</code> namespace; as a fortunate
+side-effect, we stop exposing <code>Js__Js_internal</code>, which could leak into some
+error messages, causing unnecessary confusion.</p>
+<h2 id="ocaml-5-2" tabindex="-1">OCaml 5.2 <a class="header-anchor" href="#ocaml-5-2" aria-label="Permalink to &quot;OCaml 5.2&quot;"></a></h2>
+<p>With OCaml 5.2 around the corner (the first
+<a href="https://github.com/ocaml/ocaml/archive/refs/tags/5.2.0-beta1.tar.gz" target="_blank" rel="noreferrer">beta</a>
+was released just a couple weeks ago), we made Melange ready for the upcoming
+release. In <a href="https://github.com/melange-re/melange/pull/1074" target="_blank" rel="noreferrer">melange#1074</a> and
+<a href="https://github.com/melange-re/melange/pull/1078" target="_blank" rel="noreferrer">melange#1078</a> we upgraded
+both the Melange core and the Stdlib to the changes in OCaml 5.2. As mentioned
+above, we're happy that the next release of Melange will support an even wider
+range of OCaml compiler versions, making 5.2 the latest addition to the
+supported compiler versions.</p>
+<h2 id="leveraging-dune-s-potential" tabindex="-1">Leveraging Dune's potential <a class="header-anchor" href="#leveraging-dune-s-potential" aria-label="Permalink to &quot;Leveraging Dune's potential&quot;"></a></h2>
+<h3 id="making-dune-faster" tabindex="-1">Making Dune faster <a class="header-anchor" href="#making-dune-faster" aria-label="Permalink to &quot;Making Dune faster&quot;"></a></h3>
+<p>Back in January, <a href="https://twitter.com/javierwchavarri" target="_blank" rel="noreferrer">Javi</a> found a
+performance regression in Dune
+(<a href="https://github.com/ocaml/dune/issues/9738" target="_blank" rel="noreferrer">dune#9738</a>) after upgrading to
+Dune 3.13. The whole fact-finding process of profiling Dune's performance and
+working closely with the team to patch this regression
+(<a href="https://github.com/ocaml/dune/pull/9769" target="_blank" rel="noreferrer">dune#9769</a>) ended up being quite the
+learning experience.</p>
+<p>Once the dust settled, Javi took the time to write a <a href="https://tech.ahrefs.com/profiling-dune-builds-a8de589ec268" target="_blank" rel="noreferrer">blog
+post</a> outlining
+some of the tools he used and the steps he used to gather information about
+Dune's runtime behavior.</p>
+<h3 id="improving-dune-describe-pp" tabindex="-1">Improving <code>dune describe pp</code> <a class="header-anchor" href="#improving-dune-describe-pp" aria-label="Permalink to &quot;Improving `dune describe pp`&quot;"></a></h3>
+<p>The command <code>dune describe pp</code> prints a given source file after preprocessing.
+This is useful to quickly inspect the code generate by a (set of) ppx.</p>
+<p><code>dune describe pp</code> didn't, however, support <a href="https://dune.readthedocs.io/en/stable/overview.html#term-dialect" target="_blank" rel="noreferrer">Dune
+dialects</a>. I
+<a href="https://github.com/ocaml/dune/issues/4470#issuecomment-1135120774" target="_blank" rel="noreferrer">found out</a>
+about this limitation when trying to get the preprocessed output of a ReasonML
+file.</p>
+<p>We recently set out to fix this problem. In
+<a href="https://github.com/ocaml/dune/pull/10321" target="_blank" rel="noreferrer">dune#10321</a> we made Reason files and
+dialects generally work within <code>dune describe pp</code>, and we followed up with the
+ability to print back the preprocessed output in the same dialect as the given
+file (<a href="https://github.com/ocaml/dune/pull/10322" target="_blank" rel="noreferrer">dune#10322</a>,
+<a href="https://github.com/ocaml/dune/pull/10339" target="_blank" rel="noreferrer">dune#10339</a> and
+<a href="https://github.com/ocaml/dune/pull/10340" target="_blank" rel="noreferrer">dune#10340</a>).</p>
+<h3 id="virtual-libraries-in-melange" tabindex="-1"><a href="https://dune.readthedocs.io/en/stable/variants.html" target="_blank" rel="noreferrer">Virtual libraries</a> in Melange <a class="header-anchor" href="#virtual-libraries-in-melange" aria-label="Permalink to &quot;[Virtual libraries](https://dune.readthedocs.io/en/stable/variants.html) in Melange&quot;"></a></h3>
+<p>From Dune's own documentation:</p>
+<blockquote>
+<p>Virtual libraries correspond to Dune’s ability to compile parameterised
+libraries and delay the selection of concrete implementations until linking an
+executable.</p>
+</blockquote>
+<p>In the Melange case there's no executable linking going on, but we can still
+delay the selection of concrete implementations until JavaScript emission – in
+practice, this means programming against the interface of &quot;virtual modules&quot; in
+libraries and deferring the dependency on the concrete implementation until the
+<code>melange.emit</code> stanza.</p>
+<p>Or rather, this is <em>now</em> possible after landing
+<a href="https://github.com/melange-re/melange/pull/1067" target="_blank" rel="noreferrer">melange#1067</a> and
+<a href="https://github.com/ocaml/dune/pull/10051" target="_blank" rel="noreferrer">dune#10051</a>: in particular, while
+Dune support for Melange has shipped with virtual libraries since day one, it
+didn't support one of the most useful features that they provide: programming
+against the interface of a virtual module.</p>
+<h3 id="melange-rules-work-within-the-dune-sandbox" tabindex="-1">Melange rules work within the Dune sandbox <a class="header-anchor" href="#melange-rules-work-within-the-dune-sandbox" aria-label="Permalink to &quot;Melange rules work within the Dune sandbox&quot;"></a></h3>
+<p>Within the last month, we also fixed a bug where Dune didn't track all Melange
+dependencies precisely during the JavaScript emission phase. While the
+<a href="https://github.com/ocaml/dune/issues/9190" target="_blank" rel="noreferrer">originally reported issue</a> saw this
+bug manifest when moving modules across directories when <code>(include_subdirs ..)</code>
+is enabled, the fix we applied in
+<a href="https://github.com/ocaml/dune/pull/10286" target="_blank" rel="noreferrer">dune#10286</a> and
+<a href="https://github.com/ocaml/dune/pull/10297" target="_blank" rel="noreferrer">dune#10297</a> brings with it the
+fortunate side-effect of making Melange rules work in the <a href="https://dune.readthedocs.io/en/stable/concepts/sandboxing.html" target="_blank" rel="noreferrer">Dune
+sandbox</a>.
+We're glad this issue is fixed since it could result in the <a href="https://dune.readthedocs.io/en/stable/caching.html" target="_blank" rel="noreferrer">Dune
+Cache</a> being poisoned,
+leading to very confusing results.</p>
+<p>To make sure that sandboxing keeps working with Melange, we enabled it by
+default in <a href="https://github.com/ocaml/dune/pull/10312" target="_blank" rel="noreferrer">dune#10312</a> for the
+Melange tests in Dune.</p>
+<h2 id="towards-universal-react-in-ocaml" tabindex="-1">Towards Universal React in OCaml <a class="header-anchor" href="#towards-universal-react-in-ocaml" aria-label="Permalink to &quot;Towards Universal React in OCaml&quot;"></a></h2>
+<p>One of our goals for 2024 is to ship a good developer experience around
+&quot;universal libraries&quot; in OCaml, the ability to write a mixed OCaml / Melange
+codebase that shares most libraries and modules pertaining to DOM rendering
+logic.</p>
+<p><a href="https://twitter.com/davesnx" target="_blank" rel="noreferrer">Dave</a> wrote
+<a href="https://github.com/ml-in-barcelona/server-reason-react" target="_blank" rel="noreferrer">server-reason-react</a>
+for this purpose. He also wrote a <a href="https://sancho.dev/blog/server-side-rendering-react-in-ocaml" target="_blank" rel="noreferrer">post on his
+blog</a> detailing
+the motivation behind this approach and what he wants to achieve with
+<code>server-reason-react</code>.</p>
+<p>While React component hydration in native OCaml is a challenge specific to
+Melange and React codebases, there are reusable primitives that we needed to
+implement in Dune to make it possible. They also unlock a host of new use cases
+for Dune that we expect will start getting adoption over time.</p>
+<p>Universal libraries are already deployed for a small subset of apps at Ahrefs.
+Javi wrote about how Ahrefs is <a href="https://tech.ahrefs.com/building-react-server-components-in-ocaml-81c276713f19" target="_blank" rel="noreferrer">sharing component
+code</a>
+for those apps.</p>
+<p>This past quarter, we took it a step further. We added support in Dune for
+libraries that share the same name, as long as they're defined in different
+build contexts (<a href="https://github.com/ocaml/dune/issues/10222" target="_blank" rel="noreferrer">dune#10222</a>).
+Support for libraries with the same name in multiple contexts landed in
+<a href="https://github.com/ocaml/dune/pull/10307" target="_blank" rel="noreferrer">dune#10307</a>. We'll be diving deeper
+into what led us to this solution and what it enables in a separate blog post.
+For now, the remaining work relates to selecting which build context to use for
+editor integration when using multi-context builds.</p>
+<h2 id="community-at-large" tabindex="-1">Community at large <a class="header-anchor" href="#community-at-large" aria-label="Permalink to &quot;Community at large&quot;"></a></h2>
+<h3 id="bootstrapping-melange-projects-with-create-melange-app" tabindex="-1">Bootstrapping Melange projects with <code>create-melange-app</code> <a class="header-anchor" href="#bootstrapping-melange-projects-with-create-melange-app" aria-label="Permalink to &quot;Bootstrapping Melange projects with `create-melange-app`&quot;"></a></h3>
+<p>In January, <a href="https://twitter.com/dillon_mulroy" target="_blank" rel="noreferrer">Dillon</a> released v1.0 of
+<a href="https://github.com/dmmulroy/create-melange-app" target="_blank" rel="noreferrer"><code>create-melange-app</code></a>, and
+we're now recommending it for bootstrapping <a href="https://melange.re/v3.0.0/getting-started.html#getting-started-automated-create-melange-app" target="_blank" rel="noreferrer">new Melange
+projects</a></p>
+<p><code>create-melange-app</code> is a friendly and familiar way to get started with OCaml,
+ReasonML, and Melange, geared towards JavaScript and TypeScript developers.</p>
+<p><code>create-melange-app</code> quickly became a community favorite after its release,
+attracting a number of contributors that are helping make it better.</p>
+<h3 id="melange-book" tabindex="-1">Melange Book <a class="header-anchor" href="#melange-book" aria-label="Permalink to &quot;Melange Book&quot;"></a></h3>
+<p><a href="https://twitter.com/feihonghsu" target="_blank" rel="noreferrer">Feihong</a> keeps making really good progress on
+our book <a href="https://react-book.melange.re" target="_blank" rel="noreferrer">Melange for React Devs</a>, a
+project-based introduction to Melange for React developers. The newest chapter
+on <a href="https://dune.readthedocs.io/en/stable/tests.html#cram-tests" target="_blank" rel="noreferrer">Cram testing</a>
+guides you through the necessary steps for writing tests and snapshotting their
+output.</p>
+<p>There are more chapters in the pipeline that we'll be releasing incrementally
+as they're ready for consumption. We're also gathering feedback on the book; we
+invite you to go through it and open issues in the <a href="https://github.com/melange-re/melange-for-react-devs" target="_blank" rel="noreferrer">GitHub
+repository</a> for any
+material that deserves rewording.</p>
+<h2 id="looking-forward" tabindex="-1">Looking forward <a class="header-anchor" href="#looking-forward" aria-label="Permalink to &quot;Looking forward&quot;"></a></h2>
+<p>As we look forward, towards the next phase of Melange development, I'd like to
+take a moment to thank <a href="https://ahrefs.com" target="_blank" rel="noreferrer">Ahrefs</a>, the <a href="https://ocaml-sf.org/" target="_blank" rel="noreferrer">OCaml Software
+Foundation</a> and my <a href="https://github.com/sponsors/anmonteiro/" target="_blank" rel="noreferrer">GitHub
+sponsors</a> for the funding and support,
+without which developing Melange wouldn't have been possible over this
+sustained period of time.</p>
+<p>On a personal note, it fills me with joy to have the opportunity to share the
+amazing work that Melange contributors have been putting in. It represents a
+stark contrast from not long ago and the Melange project and community are
+better for it. Thank you everyone!</p>
+<p>As a final note, we thank you for reading through our updates for the first
+three months of 2024! As we finish planning our work for the next period, we'll
+share updates on what's to come for Melange in the not-so-distant future.</p>
+<p>Until then, stay tuned and happy hacking!</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Announcing Melange 3]]></title>
+            <link>https://melange.re/blog/posts/announcing-melange-3</link>
+            <guid>https://melange.re/blog/posts/announcing-melange-3</guid>
+            <pubDate>Tue, 13 Feb 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>We are excited to announce the release of <a href="https://github.com/melange-re/melange/releases/tag/3.0.0-51" target="_blank" rel="noreferrer">Melange
+3</a>, the latest
+version of our backend for the OCaml compiler that emits JavaScript.</p>
+<p>This new version comes packed with significant changes, improvements, and a few
+necessary removals to ensure a more streamlined and efficient experience for our
+users. This new version is both leaner and more robust. We focused on fixing
+crashes and removing obsolete functionality, improving the developer and
+troubleshooting experience, increasing OCaml compatibility and JavaScript FFI
+integration.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>We are excited to announce the release of <a href="https://github.com/melange-re/melange/releases/tag/3.0.0-51" target="_blank" rel="noreferrer">Melange
+3</a>, the latest
+version of our backend for the OCaml compiler that emits JavaScript.</p>
+<p>This new version comes packed with significant changes, improvements, and a few
+necessary removals to ensure a more streamlined and efficient experience for our
+users. This new version is both leaner and more robust. We focused on fixing
+crashes and removing obsolete functionality, improving the developer and
+troubleshooting experience, increasing OCaml compatibility and JavaScript FFI
+integration.</p>
+<hr>
+<p>Here's a rundown of the key updates in Melange 3. Check the <a href="https://melange.re/v3.0.0/" target="_blank" rel="noreferrer">Melange
+documentation</a> for further resources.</p>
+<h2 id="major-changes-and-removals" tabindex="-1">Major Changes and Removals <a class="header-anchor" href="#major-changes-and-removals" aria-label="Permalink to &quot;Major Changes and Removals&quot;"></a></h2>
+<p>In Melange 3, <code>Belt</code> is no longer a dependency for the Melange <code>Stdlib</code>.
+Libraries that depend on the Belt modules will need to include <code>(libraries melange.belt)</code> in their build configuration.</p>
+<p>The <code>@bs</code> / <code>@bs.*</code> attributes have been replaced. Users of Melange should now
+utilize <code>[@u]</code> for uncurried application and <code>[@mel.*]</code> for FFI attributes.
+Additionally:</p>
+<ul>
+<li><code>[@mel.val]</code> has been removed as it was redundant in the Melange FFI​​.</li>
+<li><code>[@mel.splice]</code> was removed in favor of <code>[@mel.variadic]</code></li>
+</ul>
+<p>For this release, most modules in the <code>Js</code> namespace had their APIs unified,
+deduplicated and refactored. In cases such as <code>Js.Int</code>, <code>Js.Date</code>, <code>Js.Re</code>,
+<code>Js.Float</code>, <code>Js.String</code>, some functions were changed from pipe-first to
+pipe-last and labeled arguments were added; and incorporating those made others
+obsolete, which we removed. Modules such as <code>Js.List</code>, <code>Js.Null_undefined</code>,
+<code>Js.Option</code>, <code>Js.Result</code> and <code>Js.Cast</code> are also no longer present in Melange 3.
+Alternatives within <code>Stdlib</code> or <code>Belt</code> are instead​​ recommended.</p>
+<h2 id="new-features-and-enhancements" tabindex="-1">New Features and Enhancements <a class="header-anchor" href="#new-features-and-enhancements" aria-label="Permalink to &quot;New Features and Enhancements&quot;"></a></h2>
+<p>Melange 3 includes a few interesting new features and enhancements. From syntax
+and preprocessing to interop with JavaScript, runtime and error messages, here are some
+we chose to highlight:</p>
+<h3 id="multiple-ocaml-version-releases" tabindex="-1">Multiple OCaml-version releases <a class="header-anchor" href="#multiple-ocaml-version-releases" aria-label="Permalink to &quot;Multiple OCaml-version releases&quot;"></a></h3>
+<p>A few users have expressed concerns related to Melange having a 1:1 relationship to its
+OCaml version. This limitation exists because we vendor and modify OCaml's typechecker,
+which is usually version-dependent.</p>
+<p>In Melange 1, we made some strides to solve this at the syntax level – one Melange version
+could work across many compiler switches. But that has a pretty big limitation: editor tooling,
+documentation generation and everything else that reads from <code>.cmt</code> artifact files needed to be
+in the same compiler switch as the version of the typechecker in use.</p>
+<p>Starting in Melange 3, we will be adopting the recent Merlin release strategy: Melange has a
+release for every compiler version that it supports, suffixed with the OCaml version that it
+corresponds to, e.g. Melange 3 on OCaml 4.14 is <code>v3.0.0-414</code>.</p>
+<h3 id="interop" tabindex="-1">Interop <a class="header-anchor" href="#interop" aria-label="Permalink to &quot;Interop&quot;"></a></h3>
+<ul>
+<li>Modules can be renamed with <code>@mel.as</code></li>
+<li><code>@mel.obj</code> and <code>%mel.obj</code> allow renaming the JS object keys with <code>@mel.as</code></li>
+<li><code>@mel.new</code> can now be used alongside <code>@mel.send</code> and <code>@mel.send.pipe</code></li>
+<li><code>[@@deriving abstract]</code> is now deprecated and split into its two main
+features:
+<ul>
+<li><code>[@@deriving jsProperties]</code> derives a JS object creation function that can
+generate a JS object with optional keys (when using <code>@mel.optional]</code>)</li>
+<li><code>[@@deriving getSet]</code> derives getter / setter functions for the JS object
+derived by the underlying record.</li>
+</ul>
+</li>
+</ul>
+<h3 id="error-messages-hints" tabindex="-1">Error messages &amp; Hints <a class="header-anchor" href="#error-messages-hints" aria-label="Permalink to &quot;Error messages &amp; Hints&quot;"></a></h3>
+<p>Melange 3 provides more informative error messages originating from both the
+<code>melange.ppx</code> and the compiler core​​​​.</p>
+<p>In this release, we also introduce a new <code>unprocessed</code> alert to detect code that
+has made it to the Melange compiler without having been processed by the Melange
+PPX. Besides hinting users to add <code>(preprocess (pps melange.ppx))</code> to their <code>dune</code>
+file, this alert more explicitly exposes a common failure mode that puzzles
+beginners quite often.</p>
+<p>Additionally:</p>
+<ul>
+<li>The Melange playground now has improved reporting of PPX alerts.</li>
+<li>Runtime error rendering in the playground renders better error information.</li>
+<li>The JS parser within Melange has been upgraded to Flow v0.225.1.</li>
+</ul>
+<h3 id="runtime-stdlib" tabindex="-1">Runtime &amp; <code>Stdlib</code> <a class="header-anchor" href="#runtime-stdlib" aria-label="Permalink to &quot;Runtime &amp; `Stdlib`&quot;"></a></h3>
+<p>Melange 3 implements more functions in the following modules of the <code>Stdlib</code>:
+<code>String</code>, <code>Bytes</code>, <code>Buffer</code>, <code>BytesLabels</code> and <code>StringLabels</code>. Specifically, the
+new unicode parsing functions upstream are now available in Melange as well.</p>
+<p>Some keys with legacy names have been updated for consistency, such as renaming
+<code>RE_EXN_ID</code> to <code>MEL_EXN_ID</code> and <code>BS_PRIVATE_NESTED_SOME_NONE</code> to
+<code>MEL_PRIVATE_NESTED_SOME_NONE</code>​​ in the Melange generated JS runtime.</p>
+<p>The team also took a look at unicode strings in this version of Melange. A few
+noteworthy changes:</p>
+<ul>
+<li><code>{j| ... |j}</code> interpolation​​​​ now only allows interpolating strings; other
+usages of interpolation have started to produce type errors.</li>
+<li>Unicode strings such as <code>{js| … |js}</code> can now be used as <code>Format</code> strings.</li>
+</ul>
+<h2 id="conclusion" tabindex="-1">Conclusion <a class="header-anchor" href="#conclusion" aria-label="Permalink to &quot;Conclusion&quot;"></a></h2>
+<p>Melange 3 marks a significant step forward in the OCaml-to-JavaScript
+compilation process. With these updates, we aim to provide a more robust,
+efficient, and user-friendly tool for developers. We encourage users to upgrade
+to this new version to take full advantage of the improvements and to adapt to
+the breaking changes for a smoother development experience. For a full list of
+the changes that made it into this release, feel free to consult the
+<a href="https://github.com/melange-re/melange/blob/main/Changes.md#300-2024-01-28" target="_blank" rel="noreferrer">changelog</a>.</p>
+<p>Stay tuned for more updates and enhancements as we continue to improve Melange
+and support the developer community!</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[The rest of 2023 in Melange]]></title>
+            <link>https://melange.re/blog/posts/the-rest-of-2023-in-melange</link>
+            <guid>https://melange.re/blog/posts/the-rest-of-2023-in-melange</guid>
+            <pubDate>Thu, 12 Oct 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>As October 2023 unfolds, we'd like to present what we're planning to work on
+during what remains of 2023. Built upon the invaluable feedback of our users and
+our vision for Melange, we are excited about what's next.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>As October 2023 unfolds, we'd like to present what we're planning to work on
+during what remains of 2023. Built upon the invaluable feedback of our users and
+our vision for Melange, we are excited about what's next.</p>
+<hr>
+<p><img src="https://substackcdn.com/image/fetch/w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F98530216-e8ed-478a-925e-e365ae5b2136_1792x1024.webp" alt=""></p>
+<h3 id="melange-v3" tabindex="-1">Melange v3 <a class="header-anchor" href="#melange-v3" aria-label="Permalink to &quot;Melange v3&quot;"></a></h3>
+<p>By the close of Q4 2023, we're set to launch Melange v3. Here's a breakdown of
+our main focus for shipping a new major release:</p>
+<ul>
+<li>
+<p><strong>Fast, Reliable Builds</strong>: We're fine-tuning Melange to ensure faster, more
+reliable project builds. This work is spread across a few fronts:</p>
+<ul>
+<li>
+<p>implementing some missing compiler and build system optimizations, improving
+the associated dune rules, and honing the underlying artifact representation
+for optimal performance.</p>
+</li>
+<li>
+<p>improving the Melange core to be faster to build, run and evolve.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>JavaScript Expressivity</strong>:</p>
+<ul>
+<li>
+<p>we're aiming to make JavaScript idioms more intuitive in Melange. We're
+implementing more supported interoperability attributes, exploring new ways
+of writing bindings and surfacing their documentation and enriching the
+existing sections in the Melange docs.</p>
+</li>
+<li>
+<p>we're planning on unifying the Melange core APIs around an abstraction over
+both <a href="https://melange.re/v2.0.0/communicate-with-javascript/#pipe-operators" target="_blank" rel="noreferrer">pipe
+operators</a> <code>|&gt;</code> and <code>-&gt;</code>,
+allowing us to remove some modules where standard library duplication
+exists, ensuring a more consistent user experience, reducing confusion and
+evolvability of the code.</p>
+</li>
+<li>
+<p>from supporting React 18 to introducing async component support, we're
+ensuring Melange stays up to date with the latest in React development. To
+make is easier to add these, we're planning to safely type JavaScript
+dynamic <code>import()</code>: this will make code more concise by removing the need
+for verbose workarounds but also ensures safety, reducing runtime errors</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Development &amp; Learning Experience</strong></p>
+<ul>
+<li>
+<p>With an emphasis on user-friendliness, we're improving the Melange
+Playground with a few requested features: by the end of the quarter it will
+offer advanced code diagnostics, bundle the new Melange
+v2 <code>melange.dom</code> library, present errors and warnings in a more robust way
+and test a new way of learning how to communicate with JavaScript from
+Melange.</p>
+</li>
+<li>
+<p>Until the end of 2023, we're going to design and start implementing a whole
+new Melange website consolidated around a distinct, consistent brand.</p>
+</li>
+<li>
+<p>We're planning to publish Melange for React Devs, a guided introduction for
+developers with existing React.js knowledge, bridging the gap between React
+and Melange, showcasing how some common React.js constructs are expressed in
+OCaml / Reason and Melange.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="the-melange-legacy" tabindex="-1">The Melange Legacy <a class="header-anchor" href="#the-melange-legacy" aria-label="Permalink to &quot;The Melange Legacy&quot;"></a></h3>
+<p>Having integrated with the OCaml Platform set of tools and ensured Melange
+package availability in the OPAM repository, our previous releases have set the
+stage for what's next: with Melange v3, we're striving for an even more robust,
+expressive toolchain with an improved set of learning resources and an unmatched
+in-browser learning experience on the Melange Playground.</p>
+<p>The above is just a glimpse into what we're working on. Consult the <a href="https://docs.google.com/document/d/1q9NWiXun_Lqgv5iNNYm2SKzUGGJ02FpRawKUiTxnJPI/edit#heading=h.9je9ws3oydaz" target="_blank" rel="noreferrer">full
+roadmap
+document</a> for
+more detail around what we'll be up to until the end of 2023.</p>
+<p>Thank you for reading and happy hacking!</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Introducing Melange 2.0]]></title>
+            <link>https://melange.re/blog/posts/introducing-melange-20</link>
+            <guid>https://melange.re/blog/posts/introducing-melange-20</guid>
+            <pubDate>Wed, 20 Sep 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>Today, the Melange team is excited to introduce Melange 2.0. This iteration
+brings an upgrade to the OCaml 5.1 type checker, along with increased
+compatibility with the OCaml Platform. Melange 2.0 unifies the compiler
+attributes and libraries under the Melange brand and it improves developer
+experience across the ecosystem. We're also publishing a few battle-tested
+libraries to <a href="https://github.com/ocaml/opam-repository" target="_blank" rel="noreferrer">OPAM</a>.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>Today, the Melange team is excited to introduce Melange 2.0. This iteration
+brings an upgrade to the OCaml 5.1 type checker, along with increased
+compatibility with the OCaml Platform. Melange 2.0 unifies the compiler
+attributes and libraries under the Melange brand and it improves developer
+experience across the ecosystem. We're also publishing a few battle-tested
+libraries to <a href="https://github.com/ocaml/opam-repository" target="_blank" rel="noreferrer">OPAM</a>.</p>
+<hr>
+<p>Everything we have included in this release has been designed to enhance your
+experience writing Reason / OCaml for modern JS workflows. Here's a
+comprehensive look at what's new.</p>
+<h2 id="what-s-new-in-melange-2-0" tabindex="-1"><strong>What's New in Melange 2.0?</strong> <a class="header-anchor" href="#what-s-new-in-melange-2-0" aria-label="Permalink to &quot;**What's New in Melange 2.0?**&quot;"></a></h2>
+<h3 id="ocaml-5" tabindex="-1">OCaml 5 <a class="header-anchor" href="#ocaml-5" aria-label="Permalink to &quot;OCaml 5&quot;"></a></h3>
+<p><a href="https://discuss.ocaml.org/t/ocaml-5-1-0-released/13021" target="_blank" rel="noreferrer">OCaml 5.1</a> has just
+been released. Melange 2.0 has been upgraded to use the newly released OCaml 5.1
+type checker and compiler libs. As the OCaml community starts to upgrade to the
+newest version of OCaml, Melange will be co-installable in your OPAM switch.</p>
+<p>While the Melange type checker has been upgraded to the 5.x release line,
+Melange doesn't yet include support for <a href="https://v2.ocaml.org/manual/effects.html" target="_blank" rel="noreferrer">effect
+handlers</a> and some of the multicore
+OCaml primitives. Stay tuned for future updates on this.</p>
+<h3 id="the-reign-of-melange-ppx" tabindex="-1">The reign of <code>melange.ppx</code> <a class="header-anchor" href="#the-reign-of-melange-ppx" aria-label="Permalink to &quot;The reign of `melange.ppx`&quot;"></a></h3>
+<p>The compiler frontend transformations related to
+the <a href="https://en.wikipedia.org/wiki/Foreign_function_interface" target="_blank" rel="noreferrer">FFI</a>, <a href="https://melange.re/v2.0.0/communicate-with-javascript/#list-of-attributes-and-extension-nodes" target="_blank" rel="noreferrer">extensions</a> and <a href="https://melange.re/v2.0.0/communicate-with-javascript/#generate-getters-setters-and-constructors" target="_blank" rel="noreferrer">derivers</a> have
+been fully extracted from the compiler to the Melange PPX. Going forward, it's
+likely you'll need to preprocess most Melange code with <code>melange.ppx</code>.</p>
+<h3 id="wrapping-the-melange-core-libraries" tabindex="-1">Wrapping the Melange Core Libraries <a class="header-anchor" href="#wrapping-the-melange-core-libraries" aria-label="Permalink to &quot;Wrapping the Melange Core Libraries&quot;"></a></h3>
+<p>In this release, we wrapped the Melange runtime and core libraries. Each library
+exposes only a single top-level module, avoiding namespace pollution. The only
+modules exposed by Melange are now:</p>
+<ul>
+<li>
+<p>The <code>Js</code> module contains utilities to interact with JavaScript standard APIs.
+Modules such as <code>Js_string</code> now only accessible via <code>Js.String</code>.</p>
+</li>
+<li>
+<p>The <code>Belt</code> library contains utilities inherited from BuckleScript. Its
+sub-modules similarly nested under <code>Belt</code>, e.g. you'll use <code>Belt.List</code> instead
+of <code>Belt_List</code>.</p>
+</li>
+<li>
+<p>Melange 2.0 exposes only a single <code>Stdlib</code> module, where previously it was
+leaking e.g. <code>Stdlib__String</code>, etc.</p>
+</li>
+<li>
+<p><strong>New libraries</strong>: The <code>Node</code> module has been extracted to a
+new <code>melange.node</code> library. Similarly, <code>Dom</code> is now only accessible via
+the <code>melange.dom</code> library. Both libraries are released with the Melange
+distribution, but not included by default; they can be added to the
+Dune <code>(libraries ...)</code> field.</p>
+</li>
+</ul>
+<h3 id="enforcing-the-melange-brand" tabindex="-1">Enforcing the Melange brand <a class="header-anchor" href="#enforcing-the-melange-brand" aria-label="Permalink to &quot;Enforcing the Melange brand&quot;"></a></h3>
+<p><code>bs.*</code> <a href="https://melange.re/v2.0.0/communicate-with-javascript/#attributes" target="_blank" rel="noreferrer">attributes</a> have
+been deprecated in this release in favor of <code>mel.*</code>.
+The <a href="https://melange.re/v2.0.0/communicate-with-javascript/#binding-to-callbacks" target="_blank" rel="noreferrer">uncurried</a> <code>[@bs]</code> attribute
+is now simply <code>[@u]</code>. The next major Melange release will be removing them
+entirely. <code>%bs.*</code> <a href="https://melange.re/v2.0.0/communicate-with-javascript/#extension-nodes" target="_blank" rel="noreferrer">extension
+nodes</a> have,
+however, been replaced with <code>%mel.* </code>due to limitations
+in <a href="https://github.com/ocaml-ppx/ppxlib" target="_blank" rel="noreferrer">ppxlib</a>. This is a breaking change.</p>
+<h3 id="development-experience" tabindex="-1">Development experience <a class="header-anchor" href="#development-experience" aria-label="Permalink to &quot;Development experience&quot;"></a></h3>
+<p>We've done significant work making Melange easier to use in this release:</p>
+<ol>
+<li>
+<p>Attributes like <code>[@{bs,mel}.val]</code> have been deprecated as they're redundant
+in the Melange FFI.</p>
+</li>
+<li>
+<p>We're introducing more ways of using <code>@mel.as</code> in:</p>
+<ol>
+<li>
+<p><code>let</code><a href="https://github.com/melange-re/melange/pull/714" target="_blank" rel="noreferrer"> bindings</a> to
+allow exporting otherwise invalid OCaml identifiers;</p>
+</li>
+<li>
+<p><code>external</code><a href="https://github.com/melange-re/melange/pull/722" target="_blank" rel="noreferrer"> polymorphic
+variants</a> without
+needing to use <code>[@mel.{string,int}]</code>;</p>
+</li>
+<li>
+<p><a href="https://github.com/melange-re/melange/pull/732" target="_blank" rel="noreferrer">inline records</a> in both
+regular and extensible variants and custom exceptions.</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="ecosystem" tabindex="-1">Ecosystem <a class="header-anchor" href="#ecosystem" aria-label="Permalink to &quot;Ecosystem&quot;"></a></h3>
+<ul>
+<li>
+<p>With this release, we're starting to publish some widely used libraries from
+the <code>melange-community</code> and <code>ahrefs</code> organizations. Be on the lookout for new
+Melange-ready releases popping up in the <a href="https://github.com/ocaml/opam-repository" target="_blank" rel="noreferrer">OPAM
+repository</a> in the next few
+days. <a href="https://github.com/ocaml/opam-repository/pull/24396" target="_blank" rel="noreferrer">Reason 3.10</a> is
+also a companion release to Melange 2.0.</p>
+</li>
+<li>
+<p>The new <code>reason-react</code> releases greatly increase developer experience
+by <a href="https://github.com/reasonml/reason-react/pull/748" target="_blank" rel="noreferrer">improving the editor
+integration</a>. React props
+and children now point to the correct source code locations, making React
+components much easier to track in your editor.</p>
+</li>
+<li>
+<p>We've also released an OPAM
+plugin, <a href="https://github.com/jchavarri/opam-check-npm-deps/" target="_blank" rel="noreferrer">check-npm-deps</a>.
+This tool checks whether the NPM dependencies in your <code>node_modules</code> folder
+match what libraries released to OPAM need. <code>check-npm-deps</code> is currently in
+preview and we're looking for your feedback on how we can evolve it.</p>
+</li>
+</ul>
+<h2 id="support-sponsorship" tabindex="-1"><strong>Support &amp; Sponsorship</strong> <a class="header-anchor" href="#support-sponsorship" aria-label="Permalink to &quot;**Support &amp; Sponsorship**&quot;"></a></h2>
+<p>This release was made possible with the continued support of:</p>
+<ul>
+<li>
+<p><a href="https://ahrefs.com/?utm_source=anmonteiro&amp;utm_medium=email&amp;utm_campaign=melange-hits-v10" target="_blank" rel="noreferrer">Ahrefs</a>,
+who have been supporting Melange development since October 2022, having
+fully <a href="https://tech.ahrefs.com/ahrefs-is-now-built-with-melange-b14f5ec56df4?utm_source=anmonteiro&amp;utm_medium=email&amp;utm_campaign=melange-hits-v10" target="_blank" rel="noreferrer">migrated their codebase to
+Melange</a> and
+making the work towards <a href="https://anmonteiro.substack.com/p/melange-10-is-here" target="_blank" rel="noreferrer">Melange
+1.0</a> possible.</p>
+</li>
+<li>
+<p>The <a href="https://ocaml-sf.org/?utm_source=anmonteiro&amp;utm_medium=email&amp;utm_campaign=melange-hits-v10" target="_blank" rel="noreferrer">OCaml Software
+Foundation</a>,
+who has previously <a href="https://twitter.com/_anmonteiro/status/1589044352479035393?utm_source=anmonteiro&amp;utm_medium=email&amp;utm_campaign=melange-hits-v10" target="_blank" rel="noreferrer">committed
+funding</a> for
+the Melange project in October 2022, and renewed it for another half-year
+ending in August 2023.</p>
+</li>
+<li>
+<p><a href="https://github.com/sponsors/anmonteiro/?utm_source=anmonteiro&amp;utm_medium=email&amp;utm_campaign=melange-hits-v10" target="_blank" rel="noreferrer">My (Antonio)
+sponsors</a> on
+GitHub, both past and present.</p>
+</li>
+</ul>
+<h3 id="parting-thoughts" tabindex="-1">Parting thoughts <a class="header-anchor" href="#parting-thoughts" aria-label="Permalink to &quot;Parting thoughts&quot;"></a></h3>
+<p>The goal of Melange is to provide a robust and evolving toolchain that matches
+the dynamic nature of modern JS development. Melange 2.0 is a testament to that
+commitment. In this release, we've shipped the majority of our <a href="https://docs.google.com/document/d/1UhanM28sOAmS3NI4q4BJBeoCX0SdBMqUIq0rofdpOfU" target="_blank" rel="noreferrer">Q3
+roadmap</a>.
+Dive in, explore the new features, and let us know your feedback.</p>
+<p>Consult the <a href="https://github.com/melange-re/melange/blob/main/Changes.md#200-2023-09-13" target="_blank" rel="noreferrer">full change
+log</a> and
+the <a href="https://melange.re/v2.0.0/how-to-guides/#to-v2-from-v1" target="_blank" rel="noreferrer">migration guide from
+1.0</a> for a more detailed
+look at all the changes that went into this packed release.</p>
+<p>If you or your company are interested in seeing what Melange can do for your
+JavaScript needs, feel free to get in touch. We'd love to hear from you.</p>
+<p>Happy hacking!</p>
+<p>Antonio &amp; the Melange team</p>
+]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[What's next for Melange]]></title>
+            <link>https://melange.re/blog/posts/whats-next-for-melange</link>
+            <guid>https://melange.re/blog/posts/whats-next-for-melange</guid>
+            <pubDate>Mon, 10 Jul 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>We're quite happy with how far Melange has come -- I previously wrote
+about <a href="https://anmonteiro.substack.com/p/melange-10-is-here" target="_blank" rel="noreferrer">releasing Melange
+1.0</a> and a <a href="https://anmonteiro.substack.com/p/melange-q2-2023-retrospective" target="_blank" rel="noreferrer">retrospective
+on Q2 2023</a>.</p>
+<p>But we're not done yet: there's more in slate for the next quarter. I'll tell
+you what we're looking to achieve in Q3 2023.</p>
+]]></description>
+            <content:encoded><![CDATA[<p>We're quite happy with how far Melange has come -- I previously wrote
+about <a href="https://anmonteiro.substack.com/p/melange-10-is-here" target="_blank" rel="noreferrer">releasing Melange
+1.0</a> and a <a href="https://anmonteiro.substack.com/p/melange-q2-2023-retrospective" target="_blank" rel="noreferrer">retrospective
+on Q2 2023</a>.</p>
+<p>But we're not done yet: there's more in slate for the next quarter. I'll tell
+you what we're looking to achieve in Q3 2023.</p>
+<hr>
+<p>We've decided to call the next Melange version 2.0 -- we plan to make a few
+breaking changes. The main goal for this quarter is to release Melange 2.0. We
+will focus across a few different axes.</p>
+<h3 id="ocaml-and-ocaml-platform-compatibility" tabindex="-1">OCaml (and OCaml Platform) compatibility <a class="header-anchor" href="#ocaml-and-ocaml-platform-compatibility" aria-label="Permalink to &quot;OCaml (and OCaml Platform) compatibility&quot;"></a></h3>
+<p>Melange integrates with the most popular workflows in the OCaml
+ecosystem. <a href="https://dune.build/" target="_blank" rel="noreferrer">Dune</a> builds Melange
+projects. <a href="https://github.com/ocaml/merlin" target="_blank" rel="noreferrer">Merlin</a> and the <a href="https://github.com/ocaml/ocaml-lsp" target="_blank" rel="noreferrer">OCaml
+LSP</a> power editor
+integration. <a href="https://github.com/ocaml-ppx/ocamlformat" target="_blank" rel="noreferrer">OCamlformat</a> and <a href="https://github.com/reasonml/reason" target="_blank" rel="noreferrer">Reason</a>'s <code>refmt</code> automatically
+format code. <a href="https://github.com/tarides/dune-release" target="_blank" rel="noreferrer">dune-release</a> publishes
+Melange libraries and PPX to the <a href="https://github.com/ocaml/opam-repository/" target="_blank" rel="noreferrer">OPAM
+repository</a>. <a href="https://github.com/ocaml/odoc" target="_blank" rel="noreferrer">odoc</a> builds
+package documentation.</p>
+<p>In Melange 2.0, we will:</p>
+<ul>
+<li>
+<p>Upgrade the Melange type-checker and standard library to OCaml 5.1:</p>
+<ul>
+<li>
+<p>Turn off <a href="https://v2.ocaml.org/manual/effects.html" target="_blank" rel="noreferrer">Effect Handlers</a> for the
+time being.</p>
+</li>
+<li>
+<p>Provide a compatible <a href="https://v2.ocaml.org/api/Domain.html" target="_blank" rel="noreferrer">Domain</a> module
+shim.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Move the Melange internal PPX completely out of the compiler,
+into <code>melange.ppx</code>:</p>
+</li>
+<li>
+<p>Wrap the <code>Belt</code> and <code>Js</code> libraries:</p>
+<ul>
+<li>These currently expose all their internal modules. Dune can wrap them nicely
+under a single top-level module.</li>
+</ul>
+</li>
+<li>
+<p>Break out <code>melange.node</code>:</p>
+<ul>
+<li>The Node.js bindings are rarely used. We will require <code>melange.node</code> be
+added to the Dune <code>libraries</code> field.</li>
+</ul>
+</li>
+</ul>
+<h3 id="developer-experience" tabindex="-1">Developer Experience <a class="header-anchor" href="#developer-experience" aria-label="Permalink to &quot;Developer Experience&quot;"></a></h3>
+<p>While Melange already integrates with the OCaml Platform tooling and workflow,
+there is space to make the experience of developing Melange projects even
+better.</p>
+<p>We want to focus on:</p>
+<ul>
+<li>
+<p>Improving the editing experience:</p>
+<ul>
+<li>
+<p>Melange can compile FFI <code>external</code>s better, in a way that works better with
+analysis tools such as Merlin.</p>
+</li>
+<li>
+<p><code>reason-react-ppx</code> doesn't faithfully respect the JSX node locations. We
+want to fix that so that &quot;go to definition&quot; works better for Reason JSX.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Improving the interaction between OPAM and npm:</p>
+<ul>
+<li>
+<p>Melange bridges the OPAM and npm ecosystems. Some packages published to OPAM
+depend on npm dependencies at runtime.</p>
+</li>
+<li>
+<p>We want to <a href="https://github.com/melange-re/melange/issues/629" target="_blank" rel="noreferrer">explore
+solving</a> this issue,
+starting with a tool that checks that the required npm dependencies are
+installed in Melange projects.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Generating <a href="https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit?hl=en_US&amp;pli=1&amp;pli=1" target="_blank" rel="noreferrer">Source
+Maps</a>:</p>
+<ul>
+<li>
+<p>Source Maps allow mapping generated code back to the original OCaml / Reason
+source.</p>
+</li>
+<li>
+<p>Among other benefits, source maps allow for better stack traces that map to
+the original lines of code that triggered runtime crashes.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="documentation-and-branding" tabindex="-1">Documentation and Branding: <a class="header-anchor" href="#documentation-and-branding" aria-label="Permalink to &quot;Documentation and Branding:&quot;"></a></h3>
+<p>We released <a href="https://melange.re/" target="_blank" rel="noreferrer">melange.re</a> alongside Melange 1.0. The website
+contains our initial efforts to document Melange workflows, and it can be
+improved upon. Over the next few months, we will:</p>
+<ul>
+<li>
+<p>Develop unified Melange brand guidelines and apply them to the website.</p>
+</li>
+<li>
+<p>Continue documenting Melange workflows:</p>
+<ul>
+<li>We've already seen some <a href="https://github.com/melange-re/melange-re.github.io/pulls?q=is%3Apr+is%3Aclosed" target="_blank" rel="noreferrer">user
+contributions</a>.
+We're looking to keep improving the Melange documentation in response to
+feedback from Melange users.</li>
+</ul>
+</li>
+</ul>
+<h3 id="wrapping-up" tabindex="-1">Wrapping up <a class="header-anchor" href="#wrapping-up" aria-label="Permalink to &quot;Wrapping up&quot;"></a></h3>
+<p>We have a lot of work ahead of us. The best way to help us is to <a href="https://melange.re/v1.0.0/getting-started/" target="_blank" rel="noreferrer">try
+Melange</a>. We'd love to read your
+feedback.</p>
+<p>I tried to summarize what we'll be up to in the near future. The full <a href="https://docs.google.com/document/d/1UhanM28sOAmS3NI4q4BJBeoCX0SdBMqUIq0rofdpOfU/edit" target="_blank" rel="noreferrer">Melange
+Roadmap for Q3
+2023</a> goes
+into more detail.</p>
+<p>Happy hacking!</p>
+]]></content:encoded>
+        </item>
+    </channel>
+</rss>

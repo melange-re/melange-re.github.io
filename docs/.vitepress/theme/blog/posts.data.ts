@@ -12,14 +12,16 @@ interface Post {
 
 declare const data: Post[]
 export { data }
+export type { Post }
 
-export default createContentLoader('posts/*.md', {
+export default createContentLoader('blog/posts/*.md', {
   excerpt: true,
   transform(raw): Post[] {
     return raw
       .map(({ url, frontmatter, excerpt }) => ({
         title: frontmatter.title,
-        url: "/blog" + url,
+        // URL is relative to srcDir, will be prefixed with base by VitePress router
+        url: url,
         excerpt,
         date: formatDate(frontmatter.date)
       }))

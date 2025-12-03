@@ -3,6 +3,7 @@ import { join } from "path";
 import { defineConfig } from "vitepress";
 import markdownItFootnote from 'markdown-it-footnote'
 import { bundledLanguages } from "shiki";
+import { genFeed } from './genFeed.js'
 
 // Modify bundledLanguages so it no longer contains the bundled OCaml grammar. This is needed because vitepress config
 // doesn't allow you to override bundled grammars, see
@@ -31,14 +32,16 @@ const ocamlGrammar = JSON.parse(
   readFileSync(join(__dirname, "./ocaml.tmLanguage.json"), "utf8")
 );
 
-const base = process.env.BASE || "unstable";
+// BASE can be empty string for dev (root path) or a version like "unstable" for prod
+const base = process.env.BASE !== undefined ? process.env.BASE : "unstable";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   // Some links in the API are death, some of them because of the removal in Makefile "pull-melange-docs"
   // We can't use (_, source) => source.toLowerCase().includes('api') since it comes from vitepress 2, using true (which ignores all deadlinks)
   ignoreDeadLinks: true,
-  title: "Melange Documentation Site",
+  title: "Melange",
+  cleanUrls: true,
   head: [
     [
       'script',
@@ -48,10 +51,11 @@ export default defineConfig({
   ],
   description:
     "The official documentation site for Melange, a compiler from OCaml to JavaScript. Explore the features and resources for functional programming with Melange, including the standard libraries APIs, the playground, and extensive documentation about bindings, build system, and the opam package manager.",
-  base: `/${base}/`,
+  base: base ? `/${base}/` : '/',
   sitemap: {
-    hostname: `https://melange.re/${base}/`,
+    hostname: base ? `https://melange.re/${base}/` : 'https://melange.re/',
   },
+  buildEnd: genFeed,
   markdown: {
     languages: [duneGrammar, ocamlGrammar, opamGrammar, reasonGrammar],
     config: (md) => {
@@ -73,9 +77,10 @@ export default defineConfig({
       { text: "API", link: "/api" },
       { text: "Playground", link: "/playground/", target: "_self" },
       { text: "Book", link: "https://react-book.melange.re" },
-      { text: "Blog", link: "https://melange.re/blog" },
+      // Blog: in dev (base='') use relative /blog/, in prod use absolute URL
+      { text: "Blog", link: base ? "https://melange.re/blog/" : "/blog/" },
       {
-        text: "unstable",
+        text: base || "dev",
         items: [
           {
             text: "v4.0.0",
@@ -105,58 +110,63 @@ export default defineConfig({
       },
     ],
 
-    sidebar: [
-      {
-        text: "Intro",
-        items: [
-          { text: "What is Melange", link: "/what-is-melange" },
-          { text: "Rationale", link: "/rationale" },
-          { text: "Supported syntaxes", link: "/syntaxes" },
-          { text: "Getting Started", link: "/getting-started" },
-        ],
-      },
-      {
-        text: "Learn",
-        items: [
-          { text: "New to OCaml?", link: "/new-to-ocaml" },
-          { text: "Package Management", link: "/package-management" },
-          { text: "Build System", link: "/build-system" },
-          { text: "How-to Guides", link: "/how-to-guides" },
-          {
-            text: "Melange for X Developers",
-            link: "/melange-for-x-developers",
-          },
-        ],
-      },
-      {
-        text: 'Communicate with JavaScript',
-        items: [
-          { text: "Overview", link: "/communicate-with-javascript" },
-          { text: "Language concepts", link: "/language-concepts" },
-          { text: "Data types and runtime representation", link: "/data-types-and-runtime-rep" },
-          { text: "Melange attributes and extension nodes", link: "/attributes-and-extension-nodes" },
-          { text: "Working with JavaScript objects and values", link: "/working-with-js-objects-and-values" },
-          { text: "Advanced JavaScript interoperability", link: "/advanced-js-interop" },
-          { text: "Bindings cookbook", link: "/bindings-cookbook" },
-        ],
-      },
-      {
-        text: "Reference",
-        items: [{ text: "API", link: "/api" }],
-      },
-      {
-        text: "Try",
-        items: [{ text: "Playground", link: "/playground/", target: "_self" }],
-      },
-      {
-        text: "About",
-        items: [
-          { text: "Community", link: "/community" },
-          { text: "Resources", link: "/resources" },
-          { text: "Roadmap", link: "/roadmap" },
-        ],
-      },
-    ],
+    sidebar: {
+      // Blog pages have no sidebar
+      '/blog/': [],
+      // Default sidebar for docs
+      '/': [
+        {
+          text: "Intro",
+          items: [
+            { text: "What is Melange", link: "/what-is-melange" },
+            { text: "Rationale", link: "/rationale" },
+            { text: "Supported syntaxes", link: "/syntaxes" },
+            { text: "Getting Started", link: "/getting-started" },
+          ],
+        },
+        {
+          text: "Learn",
+          items: [
+            { text: "New to OCaml?", link: "/new-to-ocaml" },
+            { text: "Package Management", link: "/package-management" },
+            { text: "Build System", link: "/build-system" },
+            { text: "How-to Guides", link: "/how-to-guides" },
+            {
+              text: "Melange for X Developers",
+              link: "/melange-for-x-developers",
+            },
+          ],
+        },
+        {
+          text: 'Communicate with JavaScript',
+          items: [
+            { text: "Overview", link: "/communicate-with-javascript" },
+            { text: "Language concepts", link: "/language-concepts" },
+            { text: "Data types and runtime representation", link: "/data-types-and-runtime-rep" },
+            { text: "Melange attributes and extension nodes", link: "/attributes-and-extension-nodes" },
+            { text: "Working with JavaScript objects and values", link: "/working-with-js-objects-and-values" },
+            { text: "Advanced JavaScript interoperability", link: "/advanced-js-interop" },
+            { text: "Bindings cookbook", link: "/bindings-cookbook" },
+          ],
+        },
+        {
+          text: "Reference",
+          items: [{ text: "API", link: "/api" }],
+        },
+        {
+          text: "Try",
+          items: [{ text: "Playground", link: "/playground/", target: "_self" }],
+        },
+        {
+          text: "About",
+          items: [
+            { text: "Community", link: "/community" },
+            { text: "Resources", link: "/resources" },
+            { text: "Roadmap", link: "/roadmap" },
+          ],
+        },
+      ],
+    },
 
     socialLinks: [
       { icon: "github", link: "https://github.com/melange-re/melange" },
