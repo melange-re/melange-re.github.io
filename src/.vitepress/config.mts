@@ -1,9 +1,11 @@
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 import { defineConfig } from "vitepress";
 import markdownItFootnote from 'markdown-it-footnote'
 import { bundledLanguages } from "shiki";
 import { genFeed } from './genFeed.js'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 // Modify bundledLanguages so it no longer contains the bundled OCaml grammar. This is needed because vitepress config
 // doesn't allow you to override bundled grammars, see
@@ -35,6 +37,11 @@ const ocamlGrammar = JSON.parse(
 // BASE can be empty string for dev (root path) or a version like "unstable" for prod
 const base = process.env.BASE !== undefined ? process.env.BASE : "unstable";
 
+// Resolve paths for dune build outputs (playground assets)
+// __dirname is src/.vitepress, so we go up 2 levels to get to the project root
+const rootDir = resolve(__dirname, '../..');
+const playgroundBuildDir = resolve(rootDir, '_build/default/playground');
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   // Some links in the API are death, some of them because of the removal in Makefile "pull-melange-docs"
@@ -62,6 +69,29 @@ export default defineConfig({
       md.use(markdownItFootnote)
     },
   },
+  vite: {
+    plugins: [
+      tailwindcss(),
+      react({
+        include: /\.(jsx|tsx)$/,
+      }),
+    ],
+    resolve: {
+      alias: {
+        '@playground-assets': playgroundBuildDir,
+      },
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', '@monaco-editor/react'],
+      exclude: ['@playground-assets'],
+    },
+    build: {
+      rollupOptions: {
+        // Don't treeshake the dune-generated files as they are side-effect scripts
+        treeshake: false,
+      },
+    },
+  },
   themeConfig: {
     outline: { level: [2, 3] },
     search: {
@@ -75,7 +105,7 @@ export default defineConfig({
     nav: [
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
-      { text: "Playground", link: "/playground/", target: "_self" },
+      { text: "Playground", link: "/playground" },
       { text: "Book", link: "https://react-book.melange.re" },
       // Blog: in dev (base='') use relative /blog/, in prod use absolute URL
       { text: "Blog", link: base ? "https://melange.re/blog/" : "/blog/" },
@@ -113,6 +143,8 @@ export default defineConfig({
     sidebar: {
       // Blog pages have no sidebar
       '/blog/': [],
+      // Playground has no sidebar
+      '/playground': [],
       // Default sidebar for docs
       '/': [
         {
@@ -155,7 +187,7 @@ export default defineConfig({
         },
         {
           text: "Try",
-          items: [{ text: "Playground", link: "/playground/", target: "_self" }],
+          items: [{ text: "Playground", link: "/playground" }],
         },
         {
           text: "About",

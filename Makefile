@@ -25,6 +25,7 @@ install: ## Install development dependencies
 	opam install -y . --deps-only --with-doc
 	opam pin -y add $(project_name).dev .
 	opam source melange.$$(opam show melange -f version --color never) --dir melange
+	yarn install
 
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
@@ -55,13 +56,12 @@ format: ## Format the codebase with ocamlformat
 format-check: ## Checks if format is correct
 	$(DUNE) build @fmt
 
-.PHONY: build-playground
-build-playground: ## Builds the playground
+.PHONY: build-playground-assets
+build-playground-assets: ## Builds the playground dune assets (compiler, runtime, etc.)
 	$(DUNE) build @playground-assets
-	cd playground && yarn && yarn build
 
 .PHONY: build-site
-build-site: build-playground build-docs fix-blog-paths ## Builds the whole site (including playground and blog)
+build-site: build-playground-assets build-docs fix-blog-paths ## Builds the whole site (including playground and blog)
 
 .PHONY: build-docs
 build-docs: ## Builds the docs (including blog in /{version}/blog/)
@@ -72,7 +72,7 @@ fix-blog-paths: ## Post-process blog to move from /{version}/blog/ to /blog/
 	node scripts/fix-blog-paths.js $(BASE)
 
 .PHONY: dev
-dev: ## Start docs dev server with blog at /blog/ (use BASE= for root paths)
+dev: build-playground-assets ## Start docs dev server with blog at /blog/ (use BASE= for root paths)
 	BASE= yarn vitepress dev src
 
 .PHONY: preview

@@ -6,6 +6,7 @@ import Switch from "./Switch.vue";
 import BlogHome from "./blog/Home.vue";
 import BlogArticle from "./blog/Article.vue";
 import BlogNotFound from "./blog/NotFound.vue";
+import PlaygroundLayout from "./PlaygroundLayout.vue";
 import './custom.css'
 
 const { Layout } = DefaultTheme;
@@ -18,11 +19,20 @@ const isBlogPage = computed(() => {
   return path.includes('/blog/');
 });
 const isBlogIndex = computed(() => frontmatter.value.index === true);
+
+// Check if we're on the playground page
+const isPlaygroundPage = computed(() => {
+  const path = route.path;
+  return path.includes('/playground');
+});
 </script>
 
 <template>
+  <!-- For playground page, use the playground layout -->
+  <PlaygroundLayout v-if="isPlaygroundPage" />
+
   <!-- For docs pages, use the regular layout with syntax switch -->
-  <Layout v-if="!isBlogPage">
+  <Layout v-else-if="!isBlogPage">
     <template #sidebar-nav-before>
       <Switch> Hello </Switch>
     </template>
