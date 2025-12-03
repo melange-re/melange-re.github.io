@@ -65,7 +65,7 @@ build-site: build-playground build-docs fix-blog-paths ## Builds the whole site 
 
 .PHONY: build-docs
 build-docs: ## Builds the docs (including blog in /{version}/blog/)
-	BASE=$(BASE) yarn vitepress build docs
+	BASE=$(BASE) yarn vitepress build src
 
 .PHONY: fix-blog-paths
 fix-blog-paths: ## Post-process blog to move from /{version}/blog/ to /blog/
@@ -73,11 +73,11 @@ fix-blog-paths: ## Post-process blog to move from /{version}/blog/ to /blog/
 
 .PHONY: dev
 dev: ## Start docs dev server with blog at /blog/ (use BASE= for root paths)
-	BASE= yarn vitepress dev docs
+	BASE= yarn vitepress dev src
 
 .PHONY: preview
 preview: ## Preview the docs
-	yarn vitepress preview docs
+	yarn vitepress preview src
 
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs
@@ -86,14 +86,14 @@ pull-melange-docs: ## Pull melange docs
 	fi
 	rm -rf melange/test melange/jscomp/test
 	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
-	rm -rf docs/api/$(SYNTAX)
-	mkdir -p docs/api/$(SYNTAX)
-	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
+	rm -rf src/api/$(SYNTAX)
+	mkdir -p src/api/$(SYNTAX)
+	cp -r _build/default/_doc/_markdown/melange src/api/$(SYNTAX)/
 	# Keep only Belt*, Dom*, Node*, Stdlib* files and Js* (but exclude Js_parser)
-	find docs/api/$(SYNTAX)/melange -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "Stdlib*.md" ! -name "index.md" -delete
-	find docs/api/$(SYNTAX)/melange -type f -name "Js_parser*.md" -delete
+	find src/api/$(SYNTAX)/melange -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "Stdlib*.md" ! -name "index.md" -delete
+	find src/api/$(SYNTAX)/melange -type f -name "Js_parser*.md" -delete
 	# Exclude some docs until https://github.com/melange-re/melange/pull/1619
-	find docs/api/$(SYNTAX)/melange -type f \( -name "Js-Null.md" -o -name "Js-Undefined.md" -o -name "Js-Re.md" -o -name "Js-Nullable.md" -o -name "Js-Null.md" \) -delete
+	find src/api/$(SYNTAX)/melange -type f \( -name "Js-Null.md" -o -name "Js-Undefined.md" -o -name "Js-Re.md" -o -name "Js-Nullable.md" -o -name "Js-Null.md" \) -delete
 
 .PHONY: pull-melange-docs-both
 pull-melange-docs-both: ## Pull melange docs for both OCaml and Reason syntax

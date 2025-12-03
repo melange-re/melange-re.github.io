@@ -16,7 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
 
 const version = process.argv[2] || 'unstable';
-const distDir = join(rootDir, 'docs', '.vitepress', 'dist');
+const distDir = join(rootDir, 'src', '.vitepress', 'dist');
 const versionedBlogDir = join(distDir, 'blog');
 const outputBlogDir = join(distDir, '..', 'blog-output');
 
@@ -98,6 +98,6 @@ console.log('Blog paths fixed successfully!');
 console.log(`Blog files are now at: ${outputBlogDir}`);
 console.log('');
 console.log('To deploy:');
-console.log(`  1. Deploy docs/.vitepress/dist/ to /${version}/`);
+console.log(`  1. Deploy src/.vitepress/dist/ to /${version}/`);
 console.log(`  2. Deploy blog-output/ to /blog/`);
 

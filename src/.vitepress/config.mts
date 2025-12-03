@@ -69,7 +69,7 @@ export default defineConfig({
     },
     editLink: {
       pattern:
-        "https://github.com/melange-re/melange-re.github.io/edit/master/docs/:path",
+        "https://github.com/melange-re/melange-re.github.io/edit/master/src/:path",
     },
     // https://vitepress.dev/reference/default-theme-config
     nav: [

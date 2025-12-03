@@ -6,7 +6,7 @@ export default defineConfig({
   ignoreDeadLinks: true,
   plugins: [react()],
   build: {
-    outDir: "../docs/public/playground",
+    outDir: "../src/public/playground",
     rollupOptions: {
       treeshake: false
     }

@@ -5,12 +5,12 @@
   "description": "This repository contains the source for Melange public documentation site.",
   "main": "index.js",
   "directories": {
-    "doc": "docs"
+    "doc": "src"
   },
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "preview": "vitepress preview src"
   },
   "repository": {
     "type": "git",
