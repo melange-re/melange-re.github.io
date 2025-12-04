@@ -39,6 +39,15 @@ onUnmounted(() => {
   display: none !important;
 }
 
+.playground-layout .VPNav {
+  position: relative !important;
+}
+
+.playground-layout .VPNav .container {
+  margin: 0;
+  max-width: 100%;
+}
+
 .playground-layout .VPSidebar {
   display: none !important;
 }
@@ -56,11 +65,5 @@ onUnmounted(() => {
   height: calc(100vh - var(--vp-nav-height));
   margin: 0;
   padding: 0;
-}
-
-/* Reset box-sizing for playground */
-.playground-container,
-.playground-container * {
-  box-sizing: border-box;
 }
 </style>

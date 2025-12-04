@@ -2,7 +2,6 @@
 import { useData, useRoute } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import { computed } from "vue";
-import Switch from "./Switch.vue";
 import BlogHome from "./blog/Home.vue";
 import BlogArticle from "./blog/Article.vue";
 import BlogNotFound from "./blog/NotFound.vue";
@@ -31,12 +30,8 @@ const isPlaygroundPage = computed(() => {
   <!-- For playground page, use the playground layout -->
   <PlaygroundLayout v-if="isPlaygroundPage" />
 
-  <!-- For docs pages, use the regular layout with syntax switch -->
-  <Layout v-else-if="!isBlogPage">
-    <template #sidebar-nav-before>
-      <Switch> Hello </Switch>
-    </template>
-  </Layout>
+  <!-- For docs pages, use the regular layout -->
+  <Layout v-else-if="!isBlogPage" />
 
   <!-- For blog pages, render content after the nav -->
   <Layout v-else class="blog-layout">

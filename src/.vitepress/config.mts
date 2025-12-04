@@ -1,11 +1,34 @@
 import { readFileSync } from "fs";
 import { join, resolve } from "path";
 import { defineConfig } from "vitepress";
+import type { Plugin } from "vite";
 import markdownItFootnote from 'markdown-it-footnote'
 import { bundledLanguages } from "shiki";
 import { genFeed } from './genFeed.js'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+
+// Custom plugin to strip sourcemaps from js_of_ocaml-generated files.
+// These files have inline index sourcemaps that Vite's applySourcemapIgnoreList
+// function can't handle, causing "Cannot read properties of undefined (reading 'length')" errors.
+// We use the `load` hook instead of `transform` because Vite processes sourcemaps
+// during the load phase, before transforms run.
+function stripJsooSourcemaps(): Plugin {
+  return {
+    name: 'strip-jsoo-sourcemaps',
+    enforce: 'pre',
+    load(id) {
+      // Only process .bc.js files from the playground build directory
+      if (id.includes('_build/default/playground-assets') && id.endsWith('.bc.js')) {
+        // Read the file and strip the inline sourcemap
+        const code = readFileSync(id, 'utf-8');
+        const strippedCode = code.replace(/\/\/# sourceMappingURL=data:[^\n]+/g, '');
+        return { code: strippedCode, map: null };
+      }
+      return null;
+    },
+  };
+}
 
 // Modify bundledLanguages so it no longer contains the bundled OCaml grammar. This is needed because vitepress config
 // doesn't allow you to override bundled grammars, see
@@ -40,7 +63,7 @@ const base = process.env.BASE !== undefined ? process.env.BASE : "unstable";
 // Resolve paths for dune build outputs (playground assets)
 // __dirname is src/.vitepress, so we go up 2 levels to get to the project root
 const rootDir = resolve(__dirname, '../..');
-const playgroundBuildDir = resolve(rootDir, '_build/default/playground');
+const playgroundBuildDir = resolve(rootDir, '_build/default/playground-assets');
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -71,6 +94,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      stripJsooSourcemaps(),
       tailwindcss(),
       react({
         include: /\.(jsx|tsx)$/,
@@ -82,8 +106,7 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', '@monaco-editor/react'],
-      exclude: ['@playground-assets'],
+      include: ['react', 'react-dom', '@monaco-editor/react']
     },
     build: {
       rollupOptions: {
@@ -138,6 +161,10 @@ export default defineConfig({
           },
         ],
       },
+{
+        component: 'LanguageToggleWrapper'
+
+}
     ],
 
     sidebar: {

@@ -6,9 +6,10 @@ import * as Console from "./console";
 const modules = {};
 
 const rawModules = import.meta.glob(
-  "../../../../_build/default/playground/output/node_modules/**/*.js",
+  "../../../../_build/default/playground-assets/output/node_modules/**/*.js",
   {
-    as: "raw",
+    query: '?raw',
+    import: 'default',
     eager: true,
   }
 );
@@ -16,7 +17,7 @@ const rawModules = import.meta.glob(
 Object.keys(rawModules).forEach((k) => {
   const value = rawModules[k];
   modules[
-    k.replace("../../../../_build/default/playground/output/node_modules/", "")
+    k.replace("../../../../_build/default/playground-assets/output/node_modules/", "")
   ] = value;
 });
 

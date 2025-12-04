@@ -27,9 +27,11 @@
   text-decoration: inherit;
   color: var(--colors-gray11);
 }
+
 .playground-container a:visited {
   color: var(--colors-gray11);
 }
+
 .playground-container a:hover {
   color: var(--colors-indigo9);
 }
@@ -49,6 +51,7 @@
   transition: border-color 0.25s;
   color: var(--colors-gray11);
 }
+
 .playground-container button:hover {
   color: var(--colors-gray12);
 }
@@ -62,18 +65,21 @@
   cursor: pointer;
   color: var(--colors-gray11);
 }
+
 .IconButton:hover {
   color: var(--colors-gray12);
 }
+
 .IconButton[data-state="open"] {
   color: var(--colors-gray12);
 }
+
 .IconButton svg {
   width: 14px;
   height: 14px;
 }
 
-.PlaygroundApp {
+.App {
   width: 100%;
   height: calc(100vh - var(--vp-nav-height));
   display: flex;
@@ -105,6 +111,15 @@
   width: 100%;
 }
 
+/* .Layout .VPNav {
+  position: relative;
+}
+
+.Layout .VPNav .container {
+  margin: 0;
+  max-width: 100%;
+} */
+
 .Editor {
   height: 100%;
 }
@@ -122,9 +137,11 @@
   flex-direction: column;
   gap: 8px;
 }
+
 .ActionItem {
   padding: 0px 16px;
 }
+
 .Separator {
   width: 100%;
   height: 1px;
@@ -137,16 +154,19 @@
   display: flex;
   flex-direction: column;
 }
+
 .Info .Versions {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
+
 .Version {
   display: flex;
   gap: 8px;
   justify-content: space-between;
 }
+
 .Version .Number {
   font-weight: 600;
 }
@@ -159,11 +179,13 @@
   --background-color: transparent;
   background-color: var(--colors-gray6);
 }
+
 .ResizeHandle:hover {
   background-color: var(--colors-gray9);
   outline: 1px solid var(--colors-gray9);
   outline-offset: 0px;
 }
+
 .ResizeHandle[data-resize-handle-active] {
   background-color: var(--colors-gray7);
   outline: 1px solid var(--colors-gray7);
@@ -187,39 +209,42 @@
   display: flex;
   width: 100%;
   justify-content: space-between;
-  padding: 0px 8px;
+  padding: 0px 1rem;
 }
 
 .Tabs {
+  width: 100%;
   display: flex;
   font-size: 12px;
-  padding-top: 1rem;
-  padding-right: 0.8rem;
-  padding-left: 0.8rem;
   gap: 16px;
   transition: color 0.25s;
 }
+
 .Tabs button {
   background-color: transparent;
-  padding-bottom: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   outline: none;
   border-bottom: 1px solid transparent;
   color: var(--colors-gray11);
 }
+
 .Tabs button:hover {
   border-color: transparent;
   color: var(--colors-gray12);
 }
+
 .Tabs button:focus,
 .Tabs button:focus-visible {
   color: var(--colors-gray10);
   outline: none;
 }
+
 .Tabs button.active {
   color: var(--colors-gray12);
-  border-bottom: 1px solid var(--colors-gray12);
   background-color: transparent;
 }
+
 .Tabs.ToEnd {
   justify-content: flex-end;
 }
@@ -228,15 +253,18 @@
   background: var(--colors-gray4);
   border-radius: 4px;
   padding: 4px;
-  height: calc(100% - 8px); /* 100% - (margin) */
+  height: calc(100% - 8px);
+  /* 100% - (margin) */
   margin-left: 8px;
   margin-right: 8px;
   margin-bottom: 8px;
 }
+
 .Live .EmptyPreview {
   overflow-wrap: anywhere;
   padding: 6px 12px;
 }
+
 .Live code {
   background-color: var(--colors-gray5);
   padding: 1px 5px;
@@ -250,21 +278,25 @@
   padding: 8px;
   background-color: var(--colors-gray3);
 }
+
 .ConsoleHeader .Clear {
   font-size: 12px;
 }
+
 .ConsoleHeader .Title {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
 }
+
 .ConsoleHeader .Actions {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
 }
+
 .Console {
   width: 100%;
   height: 100%;
@@ -272,12 +304,14 @@
   background-color: var(--colors-gray3);
   border-top: 1px solid var(--colors-gray6);
 }
+
 .Console .Item {
   border-bottom: 1px solid var(--colors-gray6);
   padding-bottom: 2px;
   padding-top: 2px;
   padding-left: 4px;
 }
+
 .Console .EmptyItem {
   height: 22px;
 }
@@ -291,6 +325,7 @@
   padding: 12px;
   line-height: 18px;
 }
+
 .ProblemsHeader {
   display: flex;
   flex-direction: row;
@@ -305,21 +340,26 @@
   visibility: hidden;
   width: 8px;
 }
+
 .Scrollbar:not(:hover)::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
 .Scrollbar::-webkit-scrollbar {
   width: 8px;
   transition: all 0.2s ease-in-out;
 }
+
 .Scrollbar::-webkit-scrollbar-track {
   background: transparent;
   transition: all 0.2s ease-in-out;
 }
+
 .Scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease-in-out;
 }
+
 .Scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease-in-out;
@@ -342,14 +382,17 @@
   font-size: 10px;
   line-height: 14px;
 }
+
 .Text-m {
   font-size: 12px;
   line-height: 18px;
 }
+
 .Text-l {
   font-size: 14px;
   line-height: 22px;
 }
+
 .Text-xl {
   font-size: 16px;
   line-height: 28px;
@@ -361,17 +404,37 @@
   display: inline-block;
   border-radius: 2px;
 }
+
 .active .SquareLogo.OCaml {
   background-color: var(--colors-orange9);
 }
+
 .SquareLogo.OCaml {
   background-color: var(--colors-orange7);
 }
+
 .active .SquareLogo.Reason {
   background-color: var(--colors-red9);
 }
+
 .SquareLogo.Reason {
   background-color: var(--colors-red7);
+}
+
+.OCamlLogo rect {
+  fill: var(--colors-orange7);
+}
+
+.active .OCamlLogo rect {
+  fill: var(--colors-orange9);
+}
+
+.ReasonLogo rect {
+  fill: var(--colors-red7);
+}
+
+.active .ReasonLogo rect {
+  fill: var(--colors-red9);
 }
 
 /* Examples Dropdown */
@@ -381,15 +444,18 @@
   border-radius: 4px;
   border: 1px solid var(--colors-gray5);
 }
+
 .DropdownLabel {
   padding: 12px 12px;
   border-bottom: 1px solid var(--colors-gray5);
 }
+
 .DropdownGroup {
   display: flex;
   flex-direction: column;
   padding: 6px 0px;
 }
+
 .DropdownItem {
   padding: 6px 12px;
   cursor: pointer;
@@ -397,6 +463,7 @@
   align-items: center;
   gap: 5px;
 }
+
 .DropdownItem:hover {
   background-color: var(--colors-gray3);
   outline: none;
@@ -430,11 +497,13 @@
   z-index: 2147483647;
   outline: none;
 }
+
 .ToastTitle {
   font-size: 14px;
   font-weight: 600;
   color: var(--colors-gray12);
 }
+
 .ToastURL {
   font-size: 12px;
   font-weight: 400;
@@ -509,4 +578,3 @@
   color: var(--colors-gray10);
   font-size: 12px;
 }
-

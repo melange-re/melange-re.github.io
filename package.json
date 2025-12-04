@@ -45,7 +45,7 @@
     "gray-matter": "^4.0.2",
     "markdown-it-footnote": "^4.0.0",
     "tailwindcss": "^4.0.0",
-    "vitepress": "^1.0.0-rc.42",
+    "vitepress": "1.6.4",
     "vue": "^3.4.0"
   }
 }
