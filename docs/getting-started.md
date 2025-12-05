@@ -35,6 +35,16 @@ to configure the [local opam
 switch](https://opam.ocaml.org/blog/opam-local-switches/) and download the
 necessary dependencies to build the project.
 
+## Use the CLI to scaffold a project
+
+If you're coming from a JavaScript or TypeScript background, you can use [create-melange-app](https://github.com/melange-community/create-melange-app), an opinionated CLI tool that quickly scaffolds a Melange project with everything configured and ready to go:
+
+```bash
+npm create melange-app@latest
+```
+
+This is the fastest and most beginner-friendly way to get started with Melange, especially if you're familiar with JavaScript tooling.
+
 ## Configure and run melange starting from a vanilla OCaml project
 
 To learn how to start from a vanilla OCaml project and set up Melange, check out the [melange-from-scratch](https://github.com/ahrefs/melange-from-scratch) repository. It provides a step-by-step guide that starts from a vanilla OCaml project created with [`opam exec -- dune init proj`](https://ocaml.org/docs/your-first-program) and progressively adds Melange configuration until you have a fully working React application compiled from Reason.
