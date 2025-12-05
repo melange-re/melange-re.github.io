@@ -35,6 +35,10 @@ to configure the [local opam
 switch](https://opam.ocaml.org/blog/opam-local-switches/) and download the
 necessary dependencies to build the project.
 
+## Configure and run melange starting from a vanilla OCaml project
+
+To learn how to start from a vanilla OCaml project and set up Melange, check out the [melange-from-scratch](https://github.com/ahrefs/melange-from-scratch) repository. It provides a step-by-step guide that starts from a vanilla OCaml project created with [`opam exec -- dune init proj`](https://ocaml.org/docs/your-first-program) and progressively adds Melange configuration until you have a fully working React application compiled from Reason.
+
 ## Editor integration
 
 One of the goals of Melange is to remain compatible with OCaml. One of the major
