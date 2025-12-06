@@ -4,8 +4,8 @@ let print_with f structureAndComments =
   f Format.str_formatter structureAndComments;
   Format.flush_str_formatter ()
 
-let parse_ml = parse_with Reason_toolchain.ML.implementation_with_comments
-let print_re = print_with Reason_toolchain.RE.print_implementation_with_comments
+let parse_ml = parse_with Reason.Reason_toolchain.ML.implementation_with_comments
+let print_re = print_with Reason.Reason_toolchain.RE.print_implementation_with_comments
 
 (* Remove the first and second to last lines of a string and dedent every line *)
 let designature s =

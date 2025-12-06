@@ -137,19 +137,19 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"5.0.0-53"}</span>
+                <span className="Text-xs Number">{"6.0.0-54"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
-                <span className="Text-xs Number">{"5.3.0"}</span>
+                <span className="Text-xs Number">{"5.4.0"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"Reason"}</span>
-                <span className="Text-xs Number">{"3.15.0"}</span>
+                <span className="Text-xs Number">{"3.17.2"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"ReasonReact"}</span>
-                <span className="Text-xs Number">{"0.15.0"}</span>
+                <span className="Text-xs Number">{"0.16.0"}</span>
               </span>
             </div>
           </div>) : null}
@@ -553,7 +553,7 @@ function App() {
     let hoverProvider = undefined;
     if (monaco) {
       hoverProvider = monaco.languages.registerHoverProvider(language, {
-        provideHover: function (model, position) {
+        provideHover: function(model, position) {
           const { lineNumber, column } = position;
           if (!compilation?.typeHints) {
             return null;

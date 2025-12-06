@@ -8,26 +8,38 @@
       forAllSystems = f: nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system:
         let
           pkgs = nixpkgs.legacyPackages.${system}.extend (self: super: {
-            ocamlPackages = super.ocaml-ng.ocamlPackages_5_3.overrideScope (oself: osuper: {
+            ocamlPackages = super.ocaml-ng.ocamlPackages_5_4.overrideScope (oself: osuper: {
               cmarkit = osuper.cmarkit.overrideAttrs (_: {
                 src = super.fetchFromGitHub {
                   owner = "dbuenzli";
                   repo = "cmarkit";
-                  rev = "af8930c307957a546ea833bbdabda94a2fa60b4b";
-                  hash = "sha256-qwSkmsZXdea4M4Wk/ogZY0NBhOYGBwlA7s0hq7o/3s0=";
+                  rev = "6d6f2d289fb336e7d3c15cfe5bbda2c180c95727";
+                  hash = "sha256-3VWZJ4p+f/1blsevtXLwFsUD8RrHGI84gehId/twJHc=";
                 };
+                # propagatedBuildInputs = (o.propagatedBuildInputs or [ ]) ++ (with oself; [ cmdliner ]);
+                buildPhase = ''
+                  runHook preBuild
+                  ${oself.topkg.run} build --with-cmdliner false
+                  runHook postBuild
+                '';
               });
+              melange-playground = with oself; buildDunePackage {
+                pname = "melange-playground";
+                inherit (melange) src version;
+                # nativeBuildInputs = [ cppo reason ];
+                # propagatedBuildInputs = [ melange reason ];
+                nativeBuildInputs = [ cppo js_of_ocaml ]; # nodejs menhir 
+                propagatedBuildInputs = [ js_of_ocaml-compiler melange reason reason-react-ppx ];
+
+              };
               melange = osuper.melange.overrideAttrs (_: {
                 src = super.fetchFromGitHub {
                   owner = "melange-re";
                   repo = "melange";
-                  rev = "973fa8d80c55ea31e468bae390da2200580ddda6";
-                  hash = "sha256-muemErCaWoB3q2GUs99dFrkmo161WMmovtNHtLRxQJ0=";
+                  rev = "6.0.1-54";
+                  hash = "sha256-CvIIRYW7VfUxNOMCgltUAQcmwM4sB0eFYm/70dQO/i8=";
                   fetchSubmodules = true;
                 };
-              });
-              ppxlib = osuper.ppxlib.overrideAttrs (o: {
-                propagatedBuildInputs = o.propagatedBuildInputs ++ [ osuper.stdio ];
               });
             });
           });
@@ -40,15 +52,19 @@
           python3Packages = pkgs.python3.pkgs.overrideScope (pyself: pysuper: {
             mkdocs-print-site-plugin = pyself.buildPythonPackage rec {
               pname = "mkdocs-print-site-plugin";
-              version = "2.3.4";
-
+              version = "2.8";
+              pyproject = true;
+              build-system = [ pyself.setuptools ];
               src = pkgs.fetchFromGitHub {
                 owner = "timvink";
                 repo = "mkdocs-print-site-plugin";
                 rev = "v${version}";
-                hash = "sha256-hcOSRDGNzm8upFO2l5cNqW/Q2PUK1US1zwVGzRaVI7E=";
+                hash = "sha256-ItBpovQ6emFYrlcVlCPjc21aInX/5hvk14QpkAdBSAA=";
               };
-              propagatedBuildInputs = with pyself; [ mkdocs-material ];
+              propagatedBuildInputs = with pyself; [
+                setuptools-scm
+                mkdocs-material
+              ];
               checkInputs = with pyself; [ pytest ];
             };
           });
@@ -61,6 +77,7 @@
               ocaml
               findlib
               melange
+              melange-playground
               reason
             ];
             buildInputs = with python3Packages; [
