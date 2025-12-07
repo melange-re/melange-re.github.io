@@ -71,6 +71,7 @@ export default defineConfig({
     nav: [
       { text: "Learn", link: "/what-is-melange" },
       { text: "API", link: "/api" },
+      { text: "Cheatsheet", link: "/melange-cheatsheet.html", target: "_blank" },
       { text: "Playground", link: "/playground/", target: "_self" },
       { text: "Book", link: "https://react-book.melange.re" },
       { text: "Blog", link: "https://melange.re/blog" },
