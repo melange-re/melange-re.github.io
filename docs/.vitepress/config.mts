@@ -75,8 +75,12 @@ export default defineConfig({
       { text: "Book", link: "https://react-book.melange.re" },
       { text: "Blog", link: "https://melange.re/blog" },
       {
-        text: "v5.0.0",
+        text: "v6.0.1",
         items: [
+          {
+            text: "v5.0.0",
+            link: "https://melange.re/v5.0.0/",
+          },
           {
             text: "v4.0.0",
             link: "https://melange.re/v4.0.0/",
