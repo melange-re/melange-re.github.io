@@ -16,7 +16,7 @@ bug-reports: "https://github.com/melange-re/melange-re.github.io/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.8"}
-  "reason"
+  "reason" {>= "3.17"}
   "reason-react"
   "reason-react-ppx"
   "ocamlformat"
