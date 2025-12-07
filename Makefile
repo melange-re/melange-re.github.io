@@ -99,3 +99,9 @@ pull-melange-docs: ## Pull melange docs
 pull-melange-docs-both: ## Pull melange docs for both OCaml and Reason syntax
 	make pull-melange-docs SYNTAX="ml"
 	make pull-melange-docs SYNTAX="re"
+
+.PHONY: move-v6.0.1-tag
+move-v6.0.1-tag: ## Moves the v6.0.1 tag to the latest commit, useful to publish the v6 docs
+	git push origin :refs/tags/v6.0.1
+	git tag -fa v6.0.1
+	git push origin --tags
