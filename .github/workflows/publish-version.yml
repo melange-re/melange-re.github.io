@@ -28,7 +28,7 @@ jobs:
           mkdir -p docs/public/api/
           cp -r `opam var melange:build`/_build/default/_doc/_html docs/public/api/ml
       - name: Generate melange docs in re syntax
-        run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc
+        run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc --keep-build-dir
       - name: Copy melange docs in re syntax
         run: cp -r `opam var melange:build`/_build/default/_doc/_html docs/public/api/re
       # only uncomment after a new version is released, from inside a `x.x.x-patches` branch
