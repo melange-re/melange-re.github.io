@@ -202,7 +202,7 @@ type action =
 [@@deriving jsConverter { newType }]
 ```
 ```reasonml
-[@deriving jsConverter({newType: newType})]
+[@deriving jsConverter({ newType: newType })]
 type action = [
   | `Click
   | [@mel.as "submit"] `Submit
@@ -252,7 +252,7 @@ let () = pets |. Belt.Array.map name |. Js.Array.join ~sep:"&" |. Js.log
 [@deriving accessors]
 type pet = {name: string};
 
-let pets = [|{name: "Brutus"}, {name: "Mochi"}|];
+let pets = [|{ name: "Brutus" }, { name: "Mochi" }|];
 
 let () = pets->(Belt.Array.map(name))->(Js.Array.join(~sep="&"))->Js.log;
 ```
@@ -485,7 +485,7 @@ let alice = person ~name:"Alice" ~age:20
 let aliceName = name alice
 ```
 ```reasonml
-[@deriving (jsProperties, getSet({light: light}))]
+[@deriving (jsProperties, getSet({ light: light }))]
 type person = {
   name: string,
   age: int,
