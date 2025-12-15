@@ -28,7 +28,7 @@
                 inherit (melange) src version;
                 # nativeBuildInputs = [ cppo reason ];
                 # propagatedBuildInputs = [ melange reason ];
-                nativeBuildInputs = [ cppo js_of_ocaml ]; # nodejs menhir 
+                nativeBuildInputs = [ cppo js_of_ocaml ]; # nodejs menhir
                 propagatedBuildInputs = [ js_of_ocaml-compiler melange reason reason-react-ppx ];
 
               };
