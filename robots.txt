@@ -17,3 +17,5 @@ Sitemap: https://melange.re/v3.0.0/sitemap.xml
 Sitemap: https://melange.re/v4.0.0/sitemap.xml
 
 Sitemap: https://melange.re/v5.0.0/sitemap.xml
+
+Sitemap: https://melange.re/v6.0.1/sitemap.xml
