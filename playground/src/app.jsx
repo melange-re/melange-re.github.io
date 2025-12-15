@@ -137,7 +137,7 @@ function Sidebar({ onExampleClick }) {
             <div className="Versions">
               <span className="Version">
                 <span className="Text-xs">{"Melange"}</span>
-                <span className="Text-xs Number">{"6.0.0-54"}</span>
+                <span className="Text-xs Number">{"6.0.1-54"}</span>
               </span>
               <span className="Version">
                 <span className="Text-xs">{"OCaml"}</span>
