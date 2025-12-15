@@ -387,7 +387,7 @@ let person = {
   id: 1,
   name: "Alice",
 };
-let {id, name} = person;
+let { id, name } = person;
 ```
 
 ## Classes and OOP

@@ -76,7 +76,7 @@ type action = {
   type_: string,
 };
 
-let action = {type_: "ADD_USER"};
+let action = { type_: "ADD_USER" };
 ```
 
 Which generates the JavaScript code:
