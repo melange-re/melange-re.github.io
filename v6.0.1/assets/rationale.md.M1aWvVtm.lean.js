@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as t,V as o}from"./chunks/framework.0V7JO_nO.js";const g=JSON.parse('{"title":"Why Melange","description":"","frontmatter":{},"headers":[],"relativePath":"rationale.md","filePath":"rationale.md"}'),r={name:"rationale.md"},i=o("",26),n=[i];function s(l,c,h,p,d,m){return t(),a("div",null,n)}const u=e(r,[["render",s]]);export{g as __pageData,u as default};
