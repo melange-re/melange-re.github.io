@@ -8,7 +8,8 @@
       forAllSystems = f: nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system:
         let
           pkgs = nixpkgs.legacyPackages.${system}.extend (self: super: {
-            ocamlPackages = super.ocaml-ng.ocamlPackages_5_4.overrideScope (oself: osuper: {
+
+            ocamlPackages = super.ocaml-ng.ocamlPackages_5_4.overrideScope (oself: osuper: with oself; {
               cmarkit = osuper.cmarkit.overrideAttrs (_: {
                 src = super.fetchFromGitHub {
                   owner = "dbuenzli";
@@ -19,11 +20,11 @@
                 # propagatedBuildInputs = (o.propagatedBuildInputs or [ ]) ++ (with oself; [ cmdliner ]);
                 buildPhase = ''
                   runHook preBuild
-                  ${oself.topkg.run} build --with-cmdliner false
+                  ${topkg.run} build --with-cmdliner false
                   runHook postBuild
                 '';
               });
-              melange-playground = with oself; buildDunePackage {
+              melange-playground = buildDunePackage {
                 pname = "melange-playground";
                 inherit (melange) src version;
                 # nativeBuildInputs = [ cppo reason ];

@@ -149,7 +149,7 @@ template](https://github.com/melange-re/melange-esy-template/generate).
   "name": "melange-project",
   "dependencies": {
     "ocaml": "5.1.x",
-    "@opam/dune": ">= 3.8.0",
+    "@opam/dune": ">= 3.21.0",
     "@opam/melange": "*"
   },
   "devDependencies": {
@@ -167,4 +167,3 @@ Run:
 
 1. `esy install` to build and make all dependencies available
 2. `esy shell` to enter a Melange development environment
-
