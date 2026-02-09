@@ -10,30 +10,6 @@
           pkgs = nixpkgs.legacyPackages.${system}.extend (self: super: {
 
             ocamlPackages = super.ocaml-ng.ocamlPackages_5_4.overrideScope (oself: osuper: with oself; {
-              dune_3 = osuper.dune_3.overrideAttrs (o: {
-                src = super.fetchFromGitHub {
-                  owner = "ocaml";
-                  repo = "dune";
-                  rev = "3.21.0_alpha0";
-                  hash = "sha256-1uEJIU83zyxApeh1LG8w/+UP2/dGdb/r3V5rMWtZOdc=";
-                };
-              });
-              fs-io = buildDunePackage {
-                pname = "fs-io";
-                inherit (dune_3) src version;
-              };
-              top-closure = buildDunePackage {
-                pname = "top-closure";
-                inherit (dune_3) src version;
-              };
-              stdune = osuper.stdune.overrideAttrs (o: {
-                propagatedBuildInputs = o.propagatedBuildInputs ++ [
-                  pp
-                  fs-io
-                  top-closure
-                ];
-              });
-
               cmarkit = osuper.cmarkit.overrideAttrs (_: {
                 src = super.fetchFromGitHub {
                   owner = "dbuenzli";
