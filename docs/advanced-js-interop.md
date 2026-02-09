@@ -595,8 +595,8 @@ preventing any Melange code from creating values of such type.
 ## Use Melange code from JavaScript
 
 As mentioned in the [build system
-section](./build-system.md#commonjs-or-es6-modules), Melange allows to produce
-both CommonJS and ES6 modules. In both cases, using Melange-generated JavaScript
+section](./build-system.md#commonjs-or-esm-modules), Melange allows to produce
+both CommonJS and ESM modules. In both cases, using Melange-generated JavaScript
 code from any hand-written JavaScript file works as expected.
 
 The following definition:
@@ -618,7 +618,7 @@ function print(name) {
 exports.print = print;
 ```
 
-When using ES6 (through the `(module_systems es6)` field in `melange.emit`) this
+When using ESM (through the `(module_systems esm)` field in `melange.emit`) this
 code will be generated:
 
 ```js
@@ -634,9 +634,9 @@ export {
 So one can use either `require` or `import` (depending on the module system of
 choice) to import the `print` value in a JavaScript file.
 
-### Default ES6 values
+### Default ESM values
 
-One special case occur when working with JavaScript imports in ES6 modules that
+One special case occurs when working with JavaScript imports in ESM modules that
 look like this:
 
 ```js

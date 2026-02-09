@@ -87,16 +87,16 @@ Create a file named `dune-project`. This file will tell Dune a few things about
 our project configuration:
 
 ```dune
-(lang dune 3.8)
+(lang dune 3.21)
 
-(using melange 0.1)
+(using melange 1.0)
 ```
 
-The first line `(lang dune 3.8)` tells Dune which version of the "Dune language"
-(the language used in `dune` files) we want to use. Melange support in Dune is
-only available from version 3.8.
+The first line `(lang dune 3.21)` tells Dune which version of the "Dune
+language" (the language used in `dune` files) we want to use. Melange support
+in Dune is only available from version 3.8.
 
-The second line `(using melange 0.1)` tells Dune we want to use the [Melange
+The second line `(using melange 1.0)` tells Dune we want to use the [Melange
 extension of the Dune
 language](https://dune.readthedocs.io/en/stable/reference/dune-project/using.html).
 
@@ -435,7 +435,7 @@ with Melange, check the [Dune documentation](https://dune.readthedocs.io/), and
 the [Melange opam
 template](https://github.com/melange-re/melange-opam-template).
 
-#### CommonJS or ES6 modules
+#### CommonJS or ESM modules
 
 Melange produces JavaScript modules that export the functions they declare, and
 declare imports for the values and modules they depend on.
@@ -443,25 +443,25 @@ declare imports for the values and modules they depend on.
 By default, Melange will produce
 [CommonJS](https://en.wikipedia.org/wiki/CommonJS) modules, but it is possible
 to configure it to generate
-[ES6](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015)
+[ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 modules.
 
 Use the `module_systems` field in the [`melange.emit`
 stanza](https://dune.readthedocs.io/en/stable/melange.html#melange-emit) to emit
-ES6 modules:
+ESM modules:
 
 ```dune
 (melange.emit
  (target app)
  (alias my-app)
  (libraries lib)
- (module_systems es6))
+ (module_systems esm))
 ```
 
 If no extension is specified, the resulting JavaScript files will use `.js`. You
 can specify a different extension with a pair `(<module_system> <extension>)`,
-e.g. `(module_systems (es6 mjs))`. Multiple module systems can be used in the
+e.g. `(module_systems (esm mjs))`. Multiple module systems can be used in the
 same field as long as their extensions are different. For example,
-`(module_systems commonjs (es6 mjs))` will produce one set of JavaScript files
-using CommonJS and the `.js` extension, and another using ES6 and the `.mjs`
+`(module_systems commonjs (esm mjs))` will produce one set of JavaScript files
+using CommonJS and the `.js` extension, and another using ESM and the `.mjs`
 extension.

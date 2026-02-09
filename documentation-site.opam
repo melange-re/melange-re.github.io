@@ -14,7 +14,7 @@ license: "MIT"
 homepage: "https://github.com/melange-re/melange-re.github.io"
 bug-reports: "https://github.com/melange-re/melange-re.github.io/issues"
 depends: [
-  "dune" {>= "3.8"}
+  "dune" {>= "3.21"}
   "ocaml"
   "reason" {>= "3.17"}
   "ocamlformat"
