@@ -1,7 +1,6 @@
 project_name = documentation-site
 
 DUNE = opam exec -- dune
-SYNTAX ?= ml
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -80,22 +79,5 @@ preview: ## Preview the docs
 	yarn vitepress preview docs
 
 .PHONY: pull-melange-docs
-pull-melange-docs: ## Pull melange docs
-	if [ ! -d "melange" ]; then \
-		opam source melange.$$(opam show melange -f version --color never) --dir melange; \
-	fi
-	rm -rf melange/test melange/jscomp/test
-	ODOC_SYNTAX=$(SYNTAX) $(DUNE) build @doc-markdown
-	rm -rf docs/api/$(SYNTAX)
-	mkdir -p docs/api/$(SYNTAX)
-	cp -r _build/default/_doc/_markdown/melange docs/api/$(SYNTAX)/
-	# Keep only Belt*, Dom*, Node* files and Js* (but exclude Js_parser)
-	find docs/api/$(SYNTAX)/melange -type f -name "*.md" ! -name "Js*.md" ! -name "Belt*.md" ! -name "Dom*.md" ! -name "Node*.md" ! -name "index.md" -delete
-	find docs/api/$(SYNTAX)/melange -type f -name "Js_parser*.md" -delete
-	# Exclude some docs until https://github.com/melange-re/melange/pull/1619
-	find docs/api/$(SYNTAX)/melange -type f \( -name "Js-Null.md" -o -name "Js-Undefined.md" -o -name "Js-Re.md" -o -name "Js-Nullable.md" -o -name "Js-Null.md" \) -delete
-
-.PHONY: pull-melange-docs-both
-pull-melange-docs-both: ## Pull melange docs for both OCaml and Reason syntax
-	make pull-melange-docs SYNTAX="ml"
-	make pull-melange-docs SYNTAX="re"
+pull-melange-docs: ## Pull melange docs (builds both syntaxes and merges)
+	$(DUNE) exec scripts/generate_melange_api_docs.exe

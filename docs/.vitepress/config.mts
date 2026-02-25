@@ -142,7 +142,17 @@ export default defineConfig({
       },
       {
         text: "Reference",
-        items: [{ text: "API", link: "/api" }],
+        items: [{
+          text: "API",
+          link: "/api",
+          items: [
+            { text: "Standard library", link: "/api/Stdlib" },
+            { text: "Belt", link: "/api/Belt" },
+            { text: "Js", link: "/api/Js" },
+            { text: "Dom", link: "/api/Dom" },
+            { text: "Node", link: "/api/Node" },
+          ]
+        }],
       },
       {
         text: "Try",
