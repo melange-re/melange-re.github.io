@@ -313,7 +313,7 @@ let should_keep filename =
   let start prefix = String.starts_with ~prefix filename in
   (start "Js" || start "Belt" || start "Dom" || start "Node" || start "Stdlib"
  || filename = "index.md")
-  && (not (start "Js_parser"))
+  && not (start "Js_parser")
 
 let src_dir = "melange/_build/default/_doc/_markdown/melange"
 let output_dir = "docs/api"
@@ -321,7 +321,8 @@ let output_dir = "docs/api"
 let fetch_melange () =
   if not (Sys.file_exists "melange") then
     run
-      "opam source melange.$(opam show melange -f version --color never) --dir melange";
+      "opam source melange.$(opam show melange -f version --color never) --dir \
+       melange";
   ignore (Sys.command "rm -rf melange/test melange/jscomp/test")
 
 let build_docs syntax =
@@ -372,7 +373,10 @@ let () =
               Printf.eprintf "Warning: %s not found in RE docs\n%!" filename;
               ml_content
         in
-        write_file (Filename.concat output_dir filename) merged_content;
+        let frontmatter = "---\neditLink: false\n---\n\n" in
+        write_file
+          (Filename.concat output_dir filename)
+          (frontmatter ^ merged_content);
         incr count
       end)
     filenames;
