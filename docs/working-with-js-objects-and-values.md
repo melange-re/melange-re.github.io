@@ -424,10 +424,7 @@ Sometimes JavaScript objects are used as dictionaries. In these cases:
 
 For this particular use case of JavaScript objects, Melange exposes a specific
 type `Js.Dict.t`. The values and functions to work with values of this type are
-defined in the <a class="text-ocaml" target="_self"
-href="./api/ml/melange/Js/Dict"><code>Js.Dict</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/Dict"><code>Js.Dict</code> module</a>, with operations
+defined in the [`Js.Dict` module](./api/Js-Dict), with operations
 like `get`, `set`, etc.
 
 Values of the type `Js.Dict.t` compile to JavaScript objects.
@@ -502,10 +499,8 @@ let () = clearTimeout(id);
 ```
 
 > **_NOTE:_** The bindings to `setTimeout` and `clearTimeout` are shown here for
-> learning purposes, but they are already available in the <a class="text-ocaml"
-> target="_self" href="./api/ml/melange/Js/Global"><code>Js.Global</code>
-> module</a><a class="text-reasonml" target="_self"
-> href="./api/re/melange/Js/Global"><code>Js.Global</code> module</a>.
+> learning purposes, but they are already available in the
+> [`Js.Global` module](./api/Js-Global).
 
 Generates:
 

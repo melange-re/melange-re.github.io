@@ -16,6 +16,12 @@
  (modules add_canonical)
  (libraries str unix))
 
+(executable
+ (name generate_melange_api_docs)
+ (public_name generate_melange_api_docs)
+ (modules generate_melange_api_docs)
+ (libraries reason unix))
+
 (cram
  (applies_to add_canonical)
  (deps %{bin:add_canonical}))

@@ -12,8 +12,8 @@ This is how each Melange type is converted into JavaScript values:
 | array | array |
 | tuple `(3, 4)` | array `[3, 4]` |
 | bool | boolean |
-| <a class="text-ocaml" target="_self" href="./api/ml/melange/Js/Nullable">Js.Nullable.t</a><a class="text-reasonml" target="_self" href="./api/re/melange/Js/Nullable">Js.Nullable.t</a> | `null` / `undefined` |
-| <a class="text-ocaml" target="_self" href="./api/ml/melange/Js/Re">Js.Re.t</a><a class="text-reasonml" target="_self" href="./api/re/melange/Js/Re">Js.Re.t</a> | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
+| [Js.Nullable.t](./api/Js-Nullable) | `null` / `undefined` |
+| [Js.Re.t](./api/Js-Re) | [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) |
 | option `None` | `undefined` |
 | option <code class="text-ocaml">Some( Some .. Some (None))</code><code class="text-reasonml">Some(Some( .. Some(None)))</code> | internal representation |
 | option <code class="text-ocaml">Some 2</code><code class="text-reasonml">Some(2)</code> | `2` |
@@ -128,15 +128,9 @@ You can surround the interpolation variable in parentheses too: `{j|你
 好，$(world)|j}`.
 
 To work with strings, the Melange standard library provides some utilities in
-the <a class="text-ocaml" target="_self"
-href="./api/ml/melange/Stdlib/String"><code>Stdlib.String</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Stdlib/String"><code>Stdlib.String</code> module</a>. The
-bindings to the native JavaScript functions to work with strings are in the <a
-class="text-ocaml" target="_self"
-href="./api/ml/melange/Js/String"><code>Js.String</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/String"><code>Js.String</code> module</a>.
+the [`Stdlib.String` module](./api/Stdlib-String). The
+bindings to the native JavaScript functions to work with strings are in the
+[`Js.String` module](./api/Js-String).
 
 ### Floating-point numbers
 
@@ -146,15 +140,10 @@ with a 53-bit mantissa and exponents from -1022 to 1023. This happens to be the
 same encoding as [JavaScript
 numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding),
 so values of these types can be used transparently between Melange code and
-JavaScript code. The Melange standard library provides a <a class="text-ocaml"
-target="_self" href="./api/ml/melange/Stdlib/Float"><code>Stdlib.Float</code>
-module</a><a class="text-reasonml" target="_self"
-href="./api/re/melange/Stdlib/Float"><code>Stdlib.Float</code> module</a>. The
+JavaScript code. The Melange standard library provides a
+[`Stdlib.Float` module](./api/Stdlib-Float). The
 bindings to the JavaScript APIs that manipulate float values can be found in the
-<a class="text-ocaml" target="_self"
-href="./api/ml/melange/Js/Float"><code>Js.Float</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/Float"><code>Js.Float</code> module</a>.
+[`Js.Float` module](./api/Js-Float).
 
 ### Integers
 
@@ -170,14 +159,10 @@ allowing for a larger range of representable integers in JavaScript compared to
 Melange. When dealing with large numbers, it is advisable to use floats instead.
 For instance, floats are used in bindings like `Js.Date`.
 
-The Melange standard library provides a <a class="text-ocaml" target="_self"
-href="./api/ml/melange/Stdlib/Int"><code>Stdlib.Int</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Stdlib/Int"><code>Stdlib.Int</code> module</a>. The
-bindings to work with JavaScript integers are in the <a class="text-ocaml"
-target="_self" href="./api/ml/melange/Js/Int"><code>Js.Int</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/Int"><code>Js.Int</code> module</a>.
+The Melange standard library provides a
+[`Stdlib.Int` module](./api/Stdlib-Int). The
+bindings to work with JavaScript integers are in the
+[`Js.Int` module](./api/Js-Int).
 
 ### Arrays
 
@@ -187,16 +172,11 @@ arrays, all the values in a Melange array need to have the same type.
 Another difference is that OCaml arrays are fixed-sized, but on Melange side
 this constraint is relaxed. You can change an array’s length using functions
 like `Js.Array.push`, available in the bindings to the JavaScript APIs in the <a
-class="text-ocaml" target="_self"
-href="./api/ml/melange/Js/Array"><code>Js.Array</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/Array"><code>Js.Array</code> module</a>.
+target="_self"
+href="./api/Js-Array"><code>Js.Array</code> module</a>.
 
 Melange standard library also has a module to work with arrays, available in the
-<a class="text-ocaml" target="_self"
-href="./api/ml/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a>.
+[`Stdlib.Array` module](./api/Stdlib-Array).
 
 ### Tuples
 
@@ -263,11 +243,8 @@ Will compile to:
 var r = /b/g;
 ```
 
-A regular expression like the above is of type `Js.Re.t`. The <a
-class="text-ocaml" target="_self"
-href="./api/ml/melange/Js/Re"><code>Js.Re</code> module</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Js/Re"><code>Js.Re</code> module</a> provides the
+A regular expression like the above is of type `Js.Re.t`. The
+[`Js.Re` module](./api/Js-Re) provides the
 bindings to the JavaScript functions that operate over regular expressions.
 
 ## Non-shared data types
@@ -283,16 +260,11 @@ them before doing so.
   to do so.
 - Exceptions
 - Option (a variant type): Better use the `Js.Nullable.fromOption` and
-  `Js.Nullable.toOption` functions in the <a class="text-ocaml" target="_self"
-  href="./api/ml/melange/Js/Nullable"><code>Js.Nullable</code> module</a><a
-  class="text-reasonml" target="_self"
-  href="./api/re/melange/Js/Nullable"><code>Js.Nullable</code> module</a> to
+  `Js.Nullable.toOption` functions in the
+  [`Js.Nullable` module](./api/Js-Nullable) to
   transform them into either `null` or `undefined` values.
-- List (also a variant type): use `Array.of_list` and `Array.to_list` in the <a
-  class="text-ocaml" target="_self"
-  href="./api/ml/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a><a
-  class="text-reasonml" target="_self"
-  href="./api/re/melange/Stdlib/Array"><code>Stdlib.Array</code> module</a>.
+- List (also a variant type): use `Array.of_list` and `Array.to_list` in the
+  [`Stdlib.Array` module](./api/Stdlib-Array).
 - Character
 - Int64
 - Lazy values

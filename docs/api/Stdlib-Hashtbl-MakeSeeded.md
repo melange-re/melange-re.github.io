@@ -1,0 +1,170 @@
+
+# Module `Hashtbl.MakeSeeded`
+
+Functor building an implementation of the hashtable structure. The functor `Hashtbl.MakeSeeded` returns a structure containing a type `key` of keys and a type <code class="text-ocaml">'a t</code><code class="text-reasonml">t('a)</code> of hash tables associating data of type `'a` to keys of type `key`. The operations perform similarly to those of the generic interface, but use the seeded hashing and equality functions specified in the functor argument `H` instead of generic equality and hashing. The `create` operation of the result structure supports the `~random` optional parameter and returns randomized hash tables if `~random:true` is passed or if randomization is globally on (see [`Hashtbl.randomize`](./Stdlib-Hashtbl.md#val-randomize)).
+
+since 4\.00
+
+## Parameters
+
+```ocaml
+module H : SeededHashedType
+```
+```reasonml
+module H: SeededHashedType
+```
+
+## Signature
+
+```ocaml
+type key = H.t
+```
+```reasonml
+type key = H.t;
+```
+```ocaml
+type !'a t
+```
+```reasonml
+type t(!'a);
+```
+```ocaml
+val create : ?random:bool -> int -> 'a t
+```
+```reasonml
+let create: ?random:bool => int => t('a);
+```
+```ocaml
+val clear : 'a t -> unit
+```
+```reasonml
+let clear: t('a) => unit;
+```
+```ocaml
+val reset : 'a t -> unit
+```
+```reasonml
+let reset: t('a) => unit;
+```
+```ocaml
+val copy : 'a t -> 'a t
+```
+```reasonml
+let copy: t('a) => t('a);
+```
+```ocaml
+val add : 'a t -> key -> 'a -> unit
+```
+```reasonml
+let add: t('a) => key => 'a => unit;
+```
+```ocaml
+val remove : 'a t -> key -> unit
+```
+```reasonml
+let remove: t('a) => key => unit;
+```
+```ocaml
+val find : 'a t -> key -> 'a
+```
+```reasonml
+let find: t('a) => key => 'a;
+```
+```ocaml
+val find_opt : 'a t -> key -> 'a option
+```
+```reasonml
+let find_opt: t('a) => key => option('a);
+```
+since 4\.05
+```ocaml
+val find_all : 'a t -> key -> 'a list
+```
+```reasonml
+let find_all: t('a) => key => list('a);
+```
+```ocaml
+val replace : 'a t -> key -> 'a -> unit
+```
+```reasonml
+let replace: t('a) => key => 'a => unit;
+```
+```ocaml
+val mem : 'a t -> key -> bool
+```
+```reasonml
+let mem: t('a) => key => bool;
+```
+```ocaml
+val iter : (key -> 'a -> unit) -> 'a t -> unit
+```
+```reasonml
+let iter: (key => 'a => unit) => t('a) => unit;
+```
+```ocaml
+val filter_map_inplace : (key -> 'a -> 'a option) -> 'a t -> unit
+```
+```reasonml
+let filter_map_inplace: (key => 'a => option('a)) => t('a) => unit;
+```
+since 4\.03
+```ocaml
+val fold : (key -> 'a -> 'acc -> 'acc) -> 'a t -> 'acc -> 'acc
+```
+```reasonml
+let fold: (key => 'a => 'acc => 'acc) => t('a) => 'acc => 'acc;
+```
+```ocaml
+val length : 'a t -> int
+```
+```reasonml
+let length: t('a) => int;
+```
+```ocaml
+val stats : 'a t -> statistics
+```
+```reasonml
+let stats: t('a) => statistics;
+```
+```ocaml
+val to_seq : 'a t -> (key * 'a) Seq.t
+```
+```reasonml
+let to_seq: t('a) => Seq.t((key, 'a));
+```
+since 4\.07
+```ocaml
+val to_seq_keys : _ t -> key Seq.t
+```
+```reasonml
+let to_seq_keys: t(_) => Seq.t(key);
+```
+since 4\.07
+```ocaml
+val to_seq_values : 'a t -> 'a Seq.t
+```
+```reasonml
+let to_seq_values: t('a) => Seq.t('a);
+```
+since 4\.07
+```ocaml
+val add_seq : 'a t -> (key * 'a) Seq.t -> unit
+```
+```reasonml
+let add_seq: t('a) => Seq.t((key, 'a)) => unit;
+```
+since 4\.07
+```ocaml
+val replace_seq : 'a t -> (key * 'a) Seq.t -> unit
+```
+```reasonml
+let replace_seq: t('a) => Seq.t((key, 'a)) => unit;
+```
+since 4\.07
+```ocaml
+val of_seq : (key * 'a) Seq.t -> 'a t
+```
+```reasonml
+let of_seq: Seq.t((key, 'a)) => t('a);
+```
+since 4\.07

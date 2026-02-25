@@ -405,10 +405,7 @@ class="text-reasonml">\-\></code>.
 As its name suggests, the pipe first operator is better suited for functions
 where the data is passed as the first argument.
 
-The functions in the <a class="text-ocaml" target="_self"
-href="./api/ml/melange/Belt"><code>Belt</code> library</a><a
-class="text-reasonml" target="_self"
-href="./api/re/melange/Belt"><code>Belt</code> library</a> included with Melange
+The functions in the [`Belt` library](./api/Belt) included with Melange
 have been designed with the data-first convention in mind, so they work best
 with the pipe first operator.
 
