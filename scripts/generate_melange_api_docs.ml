@@ -314,9 +314,6 @@ let should_keep filename =
   (start "Js" || start "Belt" || start "Dom" || start "Node" || start "Stdlib"
  || filename = "index.md")
   && (not (start "Js_parser"))
-  && not
-       (List.mem filename
-          [ "Js-Null.md"; "Js-Undefined.md"; "Js-Re.md"; "Js-Nullable.md" ])
 
 let src_dir = "melange/_build/default/_doc/_markdown/melange"
 let output_dir = "docs/api"
@@ -324,8 +321,7 @@ let output_dir = "docs/api"
 let fetch_melange () =
   if not (Sys.file_exists "melange") then
     run
-      "opam source melange.$(opam show melange -f version --color never) --dir \
-       melange";
+      "opam source melange.$(opam show melange -f version --color never) --dir melange";
   ignore (Sys.command "rm -rf melange/test melange/jscomp/test")
 
 let build_docs syntax =
