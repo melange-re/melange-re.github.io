@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as r,V as l}from"./chunks/framework.BCxdY_ip.js";const y=JSON.parse('{"title":"melange index","description":"","frontmatter":{},"headers":[],"relativePath":"api/index.md","filePath":"api/index.md"}'),i={name:"api/index.md"},t=l("",15),n=[t];function o(h,d,m,s,b,p){return r(),a("div",null,n)}const g=e(i,[["render",o]]);export{y as __pageData,g as default};

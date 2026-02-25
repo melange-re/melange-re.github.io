@@ -1,0 +1,1 @@
+import{_ as s,c as i,o as a,V as t}from"./chunks/framework.BCxdY_ip.js";const c=JSON.parse('{"title":"Module Belt","description":"","frontmatter":{},"headers":[],"relativePath":"api/Belt.md","filePath":"api/Belt.md"}'),h={name:"api/Belt.md"},l=t("",80),n=[l];function e(p,k,d,r,g,o){return a(),i("div",null,n)}const F=s(h,[["render",e]]);export{c as __pageData,F as default};
