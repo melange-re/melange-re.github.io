@@ -1,7 +1,4 @@
-import { initWorkerizedReducer } from "use-workerized-reducer";
 import { rollup } from "@rollup/browser";
-
-import * as Console from "./console";
 
 const modules = {};
 
@@ -20,17 +17,9 @@ Object.keys(rawModules).forEach((k) => {
   ] = value;
 });
 
-// https://rollupjs.org/troubleshooting/#avoiding-eval
-const eval2 = eval;
-
-/** @type {Map<string, Promise<{ url: string; body: string; }>>} */
 const FETCH_CACHE = new Map();
 
-/**
- * @param {string} url
- * @param {number} uid
- */
-async function fetch_if_uncached(url) {
+async function fetchIfUncached(url) {
   if (FETCH_CACHE.has(url)) {
     return FETCH_CACHE.get(url);
   }
@@ -53,93 +42,88 @@ async function fetch_if_uncached(url) {
   return promise;
 }
 
-initWorkerizedReducer(
-  "bundle", // Name of the reducer
-  async (state, action) => {
-    // Reducers can be async.
-    // Manipulate `state` directly. ImmerJS will take
-    // care of maintaining referential equality.
-    switch (action.type) {
-      case "clear.logs":
-        Console.flush();
-        state.logCaptures = [];
-        break;
-      case "bundle":
-        const code = action.code;
-        if (!code) {
-          return
-        }
-        Console.start();
+async function bundleCode(code) {
+  modules["main.js"] = code;
 
-        /* Reset logs if there's some */
-        Console.flush();
-
-        modules["main.js"] = code;
-
-        const bundle = await rollup({
-          input: "main.js",
-          plugins: [
-            {
-              name: "loader",
-              resolveId(importee, importer) {
-                var source = importee;
-                const isRelative = importee.substring(0, 2) == "./";
-                if (isRelative && importer) {
-                  const pkg = importer.substring(
-                    0,
-                    importer.lastIndexOf("/") + 1
-                  );
-                  source = pkg + source.substring(2, importee.length);
-                }
-                if (modules.hasOwnProperty(source)) {
-                  return source;
-                } else {
-                  if (importee[0] == "/") {
-                    return "https://esm.sh" + importee;
-                  } else if (importee.substring(0, 8) != "https://") {
-                    return "https://esm.sh/" + importee;
-                  } else {
-                    // TODO: Improve versioning.
-                    // We are getting "react" and "react-dom" from stable,
-                    // which might change under our backs.
-                    return importee;
-                  }
-                }
-              },
-              async load(resolved) {
-                if (modules.hasOwnProperty(resolved)) {
-                  return modules[resolved];
-                } else {
-                  const res = await fetch_if_uncached(resolved);
-                  return res?.body;
-                }
-              },
-            },
-          ],
-        });
-        const { output } = await bundle.generate({
-          format: "iife",
-          name: "MelangeApp",
-        });
-        try {
-          // bundling always happens in worker as it's expensive. Evaluation too,
-          // but if there is DOM manipulation, then defer evaluation to the
-          // main thread, as worker doesn't have access to DOM
-          if (code.indexOf("react/jsx-runtime") >= 0 || code.indexOf("react-dom/client") >= 0) {
-            state.bundledCode = output[0].code;
-          } else {
-            state.bundledCode = undefined;
-            eval2(output[0].code);
+  const bundle = await rollup({
+    input: "main.js",
+    plugins: [
+      {
+        name: "loader",
+        resolveId(importee, importer) {
+          var source = importee;
+          const isRelative = importee.substring(0, 2) == "./";
+          if (isRelative && importer) {
+            const pkg = importer.substring(0, importer.lastIndexOf("/") + 1);
+            source = pkg + source.substring(2, importee.length);
           }
-        } catch (e) {
-          console.error("Error while evaluating JavaScript code: " + e.message);
-        }
-        // We always set logCaptures, if `code` is undefined we will erase them
-        state.logCaptures = Console.getCaptures();
-        Console.stop();
-        break;
-      default:
-        throw new Error();
-    }
+          if (modules.hasOwnProperty(source)) {
+            return source;
+          } else {
+            if (source[0] == "/") {
+              return "https://esm.sh" + source;
+            } else if (source.substring(0, 8) != "https://") {
+              return "https://esm.sh/" + source;
+            } else {
+              return source;
+            }
+          }
+        },
+        async load(resolved) {
+          if (modules.hasOwnProperty(resolved)) {
+            return modules[resolved];
+          } else {
+            const res = await fetchIfUncached(resolved);
+            return res?.body;
+          }
+        },
+      },
+    ],
+  });
+
+  const { output } = await bundle.generate({
+    format: "iife",
+    name: "MelangeApp",
+  });
+
+  return output[0].code;
+}
+
+self.addEventListener("message", async (event) => {
+  const action = event.data;
+  if (!action || typeof action !== "object") {
+    return;
   }
-);
+
+  if (action.type !== "bundle") {
+    return;
+  }
+
+  const code = action.code;
+  if (!code) {
+    return;
+  }
+
+  const requestId = action.requestId ?? 0;
+  const bundledCodeIsReact = !!action.isReactCode;
+
+  let bundledCode;
+  let bundleError;
+
+  try {
+    bundledCode = await bundleCode(code);
+  } catch (e) {
+    bundledCode = undefined;
+    bundleError =
+      "Error while bundling JavaScript code: " + (e?.message || String(e));
+    console.error(bundleError);
+  }
+
+  self.postMessage({
+    type: "bundle.result",
+    requestId,
+    bundledCode,
+    bundledCodeIsReact,
+    bundleError,
+  });
+});
