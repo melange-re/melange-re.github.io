@@ -61,7 +61,7 @@ jobs:
           echo "reason-react build melange_mini_stdlib.cmi candidates:"
           find "$RR_BUILD" -name "melange_mini_stdlib.cmi" -print || true
       - name: Rebuild packages for playground consistency
-        run: opam reinstall -y melange melange-playground reason-react reason-react-ppx
+        run: opam reinstall -y melange
       - name: Clean dune state after reinstall
         run: opam exec -- dune clean
       - name: Verify CMI consistency for playground
