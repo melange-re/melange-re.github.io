@@ -32,6 +32,15 @@
                         runHook postBuild
                       '';
                     });
+                    melange = osuper.melange.overrideAttrs (_: {
+                      src = super.fetchFromGitHub {
+                        owner = "melange-re";
+                        repo = "melange";
+                        rev = "0c7fbb6b6734d54e60b7e73d2d696ec31e90a0c8";
+                        fetchSubmodules = true;
+                        hash = "sha256-HOLqyVCfHfpbJwcrYH1M1jT8Y6v45oFG42SKJVYJm/4=";
+                      };
+                    });
                     melange-playground =
                       with oself;
                       buildDunePackage {
