@@ -5,9 +5,8 @@ import "../../_build/default/playground/melange-cmijs.js";
 import "../../_build/default/playground/format.bc.js";
 
 import * as React from "react";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useWorkerizedReducer } from "use-workerized-reducer/react";
 import { useDebounce } from 'use-debounce';
 import { AlignLeft, Code2, Zap, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
 
@@ -32,7 +31,7 @@ const LIVE_PREVIEW = {
   OFF: "off",
 };
 
-// Spin up the worker running the reducers.
+// Spin up the worker for bundling.
 const worker = new Worker(new URL("./worker.js", import.meta.url), {
   type: "module",
 });
@@ -165,13 +164,10 @@ function Sidebar({ onExampleClick }) {
 }
 
 function Live({ codeHasReact }) {
-  /* codeHasReact is a prop to trigger a re-render of #preview, since when
-  ReactDOM mounts a component under a React tree, you can't use `unmountComponentAtNode`
-  since React considers as part of VDOM. */
   return (
     <div className="Live">
       {!codeHasReact ?
-        <div id="preview" key="empty">
+        <div id="preview">
           <div className="EmptyPreview">
             <p className="Text-m">
               This div has the ID selector <code>preview</code>.
@@ -182,7 +178,7 @@ function Live({ codeHasReact }) {
               override by rendering into the element with <code>ReactDOM.querySelector("#preview")</code>
             </p>
           </div>
-        </div> : <div id="preview" key="react" />}
+        </div> : <div id="preview" />}
     </div>
   );
 }
@@ -416,6 +412,10 @@ const toMonaco = (severity) => (problem) => ({
   severity: severity,
 });
 
+const codeHasReactLivePreview = (jsCode) =>
+  !!jsCode &&
+  (jsCode.includes("react-dom/client") || jsCode.includes("react/jsx-runtime"));
+
 const compile = (language, code) => {
   let compilation = undefined
   try {
@@ -513,31 +513,67 @@ function App() {
   const { language, code, live } = state;
   const [debouncedCode] = useDebounce(code, 300);
 
-  const compilation = React.useMemo(() => compile(language, debouncedCode), [debouncedCode]);
+  const compilation = React.useMemo(() => compile(language, debouncedCode), [language, debouncedCode]);
+  const [workerState, setWorkerState] = React.useState({
+    bundledCode: undefined,
+    bundledCodeIsReact: false,
+    bundleRequestId: 0,
+    bundleError: undefined,
+  });
 
-  const [workerState, dispatch, _busy] = useWorkerizedReducer(
-    worker,
-    "bundle", // Reducer name
-    { logCaptures: [] } // Initial state
-  );
+  const [runtimeLogCaptures, setRuntimeLogCaptures] = React.useState([]);
+  const lastDispatchedBundleRequestId = React.useRef(0);
+  const lastEvaluatedBundleRequestId = React.useRef(0);
 
   const setLive = (live) => setState({ ...state, live });
   const setCode = (code) => setState({ ...state, code });
   const setInput = ({ language, code }) => setState({ ...state, language, code });
 
   const editorRef = React.useRef(null);
+  const [monaco, setMonaco] = React.useState(null);
 
-  function handleEditorDidMount(editor, monaco) {
+  function handleEditorDidMount(editor, monacoInstance) {
     editorRef.current = editor;
-    updateMarkers(monaco, editorRef, compilation);
+    if (!monaco) {
+      setMonaco(monacoInstance);
+    }
+    updateMarkers(monacoInstance, editorRef, compilation);
   }
 
   function clearLogs() {
-    dispatch({ type: "clear.logCaptures" });
     Console.flush();
+    setRuntimeLogCaptures([]);
   }
 
-  const monaco = useMonaco();
+  React.useEffect(() => {
+    const onMessage = (event) => {
+      const message = event.data;
+      if (!message || typeof message !== "object") {
+        return;
+      }
+      if (message.type === "bundle.result") {
+        setWorkerState((prev) => ({
+          ...prev,
+          bundleRequestId: message.requestId ?? prev.bundleRequestId,
+          bundledCode: message.bundledCode,
+          bundledCodeIsReact: !!message.bundledCodeIsReact,
+          bundleError: message.bundleError,
+        }));
+      }
+    };
+
+    const onError = (event) => {
+      const message = event?.message || String(event?.error || "Unknown worker error");
+      setWorkerState((prev) => ({ ...prev, bundleError: message }));
+    };
+
+    worker.addEventListener("message", onMessage);
+    worker.addEventListener("error", onError);
+    return () => {
+      worker.removeEventListener("message", onMessage);
+      worker.removeEventListener("error", onError);
+    };
+  }, []);
 
   React.useEffect(() => {
     // or make sure that it exists by other ways
@@ -622,23 +658,57 @@ function App() {
   }, [monaco, compilation?.problems, compilation?.warnings]);
 
   React.useEffect(() => {
-    if (workerState.bundledCode) {
-      Console.start();
-      // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
-      const eval2 = eval;
-      try {
-        eval2(workerState.bundledCode);
-      } catch (e) {
-        console.error(e);
-      }
-      Console.stop();
+    if (workerState.bundleError) {
+      console.error(workerState.bundleError);
     }
-  }, [workerState.bundledCode]);
+  }, [workerState.bundleError]);
 
   React.useEffect(() => {
-    if (compilation?.javascriptCode) {
-      dispatch({ type: "bundle", code: compilation?.javascriptCode });
+    const requestId = workerState.bundleRequestId;
+    const code = workerState.bundledCode;
+    if (!requestId || !code) {
+      return;
     }
+    // Ignore stale worker completions and duplicate effect runs.
+    if (requestId <= lastEvaluatedBundleRequestId.current) {
+      return;
+    }
+    lastEvaluatedBundleRequestId.current = requestId;
+
+    Console.start(true);
+    // https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
+    const eval2 = eval;
+    try {
+      if (workerState.bundledCodeIsReact) {
+        const preview = document.getElementById("preview");
+        if (preview?.parentNode) {
+          const nextPreview = document.createElement("div");
+          nextPreview.id = "preview";
+          preview.parentNode.replaceChild(nextPreview, preview);
+        }
+      }
+      eval2(code);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRuntimeLogCaptures(Console.getCaptures());
+      Console.stop();
+    }
+  }, [workerState.bundleRequestId, workerState.bundledCode, workerState.bundledCodeIsReact]);
+
+  React.useEffect(() => {
+    if (!compilation?.javascriptCode) {
+      return;
+    }
+    const code = compilation.javascriptCode;
+    const requestId = lastDispatchedBundleRequestId.current + 1;
+    lastDispatchedBundleRequestId.current = requestId;
+    worker.postMessage({
+      type: "bundle",
+      code,
+      requestId,
+      isReactCode: codeHasReactLivePreview(code),
+    });
   }, [compilation?.javascriptCode]);
 
   const onLanguageToggle = (newLanguage) => {
@@ -740,7 +810,9 @@ function App() {
                         JavaScript output</button>
                     </div>
                     <VisuallyHidden when={live === LIVE_PREVIEW.OFF}>
-                      <Live codeHasReact={compilation?.javascriptCode?.includes(`"react-dom"`)} />
+                      <Live
+                        codeHasReact={codeHasReactLivePreview(compilation?.javascriptCode || workerState.bundledCode)}
+                      />
                     </VisuallyHidden>
                     <VisuallyHidden when={live === LIVE_PREVIEW.ON}>
                       <OutputEditor
@@ -752,7 +824,7 @@ function App() {
                   </div>
                 </Panel>
                 <PanelResizeHandle className="ResizeHandle" />
-                <ConsolePanel logCaptures={workerState.logCaptures} clearLogs={clearLogs} />
+                <ConsolePanel logCaptures={runtimeLogCaptures} clearLogs={clearLogs} />
               </PanelGroup>
             </div>
           </Panel>
