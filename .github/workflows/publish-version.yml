@@ -61,7 +61,9 @@ jobs:
           echo "reason-react build melange_mini_stdlib.cmi candidates:"
           find "$RR_BUILD" -name "melange_mini_stdlib.cmi" -print || true
       - name: Rebuild packages for playground consistency
-        run: opam reinstall -y melange
+        run: opam reinstall -y melange melange-playground reason-react reason-react-ppx
+      - name: Clean dune state after reinstall
+        run: opam exec -- dune clean
       - name: Verify CMI consistency for playground
         run: |
           set -euo pipefail
@@ -95,6 +97,17 @@ jobs:
             echo "::error::reactDOM.cmi and js.cmi disagree on Melange_mini_stdlib digest"
             exit 1
           fi
+      - name: Refresh vendored melange source
+        run: |
+          rm -rf melange
+          opam source melange.$(opam show melange -f version --color never) --dir melange
+      - name: Restrict vendored melange source to playground
+        run: |
+          set -euo pipefail
+          perl -0pi -e 's/\(dirs[^\n]*\)/(dirs playground)/' melange/dune
+          grep -n '^(dirs ' melange/dune
+      - name: Build playground assets for consistency check
+        run: opam exec -- dune build @playground-assets
       # only uncomment after a new version is released, from inside a `x.x.x-patches` branch
       # - name: Run canonical script
       #   run: opam exec -- dune exec add_canonical docs/public/api
