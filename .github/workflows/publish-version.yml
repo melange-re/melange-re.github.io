@@ -53,10 +53,10 @@ jobs:
           fi
 
           echo "reason-react reactDOM.cmi: $RR_REACTDOM"
-          ocamlobjinfo "$RR_REACTDOM"
+          opam exec -- ocamlobjinfo "$RR_REACTDOM"
 
           echo "melange js.cmi: $MEL_JS"
-          ocamlobjinfo "$MEL_JS"
+          opam exec -- ocamlobjinfo "$MEL_JS"
 
           echo "reason-react build melange_mini_stdlib.cmi candidates:"
           find "$RR_BUILD" -name "melange_mini_stdlib.cmi" -print || true
@@ -76,10 +76,10 @@ jobs:
             exit 1
           fi
 
-          js_digest="$(ocamlobjinfo "$MEL_JS" | awk '$2=="Js" {print $1; exit}')"
-          js_mini_digest="$(ocamlobjinfo "$MEL_JS" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
-          reactdom_js_digest="$(ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Js" {print $1; exit}')"
-          reactdom_mini_digest="$(ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
+          js_digest="$(opam exec -- ocamlobjinfo "$MEL_JS" | awk '$2=="Js" {print $1; exit}')"
+          js_mini_digest="$(opam exec -- ocamlobjinfo "$MEL_JS" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
+          reactdom_js_digest="$(opam exec -- ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Js" {print $1; exit}')"
+          reactdom_mini_digest="$(opam exec -- ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
 
           echo "melange js.cmi Js digest: $js_digest"
           echo "reason-react reactDOM.cmi Js digest: $reactdom_js_digest"
