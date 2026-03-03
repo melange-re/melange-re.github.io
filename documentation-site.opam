@@ -24,8 +24,6 @@ depends: [
   "cmarkit" {dev}
   "ocaml-lsp-server" {dev}
   "odoc" {with-doc}
-  "melange" {dev}
-  "melange-playground" {dev}
 ]
 build: [
   ["dune" "subst"] {dev}
@@ -45,6 +43,4 @@ dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
 pin-depends: [
   [ "reason-react-ppx.dev" "git+https://github.com/reasonml/reason-react.git#8f49cb937cdafcc4e2d83a2edcca66aa24bf8e20"]
   [ "reason-react.dev" "git+https://github.com/reasonml/reason-react.git#8f49cb937cdafcc4e2d83a2edcca66aa24bf8e20"]
-  [ "melange.dev" "git+https://github.com/melange-re/melange.git#0c7fbb6b6734d54e60b7e73d2d696ec31e90a0c8" ]
-  [ "melange-playground.dev" "git+https://github.com/melange-re/melange.git#0c7fbb6b6734d54e60b7e73d2d696ec31e90a0c8" ]
 ]
