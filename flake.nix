@@ -32,31 +32,6 @@
                         runHook postBuild
                       '';
                     });
-                    melange = osuper.melange.overrideAttrs (_: {
-                      src = super.fetchFromGitHub {
-                        owner = "melange-re";
-                        repo = "melange";
-                        rev = "0c7fbb6b6734d54e60b7e73d2d696ec31e90a0c8";
-                        fetchSubmodules = true;
-                        hash = "sha256-HOLqyVCfHfpbJwcrYH1M1jT8Y6v45oFG42SKJVYJm/4=";
-                      };
-                    });
-                    melange-playground =
-                      with oself;
-                      buildDunePackage {
-                        pname = "melange-playground";
-                        inherit (melange) src version;
-                        nativeBuildInputs = [
-                          cppo
-                          js_of_ocaml
-                        ];
-                        propagatedBuildInputs = [
-                          js_of_ocaml-compiler
-                          melange
-                          reason
-                          reason-react-ppx
-                        ];
-                      };
                   }
                 );
               }
@@ -99,8 +74,8 @@
               dune
               ocaml
               findlib
-              melange
-              melange-playground
+              js_of_ocaml
+              js_of_ocaml-compiler
               reason
             ];
             buildInputs =
@@ -111,8 +86,6 @@
                 pkgs.yarn
               ]
               ++ (with pkgs.ocamlPackages; [
-                reason-react
-                reason-react-ppx
                 ocamlformat
                 js_of_ocaml
                 cmarkit
