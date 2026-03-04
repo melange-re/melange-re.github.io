@@ -13,6 +13,7 @@
 (rule
  (deps
   %{bin:js_of_ocaml}
+  (package reason-react)
   (:some-cmi %{lib:reason-react:melange/react.cmi}))
  (target reason-react-cmijs.js)
  (action
