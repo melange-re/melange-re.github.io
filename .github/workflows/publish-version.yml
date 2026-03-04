@@ -42,7 +42,9 @@ jobs:
           ODOC_SYNTAX="re" opam exec -- dune build --root melange @doc
           cp -r melange/_build/default/_doc/_html docs/public/api/re
       - name: Build playground assets
-        run: opam exec -- dune build @playground-assets
+        run: |
+          opam exec -- dune build melange/melange.install
+          opam exec -- dune build @playground-assets
       # only uncomment after a new version is released, from inside a `x.x.x-patches` branch
       # - name: Run canonical script
       #   run: opam exec -- dune exec add_canonical docs/public/api
