@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: recursive
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -25,88 +27,21 @@ jobs:
           dune-cache: false # can cause trouble when generating melange docs in step below: https://github.com/ocaml/dune/issues/7720
       - name: Install all deps
         run: make install
-      - name: Generate melange docs
-        run: opam reinstall -y melange --with-doc --keep-build-dir
-      - name: Copy melange docs in ml syntax
+      - name: Check vendored sources exist
         run: |
+          test -d melange
+          test -d reason-react
+      - name: Generate melange docs in ml syntax
+        run: |
+          ODOC_SYNTAX="ml" opam exec -- dune build --root melange @doc
           mkdir -p docs/public/api/
-          cp -r `opam var melange:build`/_build/default/_doc/_html docs/public/api/ml
+          cp -r melange/_build/default/_doc/_html docs/public/api/ml
       - name: Generate melange docs in re syntax
-        run: ODOC_SYNTAX="re" opam reinstall -y melange --with-doc --keep-build-dir
-      - name: Copy melange docs in re syntax
-        run: cp -r `opam var melange:build`/_build/default/_doc/_html docs/public/api/re
-      - name: Diagnose CMI assumptions before playground rebuild
         run: |
-          set -euo pipefail
-          RR_LIB="$(opam var reason-react:lib)"
-          MEL_LIB="$(opam var melange:lib)"
-          RR_BUILD="$(opam var reason-react:build)"
-
-          RR_REACTDOM="$(find "$RR_LIB" -path '*/melange/reactDOM.cmi' -print -quit)"
-          MEL_JS="$(find "$MEL_LIB" -path '*/melange/js.cmi' -print -quit)"
-
-          if [ -z "$RR_REACTDOM" ] || [ -z "$MEL_JS" ]; then
-            echo "Could not locate expected CMI files"
-            echo "reason-react lib: $RR_LIB"
-            echo "melange lib: $MEL_LIB"
-            exit 1
-          fi
-
-          echo "reason-react reactDOM.cmi: $RR_REACTDOM"
-          opam exec -- ocamlobjinfo "$RR_REACTDOM"
-
-          echo "melange js.cmi: $MEL_JS"
-          opam exec -- ocamlobjinfo "$MEL_JS"
-
-          echo "reason-react build melange_mini_stdlib.cmi candidates:"
-          find "$RR_BUILD" -name "melange_mini_stdlib.cmi" -print || true
-      - name: Rebuild packages for playground consistency
-        run: opam reinstall -y melange
-      - name: Clean dune state after reinstall
-        run: opam exec -- dune clean
-      - name: Verify CMI consistency for playground
-        run: |
-          set -euo pipefail
-          RR_LIB="$(opam var reason-react:lib)"
-          MEL_LIB="$(opam var melange:lib)"
-
-          RR_REACTDOM="$(find "$RR_LIB" -path '*/melange/reactDOM.cmi' -print -quit)"
-          MEL_JS="$(find "$MEL_LIB" -path '*/melange/js.cmi' -print -quit)"
-
-          if [ -z "$RR_REACTDOM" ] || [ -z "$MEL_JS" ]; then
-            echo "Could not locate expected CMI files"
-            exit 1
-          fi
-
-          js_digest="$(opam exec -- ocamlobjinfo "$MEL_JS" | awk '$2=="Js" {print $1; exit}')"
-          js_mini_digest="$(opam exec -- ocamlobjinfo "$MEL_JS" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
-          reactdom_js_digest="$(opam exec -- ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Js" {print $1; exit}')"
-          reactdom_mini_digest="$(opam exec -- ocamlobjinfo "$RR_REACTDOM" | awk '$2=="Melange_mini_stdlib" {print $1; exit}')"
-
-          echo "melange js.cmi Js digest: $js_digest"
-          echo "reason-react reactDOM.cmi Js digest: $reactdom_js_digest"
-          echo "melange js.cmi Melange_mini_stdlib digest: $js_mini_digest"
-          echo "reason-react reactDOM.cmi Melange_mini_stdlib digest: $reactdom_mini_digest"
-
-          if [ "$js_digest" != "$reactdom_js_digest" ]; then
-            echo "::error::reactDOM.cmi and js.cmi disagree on Js digest"
-            exit 1
-          fi
-
-          if [ "$js_mini_digest" != "$reactdom_mini_digest" ]; then
-            echo "::error::reactDOM.cmi and js.cmi disagree on Melange_mini_stdlib digest"
-            exit 1
-          fi
-      - name: Refresh vendored melange source
-        run: |
-          rm -rf melange
-          opam source melange.$(opam show melange -f version --color never) --dir melange
-      - name: Restrict vendored melange source to playground
-        run: |
-          set -euo pipefail
-          perl -0pi -e 's/\(dirs[^\n]*\)/(dirs playground)/' melange/dune
-          grep -n '^(dirs ' melange/dune
-      - name: Build playground assets for consistency check
+          opam exec -- dune clean --root melange
+          ODOC_SYNTAX="re" opam exec -- dune build --root melange @doc
+          cp -r melange/_build/default/_doc/_html docs/public/api/re
+      - name: Build playground assets
         run: opam exec -- dune build @playground-assets
       # only uncomment after a new version is released, from inside a `x.x.x-patches` branch
       # - name: Run canonical script

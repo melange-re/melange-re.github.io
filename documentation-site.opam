@@ -14,11 +14,9 @@ license: "MIT"
 homepage: "https://github.com/melange-re/melange-re.github.io"
 bug-reports: "https://github.com/melange-re/melange-re.github.io/issues"
 depends: [
-  "ocaml"
   "dune" {>= "3.8"}
+  "ocaml"
   "reason" {>= "3.17"}
-  "reason-react"
-  "reason-react-ppx"
   "ocamlformat"
   "js_of_ocaml"
   "cmarkit" {dev}

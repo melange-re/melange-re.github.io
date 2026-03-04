@@ -11,9 +11,10 @@ https://github.com/melange-re/melange.
 
 ## Working locally
 
-After cloning the repository, install the necessary JavaScript packages:
+After cloning the repository, initialize submodules and install the necessary JavaScript packages:
 
 ```bash
+git submodule update --init --recursive
 yarn
 ```
 
@@ -21,9 +22,10 @@ Then run `make dev` from the folder where the repository lives.
 
 ## (Optional) Fetch melange documentation API
 
-Optionally, to fetch the melange odoc documentation and generate markdown into docs/api, you will need the melange package installed into your switch and run:
+Optionally, to generate melange odoc documentation markdown into docs/api, initialize the vendored `melange` submodule and run:
 
 ```bash
+git submodule update --init --recursive
 make pull-melange-docs SYNTAX="re"
 make pull-melange-docs SYNTAX="ml"
 ```
