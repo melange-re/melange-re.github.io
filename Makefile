@@ -17,12 +17,14 @@ create-switch: ## Create opam switch
 .PHONY: init
 init: create-switch install ## Configure everything to develop this repository in local
 
+.PHONY: init-submodules
+init-submodules:
+	git submodule update --init --recursive
+
 .PHONY: install
-install: ## Install development dependencies
+install: init-submodules ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-doc
-	opam pin -y add $(project_name).dev .
-	opam source melange.$$(opam show melange -f version --color never) --dir melange
 
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed

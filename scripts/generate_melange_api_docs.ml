@@ -318,13 +318,6 @@ let should_keep filename =
 let src_dir = "melange/_build/default/_doc/_markdown/melange"
 let output_dir = "docs/api"
 
-let fetch_melange () =
-  if not (Sys.file_exists "melange") then
-    run
-      "opam source melange.$(opam show melange -f version --color never) --dir \
-       melange";
-  ignore (Sys.command "rm -rf melange/test melange/jscomp/test")
-
 let build_docs syntax =
   run
     (Printf.sprintf
@@ -341,8 +334,6 @@ let read_docs () =
   tbl
 
 let () =
-  fetch_melange ();
-
   Printf.printf "Building ML docs...\n%!";
   build_docs "ml";
   let ml_docs = read_docs () in

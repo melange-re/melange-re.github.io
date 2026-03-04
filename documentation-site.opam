@@ -14,11 +14,9 @@ license: "MIT"
 homepage: "https://github.com/melange-re/melange-re.github.io"
 bug-reports: "https://github.com/melange-re/melange-re.github.io/issues"
 depends: [
+  "dune" {>= "3.8"}
   "ocaml"
-  "dune" {>= "3.8" & >= "3.8"}
   "reason" {>= "3.17"}
-  "reason-react"
-  "reason-react-ppx"
   "ocamlformat"
   "js_of_ocaml"
   "cmarkit" {dev}
@@ -40,8 +38,3 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
-pin-depends: [
-  [ "reason-react-ppx.dev" "git+https://github.com/reasonml/reason-react.git#8f49cb937cdafcc4e2d83a2edcca66aa24bf8e20"]
-  [ "reason-react.dev" "git+https://github.com/reasonml/reason-react.git#8f49cb937cdafcc4e2d83a2edcca66aa24bf8e20"]
-  [ "dune.dev" "git+https://github.com/ocaml/dune.git#e7ca9f7f2652761b77dd687787436bdd31b1571c"]
-]
