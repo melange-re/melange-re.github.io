@@ -21,7 +21,6 @@ init: create-switch install ## Configure everything to develop this repository i
 install: ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-doc
-	opam pin -y add $(project_name).dev .
 
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
