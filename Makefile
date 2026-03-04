@@ -22,7 +22,6 @@ install: ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-doc
 	opam pin -y add $(project_name).dev .
-	opam source melange.$$(opam show melange -f version --color never) --dir melange
 
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed

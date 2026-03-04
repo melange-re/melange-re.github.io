@@ -15,16 +15,17 @@
  "Antonio Nuno Monteiro <anmonteiro@gmail.com>"
  "Javier Chávarri <javier.chavarri@gmail.com>")
 
+(homepage "https://github.com/melange-re/melange-re.github.io")
+
+(bug_reports "https://github.com/melange-re/melange-re.github.io/issues")
+
 (package
  (name documentation-site)
  (synopsis "Melange documentation site")
  (description "Content for the Melange documentation site")
  (depends
   ocaml
-  (dune (>= 3.8))
   (reason (>= 3.17))
-  reason-react
-  reason-react-ppx
   ocamlformat
   js_of_ocaml
   (cmarkit :dev)
