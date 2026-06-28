@@ -89,8 +89,8 @@ let () =
 file. To update the tests, run `dune build @extract-code-blocks`.
 
   $ cat > dune-project <<EOF
-  > (lang dune 3.8)
-  > (using melange 0.1)
+  > (lang dune 3.21)
+  > (using melange 1.0)
   > EOF
 
   $ cat > dune <<EOF

@@ -72,9 +72,9 @@ Create a file named `dune-project` in the library root folder. This file will
 tell Dune a few things about our project configuration:
 
 ```dune
-(lang dune 3.8)
+(lang dune 3.21)
 
-(using melange 0.1)
+(using melange 1.0)
 ```
 
 ### Replace the `bsconfig.json` file with one or multiple `dune` files
@@ -268,7 +268,7 @@ documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html).
 This setting is not configured at the library level, but rather at the
 application level, using the `module_systems` field in the `melange.emit`
 stanza. To read more about it, check the corresponding [build
-system](./build-system.md#commonjs-or-es6-modules) section.
+system](./build-system.md#commonjs-or-esm-modules) section.
 
 Regarding the `"in-source"` configuration, the corresponding field in Dune would
 be the `(promote (until-clean))` configuration, which can be added to a
@@ -279,7 +279,7 @@ documentation](https://dune.readthedocs.io/en/stable/reference/dune/rule.html#pr
 
 Same as with `package-specs` this configuration is set at the application level,
 using the `module_systems` field in the `melange.emit` stanza. Check the
-[CommonJS or ES6 modules](./build-system.md#commonjs-or-es6-modules) section to
+[CommonJS or ESM modules](./build-system.md#commonjs-or-esm-modules) section to
 learn more about it.
 
 #### `warnings` and `bsc-flags`

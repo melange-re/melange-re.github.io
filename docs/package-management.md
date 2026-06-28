@@ -361,7 +361,7 @@ then `reason-react` should be added to the `dune` file under the `src` folder:
  (libraries lib reason-react)
  (preprocess
   (pps reason-react-ppx))
- (module_systems es6))
+ (module_systems esm))
 ```
 
 Some libraries will only work after being processed by an accompanying PPX,
@@ -399,7 +399,7 @@ file:
  (libraries lib reason-react melange-fetch)
  (preprocess
   (pps reason-react-ppx))
- (module_systems es6))
+ (module_systems esm))
 ```
 
 ### npm packages

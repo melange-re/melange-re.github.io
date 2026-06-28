@@ -8,7 +8,7 @@
   melange.belt
   melange.dom)
  (modules) ; Empty, we just want to the js artifacts from the libraries
- (module_systems es6))
+ (module_systems esm))
 
 (rule
  (deps

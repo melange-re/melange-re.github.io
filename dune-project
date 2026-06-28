@@ -1,6 +1,6 @@
-(lang dune 3.8)
+(lang dune 3.21)
 
-(using melange 0.1)
+(using melange 1.0)
 
 (name documentation-site)
 
@@ -25,6 +25,7 @@
  (description "Content for the Melange documentation site")
  (depends
   ocaml
+  melange
   (reason (>= 3.17))
   ocamlformat
   js_of_ocaml
