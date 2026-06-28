@@ -7,7 +7,6 @@
     {
       self,
       nixpkgs,
-      flake-utils,
     }:
     let
       forAllSystems =
@@ -17,7 +16,7 @@
           let
             pkgs = nixpkgs.legacyPackages.${system}.extend (
               self: super: {
-                ocamlPackages = super.ocaml-ng.ocamlPackages_5_4.overrideScope (
+                ocamlPackages = super.ocaml-ng.ocamlPackages_5_5.overrideScope (
                   oself: osuper: {
                     cmarkit = osuper.cmarkit.overrideAttrs (_: {
                       src = super.fetchFromGitHub {
@@ -89,6 +88,8 @@
                 ocamlformat
                 js_of_ocaml
                 cmarkit
+                cppo
+                melange
                 ocamlformat-lib
 
               ]);
