@@ -16,6 +16,7 @@ bug-reports: "https://github.com/melange-re/melange-re.github.io/issues"
 depends: [
   "dune" {>= "3.21"}
   "ocaml"
+  "melange"
   "reason" {>= "3.17"}
   "ocamlformat"
   "js_of_ocaml"
@@ -38,3 +39,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/melange-re/melange-re.github.io.git"
+x-maintenance-intent: ["(latest)"]

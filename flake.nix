@@ -73,6 +73,7 @@
               dune
               ocaml
               findlib
+              melange
               js_of_ocaml
               js_of_ocaml-compiler
               reason

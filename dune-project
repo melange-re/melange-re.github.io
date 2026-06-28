@@ -25,6 +25,7 @@
  (description "Content for the Melange documentation site")
  (depends
   ocaml
+  melange
   (reason (>= 3.17))
   ocamlformat
   js_of_ocaml
