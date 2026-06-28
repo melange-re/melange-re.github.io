@@ -26,6 +26,10 @@
  (applies_to add_canonical)
  (deps %{bin:add_canonical}))
 
+(cram
+ (deps
+  (package melange)))
+
 ;; Extract code blocks from markdown files
 
 (rule
@@ -153,4 +157,3 @@
  (alias extract-code-blocks)
  (action
   (diff build-system.t build-system.md.processed)))
-

@@ -24,9 +24,9 @@
  (synopsis "Melange documentation site")
  (description "Content for the Melange documentation site")
  (depends
-  ocaml
-  melange
-  (reason (>= 3.17))
+  (ocaml (and (>= 5.5) (< 5.6)))
+  (melange (= 7.0.0-55))
+  (reason (= 3.18.0))
   ocamlformat
   js_of_ocaml
   (cmarkit :dev)

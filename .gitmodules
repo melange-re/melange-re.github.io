@@ -1,7 +1,7 @@
 [submodule "melange"]
 	path = melange
 	url = https://github.com/melange-re/melange.git
-	branch = v6-54
+	branch = v7-55
 [submodule "reason-react"]
 	path = reason-react
 	url = https://github.com/reasonml/reason-react.git
