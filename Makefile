@@ -83,3 +83,9 @@ preview: ## Preview the docs
 .PHONY: pull-melange-docs
 pull-melange-docs: ## Pull melange docs (builds both syntaxes and merges)
 	$(DUNE) exec scripts/generate_melange_api_docs.exe
+
+.PHONY: move-v7.0.1-tag
+move-v7.0.1-tag: ## Moves the v7.0.1 tag to the latest commit, useful to publish the v7 docs
+	git push origin :refs/tags/v7.0.1
+	git tag -fa v7.0.1
+	git push origin --tags

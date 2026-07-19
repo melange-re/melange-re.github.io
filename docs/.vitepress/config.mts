@@ -75,12 +75,8 @@ export default defineConfig({
       { text: "Book", link: "https://react-book.melange.re" },
       { text: "Blog", link: "https://melange.re/blog" },
       {
-        text: "unstable",
+        text: "v7.0.1",
         items: [
-          {
-            text: "v7.0.1",
-            link: "https://melange.re/v7.0.1/",
-          },
           {
             text: "v6.0.1",
             link: "https://melange.re/v6.0.1/",
@@ -112,6 +108,10 @@ export default defineConfig({
           {
             text: "v1.0.0",
             link: "https://melange.re/v1.0.0/",
+          },
+          {
+            text: "unstable",
+            link: "https://melange.re/unstable/",
           },
         ],
       },
