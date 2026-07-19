@@ -78,8 +78,8 @@ export default defineConfig({
         text: "unstable",
         items: [
           {
-            text: "v7.0.0",
-            link: "https://melange.re/v7.0.0/",
+            text: "v7.0.1",
+            link: "https://melange.re/v7.0.1/",
           },
           {
             text: "v6.0.1",
