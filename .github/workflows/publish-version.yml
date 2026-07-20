@@ -42,6 +42,8 @@ jobs:
           opam exec -- dune clean --root melange
           ODOC_SYNTAX="re" opam exec -- dune build --root melange @doc
           cp -r melange/_build/default/_doc/_html docs/public/api/re
+      - name: Generate melange API markdown docs
+        run: make pull-melange-docs
       - name: Build playground assets
         run: |
           opam exec -- dune build melange/melange.install
