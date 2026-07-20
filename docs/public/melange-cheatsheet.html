@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melange Bindings Cheatsheet</title>
+  <style>
+    :root {
+      --c-bg: #ffffff;
+      --c-text: #213547;
+      --c-border: #ddd;
+      --c-code-bg: #f6f8fa;
+      --c-comment: #6a737d;
+    }
+
+    html.dark {
+      --c-bg: #1e1e20;
+      --c-text: #ddd;
+      --c-border: #383838;
+      --c-code-bg: #161618;
+      --c-comment: #9e9e9e;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.5;
+      color: var(--c-text);
+      background-color: var(--c-bg);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .section {
+      break-inside: avoid;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--c-border);
+      padding-bottom: 5px;
+    }
+
+    .snippet {
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .comment {
+      color: var(--c-comment);
+      margin-bottom: 5px;
+    }
+
+    code {
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      background-color: var(--c-code-bg);
+      border-radius: 3px;
+      padding: 2px 4px;
+    }
+
+    pre {
+      background-color: var(--c-code-bg);
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      margin: 0;
+      transition: background-color 0.3s;
+    }
+
+    /* Syntax toggle styles */
+    .ocaml,
+    .reasonml {
+      display: none;
+    }
+
+    .syntax__ocaml .ocaml {
+      display: block;
+    }
+
+    .syntax__reasonml .reasonml {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <h1>Melange Bindings Cheatsheet</h1>
+  </header>
+
+  <div class="container">
+    <!-- Globals Section -->
+    <div class="section">
+      <h2>Globals</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Global variable *)</div>
+        <div class="comment reasonml">// Global variable</div>
+        <div class="ocaml">
+          <pre><code>external window : Dom.window = "window"</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>external window: Dom.window = "window";</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Does global variable exist *)</div>
+        <div class="comment reasonml">// Does global variable exist</div>
+        <div class="ocaml">
+          <pre><code>match [%mel.external window] with
+| Some _ -> "exists"
+| None -> "does not exist"</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>switch ([%mel.external window]) {
+| Some(_) => "exists"
+| None => "does not exist"
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Variable in global module *)</div>
+        <div class="comment reasonml">// Variable in global module</div>
+        <div class="ocaml">
+          <pre><code>external pi : float = "PI" [@@mel.scope "Math"]</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.scope "Math"] external pi: float = "PI";</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Function in global module *)</div>
+        <div class="comment reasonml">// Function in global module</div>
+        <div class="ocaml">
+          <pre><code>external log : 'a -> unit = "log" [@@mel.scope "console"]</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.scope "console"] external log: 'a => unit = "log";</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modules Section -->
+    <div class="section">
+      <h2>Modules</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Function in CommonJS/ES6 module *)</div>
+        <div class="comment reasonml">// Function in CommonJS/ES6 module</div>
+        <div class="ocaml">
+          <pre><code>external join : string -> string -> string = "join"
+  [@@mel.module "path"]
+let dir = join "a" "b"</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.module "path"] external join: (string, string) => string = "join";
+let dir = join("a", "b");</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Import module as a value *)</div>
+        <div class="comment reasonml">// Import module as a value</div>
+        <div class="ocaml">
+          <pre><code>external foo : int -> unit = "foo" [@@mel.module]
+let () = foo 1</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.module] external foo: int => unit = "foo";
+let () = foo(1);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Import ES6 module default export *)</div>
+        <div class="comment reasonml">// Import ES6 module default export</div>
+        <div class="ocaml">
+          <pre><code>external foo : int -> unit = "default"
+  [@@mel.module "foo"]
+let () = foo 1</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.module "foo"] external foo: int => unit = "default";
+let () = foo(1);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functions Section -->
+    <div class="section">
+      <h2>Functions</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Function with rest args *)</div>
+        <div class="comment reasonml">// Function with rest args</div>
+        <div class="ocaml">
+          <pre><code>external join : string array -> string = "join"
+  [@@mel.module "path"] [@@mel.variadic]
+let dir = join [| "a"; "b" |]</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.module "path"] [@mel.variadic]
+external join: array(string) => string = "join";
+let dir = join([|"a", "b"|]);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Named arguments for readability *)</div>
+        <div class="comment reasonml">// Named arguments for readability</div>
+        <div class="ocaml">
+          <pre><code>external range : start:int -> stop:int -> step:int -> int array = "range"
+let nums = range ~start:1 ~stop:10 ~step:2</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>external range: (~start: int, ~stop: int, ~step: int) => array(int) = "range";
+let nums = range(~start=1, ~stop=10, ~step=2);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Overloaded function *)</div>
+        <div class="comment reasonml">// Overloaded function</div>
+        <div class="ocaml">
+          <pre><code>external fooString : string -> unit = "foo"
+external fooBool : bool -> unit = "foo"</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>external fooString: string => unit = "foo";
+external fooBool: bool => unit = "foo";</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Optional argument *)</div>
+        <div class="comment reasonml">// Optional argument</div>
+        <div class="ocaml">
+          <pre><code>external range : start:int -> stop:int -> ?step:int -> unit -> int array
+  = "range"
+let nums = range ~start:1 ~stop:10 ()</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>external range: (~start: int, ~stop: int, ~step: int=?, unit) => array(int) =
+  "range";
+let nums = range(~start=1, ~stop=10, ());</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Objects Section -->
+    <div class="section">
+      <h2>Objects</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Create an object (quick) *)</div>
+        <div class="comment reasonml">// Create an object (quick)</div>
+        <div class="ocaml">
+          <pre><code>let person = [%mel.obj { id = 1; name = "Alice" }]</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>let person = {
+  "id": 1,
+  "name": "Alice",
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Create an object (typed) *)</div>
+        <div class="comment reasonml">// Create an object (typed)</div>
+        <div class="ocaml">
+          <pre><code>type person = { id : int; name : string }
+let person = { id = 1; name = "Alice" }</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>type person = {
+  id: int,
+  name: string,
+};
+let person = {
+  id: 1,
+  name: "Alice",
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Get a property *)</div>
+        <div class="comment reasonml">// Get a property</div>
+        <div class="ocaml">
+          <pre><code>let name = person##name</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>let name = person##name;</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Set a property *)</div>
+        <div class="comment reasonml">// Set a property</div>
+        <div class="ocaml">
+          <pre><code>external set_id : person -> int -> unit = "id" [@@mel.set]
+let () = set_id person 0</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.set] external set_id: (person, int) => unit = "id";
+let () = set_id(person, 0);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Object destructuring *)</div>
+        <div class="comment reasonml">// Object destructuring</div>
+        <div class="ocaml">
+          <pre><code>let { id; name } = person</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>let {id, name} = person;</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Classes and OOP Section -->
+    <div class="section">
+      <h2>Classes and OOP</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Call a class constructor *)</div>
+        <div class="comment reasonml">// Call a class constructor</div>
+        <div class="ocaml">
+          <pre><code>module Foo = struct
+  type t
+  external make : unit -> t = "Foo" [@@mel.new]
+end
+
+let foo = Foo.make ()</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Foo = {
+  type t;
+  [@mel.new] external make: unit => t = "Foo";
+};
+
+let foo = Foo.make();</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Get an instance property *)</div>
+        <div class="comment reasonml">// Get an instance property</div>
+        <div class="ocaml">
+          <pre><code>external bar : t -> int = "bar" [@@mel.get]
+let bar = Foo.bar foo</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.get] external bar: t => int = "bar";
+let bar = Foo.bar(foo);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Set an instance property *)</div>
+        <div class="comment reasonml">// Set an instance property</div>
+        <div class="ocaml">
+          <pre><code>external setBar : t -> int -> unit = "bar" [@@mel.set]
+let () = Foo.setBar foo 1</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.set] external setBar: (t, int) => unit = "bar";
+let () = Foo.setBar(foo, 1);</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Call an instance method *)</div>
+        <div class="comment reasonml">// Call an instance method</div>
+        <div class="ocaml">
+          <pre><code>external meth : t -> unit = "meth" [@@mel.send]
+let () = Foo.meth foo</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.send] external meth: t => unit = "meth";
+let () = Foo.meth(foo);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Null and Undefined Section -->
+    <div class="section">
+      <h2>Null and Undefined</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Check for undefined *)</div>
+        <div class="comment reasonml">// Check for undefined</div>
+        <div class="ocaml">
+          <pre><code>module Foo = struct
+  type t
+  external bar : t -> int option = "bar" [@@mel.get]
+end
+
+let _result = match Foo.bar foo with
+  | Some _ -> 1
+  | None -> 0</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Foo = {
+  type t;
+  [@mel.get] external bar: t => option(int) = "bar";
+};
+
+let _result =
+  switch (Foo.bar(foo)) {
+  | Some(_) => 1
+  | None => 0
+  };</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Check for null or undefined *)</div>
+        <div class="comment reasonml">// Check for null or undefined</div>
+        <div class="ocaml">
+          <pre><code>external bar : t -> t option = "bar"
+  [@@mel.get] [@@mel.return nullable]
+
+let _result = match Foo.bar foo with
+  | Some _ -> 1
+  | None -> 0</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>[@mel.get] [@mel.return nullable] external bar: t => option(t) = "bar";
+
+let _result =
+  switch (Foo.bar(foo)) {
+  | Some(_) => 1
+  | None => 0
+  };</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options Objects Section -->
+    <div class="section">
+      <h2>Options Objects</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Options object argument *)</div>
+        <div class="comment reasonml">// Options object argument</div>
+        <div class="ocaml">
+          <pre><code>type mkdirOptions
+
+external mkdirOptions : ?recursive:bool -> unit -> mkdirOptions = "" [@@mel.obj]
+external mkdir : string -> ?options:mkdirOptions -> unit -> unit = "mkdir"
+
+let () = mkdir "src/main" ~options:(mkdirOptions ~recursive:true ()) ()</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>type mkdirOptions;
+
+[@mel.obj] external mkdirOptions: (~recursive: bool=?, unit) => mkdirOptions;
+external mkdir: (string, ~options: mkdirOptions=?, unit) => unit = "mkdir";
+
+let () = mkdir("src/main", ~options=mkdirOptions(~recursive=true, ()), ());</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Callback function *)</div>
+        <div class="comment reasonml">// Callback function</div>
+        <div class="ocaml">
+          <pre><code>external forEach :
+  start:int -> stop:int -> ((int -> unit)[@mel.uncurry]) -> unit = "forEach"
+
+let () = forEach ~start:1 ~stop:10 Js.log</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>external forEach:
+  (~start: int, ~stop: int, [@mel.uncurry] (int => unit)) => unit =
+  "forEach";
+
+let () = forEach(~start=1, ~stop=10, Js.log);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- React Components Section -->
+    <div class="section">
+      <h2>React Components</h2>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Bind to JavaScript component *)</div>
+        <div class="comment reasonml">// Bind to JavaScript component</div>
+        <div class="ocaml">
+          <pre><code>module Button = struct
+  external make : label:string -> onClick:(unit -> unit) -> React.element
+    = "default"
+  [@@mel.module "./ButtonInJavaScript.js"] [@@react.component]
+end</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Button = {
+  [@mel.module "./ButtonInJavaScript.js"] [@react.component]
+  external make: (~label: string, ~onClick: unit => unit) => React.element =
+    "default";
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Component with optional props *)</div>
+        <div class="comment reasonml">// Component with optional props</div>
+        <div class="ocaml">
+          <pre><code>module Card = struct
+  external make : title:string -> ?description:string -> React.element
+    = "default"
+  [@@mel.module "./Card.js"] [@@react.component]
+end</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Card = {
+  [@mel.module "./Card.js"] [@react.component]
+  external make: (~title: string, ~description: string=?) => React.element =
+    "default";
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Component with children *)</div>
+        <div class="comment reasonml">// Component with children</div>
+        <div class="ocaml">
+          <pre><code>module Container = struct
+  external make : title:string -> ?children:React.element -> React.element
+    = "default"
+  [@@mel.module "./Container.js"] [@@react.component]
+end</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Container = {
+  [@mel.module "./Container.js"] [@react.component]
+  external make: (~title: string, ~children: React.element=?) => React.element =
+    "default";
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Component with uppercase props *)</div>
+        <div class="comment reasonml">// Component with uppercase props</div>
+        <div class="ocaml">
+          <pre><code>module Greeting = struct
+  external make : _Name:string -> React.element = "default"
+  [@@mel.module "./Greeting.js"] [@@react.component]
+end</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Greeting = {
+  [@mel.module "./Greeting.js"] [@react.component]
+  external make: (~_Name: string) => React.element = "default";
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="snippet">
+        <div class="comment ocaml">(* Component with default props *)</div>
+        <div class="comment reasonml">// Component with default props</div>
+        <div class="ocaml">
+          <pre><code>module Card = struct
+  external make : title:string -> ?description:string -> React.element
+    = "default"
+  [@@mel.module "./Card.js"] [@@react.component]
+
+  let makeProps ?(description = "Default description") = makeProps ~description
+end</code></pre>
+        </div>
+        <div class="reasonml">
+          <pre><code>module Card = {
+  [@mel.module "./Card.js"] [@react.component]
+  external make: (~title: string, ~description: string=?) => React.element =
+    "default";
+
+  let makeProps = (~description="Default description") =>
+    makeProps(~description);
+};</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const SYNTAXES = ["reasonml", "ocaml"];
+      const CLASS_PREFIX = "syntax__";
+      const THEMES = ["light", "dark"];
+
+      // Function to set current syntax and update UI
+      const applySyntax = (syntax = SYNTAXES[0]) => {
+        SYNTAXES.forEach(syntax => document.body.classList.remove(`${CLASS_PREFIX}${syntax}`));
+        document.body.classList.add(`${CLASS_PREFIX}${syntax}`);
+      };
+
+      // Function to apply theme locally without changing it
+      const applyTheme = (theme = THEMES[0]) => {
+        // Apply theme to html element
+        document.documentElement.classList.remove(...THEMES);
+        document.documentElement.classList.add(theme);
+      };
+
+      // Detect initial theme from VitePress or system preference
+      const detectTheme = () => {
+        // First check localStorage (VitePress stores theme here)
+        const storedTheme = localStorage.getItem('vitepress-theme-appearance');
+        if (storedTheme && THEMES.includes(storedTheme)) {
+          return storedTheme;
+        }
+
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+
+        return 'light';
+      };
+
+      // Initialize syntax
+      applySyntax(localStorage.getItem("syntax") || SYNTAXES[0]);
+
+      // Initialize theme
+      applyTheme(detectTheme());
+
+      // Listen for theme changes from VitePress
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'vitepress-theme-appearance' && event.newValue !== currentTheme) {
+          applyTheme(event.newValue);
+        } else if (event.key === 'syntax' && event.newValue !== currentSyntax) {
+          applySyntax(event.newValue);
+        }
+      });
+    });
+
+    // Run immediately in case DOMContentLoaded already fired
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      const event = new Event("DOMContentLoaded");
+      document.dispatchEvent(event);
+    }
+  </script>
+</body>
+
+</html>
