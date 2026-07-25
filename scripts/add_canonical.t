@@ -1,5 +1,9 @@
 Test add_canonical exe
 
+  $ add_canonical does-not-exist
+  Invalid folder path
+  [2]
+
   $ cat >foo.html <<EOF
   > <head></head>
   > EOF

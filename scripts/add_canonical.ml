@@ -70,10 +70,15 @@ let rec process_files ~orig_path folder_path =
   with End_of_file -> closedir dir
 
 let () =
-  if Array.length Sys.argv <> 2 then
-    eprintf "Usage: %s folder_path\n" Sys.argv.(0)
+  if Array.length Sys.argv <> 2 then begin
+    eprintf "Usage: %s folder_path\n" Sys.argv.(0);
+    Stdlib.exit 2
+  end
   else
     let folder_path = Sys.argv.(1) in
     if Sys.file_exists folder_path && Sys.is_directory folder_path then
       process_files ~orig_path:folder_path folder_path
-    else eprintf "Invalid folder path\n"
+    else begin
+      eprintf "Invalid folder path\n";
+      Stdlib.exit 2
+    end
