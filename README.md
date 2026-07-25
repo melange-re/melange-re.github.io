@@ -74,12 +74,16 @@ Publishing is done automatically from GitHub actions:
 When a new version of `melange` is published in opam, a new release of the docs
 and playground should be published. The process is as follows:
 
-- Update `documentation-site.opam` to point `melange` and `melange-playground`
-  packages to the commit of the new release (they need to be pinned so that the
-  Melange docs can be accessed on a stable path)
-- Update versions of the compiler listed in the playground (`app.jsx`)
-- In the docs markdown pages, grep for the last version of Melange that was used
-  and replace it with the newer one.
+- Update the `melange` submodule to the release commit. When the release changes
+  OCaml compiler lines, also update its branch in `.gitmodules`.
+- Update the OCaml and Melange constraints in `dune-project`, then regenerate
+  `documentation-site.opam`.
+- Update the compiler versions listed in the playground (`app.jsx`).
+- Audit version references in the Markdown documentation. Keep historical
+  migration guides pinned to the versions they describe.
+- Run `make pull-melange-docs` and verify the generated Markdown API locally.
+- Run `make check-reason`, `make check-extracted-code-blocks`, `make test`, and
+  `make build-site`.
 - Open a PR with the changes above
 - After merging the PR, create a new branch `x.x.x-patches`. This branch will be
   used to publish any patches or improvements to that version of the docs /
