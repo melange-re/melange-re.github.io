@@ -463,10 +463,11 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ cat > input.ml <<\EOF
   > type calculator = < add : (int -> int -> int [@u]) > Js.t
   > 
-  > let calculator : calculator =
-  >   [%mel.obj { add = fun [@u] x y -> x + y }]
+  > let add = fun [@u] x y -> x + y
+  > let calculator : calculator = [%mel.obj { add }]
   > 
-  > let result = calculator#@add 1 2
+  > let direct = add 1 2 [@u]
+  > let through_object = calculator#@add 1 2
   > EOF
 
   $ dune build @melange

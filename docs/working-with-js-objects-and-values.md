@@ -202,7 +202,44 @@ To read more about objects and polymorphism we recommend checking the [OCaml
 docs](https://ocaml.org/docs/objects) or the [OCaml
 manual](https://v2.ocaml.org/manual/objectexamples.html).
 
-##### Calling methods with `##`
+##### Calling methods and function-valued properties
+
+Both `##` and `#@` can call function-valued properties on `Js.t` objects. Both
+call forms generate the same JavaScript, `obj.f(a, b)`, and keep `obj` as the
+receiver (`this`). The choice of operator depends on the property's Melange
+type, not on a different JavaScript calling convention.
+
+<table>
+  <thead>
+    <tr>
+      <th>Expression</th>
+      <th>Expected property type</th>
+      <th>JavaScript</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="text-ocaml">obj##f a b</code><code class="text-reasonml">obj##f(a, b)</code></td>
+      <td>Method: <code>[@mel.meth]</code></td>
+      <td><code>obj.f(a, b)</code></td>
+    </tr>
+    <tr>
+      <td><code class="text-ocaml">obj#@f a b</code><code class="text-reasonml">obj#@f(a, b)</code></td>
+      <td>Uncurried function: <code class="text-ocaml">[@u]</code><code class="text-reasonml">(. ...)</code></td>
+      <td><code>obj.f(a, b)</code></td>
+    </tr>
+    <tr>
+      <td><code>obj##f</code></td>
+      <td>Any property type</td>
+      <td><code>obj.f</code> (reads without calling)</td>
+    </tr>
+  </tbody>
+</table>
+
+Both call forms are uncurried: supply all arguments in the same call. Neither
+supports partial application.
+
+###### Calling methods with `##`
 
 Besides reading properties, `##` can call methods on `Js.t` objects. Annotate a
 method's function type with `[@mel.meth]` and supply its arguments after the
@@ -227,7 +264,7 @@ let increment = (counter: counter) => counter##add(1);
 let reset = (counter: counter) => counter##reset();
 ```
 
-This generates JavaScript calls that keep the object as the receiver (`this`):
+This generates:
 
 ```js
 function increment(counter) {
@@ -239,48 +276,53 @@ function reset(counter) {
 }
 ```
 
-Method calls are uncurried: supply all arguments in the same call. Use `()` for
-a method that takes no JavaScript arguments, as in `reset` above.
+Use `()` for a method that takes no JavaScript arguments, as in `reset` above.
 
-##### Calling function-valued properties with `#@`
+###### Calling uncurried function properties with `#@`
 
-Use `#@` when the property holds an uncurried function, whose type is annotated
-with `[@u]`, rather than a method annotated with `[@mel.meth]`. For example,
-an uncurried function can be stored in an object literal:
+Use `#@` when the property holds an uncurried function rather than a method.
+Such function types use <span class="text-ocaml">the `[@u]`
+annotation</span><span class="text-reasonml">a leading dot in the argument
+list, `(. ...)`</span>. For example, the same uncurried function can be called
+directly or stored in an object:
 
 ```ocaml
 type calculator = < add : (int -> int -> int [@u]) > Js.t
 
-let calculator : calculator =
-  [%mel.obj { add = fun [@u] x y -> x + y }]
+let add = fun [@u] x y -> x + y
+let calculator : calculator = [%mel.obj { add }]
 
-let result = calculator#@add 1 2
+let direct = add 1 2 [@u]
+let through_object = calculator#@add 1 2
 ```
 ```reasonml
 type calculator = {. "add": (. int, int) => int };
 
-let calculator: calculator = { "add": (. x, y) => x + y };
+let add = (. x, y) => x + y;
+let calculator: calculator = { "add": add };
 
-let result = calculator#@add(1, 2);
+let direct = add(. 1, 2);
+let through_object = calculator#@add(1, 2);
 ```
 
 This generates:
 
 ```js
-const calculator = {
-  add: (function (x, y) {
-    return x + y | 0;
-  })
-};
+function add(x, y) {
+  return x + y | 0;
+}
 
-const result = calculator.add(1, 2);
+const calculator = { add };
+
+const direct = add(1, 2);
+const through_object = calculator.add(1, 2);
 ```
 
-Both `obj##method_name arg` and `obj#@function_name arg` compile to direct
-JavaScript property calls. The distinction is in the Melange types:
-`[@mel.meth]` for `##` method calls, and `[@u]` for `#@` function calls. They
-are not interchangeable. To read a property without calling it, use `##`
-without arguments, as in `calculator##add`.
+Storing `add` in an object preserves its uncurried function type; it does not
+become a `[@mel.meth]` method. Calling it through the object therefore uses
+`#@`. Using <span class="text-ocaml">`calculator##add 1 2`</span><span class="text-reasonml">`calculator##add(1, 2)`</span>
+would be a type error, not a different way to call it. To read the function
+without calling it, use `calculator##add`.
 
 ##### Updating properties with `#=`
 
