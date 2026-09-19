@@ -202,6 +202,161 @@ To read more about objects and polymorphism we recommend checking the [OCaml
 docs](https://ocaml.org/docs/objects) or the [OCaml
 manual](https://v2.ocaml.org/manual/objectexamples.html).
 
+##### Calling methods and function-valued properties
+
+Both `##` and `#@` can call function-valued properties on `Js.t` objects. Both
+call forms generate the same JavaScript, `obj.f(a, b)`, and keep `obj` as the
+receiver (`this`). The choice of operator depends on the property's Melange
+type, not on a different JavaScript calling convention.
+
+<table>
+  <thead>
+    <tr>
+      <th>Expression</th>
+      <th>Expected property type</th>
+      <th>JavaScript</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="text-ocaml">obj##f a b</code><code class="text-reasonml">obj##f(a, b)</code></td>
+      <td>Method: <code>[@mel.meth]</code></td>
+      <td><code>obj.f(a, b)</code></td>
+    </tr>
+    <tr>
+      <td><code class="text-ocaml">obj#@f a b</code><code class="text-reasonml">obj#@f(a, b)</code></td>
+      <td>Uncurried function: <code class="text-ocaml">[@u]</code><code class="text-reasonml">(. ...)</code></td>
+      <td><code>obj.f(a, b)</code></td>
+    </tr>
+    <tr>
+      <td><code>obj##f</code></td>
+      <td>Any property type</td>
+      <td><code>obj.f</code> (reads without calling)</td>
+    </tr>
+  </tbody>
+</table>
+
+Both call forms are uncurried: supply all arguments in the same call. Neither
+supports partial application.
+
+###### Calling methods with `##`
+
+Besides reading properties, `##` can call methods on `Js.t` objects. Annotate a
+method's function type with `[@mel.meth]` and supply its arguments after the
+method name:
+
+```ocaml
+type counter =
+  < add : int -> int [@mel.meth];
+    reset : unit -> unit [@mel.meth] > Js.t
+
+let increment (counter : counter) = counter##add 1
+let reset (counter : counter) = counter##reset ()
+```
+```reasonml
+type counter = {
+  .
+  [@mel.meth] "add": int => int,
+  [@mel.meth] "reset": unit => unit,
+};
+
+let increment = (counter: counter) => counter##add(1);
+let reset = (counter: counter) => counter##reset();
+```
+
+This generates:
+
+```js
+function increment(counter) {
+  return counter.add(1);
+}
+
+function reset(counter) {
+  counter.reset();
+}
+```
+
+Use `()` for a method that takes no JavaScript arguments, as in `reset` above.
+
+###### Calling uncurried function properties with `#@`
+
+Use `#@` when the property holds an uncurried function rather than a method.
+Such function types use <span class="text-ocaml">the `[@u]`
+annotation</span><span class="text-reasonml">a leading dot in the argument
+list, `(. ...)`</span>. For example, the same uncurried function can be called
+directly or stored in an object:
+
+```ocaml
+type calculator = < add : (int -> int -> int [@u]) > Js.t
+
+let add = fun [@u] x y -> x + y
+let calculator : calculator = [%mel.obj { add }]
+
+let direct = add 1 2 [@u]
+let through_object = calculator#@add 1 2
+```
+```reasonml
+type calculator = {. "add": (. int, int) => int };
+
+let add = (. x, y) => x + y;
+let calculator: calculator = { "add": add };
+
+let direct = add(. 1, 2);
+let through_object = calculator#@add(1, 2);
+```
+
+This generates:
+
+```js
+function add(x, y) {
+  return x + y | 0;
+}
+
+const calculator = { add };
+
+const direct = add(1, 2);
+const through_object = calculator.add(1, 2);
+```
+
+Storing `add` in an object preserves its uncurried function type; it does not
+become a `[@mel.meth]` method. Calling it through the object therefore uses
+`#@`. Using <span class="text-ocaml">`calculator##add 1 2`</span><span class="text-reasonml">`calculator##add(1, 2)`</span>
+would be a type error, not a different way to call it. To read the function
+without calling it, use `calculator##add`.
+
+##### Updating properties with `#=`
+
+To make a property writable, annotate its type with `[@mel.set]`. Then use
+`obj##property #= value` to assign a new value:
+
+```ocaml
+type person = < name : string [@mel.set] > Js.t
+
+let rename (person : person) name = person##name #= name
+```
+```reasonml
+type person = {. [@mel.set] "name": string };
+
+let rename = (person: person, name) => person##name #= name;
+```
+
+This generates a JavaScript assignment:
+
+```js
+function rename(person, name) {
+  person.name = name;
+}
+```
+
+The assignment returns `unit`. The `[@mel.set]` annotation also keeps the
+property readable with `##`; it adds write access rather than replacing read
+access. `#=` updates the JavaScript property, unlike `:=`, which updates an
+OCaml reference.
+
+These operators work with `Js.t` objects. For objects represented by abstract
+types, see the external bindings using [`mel.get` and
+`mel.set`](#bind-to-object-properties), and [`mel.send`](#calling-an-object-method).
+
 #### Using external functions
 
 We have already explored one approach for creating JavaScript object literals by
@@ -755,6 +910,9 @@ MyGame.draw(10, 20, undefined);
 
 If we need to call a JavaScript method, Melange provides the attribute
 `mel.send`.
+
+Methods on `Js.t` objects can also be called directly with `##`, as shown in
+["Using `Js.t` objects"](#using-js-t-objects).
 
 > In the following snippets, we will be referring to a type `Dom.element`, which
 > is provided within the library `melange.dom`. You can add it to your project

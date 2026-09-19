@@ -453,6 +453,37 @@ file. To update the tests, run `dune build @extract-code-blocks`.
   $ dune build @melange
 
   $ cat > input.ml <<\EOF
+  > type person = < name : string [@mel.set] > Js.t
+  > 
+  > let rename (person : person) name = person##name #= name
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
+  > type calculator = < add : (int -> int -> int [@u]) > Js.t
+  > 
+  > let add = fun [@u] x y -> x + y
+  > let calculator : calculator = [%mel.obj { add }]
+  > 
+  > let direct = add 1 2 [@u]
+  > let through_object = calculator#@add 1 2
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
+  > type counter =
+  >   < add : int -> int [@mel.meth];
+  >     reset : unit -> unit [@mel.meth] > Js.t
+  > 
+  > let increment (counter : counter) = counter##add 1
+  > let reset (counter : counter) = counter##reset ()
+  > EOF
+
+  $ dune build @melange
+
+  $ cat > input.ml <<\EOF
   > let name_extended obj = obj##name ^ " wayne"
   > 
   > let one = name_extended [%mel.obj { name = "john"; age = 99 }]
