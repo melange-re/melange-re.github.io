@@ -90,7 +90,8 @@
                 cmarkit
                 cppo
                 melange
-                ocamlformat-lib
+                ocamlformat-mlx-lib
+                ppxlib
 
               ]);
           };

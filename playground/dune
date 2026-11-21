@@ -13,20 +13,17 @@
 (rule
  (deps
   %{bin:js_of_ocaml}
-  (package reason-react)
-  (:some-cmi %{lib:reason-react:melange/react.cmi}))
+  %{bin:ocamlfind}
+  (package reason-react))
  (target reason-react-cmijs.js)
  (action
-  (bash
-   "find $(dirname %{some-cmi}) -name \"*.cmi\" -or -name \"*.cmj\" | xargs js_of_ocaml build-fs -o %{target}")))
+  (run bash %{dep:build_fs.sh} reason-react %{target})))
 
 (executable
  (name format)
  (modules format)
  (modes js)
- (flags
-  (:standard -open Ocamlformat_stdlib))
- (libraries js_of_ocaml ocamlformat-lib))
+ (libraries js_of_ocaml ocamlformat-mlx-lib ppxlib reason))
 
 (rule
  (alias playground-assets)
@@ -37,10 +34,10 @@
 
 (rule
  (alias playground-assets)
- (deps %{bin:melange-cmijs.js})
+ (deps %{bin:js_of_ocaml} %{bin:ocamlfind} (package melange))
  (target melange-cmijs.js)
  (action
-  (copy %{deps} %{target})))
+  (run bash %{dep:build_fs.sh} melange %{target})))
 
 (rule
  (alias playground-assets)
@@ -52,3 +49,22 @@
   melange-cmijs.js)
  (action
   (echo "assets generated")))
+
+(rule
+ (alias runtest)
+ (deps
+  test.cjs
+  package.json
+  src/examples.js
+  format.bc.js
+  mel_playground.bc.js
+  melange-cmijs.js
+  reason-react-cmijs.js)
+ (action
+  (run
+   node
+   %{dep:test.cjs}
+   %{dep:reason-react-cmijs.js}
+   %{dep:mel_playground.bc.js}
+   %{dep:melange-cmijs.js}
+   %{dep:format.bc.js})))

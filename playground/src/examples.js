@@ -77,7 +77,7 @@ Belt.Array.makeBy(42, _ => random_gaussian())->(Belt.Array.forEach(Js.log));`,
   {
     name: "React Greeting",
     ml: `module Greeting = struct
-  let make () = (button ~children:[ React.string "Hello!" ] () [@JSX])
+  let make () = <button>(React.string "Hello!")</button>
   [@@react.component]
 end
 
@@ -87,8 +87,7 @@ let () =
   match element with
   | Some element ->
       let root = ReactDOM.Client.createRoot element in
-      ReactDOM.Client.render root
-        (Greeting.createElement ~children:[] () [@JSX])
+      ReactDOM.Client.render root <Greeting />
   | None ->
       Js.Console.error
         "Failed to start React: couldn't find the #preview element"`,
