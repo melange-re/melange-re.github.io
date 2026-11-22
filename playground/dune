@@ -23,7 +23,7 @@
  (name format)
  (modules format)
  (modes js)
- (libraries js_of_ocaml ocamlformat-mlx-lib ppxlib reason))
+ (libraries js_of_ocaml ocamlformat-mlx-lib ppxlib reason reason-to-mlx))
 
 (rule
  (alias playground-assets)
