@@ -29,6 +29,13 @@ function format(source) {
   return result;
 }
 
+function convertReason(source) {
+  const [status, result] = ocamlformat.convertReason(source);
+  assert.equal(status, 0, result);
+  assert.equal(typeof result, "string");
+  return result;
+}
+
 const plain = "let answer=21*2";
 assert.deepEqual(compile(plain), ocaml.compileML(plain));
 assert.match(format(plain), /let answer = 21 \* 2/);
@@ -63,9 +70,51 @@ assert.match(reason, /<Greeting name="MLX"\s*\/>/);
 assert.equal(reason.split("Keep this comment.").length, 2);
 assert.equal(reason.split("A greeting component.").length, 2);
 assert.ok(ocaml.compileRE(reason).js_code);
-const roundTrip = format(ocaml.printML(ocaml.parseRE(reason)));
+const roundTrip = convertReason(reason);
 assert.match(roundTrip, /<Greeting name="MLX"\s*\/>/);
+assert.equal(roundTrip.split("Keep this comment.").length, 2);
+assert.equal(roundTrip.split("A greeting component.").length, 2);
 compile(roundTrip);
+
+const forwardedChildren = convertReason(`
+let children = React.array([|React.string("Hello!")|]);
+let node = <div children />;
+`);
+assert.match(forwardedChildren, /<div>\s*\.\.\.children\s*<\/div>/);
+assert.doesNotMatch(forwardedChildren, /\[@JSX\]/);
+compile(forwardedChildren);
+
+const quotedKeys = convertReason(`
+let headers = {
+  "literal-key": "application/json",
+  "Content-Type": "text/plain",
+  "method": "GET",
+  "type": "cors",
+};
+`);
+assert.match(quotedKeys, /\[@mel.as "literal-key"\]/);
+const quotedKeysJS = compile(quotedKeys).js_code;
+assert.match(quotedKeysJS, /"literal-key"/);
+assert.match(quotedKeysJS, /"Content-Type"/);
+
+const constructors = convertReason(`
+type pair = Pair(int, string);
+let value = Some(Pair(1, "one"));
+`);
+assert.doesNotMatch(constructors, /explicit_arity|reason.preserve_braces/);
+compile(constructors);
+
+const unicode = convertReason('let greeting = "Olá 👋";');
+assert.match(unicode, /Olá 👋/);
+compile(unicode);
+
+for (const invalidReason of ["let =", 'let object = {"1279": 1};']) {
+  const [status, diagnostic] = ocamlformat.convertReason(invalidReason);
+  assert.equal(status, 1);
+  assert.equal(typeof diagnostic, "string");
+  assert.ok(diagnostic.length > 0);
+}
+compile(convertReason("let answer = 42;"));
 
 const spread = `let className = Some "greeting"
 let children = React.array [|React.string "Hello!"|]
@@ -94,13 +143,21 @@ assert.match(error.text, /string/);
 compile(source);
 
 async function checkExamples() {
+  const { headers } = await import(`data:text/javascript;base64,${Buffer.from(quotedKeysJS).toString("base64")}`);
+  assert.deepEqual(headers, {
+    "literal-key": "application/json",
+    "Content-Type": "text/plain",
+    method: "GET",
+    type: "cors",
+  });
   const { default: examples } = await import("./src/examples.js");
   for (const example of examples) {
     compile(example.ml);
     compile(format(example.ml));
     assert.ok(ocaml.compileRE(example.re).js_code, example.name);
+    compile(convertReason(example.re));
   }
-  console.log("OCaml/MLX parsing, formatting, compilation, locations, Reason round trips, and examples passed.");
+  console.log("OCaml/MLX parsing, formatting, compilation, locations, Reason-to-MLX conversion, round trips, and examples passed.");
 }
 
 checkExamples().catch((error) => {

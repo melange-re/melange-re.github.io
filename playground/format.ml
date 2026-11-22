@@ -163,6 +163,12 @@ let () =
     Js.Unsafe.(
       obj
         [|
+          ( "convertReason",
+            inject
+            @@ Js.wrap_meth_callback (fun _ code ->
+                Reason_to_mlx.convert ~conf ~input_name:"playground.re"
+                  ~output_name:"playground.mlx" (Js.to_string code)
+                |> Result.map Js.string |> Result.map_error Js.string) );
           ( "parse",
             inject
             @@ Js.wrap_meth_callback (fun _ code ->
