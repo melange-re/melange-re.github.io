@@ -419,9 +419,12 @@ const codeHasReactLivePreview = (jsCode) =>
 const compile = (language, code) => {
   let compilation = undefined
   try {
-    compilation = language == languageMap.Reason
-      ? ocaml.compileRE(code)
-      : ocaml.compileML(code);
+    if (language == languageMap.Reason) {
+      compilation = ocaml.compileRE(code);
+    } else {
+      const parsed = ocamlformat.parse(code);
+      compilation = parsed.ast ? ocaml.compileAST(code, parsed.ast) : parsed;
+    }
   } catch (error) {
     compilation = { js_warning_error_msg: error.message };
   }
@@ -719,7 +722,9 @@ function App() {
 
     if (newLanguage == languageMap.Reason) {
       try {
-        let newReasonCode = ocaml.printRE(ocaml.parseML(code))
+        const parsed = ocamlformat.parse(code);
+        if (!parsed.ast) throw new Error(parsed.js_warning_error_msg);
+        let newReasonCode = ocaml.printRE(parsed.ast);
         setInput({ language: newLanguage, code: newReasonCode });
       } catch (error) {
         setInput({ language: newLanguage, code });
@@ -727,7 +732,7 @@ function App() {
       }
     } else if (newLanguage == languageMap.OCaml) {
       try {
-        let newOCamlCode = ocaml.printML(ocaml.parseRE(code));
+        let newOCamlCode = formatOCaml(ocaml.printML(ocaml.parseRE(code)));
         setInput({ language: newLanguage, code: newOCamlCode });
       } catch (error) {
         setInput({ language: newLanguage, code });
