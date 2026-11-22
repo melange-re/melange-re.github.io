@@ -27,6 +27,10 @@
  (deps %{bin:add_canonical}))
 
 (cram
+ (applies_to sync_playgrounds)
+ (deps sync_playgrounds.sh))
+
+(cram
  (deps
   (package melange)))
 

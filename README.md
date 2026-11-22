@@ -69,6 +69,19 @@ Publishing is done automatically from GitHub actions:
   name as the tag. For example, the branch with tag `v4.0.0` will publish to
   https://melange.re/v4.0.0/.
 
+After either deployment succeeds, `sync published playgrounds` copies the
+current `unstable/playground/` build into every published `v*/playground/` folder.
+All versions therefore receive MLX support and subsequent playground updates,
+using the compiler and libraries bundled with the current playground. The
+versioned documentation stays unchanged. Existing playground URLs, including
+shared code in their query strings, keep working.
+
+The synchronization workflow runs from `master`, including after a release is
+published from an older maintenance branch, and requests a GitHub Pages build
+after updating the files. It can also be run manually from GitHub Actions. Run
+its regression tests with
+`dune build @scripts/sync_playgrounds`.
+
 ### Tracking new versions of `melange` in opam
 
 When a new version of `melange` is published in opam, a new release of the docs
