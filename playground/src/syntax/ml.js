@@ -142,6 +142,10 @@ export const language = {
   // The main tokenizer for our languages
   tokenizer: {
     root: [
+      // MLX elements; their props and children use ordinary OCaml expressions.
+      [/(<\/?)([a-zA-Z_][\w']*(?:\.[a-zA-Z_][\w']*)*)/, ["delimiter", "tag"]],
+      [/<\/>|<>|\/>/, "delimiter"],
+
       // identifiers and keywords
       [
         /[a-zA-Z_][\w]*/,
