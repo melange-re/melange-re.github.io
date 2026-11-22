@@ -8,8 +8,11 @@ From the project root:
 
 ```bash
 make install
-dune build @playground-assets
+make build-playground-assets
 ```
+
+The Make targets build the vendored Melange compiler and standard library before
+building ReasonReact. This ordering is required for clean workspace builds.
 
 Then, can work on the playground with:
 
@@ -24,4 +27,4 @@ formatting. Its parser produces an OCaml 5.5 AST, which is migrated to the
 playground compiler's ppxlib AST before compilation. Keep the pinned formatter
 version and the AST conversion in `format.ml` in sync when upgrading.
 
-Run the playground integration tests with `dune build @playground/runtest`.
+Run the playground integration tests with `make test-playground`.
