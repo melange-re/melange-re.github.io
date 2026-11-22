@@ -26,22 +26,30 @@ install: init-submodules ## Install development dependencies
 	opam update
 	opam install -y . --deps-only --with-doc
 
+.PHONY: build-melange
+build-melange: ## Builds the vendored compiler and standard library
+	$(DUNE) build melange/melange.install
+
 .PHONY: check-reason
 check-reason: ## Checks that Reason syntax snippets are well formed
 	$(DUNE) build @re
 
 .PHONY:
-update-extracted-code-blocks: ## Updates the code blocks extracted from markdown
+update-extracted-code-blocks: build-melange ## Updates the code blocks extracted from markdown
 	$(DUNE) build @extract-code-blocks --auto-promote || true
 	$(DUNE) build @runtest --auto-promote || true
 
 .PHONY: check-extracted-code-blocks
-check-extracted-code-blocks: ## Checks that code blocks extracted from markdown are up to date and tests pass
+check-extracted-code-blocks: build-melange ## Checks that code blocks extracted from markdown are up to date and tests pass
 	$(DUNE) build @runtest
 
 .PHONY: test
-test: ## Runs @runtest alias
+test: build-melange ## Runs @runtest alias
 	$(DUNE) build @runtest
+
+.PHONY: test-playground
+test-playground: build-melange ## Runs the playground integration tests
+	$(DUNE) build @playground/runtest
 
 .PHONY: clean
 clean: ## Clean build artifacts and other generated files
@@ -55,9 +63,12 @@ format: ## Format the codebase with ocamlformat
 format-check: ## Checks if format is correct
 	$(DUNE) build @fmt
 
-.PHONY: build-playground
-build-playground: ## Builds the playground
+.PHONY: build-playground-assets
+build-playground-assets: build-melange ## Builds the playground compiler and interfaces
 	$(DUNE) build @playground-assets
+
+.PHONY: build-playground
+build-playground: build-playground-assets ## Builds the playground
 	cd playground && yarn && yarn build
 
 .PHONY: build-site
