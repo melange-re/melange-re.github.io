@@ -75,7 +75,6 @@
               melange
               js_of_ocaml
               js_of_ocaml-compiler
-              reason
             ];
             buildInputs =
               with python3Packages;
@@ -91,6 +90,7 @@
                 cppo
                 melange
                 ocamlformat-mlx-lib
+                reason-to-mlx
                 ppxlib
 
               ]);
