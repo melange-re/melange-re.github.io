@@ -18,17 +18,7 @@
               self: super: {
                 ocamlPackages = super.ocaml-ng.ocamlPackages_5_5.overrideScope (
                   oself: osuper: {
-                    reason = osuper.reason.overrideAttrs (_: {
-                      version = "3.18.0";
-                      # Match opam's keyword handling for Reason-to-MLX conversion.
-                      patches = [ ];
-                      src = super.fetchFromGitHub {
-                        owner = "reasonml";
-                        repo = "reason";
-                        rev = "470c25d19494928b8926d35ddcbc9ba46663e888";
-                        hash = "sha256-V/5f9EKPN5DQEtFWrhEAkb1HdYg49QYn1o13zdwpa4g=";
-                      };
-                    });
+                    reason = osuper.reason_3_18;
                     cmarkit = osuper.cmarkit.overrideAttrs (_: {
                       src = super.fetchFromGitHub {
                         owner = "dbuenzli";
@@ -102,6 +92,7 @@
                 cppo
                 melange
                 ocamlformat-mlx-lib
+                reason-to-mlx
                 ppxlib
 
               ]);
