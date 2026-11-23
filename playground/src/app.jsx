@@ -12,7 +12,7 @@ import { AlignLeft, Code2, Zap, Package, ArrowUpFromLine, ArrowDownToLine, Erase
 
 import * as Console from "./console";
 import * as Router from './router';
-import { Toaster } from './toaster';
+import { toast, Toaster } from './toaster';
 import { useLocalStorage } from './local-storage';
 import { useHover } from './hover';
 import examples from "./examples";
@@ -732,11 +732,15 @@ function App() {
       }
     } else if (newLanguage == languageMap.OCaml) {
       try {
-        let newOCamlCode = formatOCaml(ocaml.printML(ocaml.parseRE(code)));
+        const [status, result] = ocamlformat.convertReason(code);
+        if (status !== 0) throw new Error(result);
+        const newOCamlCode = result;
         setInput({ language: newLanguage, code: newOCamlCode });
       } catch (error) {
-        setInput({ language: newLanguage, code });
-        console.log(error);
+        toast({
+          title: "Could not convert Reason to MLX",
+          description: error.message,
+        });
       }
     } else {
       return

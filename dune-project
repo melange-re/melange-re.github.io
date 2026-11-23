@@ -27,6 +27,7 @@
   (ocaml (and (>= 5.5) (< 5.6)))
   (melange (= 7.0.1-55))
   (reason (= 3.18.0))
+  (reason-to-mlx (= 0.1.0))
   (ocamlfind :build)
   ocamlformat
   (ocamlformat-mlx-lib (= 0.29.0.2))

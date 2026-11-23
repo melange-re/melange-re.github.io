@@ -56,6 +56,8 @@ jobs:
       - name: Run tests
         run: make test
       - name: Build site (and playground)
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: BASE=${{ github.ref_name }} make build-site
       - name: Configure Git user
         run: |
