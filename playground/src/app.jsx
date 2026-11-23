@@ -8,7 +8,7 @@ import * as React from "react";
 import Editor from "@monaco-editor/react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useDebounce } from 'use-debounce';
-import { AlignLeft, Code2, Zap, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, Github } from 'lucide-react';
+import { AlignLeft, Code2, Zap, Package, ArrowUpFromLine, ArrowDownToLine, Eraser, ArrowLeftToLine, ArrowRightToLine, ExternalLink, Github } from 'lucide-react';
 
 import * as Console from "./console";
 import * as Router from './router';
@@ -80,15 +80,27 @@ function Counter({ count }) {
 function LanguageToggle({ language, onChange }) {
   return (
     <div className="Tabs">
-      <button
-        className={
-          classNames(["IconButton",
-            language === languageMap.OCaml ? "active" : ""])}
-        onClick={() => onChange(languageMap.OCaml)}
-      >
-        <OCamlLogo />
-        OCaml
-      </button>
+      <div className="LanguageTab">
+        <button
+          className={
+            classNames(["IconButton",
+              language === languageMap.OCaml ? "active" : ""])}
+          onClick={() => onChange(languageMap.OCaml)}
+        >
+          <OCamlLogo />
+          OCaml (MLX)
+        </button>
+        <a
+          className="IconButton"
+          href="https://github.com/ocaml-mlx/mlx"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="About MLX (opens in a new tab)"
+          title="About MLX"
+        >
+          <ExternalLink aria-hidden="true" />
+        </a>
+      </div>
       <button
         className={
           classNames(["IconButton",
