@@ -219,6 +219,14 @@ button:hover {
   justify-content: flex-end;
 }
 
+.LanguageTab {
+  display: flex;
+  gap: 6px;
+}
+.LanguageTab a {
+  padding-bottom: 1rem;
+}
+
 .Live {
   background: var(--colors-gray4);
   border-radius: 4px;
