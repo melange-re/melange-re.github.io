@@ -5,6 +5,3 @@
 [submodule "reason-react"]
 	path = reason-react
 	url = https://github.com/reasonml/reason-react.git
-[submodule "reason-to-mlx"]
-	path = reason-to-mlx
-	url = https://github.com/ocaml-mlx/reason-to-mlx.git
