@@ -18,7 +18,6 @@
               self: super: {
                 ocamlPackages = super.ocaml-ng.ocamlPackages_5_5.overrideScope (
                   oself: osuper: {
-                    reason = osuper.reason_3_18;
                     cmarkit = osuper.cmarkit.overrideAttrs (_: {
                       src = super.fetchFromGitHub {
                         owner = "dbuenzli";
@@ -76,7 +75,6 @@
               melange
               js_of_ocaml
               js_of_ocaml-compiler
-              reason
             ];
             buildInputs =
               with python3Packages;

@@ -32,6 +32,8 @@ jobs:
       - name: Run tests
         run: make test
       - name: Build site (and playground)
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: make build-site
       - name: Run canonical script
         run: opam exec -- dune exec add_canonical docs/.vitepress/dist/api
